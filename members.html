@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TST Academy – Members Area</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#00d27a;--green-dark:#00a85f;--dark:#0a0c10;--card:#12151c;--card2:#161920;--border:#1e2330;--text:#e8eaf0;--muted:#6b7280;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden;display:flex;flex-direction:column;min-height:100vh;}
+
+  #login-screen{position:fixed;inset:0;background:var(--dark);z-index:1000;display:flex;align-items:center;justify-content:center;}
+  .login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:420px;text-align:center;}
+  .login-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#fff;margin-bottom:8px;}
+  .login-logo span{color:var(--green);}
+  .login-subtitle{font-size:14px;color:var(--muted);margin-bottom:32px;}
+  .login-box h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#fff;margin-bottom:24px;}
+  .input-group{margin-bottom:16px;text-align:left;}
+  .input-group label{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:6px;}
+  .input-group input{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;}
+  .input-group input:focus{border-color:var(--green);}
+  .login-btn{width:100%;background:var(--green);color:#0a0c10;border:none;border-radius:8px;padding:14px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;margin-top:8px;transition:background 0.2s;}
+  .login-btn:hover{background:#00e888;}
+  .login-error{font-size:13px;color:#e05c5c;margin-top:12px;display:none;}
+
+  .top-nav{background:rgba(10,12,16,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 24px;position:sticky;top:0;z-index:100;}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#fff;}
+  .nav-logo span{color:var(--green);}
+  .nav-right{display:flex;align-items:center;gap:20px;}
+  .nav-welcome{font-size:13px;color:var(--muted);}
+  .nav-welcome span{color:var(--green);font-weight:500;}
+  .logout-btn{font-size:13px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:6px;padding:6px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:color 0.2s,border-color 0.2s;}
+  .logout-btn:hover{color:#e05c5c;border-color:#e05c5c;}
+
+  .app{display:flex;flex:1;}
+
+  /* SIDEBAR — wider, larger fonts, all green */
+  .sidebar{width:320px;min-width:320px;background:var(--card);border-right:1px solid var(--border);height:calc(100vh - 57px);position:sticky;top:57px;overflow-y:auto;padding:16px 0;}
+  .sidebar::-webkit-scrollbar{width:4px;}
+  .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+  .progress-wrap{padding:14px 20px 18px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+  .progress-label{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;display:flex;justify-content:space-between;}
+  .progress-label span{color:var(--green);}
+  .progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--green);border-radius:3px;transition:width 0.4s;}
+
+  .sec-group{margin-bottom:6px;}
+  .sec-header{padding:11px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;transition:background 0.15s;border-radius:6px;margin:0 8px;}
+  .sec-header:hover{background:rgba(255,255,255,0.03);}
+  .sec-badge{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:3px;flex-shrink:0;background:rgba(0,210,122,0.12);color:var(--green);}
+  .sec-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:#fff;flex:1;letter-spacing:0.5px;}
+  .sec-arrow{color:var(--muted);font-size:11px;transition:transform 0.2s;}
+  .sec-header.open .sec-arrow{transform:rotate(90deg);}
+  .sec-lessons{display:none;padding:2px 0 8px;}
+  .sec-lessons.open{display:block;}
+
+  .mod-header{padding:8px 16px 8px 36px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;transition:background 0.15s;}
+  .mod-header:hover{background:rgba(255,255,255,0.02);}
+  .mod-name{font-size:13px;color:var(--muted);font-weight:500;}
+  .mod-arrow{color:var(--muted);font-size:10px;transition:transform 0.2s;}
+  .mod-header.open .mod-arrow{transform:rotate(90deg);}
+  .mod-header.open .mod-name{color:var(--text);}
+  .sub-list{display:none;}
+  .sub-list.open{display:block;}
+
+  .sub-item{padding:6px 16px 6px 52px;font-size:13px;color:var(--muted);cursor:pointer;transition:color 0.15s,background 0.15s;display:flex;align-items:center;gap:7px;}
+  .sub-item:hover{color:var(--text);background:rgba(255,255,255,0.02);}
+  .sub-item.active{color:var(--green);background:rgba(0,210,122,0.05);}
+  .sub-item.done{color:#2e3545;}
+  .sub-chk{font-size:11px;min-width:14px;color:var(--muted);}
+  .sub-item.active .sub-chk{color:var(--green);}
+  .sub-item.done .sub-chk{color:var(--green);}
+
+  .dir-item{padding:7px 16px 7px 36px;font-size:13px;color:var(--muted);cursor:pointer;transition:color 0.15s,background 0.15s;display:flex;align-items:center;gap:7px;}
+  .dir-item:hover{color:var(--text);background:rgba(255,255,255,0.02);}
+  .dir-item.active{color:var(--green);background:rgba(0,210,122,0.05);}
+  .dir-item.done{color:#2e3545;}
+  .dir-chk{font-size:11px;min-width:14px;color:var(--muted);}
+  .dir-item.active .dir-chk{color:var(--green);}
+  .dir-item.done .dir-chk{color:var(--green);}
+
+  .main{flex:1;padding:40px 48px;max-width:900px;}
+  .lesson-tag{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--green);font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:8px;}
+  .lesson-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:#fff;line-height:1.1;margin-bottom:12px;}
+  .lesson-meta{display:flex;gap:16px;font-size:13px;color:var(--muted);margin-bottom:28px;flex-wrap:wrap;}
+  .video-wrap{background:#000;border-radius:12px;border:1px solid var(--border);aspect-ratio:16/9;margin-bottom:28px;display:flex;align-items:center;justify-content:center;}
+  .vid-ph{text-align:center;}
+  .vid-icon{font-size:48px;margin-bottom:10px;opacity:0.2;}
+  .vid-ph p{font-size:13px;color:var(--muted);}
+  .lc h3{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#fff;margin:28px 0 10px;letter-spacing:0.3px;}
+  .lc h3:first-child{margin-top:0;}
+  .lc p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:12px;}
+  .lc ul{margin:0 0 14px 20px;}
+  .lc li{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px;}
+  .lc li::marker{color:var(--green);}
+  .callout{background:rgba(0,210,122,0.06);border-left:3px solid var(--green);border-radius:0 8px 8px 0;padding:14px 18px;margin:18px 0;}
+  .callout p{margin:0;color:var(--text);font-size:14px;line-height:1.7;}
+  .quote-block{text-align:center;padding:32px 24px;margin:28px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .quote-text{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:600;color:#fff;line-height:1.4;margin-bottom:8px;letter-spacing:0.3px;}
+  .quote-author{font-size:13px;color:var(--green);}
+  .sec-intro-card{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:32px;}
+  .sic-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:14px;background:rgba(0,210,122,0.12);color:var(--green);}
+  .sec-intro-card h2{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:#fff;margin-bottom:12px;}
+  .sec-intro-card p{font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:10px;}
+  .topics-wrap{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .topic-pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:12px;color:var(--muted);}
+  .cs-wrap{text-align:center;padding:60px 24px;}
+  .cs-icon{font-size:48px;margin-bottom:16px;opacity:0.25;}
+  .cs-wrap h3{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:#fff;margin-bottom:8px;}
+  .cs-wrap p{font-size:14px;color:var(--muted);}
+  .lesson-nav{display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid var(--border);margin-top:24px;}
+  .nav-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 22px;font-size:14px;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;transition:border-color 0.2s,color 0.2s;}
+  .nav-btn:hover{border-color:var(--green);color:var(--green);}
+  .nav-btn.primary{background:var(--green);color:#0a0c10;border-color:var(--green);font-weight:700;}
+  .nav-btn.primary:hover{background:#00e888;}
+  .nav-btn:disabled{opacity:0.3;cursor:not-allowed;pointer-events:none;}
+
+
+
+  .ai-fab{position:fixed;bottom:28px;right:28px;background:var(--green);color:#0a0c10;border:none;border-radius:50px;padding:13px 20px;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;display:flex;align-items:center;gap:7px;box-shadow:0 4px 20px rgba(0,210,122,0.25);transition:transform 0.2s;z-index:200;}
+  .ai-fab:hover{transform:translateY(-2px);}
+  .ai-panel{position:fixed;bottom:85px;right:28px;width:350px;background:var(--card);border:1px solid var(--border);border-radius:16px;display:none;flex-direction:column;z-index:200;overflow:hidden;}
+  .ai-panel.open{display:flex;}
+  .ai-ph{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+  .ai-pt{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;color:#fff;display:flex;align-items:center;gap:7px;}
+  .ai-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .ai-x{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;}
+  .ai-msgs{height:260px;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+  .ai-msgs::-webkit-scrollbar{width:3px;}
+  .ai-msgs::-webkit-scrollbar-thumb{background:var(--border);}
+  .ai-msg{max-width:85%;padding:9px 13px;border-radius:10px;font-size:13px;line-height:1.6;}
+  .ai-msg.bot{background:var(--card2);color:var(--text);align-self:flex-start;}
+  .ai-msg.user{background:var(--green);color:#0a0c10;align-self:flex-end;font-weight:500;}
+  .ai-iw{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:7px;}
+  .ai-in{flex:1;background:var(--dark);border:1px solid var(--border);border-radius:7px;padding:9px 12px;color:var(--text);font-size:13px;font-family:'DM Sans',sans-serif;outline:none;}
+  .ai-in:focus{border-color:var(--green);}
+  .ai-send{background:var(--green);color:#0a0c10;border:none;border-radius:7px;padding:9px 13px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  @media(max-width:768px){.sidebar{display:none;}.main{padding:24px 16px;}.progress-ring{display:none;}}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">TOP <span>STOCK</span> TRADING</div>
+    <div class="login-subtitle">TST Academy — Members Area</div>
+    <h2>SIGN IN</h2>
+    <div class="input-group"><label>Email</label><input type="email" id="le" placeholder="you@email.com"></div>
+    <div class="input-group"><label>Password</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="login-btn" onclick="doLogin()">Access My Course</button>
+    <div class="login-error" id="lerr">Incorrect email or password.</div>
+  </div>
+</div>
+
+<nav class="top-nav">
+  <div class="nav-logo">TOP <span>STOCK</span> TRADING</div>
+  <div class="nav-right">
+    <div class="nav-welcome">Welcome back, <span id="sname">Trader</span></div>
+    <button class="logout-btn" onclick="doLogout()">Log Out</button>
+  </div>
+</nav>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="progress-wrap">
+      <div class="progress-label">Course progress <span id="ppct">0%</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="pfill" style="width:0%"></div></div>
+    </div>
+    <div id="snav"></div>
+  </aside>
+  <main class="main" id="mc"></main>
+</div>
+
+
+
+<button class="ai-fab" onclick="toggleChat()">🤖 Ask TST AI</button>
+<div class="ai-panel" id="aip">
+  <div class="ai-ph">
+    <div class="ai-pt"><div class="ai-dot"></div> TST AI Assistant</div>
+    <button class="ai-x" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="ai-msgs" id="aimsg">
+    <div class="ai-msg bot">Hey! Ask me anything about trading, chart patterns, strategies, or course material.</div>
+  </div>
+  <div class="ai-iw">
+    <input class="ai-in" id="aiin" placeholder="Ask a trading question..." onkeydown="if(event.key==='Enter')sendAI()">
+    <button class="ai-send" onclick="sendAI()">Send</button>
+  </div>
+</div>
+
+<script>
+const DEMO={email:'student@topstocktrading.com',password:'tst2024',name:'Trader'};
+
+const COURSE=[
+  {id:'beginner',label:'Beginner',badge:'beginner',modules:[
+    {id:'b-pillars',name:'The 3 Pillars of Trading'},
+    {id:'b-types',name:'Types of Traders'},
+    {id:'b-hours',name:'Market Hours'},
+    {id:'b1',name:'Candlesticks',subs:['What Are Candlesticks','Bullish Patterns','Bearish Patterns','Doji & Indecision Candles']},
+    {id:'b2',name:'Volume',subs:['Why Volume Matters','Volume Signals','Volume & Price Action']},
+    {id:'b3',name:'Support & Resistance / Key Levels',subs:['What Is Support & Resistance','Identifying Key Levels','How Price Reacts to Levels']},
+    {id:'b4',name:'Market Structure',subs:['Higher Highs & Higher Lows','Lower Highs & Lower Lows','Range Bound Markets']},
+    {id:'b5',name:'Trendlines',subs:['Drawing Trendlines','Trendline Breaks','Channel Trading']},
+    {id:'b6',name:'Chart Patterns',subs:['Flags & Pennants','Triangles','Head & Shoulders','Double Tops & Bottoms','Cups & Handles']},
+    {id:'b7',name:'Consolidations',subs:['What Is Consolidation','Trading Inside Consolidation','Breakouts From Consolidation']},
+    {id:'b8',name:'Gaps',subs:['Types of Gaps','Gap Fills','Trading Gaps']},
+    {id:'b9',name:'Level 2 & Tape',subs:['Reading Level 2','Reading the Tape','Spotting Buyers & Sellers']},
+    {id:'b10',name:'Indicators',subs:['How to Properly Use Indicators','Moving Averages','RSI','MACD','VWAP']},
+    {id:'b11',name:'Cash vs Margin',subs:['Cash Account Rules','Margin Account Rules','PDT Rule Explained']},
+    {id:'b12',name:'Long vs Short',subs:['Going Long','Going Short','Short Selling Mechanics']},
+    {id:'b13',name:'Order Types',subs:['Market Orders','Limit Orders','Stop Orders','Stop Limit Orders']},
+    {id:'b14',name:'Journaling',subs:['Why Journaling Matters','What to Track','Reviewing Your Journal']},
+  ]},
+  {id:'intermediate',label:'Intermediate',badge:'intermediate',modules:[
+    {id:'n1',name:'Stock Personalities & Behavior'},
+    {id:'n2',name:'Timeframes'},
+    {id:'n3',name:'Best Times of Day to Trade'},
+    {id:'n4',name:'What Stocks to Trade'},
+    {id:'n5',name:'Scanning for Stocks'},
+    {id:'n6',name:'Setting Up Alerts'},
+    {id:'n7',name:'Buying',subs:['Dip Buys','Breakouts & Breakdowns','Scaling Into a Position']},
+    {id:'n8',name:'Selling',subs:['Scaling Out','Selling Into Key Levels','Whole Numbers as Targets']},
+    {id:'n9',name:'VIX & How to Use It'},
+    {id:'n10',name:'Building a Watchlist & Daily Plan'},
+  ]},
+  {id:'advanced',label:'Advanced',badge:'advanced',modules:[
+    {id:'a1',name:'Small Cap Trading',subs:['Sizing for Small Caps','Short Squeezes','Float & Why It Matters','News Catalysts']},
+    {id:'a2',name:'Swing Trading',subs:['Breakout Swings','Earnings Plays','IBS Plays','News-Driven Swings','Momentum Names']},
+    {id:'a3',name:'Long Term Investing'},
+    {id:'a4',name:'Pre-Market Prep'},
+    {id:'a5',name:'Building Your Playbook',subs:['Your Rules','Your Setups','Risk/Reward Framework','Days to Trade & Not Trade','Sizing Up & Down']},
+    {id:'a6',name:'TST Price Action Notes',subs:['Kill Candles','Fake 2nd Higher Lows','Stop Loss Hunts','Trapped Shorts','Weak Second Legs = Reversal','Staircase Up Elevator Down','Repeated vs Slow Resistance Attacks','Slow Walk Downs on Options','Accumulation vs Distribution','Gap Holds & Power Hour']},
+    {id:'a7',name:'Advanced Concepts',subs:['Best Trades Rarely Full Size','Pyramiding Winners','Mean Reversion & EV','Exhaustion Signals','Washout Longs']},
+  ]},
+  {id:'options',label:'Options',badge:'options',modules:[
+    {id:'o1',name:'Intro to Options'},
+    {id:'o2',name:'Strike Prices'},
+    {id:'o3',name:'The Greeks Explained',subs:['Delta','Gamma','Theta','Vega']},
+    {id:'o4',name:'Volatility (IV & HV)'},
+    {id:'o5',name:'LEAPs'},
+    {id:'o6',name:'Position Sizing for Options'},
+    {id:'o7',name:'Dates & Expiration'},
+  ]},
+  {id:'psychology',label:'Psychology',badge:'psychology',modules:[
+    {id:'p1',name:'Psychology & Overtrading'},
+    {id:'p2',name:'Base Hits Over Home Runs'},
+    {id:'p3',name:'The Playbook Mindset'},
+  ]},
+  {id:'finale',label:'Grand Finale',badge:'finale',modules:[
+    {id:'f1',name:'Full Day Trading Simulation'},
+  ]},
+];
+
+const INTROS={
+  'beginner':{desc:"Build your complete technical foundation. From candlesticks to indicators — everything you need to read a chart and understand how price moves.",topics:['3 Pillars of Trading','Types of Traders','Market Hours','Candlesticks','Volume','Support & Resistance','Market Structure','Trendlines','Chart Patterns','Consolidations','Gaps','Level 2 & Tape','Indicators','Cash vs Margin','Long vs Short','Order Types','Journaling']},
+  'intermediate':{desc:"Put your knowledge to work. Learn how and when to enter trades, manage them, and build a daily routine that sets you up for consistency.",topics:['Stock Personalities','Timeframes','Best Times of Day','What Stocks to Trade','Scanning','Alerts','Buying','Selling','VIX','Watchlist Building']},
+  'advanced':{desc:"Where everything comes together. Real price action observations, specific trading styles, and how to build a personalized playbook you actually follow.",topics:['Small Cap Trading','Swing Trading','Long Term Investing','Pre-Market Prep','Your Playbook','TST Price Action Notes','Advanced Concepts']},
+  'options':{desc:"Options are the most powerful and most misunderstood tool in trading. We break them down from the ground up — no confusion, no guessing.",topics:['Intro to Options','Strike Prices','The Greeks','Volatility','LEAPs','Position Sizing','Dates & Expiration']},
+  'psychology':{desc:"The market is not just a technical game. This section covers the psychological edge that separates consistently profitable traders from everyone else.",topics:['Psychology & Overtrading','Base Hits Over Home Runs','The Playbook Mindset']},
+  'finale':{desc:"The graduation test. A full simulated trading day — watchlist selection, position management, risk control, entries and exits. Prove you're ready.",topics:['Full Day Trading Simulation']},
+};
+
+const QUOTES=[
+  {t:"The goal of a successful trader is to make the best trades. Money is secondary.",a:"Alexander Elder"},
+  {t:"It's not whether you're right or wrong, but how much you make when you're right and how much you lose when you're wrong.",a:"George Soros"},
+  {t:"In trading, the money you don't lose is just as important as the money you make.",a:"TST Academy"},
+  {t:"The stock market is a device for transferring money from the impatient to the patient.",a:"Warren Buffett"},
+  {t:"The best traders have no ego. You have to swallow your pride and get out of the losses.",a:"Tom Baldwin"},
+  {t:"Base hits win championships. Stop swinging for home runs.",a:"TST Academy"},
+];
+
+let cur='beginner',done=new Set(),openSecs=new Set(['beginner']),openMods=new Set();
+
+function doLogin(){
+  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value.trim();
+  if(e===DEMO.email&&p===DEMO.password){
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('sname').textContent=DEMO.name;
+    buildSidebar();loadLesson('beginner');
+  } else { document.getElementById('lerr').style.display='block'; }
+}
+function doLogout(){document.getElementById('login-screen').style.display='flex';document.getElementById('le').value='';document.getElementById('lp').value='';}
+
+function allLessons(){
+  const all=[];
+  COURSE.forEach(sec=>{
+    all.push({id:sec.id,title:sec.label,sec:sec.label,secId:sec.id,isSecIntro:true});
+    sec.modules.forEach(mod=>{
+      if(mod.subs) mod.subs.forEach((s,si)=>all.push({id:`${mod.id}-${si}`,title:s,sec:sec.label,secId:sec.id,parentId:mod.id}));
+      else all.push({id:mod.id,title:mod.name,sec:sec.label,secId:sec.id});
+    });
+  });
+  return all;
+}
+
+function updateProgress(){
+  const al=allLessons();
+  const total=al.filter(l=>!l.isSecIntro).length;
+  const pct=total?Math.round((done.size/total)*100):0;
+  document.getElementById('ppct').textContent=pct+'%';
+  document.getElementById('pfill').style.width=pct+'%';
+}
+
+const SVG_EMPTY=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="7" cy="7" r="6" stroke="#3a4455" stroke-width="1.5"/></svg>`;
+const SVG_DONE=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="7" cy="7" r="6" stroke="#00d27a" stroke-width="1.5"/><polyline points="4,7 6,9.5 10,4.5" stroke="#00d27a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+function buildSidebar(){
+  const nav=document.getElementById('snav');nav.innerHTML='';
+  updateProgress();
+  COURSE.forEach(sec=>{
+    const isOpen=openSecs.has(sec.id);
+    const isSecActive=cur===sec.id;
+    let mHTML='';
+    sec.modules.forEach(mod=>{
+      if(mod.subs){
+        const mo=openMods.has(mod.id);
+        const sHTML=mod.subs.map((s,si)=>{
+          const lid=`${mod.id}-${si}`;
+          return `<div class="sub-item ${cur===lid?'active':''} ${done.has(lid)?'done':''}" onclick="loadLesson('${lid}')">${done.has(lid)?SVG_DONE:SVG_EMPTY}${s}</div>`;
+        }).join('');
+        mHTML+=`<div class="mod-header ${mo?'open':''}" onclick="toggleMod('${mod.id}')"><span class="mod-name">${mod.name}</span><span class="mod-arrow">▶</span></div><div class="sub-list ${mo?'open':''}">${sHTML}</div>`;
+      } else {
+        mHTML+=`<div class="dir-item ${cur===mod.id?'active':''} ${done.has(mod.id)?'done':''}" onclick="loadLesson('${mod.id}')">${done.has(mod.id)?SVG_DONE:SVG_EMPTY}${mod.name}</div>`;
+      }
+    });
+    const d=document.createElement('div');d.className='sec-group';
+    d.innerHTML=`<div class="sec-header ${isOpen?'open':''} ${isSecActive?'active':''}" onclick="toggleSec('${sec.id}')"><span class="sec-badge">${sec.badge}</span><span class="sec-name">${sec.label}</span><span class="sec-arrow">▶</span></div><div class="sec-lessons ${isOpen?'open':''}">${mHTML}</div>`;
+    nav.appendChild(d);
+  });
+}
+
+function toggleSec(id){
+  loadLesson(id);
+  if(openSecs.has(id))openSecs.delete(id);else openSecs.add(id);
+  buildSidebar();
+}
+function toggleMod(id){if(openMods.has(id))openMods.delete(id);else openMods.add(id);buildSidebar();}
+
+function rq(){const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];return `<div class="quote-block"><div class="quote-text">"${q.t}"</div><div class="quote-author">— ${q.a}</div></div>`;}
+
+function loadLesson(id){
+  cur=id;
+  const al=allLessons();
+  const idx=al.findIndex(l=>l.id===id);
+  const lesson=al[idx],prev=al[idx-1],next=al[idx+1];
+  let html='';
+
+  if(INTROS[id]){
+    const I=INTROS[id];
+    const sec=COURSE.find(s=>s.id===id);
+    html=`<div class="sec-intro-card"><span class="sic-badge">${sec?sec.label:id}</span><h2>${(sec?sec.label:id).toUpperCase()}</h2><p>${I.desc}</p><div class="topics-wrap">${I.topics.map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div></div>${rq()}`;
+  } else {
+    const title=lesson?lesson.title:id;
+    const secLabel=lesson?lesson.sec:'';
+    html=`<div class="lesson-tag">${secLabel}</div><div class="lesson-title">${title.toUpperCase()}</div><div class="lesson-meta"><span>📖 Written lesson</span><span>🎬 Video included</span></div><div class="video-wrap"><div class="vid-ph"><div class="vid-icon">▶</div><p>Video coming soon</p></div></div><div class="lc"><div class="cs-wrap"><div class="cs-icon">📝</div><h3>COMING SOON</h3><p>This lesson is being prepared. Check back after launch!</p></div></div>`;
+  }
+
+  const isIntro=INTROS[id]!==undefined;
+  html+=`<div class="lesson-nav"><button class="nav-btn" onclick="loadLesson('${prev?prev.id:''}')" ${!prev?'disabled':''}>← Previous</button><button class="nav-btn primary" onclick="completeNext('${id}','${next?next.id:''}',${ isIntro})">${next?(isIntro?'Start Section →':'Mark Complete & Next →'):'Complete Course ✓'}</button></div>`;
+
+  document.getElementById('mc').innerHTML=html;
+  window.scrollTo(0,0);
+  buildSidebar();
+}
+
+function completeNext(id,nid,isIntro){
+  if(!isIntro)done.add(id);
+  if(nid)loadLesson(nid);
+  else buildSidebar();
+  updateProgress();
+}
+
+function toggleChat(){document.getElementById('aip').classList.toggle('open');}
+
+async function sendAI(){
+  const inp=document.getElementById('aiin'),msg=inp.value.trim();if(!msg)return;inp.value='';
+  addMsg(msg,'user');addMsg('Thinking...','bot','thinking-msg');
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are the TST Academy AI assistant for Top Stock Trading. Help students understand trading concepts clearly and concisely. Be educational, beginner-friendly, and direct. Never give specific buy/sell advice on real stocks.',messages:[{role:'user',content:msg}]})});
+    const d=await r.json();
+    document.getElementById('thinking-msg')?.remove();
+    addMsg(d.content[0].text,'bot');
+  }catch(e){document.getElementById('thinking-msg')?.remove();addMsg('Connection error. Try again.','bot');}
+}
+
+function addMsg(text,type,id){
+  const msgs=document.getElementById('aimsg'),div=document.createElement('div');
+  div.className=`ai-msg ${type}`;if(id)div.id=id;div.textContent=text;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+}
+</script>
+</body>
+</html>
