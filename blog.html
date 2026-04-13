@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog | TST Academy – Top Stock Trading</title>
+<meta name="description" content="Trading insights, market analysis, and education from TST Academy. No fluff, no hype — just real knowledge to make you a better trader.">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --green:#00d27a;--green-dark:#00a85f;--blue:#00a8ff;--dark:#0a0c10;--card:#12151c;--border:#1e2330;--text:#e8eaf0;--muted:#6b7280; }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.6;overflow-x:hidden;}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(10,12,16,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:#fff;text-decoration:none;}
+  .nav-logo span{color:var(--green);}
+  .nav-links{display:flex;gap:32px;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:14px;font-weight:500;letter-spacing:0.5px;transition:color 0.2s;}
+  .nav-links a:hover{color:var(--green);}
+  .nav-cta{background:var(--green);color:#0a0c10;padding:10px 22px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;transition:background 0.2s;}
+  .nav-cta:hover{background:#00e888;}
+
+  .blog-hero{padding:140px 24px 64px;text-align:center;position:relative;overflow:hidden;}
+  .blog-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,rgba(0,210,122,0.08) 0%,transparent 60%);}
+  .blog-hero-inner{position:relative;z-index:1;max-width:640px;margin:0 auto;}
+  .blog-tag{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--green);font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:16px;}
+  .blog-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,7vw,80px);letter-spacing:3px;color:#fff;line-height:1;margin-bottom:16px;}
+  .blog-title span{color:var(--green);}
+  .blog-sub{font-size:17px;color:var(--muted);line-height:1.7;max-width:520px;margin:0 auto;}
+
+  .blog-body{max-width:1100px;margin:0 auto;padding:64px 24px 100px;}
+
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:48px;}
+  .filter-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:8px 18px;font-size:13px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s;}
+  .filter-btn:hover{border-color:var(--green);color:var(--green);}
+  .filter-btn.active{background:var(--green);color:#0a0c10;border-color:var(--green);font-weight:600;}
+
+  .featured-post{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;margin-bottom:48px;display:grid;grid-template-columns:1fr 1fr;transition:border-color 0.2s,transform 0.2s;}
+  .featured-post:hover{border-color:rgba(0,210,122,0.3);transform:translateY(-3px);}
+  .featured-img{background:linear-gradient(135deg,#0d1a12,#0a1219);min-height:280px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .featured-img::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(0,210,122,0.15) 0%,transparent 60%);}
+  .featured-img-icon{font-family:'Bebas Neue',sans-serif;font-size:80px;letter-spacing:4px;color:rgba(0,210,122,0.12);position:relative;z-index:1;}
+  .featured-content{padding:44px 40px;display:flex;flex-direction:column;justify-content:center;}
+  .post-badge{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:16px;}
+  .badge-market{background:rgba(0,210,122,0.1);color:var(--green);}
+  .badge-education{background:rgba(0,168,255,0.1);color:var(--blue);}
+  .badge-strategy{background:rgba(245,158,11,0.1);color:#f59e0b;}
+  .badge-psychology{background:rgba(168,85,247,0.1);color:#a855f7;}
+  .featured-badge{background:rgba(0,210,122,0.15);color:var(--green);}
+  .post-title-link{text-decoration:none;}
+  .post-card-title{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1.5px;color:#fff;line-height:1.1;margin-bottom:12px;transition:color 0.2s;}
+  .post-title-link:hover .post-card-title{color:var(--green);}
+  .post-excerpt{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:20px;}
+  .post-meta-row{display:flex;gap:16px;font-size:12px;color:var(--muted);align-items:center;flex-wrap:wrap;}
+  .post-date{color:var(--muted);}
+  .post-read-time{color:var(--muted);}
+  .read-more{font-size:13px;color:var(--green);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-top:20px;transition:gap 0.2s;}
+  .read-more:hover{gap:10px;}
+
+  .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;}
+  .post-card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:border-color 0.2s,transform 0.2s;display:flex;flex-direction:column;}
+  .post-card:hover{border-color:rgba(0,210,122,0.25);transform:translateY(-4px);}
+  .post-card-img{height:140px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+  .post-card-img.market{background:linear-gradient(135deg,#0d1a12,#0a0c10);}
+  .post-card-img.education{background:linear-gradient(135deg,#0a1219,#0a0c10);}
+  .post-card-img.strategy{background:linear-gradient(135deg,#1a140a,#0a0c10);}
+  .post-card-img.psychology{background:linear-gradient(135deg,#14091a,#0a0c10);}
+  .post-card-img-text{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:3px;opacity:0.1;color:#fff;}
+  .post-card-body{padding:24px;flex:1;display:flex;flex-direction:column;}
+  .post-card-title-sm{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:#fff;line-height:1.15;margin:10px 0 8px;transition:color 0.2s;}
+  .post-title-link:hover .post-card-title-sm{color:var(--green);}
+  .post-card-excerpt{font-size:14px;color:var(--muted);line-height:1.65;flex:1;margin-bottom:16px;}
+  .post-card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:14px;border-top:1px solid var(--border);}
+  .post-card-date{font-size:11px;color:var(--muted);}
+  .post-card-read{font-size:11px;color:var(--green);font-weight:600;}
+
+  .coming-soon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:48px;}
+  .cs-card{background:rgba(255,255,255,0.02);border:1px dashed rgba(255,255,255,0.08);border-radius:14px;padding:24px;opacity:0.5;}
+  .cs-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--muted);margin-bottom:6px;}
+  .cs-tag{font-size:11px;color:var(--muted);}
+
+  .section-divider{display:flex;align-items:center;gap:16px;margin:56px 0 32px;}
+  .divider-label{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#fff;white-space:nowrap;}
+  .divider-line{flex:1;height:1px;background:var(--border);}
+
+  .newsletter-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px;text-align:center;margin-top:80px;}
+  .newsletter-box h2{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:#fff;margin-bottom:10px;}
+  .newsletter-box p{font-size:16px;color:var(--muted);margin-bottom:28px;max-width:440px;margin-left:auto;margin-right:auto;}
+  .newsletter-form{display:flex;gap:10px;max-width:420px;margin:0 auto;flex-wrap:wrap;justify-content:center;}
+  .newsletter-input{flex:1;min-width:220px;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:13px 16px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;}
+  .newsletter-input:focus{border-color:var(--green);}
+  .newsletter-btn{background:var(--green);color:#0a0c10;border:none;border-radius:8px;padding:13px 24px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.2s;white-space:nowrap;}
+  .newsletter-btn:hover{background:#00e888;}
+  .newsletter-disclaimer{font-size:12px;color:var(--muted);margin-top:12px;}
+
+  footer{background:#070810;border-top:1px solid var(--border);padding:40px 24px;text-align:center;}
+  .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:#fff;margin-bottom:12px;}
+  .footer-logo span{color:var(--green);}
+  .footer-links{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-bottom:20px;}
+  .footer-links a{color:var(--muted);text-decoration:none;font-size:13px;transition:color 0.2s;}
+  .footer-links a:hover{color:var(--green);}
+  .footer-copy{font-size:12px;color:#334;}
+  .disclaimer{font-size:11px;color:#334;max-width:600px;margin:12px auto 0;line-height:1.6;}
+
+  @media(max-width:768px){
+    nav{padding:16px 20px;}
+    .nav-links{display:none;}
+    .featured-post{grid-template-columns:1fr;}
+    .featured-img{min-height:160px;}
+    .featured-content{padding:28px 24px;}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">TOP <span>STOCK</span> TRADING</a>
+  <div class="nav-links">
+    <a href="index.html#how-it-works">How It Works</a>
+    <a href="index.html#courses">Courses</a>
+    <a href="index.html#alerts">SMS Alerts</a>
+    <a href="blog.html">Blog</a>
+  </div>
+  <a href="index.html#courses" class="nav-cta">Get Started</a>
+</nav>
+
+<div class="blog-hero">
+  <div class="blog-hero-inner">
+    <div class="blog-tag">TST Academy</div>
+    <h1 class="blog-title">THE <span>TST</span> BLOG</h1>
+    <p class="blog-sub">No fluff. No hype. No fake gurus. Just real market analysis, trading education, and the kind of knowledge that actually makes you better.</p>
+  </div>
+</div>
+
+<div class="blog-body">
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterPosts('all', this)">All Posts</button>
+    <button class="filter-btn" onclick="filterPosts('market', this)">Market Analysis</button>
+    <button class="filter-btn" onclick="filterPosts('education', this)">Education</button>
+    <button class="filter-btn" onclick="filterPosts('strategy', this)">Strategy</button>
+    <button class="filter-btn" onclick="filterPosts('psychology', this)">Psychology</button>
+  </div>
+
+  <!-- FEATURED POST -->
+  <div class="featured-post" data-category="market" id="featured">
+    <div class="featured-img">
+      <div class="featured-img-icon">OIL</div>
+    </div>
+    <div class="featured-content">
+      <span class="post-badge badge-market">Market Analysis</span>
+      <a href="blog-iran-oil.html" class="post-title-link">
+        <div class="post-card-title">What the Iran War and Oil Prices Actually Mean for Your Portfolio</div>
+      </a>
+      <p class="post-excerpt">War in the Middle East, oil above $100, gas at $4 a gallon. The market is volatile and headlines are moving prices by the minute. Here's what it actually means for traders — and how to position yourself without getting chopped up by the noise.</p>
+      <div class="post-meta-row">
+        <span class="post-date">April 10, 2026</span>
+        <span>·</span>
+        <span class="post-read-time">8 min read</span>
+      </div>
+      <a href="blog-iran-oil.html" class="read-more">Read Article →</a>
+    </div>
+  </div>
+
+  <!-- POSTS GRID -->
+  <div class="posts-grid" id="posts-grid">
+
+    <div class="post-card" data-category="market">
+      <div class="post-card-img market">
+        <div class="post-card-img-text">AI</div>
+      </div>
+      <div class="post-card-body">
+        <span class="post-badge badge-market">Market Analysis</span>
+        <a href="blog-ai-bubble.html" class="post-title-link">
+          <div class="post-card-title-sm">The AI Trade Isn't a Bubble — Here's Why the Skeptics Keep Getting It Wrong</div>
+        </a>
+        <p class="post-card-excerpt">People have been calling AI a bubble for two years. The spending keeps accelerating. Here's what's actually happening and what it means for traders and long term investors right now.</p>
+        <div class="post-card-footer">
+          <span class="post-card-date">April 10, 2026</span>
+          <span class="post-card-read">9 min read</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLACEHOLDER CARDS — ready for future posts -->
+    <div class="post-card" data-category="education" style="opacity:0.4;pointer-events:none;">
+      <div class="post-card-img education">
+        <div class="post-card-img-text">EDU</div>
+      </div>
+      <div class="post-card-body">
+        <span class="post-badge badge-education">Education</span>
+        <div class="post-card-title-sm" style="color:var(--muted);">How to Read a Bull Flag Pattern — With Real Examples</div>
+        <p class="post-card-excerpt">Coming soon.</p>
+        <div class="post-card-footer">
+          <span class="post-card-date">Coming soon</span>
+          <span class="post-card-read">— min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card" data-category="strategy" style="opacity:0.4;pointer-events:none;">
+      <div class="post-card-img strategy">
+        <div class="post-card-img-text">RR</div>
+      </div>
+      <div class="post-card-body">
+        <span class="post-badge badge-strategy">Strategy</span>
+        <div class="post-card-title-sm" style="color:var(--muted);">Why Risk/Reward Is the Only Stat That Actually Matters</div>
+        <p class="post-card-excerpt">Coming soon.</p>
+        <div class="post-card-footer">
+          <span class="post-card-date">Coming soon</span>
+          <span class="post-card-read">— min read</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-card" data-category="psychology" style="opacity:0.4;pointer-events:none;">
+      <div class="post-card-img psychology">
+        <div class="post-card-img-text">PSY</div>
+      </div>
+      <div class="post-card-body">
+        <span class="post-badge badge-psychology">Psychology</span>
+        <div class="post-card-title-sm" style="color:var(--muted);">Overtrading Is Killing Your Account — Here's How to Stop</div>
+        <p class="post-card-excerpt">Coming soon.</p>
+        <div class="post-card-footer">
+          <span class="post-card-date">Coming soon</span>
+          <span class="post-card-read">— min read</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NEWSLETTER -->
+  <div class="newsletter-box">
+    <h2>GET THE WEEKLY MARKET BREAKDOWN</h2>
+    <p>Every week — what moved, why it moved, and what to watch next. No spam. Just signal.</p>
+    <div class="newsletter-form">
+      <input type="email" class="newsletter-input" placeholder="your@email.com">
+      <button class="newsletter-btn">Subscribe</button>
+    </div>
+    <p class="newsletter-disclaimer">Free. Unsubscribe any time.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-logo">TOP <span>STOCK</span> TRADING</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#courses">Courses</a>
+    <a href="index.html#alerts">Alerts</a>
+    <a href="blog.html">Blog</a>
+    <a href="#">Privacy Policy</a>
+    <a href="#">Terms of Service</a>
+  </div>
+  <div class="footer-copy">© 2026 Top Stock Trading · topstocktrading.com · All rights reserved.</div>
+  <p class="disclaimer">Trading involves substantial risk of loss and is not appropriate for all investors. Past performance is not indicative of future results. All content is for educational purposes only and does not constitute financial advice.</p>
+</footer>
+
+<script>
+function filterPosts(category, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const featured = document.getElementById('featured');
+  const cards = document.querySelectorAll('#posts-grid .post-card');
+  if (category === 'all') {
+    featured.style.display = 'grid';
+    cards.forEach(c => c.style.display = 'flex');
+  } else {
+    featured.style.display = featured.dataset.category === category ? 'grid' : 'none';
+    cards.forEach(c => c.style.display = c.dataset.category === category ? 'flex' : 'none');
+  }
+}
+</script>
+
+</body>
+</html>
