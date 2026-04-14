@@ -161,6 +161,7 @@
   <div class="nav-logo">TOP <span>STOCK</span> TRADING</div>
   <div class="nav-right">
     <div class="nav-welcome">Welcome back, <span id="sname">Trader</span></div>
+    <button class="nav-btn" style="font-size:12px;padding:6px 14px;border-radius:6px;" onclick="showProfileDashboard()">My Profile</button>
     <button class="logout-btn" onclick="doLogout()">Log Out</button>
   </div>
 </nav>
@@ -210,10 +211,10 @@ const COURSE=[
     {id:'b7',name:'Consolidations',subs:['What Is Consolidation','Trading Inside Consolidation','Breakouts From Consolidation']},
     {id:'b8',name:'Gaps',subs:['Types of Gaps','Gap Fills','Trading Gaps']},
     {id:'b9',name:'Level 2 & Tape',subs:['Reading Level 2','Reading the Tape','Spotting Buyers & Sellers']},
-    {id:'b10',name:'Indicators',subs:['How to Properly Use Indicators','Moving Averages','RSI','MACD','VWAP']},
+    {id:'b10',name:'Indicators',subs:['How to Properly Use Indicators','Moving Averages','RSI','MACD','VWAP','Volume Profile','Fibonacci Retracement']},
     {id:'b11',name:'Cash vs Margin',subs:['Cash Account Rules','Margin Account Rules','PDT Rule Explained']},
     {id:'b12',name:'Long vs Short',subs:['Going Long','Going Short','Short Selling Mechanics']},
-    {id:'b13',name:'Order Types',subs:['Market Orders','Limit Orders','Stop Orders','Stop Limit Orders']},
+    {id:'b13',name:'Order Types',subs:['Market Orders','Limit Orders','Stop Orders','Stop Limit Orders','Trailing Stops']},
     {id:'b14',name:'Journaling',subs:['Why Journaling Matters','What to Track','Reviewing Your Journal']},
   ]},
   {id:'intermediate',label:'Intermediate',badge:'intermediate',modules:[
@@ -234,7 +235,7 @@ const COURSE=[
     {id:'a3',name:'Long Term Investing'},
     {id:'a4',name:'Pre-Market Prep'},
     {id:'a5',name:'Building Your Playbook',subs:['Your Rules','Your Setups','Risk/Reward Framework','Days to Trade & Not Trade','Sizing Up & Down']},
-    {id:'a6',name:'TST Price Action Notes',subs:['Kill Candles','Fake 2nd Higher Lows','Stop Loss Hunts','Trapped Shorts','Weak Second Legs = Reversal','Staircase Up Elevator Down','Repeated vs Slow Resistance Attacks','Slow Walk Downs on Options','Accumulation vs Distribution','Gap Holds & Power Hour']},
+    {id:'a6',name:'TST Price Action Notes',subs:['Kill Candles','Fake 2nd Higher Lows','Stop Loss Hunts','Trapped Shorts','Weak Second Legs = Reversal','Staircase Up Elevator Down','Repeated vs Slow Resistance Attacks','Slow Walk Downs on Options','Accumulation vs Distribution','Gap Holds & Power Hour','Liquidity Sweeps']},
     {id:'a7',name:'Advanced Concepts',subs:['Best Trades Rarely Full Size','Pyramiding Winners','Mean Reversion & EV','Exhaustion Signals','Washout Longs']},
   ]},
   {id:'options',label:'Options',badge:'options',modules:[
@@ -257,7 +258,7 @@ const COURSE=[
 ];
 
 const INTROS={
-  'beginner':{desc:"Build your complete technical foundation. From candlesticks to indicators — everything you need to read a chart and understand how price moves.",topics:['3 Pillars of Trading','Types of Traders','Market Hours','Candlesticks','Volume','Support & Resistance','Market Structure','Trendlines','Chart Patterns','Consolidations','Gaps','Level 2 & Tape','Indicators','Cash vs Margin','Long vs Short','Order Types','Journaling']},
+  'beginner':{desc:"A professional trading curriculum unlike anything else available. Built from the ground up with interactive chart simulations, real buy & sell decision quizzes, and a Grand Finale — a full simulated trading day before you graduate. Every concept is reinforced through doing, not just watching.",topics:['3 Pillars of Trading','Types of Traders','Market Hours','Candlesticks','Volume','Support & Resistance','Market Structure','Trendlines','Chart Patterns','Consolidations','Gaps','Level 2 & Tape','Indicators','Cash vs Margin','Long vs Short','Order Types','Journaling']},
   'intermediate':{desc:"Put your knowledge to work. Learn how and when to enter trades, manage them, and build a daily routine that sets you up for consistency.",topics:['Stock Personalities','Timeframes','Best Times of Day','What Stocks to Trade','Scanning','Alerts','Buying','Selling','VIX','Watchlist Building']},
   'advanced':{desc:"Where everything comes together. Real price action observations, specific trading styles, and how to build a personalized playbook you actually follow.",topics:['Small Cap Trading','Swing Trading','Long Term Investing','Pre-Market Prep','Your Playbook','TST Price Action Notes','Advanced Concepts']},
   'options':{desc:"Options are the most powerful and most misunderstood tool in trading. We break them down from the ground up — no confusion, no guessing.",topics:['Intro to Options','Strike Prices','The Greeks','Volatility','LEAPs','Position Sizing','Dates & Expiration']},
@@ -275,6 +276,102 @@ const QUOTES=[
 ];
 
 let cur='beginner',done=new Set(),openSecs=new Set(['beginner']),openMods=new Set();
+
+const BEHAVIOR={student:DEMO.email,quizzes:[],lessonTimes:{},retries:{},flags:[],scores:{breakout:[],dip:[],momentum:[],patience:[],risk:[]},lessonStartTime:null,questionStartTime:null};
+const LESSON_SIGNALS={'b6-0':'breakout','b6-1':'patience','b6-2':'patience','b6-3':'dip','b6-4':'patience','b3-0':'dip','b3-1':'dip','b2-0':'momentum','b2-1':'momentum','n7-0':'dip','n7-1':'breakout','n7-2':'patience','n8-0':'risk','n8-1':'risk','a6-0':'momentum','a6-3':'momentum','a6-4':'patience'};
+
+function trackLessonStart(id){
+  BEHAVIOR.lessonStartTime=Date.now();
+  BEHAVIOR.lessonTimes[id]=BEHAVIOR.lessonTimes[id]||{starts:0,totalTime:0};
+  BEHAVIOR.lessonTimes[id].starts++;
+  if(BEHAVIOR.lessonTimes[id].starts>1){BEHAVIOR.retries[id]=(BEHAVIOR.retries[id]||0)+1;logFlag('revisit','Revisited: '+id);}
+}
+function trackLessonComplete(id){
+  if(!BEHAVIOR.lessonStartTime)return;
+  const elapsed=Math.round((Date.now()-BEHAVIOR.lessonStartTime)/1000);
+  if(BEHAVIOR.lessonTimes[id])BEHAVIOR.lessonTimes[id].totalTime+=elapsed;
+  if(elapsed<15)logFlag('speed','Fast lesson ('+elapsed+'s): '+id);
+  if(elapsed>300)logFlag('thorough','Deep study ('+elapsed+'s): '+id);
+  BEHAVIOR.lessonStartTime=null;
+}
+function trackQuizAnswer(lessonId,qIdx,selected,correct,isCorrect){
+  const elapsed=BEHAVIOR.questionStartTime?Math.round((Date.now()-BEHAVIOR.questionStartTime)/1000):null;
+  BEHAVIOR.questionStartTime=Date.now();
+  const signal=LESSON_SIGNALS[lessonId]||null;
+  BEHAVIOR.quizzes.push({lessonId,qIdx,isCorrect,responseTime:elapsed,signal,ts:Date.now()});
+  if(signal){BEHAVIOR.scores[signal].push(isCorrect?1:0);}
+  if(elapsed&&elapsed<4)logFlag('impulsive','Fast answer ('+elapsed+'s) q'+qIdx+' in '+lessonId);
+  if(elapsed&&elapsed>25)logFlag('deliberate','Deliberate ('+elapsed+'s) q'+qIdx+' in '+lessonId);
+}
+function logFlag(type,note){BEHAVIOR.flags.push({type,note,ts:Date.now()});}
+
+function computeProfile(){
+  const s=BEHAVIOR.scores;
+  const avg=arr=>arr.length?Math.round((arr.filter(x=>x===1).length/arr.length)*100):null;
+  const breakoutAcc=avg(s.breakout),dipAcc=avg(s.dip),momentumAcc=avg(s.momentum),patienceAcc=avg(s.patience),riskAcc=avg(s.risk);
+  const impulsive=BEHAVIOR.flags.filter(f=>f.type==='impulsive').length;
+  const deliberate=BEHAVIOR.flags.filter(f=>f.type==='deliberate').length;
+  let profile='Undetermined',traits=[],warnings=[];
+  if(breakoutAcc!==null&&dipAcc!==null){
+    if(breakoutAcc>dipAcc+15)profile='Momentum Chaser';
+    else if(dipAcc>breakoutAcc+15)profile='Sniper';
+    else if(patienceAcc&&patienceAcc>70)profile='Swing Specialist';
+    else profile='Hybrid';
+  }
+  if(impulsive>deliberate*2){traits.push('Impulsive decision maker');warnings.push('High risk of chasing trades and overtrading');}
+  if(deliberate>impulsive*2){traits.push('Methodical and analytical');traits.push('Natural swing trader tendencies');}
+  if(Object.keys(BEHAVIOR.retries).length>5)traits.push('Highly coachable — revisits material');
+  if(BEHAVIOR.flags.filter(f=>f.type==='speed').length>3)warnings.push('Rushes through lessons — may miss key concepts');
+  if(BEHAVIOR.flags.filter(f=>f.type==='thorough').length>3)traits.push('Deep learner — takes time to absorb material');
+  if(riskAcc!==null&&riskAcc<50)warnings.push('Struggles with risk management concepts — priority area');
+  return{profile,traits,warnings,scores:{breakout:breakoutAcc,dip:dipAcc,momentum:momentumAcc,patience:patienceAcc,risk:riskAcc},totalQuizzes:BEHAVIOR.quizzes.length,impulsiveCount:impulsive,deliberateCount:deliberate};
+}
+
+function showProfileDashboard(){
+  const p=computeProfile();
+  const profileColors={'Momentum Chaser':'#00d27a','Sniper':'#00a8ff','Swing Specialist':'#f59e0b','Hybrid':'#a855f7','Undetermined':'#6b7280'};
+  const color=profileColors[p.profile]||'#6b7280';
+  const scoreBar=(val,label)=>val===null
+    ?`<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;color:#6b7280;margin-bottom:4px;"><span>${label}</span><span>No data yet</span></div><div style="height:4px;background:#1e2330;border-radius:2px;"></div></div>`
+    :`<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;color:#6b7280;margin-bottom:4px;"><span>${label}</span><span style="color:${val>=60?'#00d27a':val>=40?'#f59e0b':'#e05c5c'}">${val}%</span></div><div style="height:4px;background:#1e2330;border-radius:2px;overflow:hidden;"><div style="height:100%;width:${val}%;background:${val>=60?'#00d27a':val>=40?'#f59e0b':'#e05c5c'};border-radius:2px;"></div></div></div>`;
+  document.getElementById('mc').innerHTML=`
+    <div style="margin-bottom:24px;">
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${color};font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:8px;">TST Behavioral Profile</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:#fff;margin-bottom:4px;">YOUR TRADER PROFILE</div>
+      <div style="font-size:13px;color:#6b7280;">Updated automatically as you complete lessons and quizzes</div>
+    </div>
+    <div style="background:#12151c;border:2px solid ${color}44;border-radius:16px;padding:28px;margin-bottom:20px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+        <div style="width:56px;height:56px;border-radius:50%;background:${color}22;border:2px solid ${color};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;color:${color};">${p.profile.charAt(0)}</div>
+        <div><div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:#fff;">${p.profile.toUpperCase()}</div><div style="font-size:13px;color:#6b7280;">${p.totalQuizzes} behavioral data points collected</div></div>
+      </div>
+      ${p.totalQuizzes<10?`<div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:12px 16px;font-size:13px;color:#f59e0b;">Complete more lessons and quizzes to refine your profile. Minimum 10 data points needed for accuracy.</div>`:''}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
+      <div style="background:#12151c;border:1px solid #1e2330;border-radius:12px;padding:20px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;">Accuracy by Category</div>
+        ${scoreBar(p.scores.breakout,'Breakout Patterns')}
+        ${scoreBar(p.scores.dip,'Dip Buy Setups')}
+        ${scoreBar(p.scores.momentum,'Momentum Reading')}
+        ${scoreBar(p.scores.patience,'Patience & Timing')}
+        ${scoreBar(p.scores.risk,'Risk Management')}
+      </div>
+      <div style="background:#12151c;border:1px solid #1e2330;border-radius:12px;padding:20px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;">Behavioral Signals</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1e2330;"><span style="font-size:13px;color:#6b7280;">Impulsive answers</span><span style="font-size:13px;font-weight:500;color:${p.impulsiveCount>5?'#e05c5c':'#00d27a'}">${p.impulsiveCount}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1e2330;"><span style="font-size:13px;color:#6b7280;">Deliberate answers</span><span style="font-size:13px;font-weight:500;color:#00d27a">${p.deliberateCount}</span></div>
+        <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#6b7280;">Lessons revisited</span><span style="font-size:13px;font-weight:500;color:#00a8ff">${Object.keys(BEHAVIOR.retries).length}</span></div>
+      </div>
+    </div>
+    ${p.traits.length?`<div style="background:#12151c;border:1px solid #1e2330;border-radius:12px;padding:20px;margin-bottom:16px;"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:12px;">Identified Traits</div>${p.traits.map(t=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;color:#e8eaf0;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#00d27a" stroke-width="1.5"/><polyline points="4,7 6,9.5 10,4.5" stroke="#00d27a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>${t}</div>`).join('')}</div>`:''}
+    ${p.warnings.length?`<div style="background:rgba(224,92,92,0.06);border:1px solid rgba(224,92,92,0.2);border-radius:12px;padding:20px;margin-bottom:16px;"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#e05c5c;margin-bottom:12px;">Areas to Watch</div>${p.warnings.map(w=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;color:#e8eaf0;"><span style="color:#e05c5c;flex-shrink:0;margin-top:1px;">!</span>${w}</div>`).join('')}</div>`:''}
+    <div style="background:rgba(0,210,122,0.04);border:1px solid rgba(0,210,122,0.15);border-radius:12px;padding:20px;margin-bottom:24px;"><div style="font-size:13px;color:#6b7280;line-height:1.7;">This profile is built from your actual course behavior — how fast you answer, which concepts you master, which you revisit. It updates automatically as you progress. Your VIP Inner Circle playbook will be built using this data combined with your profile questionnaire.</div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid #1e2330;">
+      <button class="nav-btn" onclick="loadLesson('beginner')">← Back to Course</button>
+      <button class="nav-btn primary" onclick="loadLesson('beginner')">Continue Course →</button>
+    </div>`;
+  window.scrollTo(0,0);
+}
 
 function doLogin(){
   const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value.trim();
@@ -344,7 +441,9 @@ function toggleMod(id){if(openMods.has(id))openMods.delete(id);else openMods.add
 function rq(){const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];return `<div class="quote-block"><div class="quote-text">"${q.t}"</div><div class="quote-author">— ${q.a}</div></div>`;}
 
 function loadLesson(id){
+  trackLessonComplete(cur);
   cur=id;
+  trackLessonStart(id);
   const al=allLessons();
   const idx=al.findIndex(l=>l.id===id);
   const lesson=al[idx],prev=al[idx-1],next=al[idx+1];
