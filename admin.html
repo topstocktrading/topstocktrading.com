@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TST Academy — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--green:#00d27a;--dark:#0a0c10;--card:#12151c;--card2:#161920;--border:#1e2330;--text:#e8eaf0;--muted:#6b7280;--red:#e05c5c;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+  .top-nav{background:rgba(10,12,16,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 32px;position:sticky;top:0;z-index:100;}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#fff;}
+  .nav-logo span{color:var(--green);}
+  .nav-badge{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:3px;background:rgba(224,92,92,0.15);color:var(--red);border:1px solid rgba(224,92,92,0.3);}
+  .wrap{max-width:860px;margin:0 auto;padding:40px 24px;}
+  h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:#fff;margin-bottom:4px;}
+  .sub{font-size:14px;color:var(--muted);margin-bottom:36px;}
+
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
+  .card-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .card-title span{font-size:11px;font-weight:400;color:var(--muted);font-family:'DM Sans',sans-serif;}
+
+  label{display:block;font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+  select,input[type=text]{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;margin-bottom:18px;}
+  select:focus,input[type=text]:focus{border-color:var(--green);}
+  select option{background:var(--dark);}
+
+  .drop-zone{border:2px dashed var(--border);border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;position:relative;margin-bottom:18px;}
+  .drop-zone:hover,.drop-zone.drag{border-color:var(--green);background:rgba(0,210,122,0.04);}
+  .drop-zone.has-file{border-color:var(--green);background:rgba(0,210,122,0.06);}
+  .drop-icon{font-size:36px;margin-bottom:10px;opacity:0.4;}
+  .drop-text{font-size:14px;color:var(--muted);}
+  .drop-text strong{color:var(--green);}
+  .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .preview{max-width:100%;max-height:200px;border-radius:8px;margin-top:14px;border:1px solid var(--border);}
+
+  .btn{background:var(--green);color:#0a0c10;border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.2s;width:100%;}
+  .btn:hover{background:#00e888;}
+  .btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+  .status{border-radius:8px;padding:14px 18px;font-size:14px;margin-top:16px;display:none;}
+  .status.success{background:rgba(0,210,122,0.08);border:1px solid rgba(0,210,122,0.3);color:var(--green);}
+  .status.error{background:rgba(224,92,92,0.08);border:1px solid rgba(224,92,92,0.3);color:var(--red);}
+  .status.loading{background:rgba(107,114,128,0.08);border:1px solid var(--border);color:var(--muted);}
+
+  .uploads-list{display:flex;flex-direction:column;gap:10px;}
+  .upload-item{background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
+  .upload-thumb{width:48px;height:36px;object-fit:cover;border-radius:4px;border:1px solid var(--border);}
+  .upload-info{flex:1;}
+  .upload-lesson{font-size:12px;color:var(--green);font-weight:600;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;}
+  .upload-name{font-size:12px;color:var(--muted);}
+  .upload-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;}
+  .upload-del:hover{color:var(--red);}
+
+  .tip{font-size:12px;color:var(--muted);margin-top:-10px;margin-bottom:18px;line-height:1.6;}
+
+  #login-screen{position:fixed;inset:0;background:var(--dark);z-index:1000;display:flex;align-items:center;justify-content:center;}
+  .login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center;}
+  .login-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#fff;margin-bottom:4px;}
+  .login-logo span{color:var(--green);}
+  .login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
+  .login-box h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:#fff;margin-bottom:20px;}
+  .login-err{font-size:13px;color:var(--red);margin-top:10px;display:none;}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">TOP <span>STOCK</span> TRADING</div>
+    <div class="login-sub">Admin Panel</div>
+    <h2>SIGN IN</h2>
+    <div style="text-align:left;margin-bottom:14px;">
+      <label>Password</label>
+      <input type="password" id="ap" placeholder="Admin password" onkeydown="if(event.key==='Enter')adminLogin()" style="width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:0;">
+    </div>
+    <button class="btn" onclick="adminLogin()">Enter Admin</button>
+    <div class="login-err" id="aerr">Wrong password.</div>
+  </div>
+</div>
+
+<nav class="top-nav">
+  <div class="nav-logo">TOP <span>STOCK</span> TRADING</div>
+  <div class="nav-badge">ADMIN ONLY</div>
+</nav>
+
+<div class="wrap">
+  <h1>CONTENT MANAGER</h1>
+  <div class="sub">Upload chart images to any lesson. They go live on the members page instantly.</div>
+
+  <div class="card">
+    <div class="card-title">📸 Upload Chart Image</div>
+
+    <label>Select Lesson</label>
+    <select id="lesson-select">
+      <optgroup label="── Beginner: Chart Patterns ──">
+        <option value="b6-0">Flags & Pennants (b6-0)</option>
+        <option value="b6-1">Triangles (b6-1)</option>
+        <option value="b6-2">Head & Shoulders (b6-2)</option>
+        <option value="b6-3">Double Tops & Bottoms (b6-3)</option>
+        <option value="b6-4">Cups & Handles (b6-4)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Volume ──">
+        <option value="b2-0">Why Volume Matters (b2-0)</option>
+        <option value="b2-1">Volume Signals (b2-1)</option>
+        <option value="b2-2">Volume & Price Action (b2-2)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Support & Resistance ──">
+        <option value="b3-0">What Is Support & Resistance (b3-0)</option>
+        <option value="b3-1">Identifying Key Levels (b3-1)</option>
+        <option value="b3-2">How Price Reacts to Levels (b3-2)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Market Structure ──">
+        <option value="b4-0">Higher Highs & Higher Lows (b4-0)</option>
+        <option value="b4-1">Lower Highs & Lower Lows (b4-1)</option>
+        <option value="b4-2">Range Bound Markets (b4-2)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Trendlines ──">
+        <option value="b5-0">Drawing Trendlines (b5-0)</option>
+        <option value="b5-1">Trendline Breaks (b5-1)</option>
+        <option value="b5-2">Channel Trading (b5-2)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Consolidations ──">
+        <option value="b7-0">What Is Consolidation (b7-0)</option>
+        <option value="b7-1">Trading Inside Consolidation (b7-1)</option>
+        <option value="b7-2">Breakouts From Consolidation (b7-2)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Gaps ──">
+        <option value="b8-0">Types of Gaps (b8-0)</option>
+        <option value="b8-1">Gap Fills (b8-1)</option>
+        <option value="b8-2">Trading Gaps (b8-2)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Indicators ──">
+        <option value="b10-0">How to Use Indicators (b10-0)</option>
+        <option value="b10-1">Moving Averages (b10-1)</option>
+        <option value="b10-2">RSI (b10-2)</option>
+        <option value="b10-3">MACD (b10-3)</option>
+        <option value="b10-4">VWAP (b10-4)</option>
+        <option value="b10-5">Volume Profile (b10-5)</option>
+        <option value="b10-6">Fibonacci Retracement (b10-6)</option>
+      </optgroup>
+      <optgroup label="── Beginner: Other ──">
+        <option value="b-pillars">The 3 Pillars of Trading</option>
+        <option value="b-types">Types of Traders</option>
+        <option value="b-hours">Market Hours</option>
+        <option value="b9-0">Reading Level 2 (b9-0)</option>
+        <option value="b9-1">Reading the Tape (b9-1)</option>
+        <option value="b9-2">Spotting Buyers & Sellers (b9-2)</option>
+        <option value="b11-0">Cash Account Rules (b11-0)</option>
+        <option value="b11-1">Margin Account Rules (b11-1)</option>
+        <option value="b11-2">PDT Rule (b11-2)</option>
+        <option value="b12-0">Going Long (b12-0)</option>
+        <option value="b12-1">Going Short (b12-1)</option>
+        <option value="b12-2">Short Selling Mechanics (b12-2)</option>
+        <option value="b13-0">Market Orders (b13-0)</option>
+        <option value="b13-1">Limit Orders (b13-1)</option>
+        <option value="b13-2">Stop Orders (b13-2)</option>
+        <option value="b13-3">Stop Limit Orders (b13-3)</option>
+        <option value="b13-4">Trailing Stops (b13-4)</option>
+        <option value="b14-0">Why Journaling Matters (b14-0)</option>
+        <option value="b14-1">What to Track (b14-1)</option>
+        <option value="b14-2">Reviewing Your Journal (b14-2)</option>
+      </optgroup>
+      <optgroup label="── Intermediate ──">
+        <option value="n1">Stock Personalities</option>
+        <option value="n2">Timeframes</option>
+        <option value="n3">Best Times of Day</option>
+        <option value="n4">What Stocks to Trade</option>
+        <option value="n5">Scanning for Stocks</option>
+        <option value="n7-0">Dip Buys</option>
+        <option value="n7-1">Breakouts & Breakdowns</option>
+        <option value="n8-0">Scaling Out</option>
+        <option value="n8-1">Selling Into Key Levels</option>
+      </optgroup>
+      <optgroup label="── Advanced ──">
+        <option value="a1-0">Sizing for Small Caps</option>
+        <option value="a1-1">Short Squeezes</option>
+        <option value="a1-2">Float & Why It Matters</option>
+        <option value="a2-0">Breakout Swings</option>
+        <option value="a2-1">Earnings Plays</option>
+        <option value="a6-0">Kill Candles</option>
+        <option value="a6-3">Trapped Shorts</option>
+      </optgroup>
+    </select>
+
+    <label>Caption <span style="font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;">(optional — describe what the chart shows)</span></label>
+    <input type="text" id="caption" placeholder="e.g. NVDA 5min breakout from tight consolidation on 04/14">
+
+    <div class="drop-zone" id="drop-zone">
+      <div class="drop-icon">📸</div>
+      <div class="drop-text">Drop chart image here or <strong>click to browse</strong></div>
+      <input type="file" id="file-input" accept="image/*">
+      <img id="preview" class="preview" style="display:none;">
+    </div>
+
+    <button class="btn" id="upload-btn" onclick="uploadImage()" disabled>Upload to Lesson</button>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div class="card" id="recent-card" style="display:none;">
+    <div class="card-title">✅ Recently Uploaded <span>— these are live on the members page</span></div>
+    <div class="uploads-list" id="uploads-list"></div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://jjecwvcxbocogvwsjwmr.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_R1r0BDuGv4Ov98CKesFVeA_I-d62XIY';
+const BUCKET = 'lesson-charts';
+const ADMIN_PASS = 'tst2024admin';
+
+const LESSON_NAMES = {
+  'b6-0':'Flags & Pennants','b6-1':'Triangles','b6-2':'Head & Shoulders','b6-3':'Double Tops & Bottoms','b6-4':'Cups & Handles',
+  'b2-0':'Why Volume Matters','b2-1':'Volume Signals','b2-2':'Volume & Price Action',
+  'b3-0':'What Is Support & Resistance','b3-1':'Identifying Key Levels','b3-2':'How Price Reacts to Levels',
+  'b4-0':'Higher Highs & Higher Lows','b4-1':'Lower Highs & Lower Lows','b4-2':'Range Bound Markets',
+  'b5-0':'Drawing Trendlines','b5-1':'Trendline Breaks','b5-2':'Channel Trading',
+  'b7-0':'What Is Consolidation','b7-1':'Trading Inside Consolidation','b7-2':'Breakouts From Consolidation',
+  'b8-0':'Types of Gaps','b8-1':'Gap Fills','b8-2':'Trading Gaps',
+  'b10-0':'How to Use Indicators','b10-1':'Moving Averages','b10-2':'RSI','b10-3':'MACD','b10-4':'VWAP','b10-5':'Volume Profile','b10-6':'Fibonacci',
+  'b9-0':'Reading Level 2','b9-1':'Reading the Tape','b9-2':'Spotting Buyers & Sellers',
+  'b11-0':'Cash Account Rules','b11-1':'Margin Account Rules','b11-2':'PDT Rule',
+  'b12-0':'Going Long','b12-1':'Going Short','b12-2':'Short Selling Mechanics',
+  'b13-0':'Market Orders','b13-1':'Limit Orders','b13-2':'Stop Orders','b13-3':'Stop Limit Orders','b13-4':'Trailing Stops',
+  'b14-0':'Why Journaling Matters','b14-1':'What to Track','b14-2':'Reviewing Your Journal',
+  'n7-0':'Dip Buys','n7-1':'Breakouts & Breakdowns','n8-0':'Scaling Out','n8-1':'Selling Into Key Levels',
+  'a1-0':'Sizing for Small Caps','a1-1':'Short Squeezes','a1-2':'Float & Why It Matters','a2-0':'Breakout Swings','a2-1':'Earnings Plays',
+  'a6-0':'Kill Candles','a6-3':'Trapped Shorts',
+};
+
+let selectedFile = null;
+let uploads = JSON.parse(localStorage.getItem('tst_uploads') || '[]');
+
+function adminLogin() {
+  const pw = document.getElementById('ap').value;
+  if (pw === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    renderUploads();
+  } else {
+    document.getElementById('aerr').style.display = 'block';
+  }
+}
+
+const dropZone = document.getElementById('drop-zone');
+const fileInput = document.getElementById('file-input');
+const preview = document.getElementById('preview');
+
+fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); });
+
+function handleFile(file) {
+  if (!file || !file.type.startsWith('image/')) return;
+  selectedFile = file;
+  const reader = new FileReader();
+  reader.onload = e => {
+    preview.src = e.target.result;
+    preview.style.display = 'block';
+    dropZone.classList.add('has-file');
+    dropZone.querySelector('.drop-text').innerHTML = `<strong>${file.name}</strong> (${(file.size/1024).toFixed(0)}KB) — ready to upload`;
+  };
+  reader.readAsDataURL(file);
+  document.getElementById('upload-btn').disabled = false;
+}
+
+async function uploadImage() {
+  if (!selectedFile) return;
+  const lessonId = document.getElementById('lesson-select').value;
+  const caption = document.getElementById('caption').value.trim();
+  const btn = document.getElementById('upload-btn');
+  const status = document.getElementById('status');
+
+  btn.disabled = true;
+  showStatus('loading', '⏳ Uploading...');
+
+  const ext = selectedFile.name.split('.').pop();
+  const filename = `${lessonId}-${Date.now()}.${ext}`;
+
+  try {
+    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': selectedFile.type,
+        'x-upsert': 'true'
+      },
+      body: selectedFile
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Upload failed');
+    }
+
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${filename}`;
+    const lessonName = LESSON_NAMES[lessonId] || lessonId;
+
+    uploads.unshift({ lessonId, lessonName, filename, publicUrl, caption, thumb: preview.src, ts: Date.now() });
+    localStorage.setItem('tst_uploads', JSON.stringify(uploads.slice(0, 50)));
+
+    showStatus('success', `✅ Uploaded! "${lessonName}" chart is now live on the members page.`);
+    renderUploads();
+    reset();
+  } catch (err) {
+    showStatus('error', `❌ Error: ${err.message}`);
+    btn.disabled = false;
+  }
+}
+
+function showStatus(type, msg) {
+  const s = document.getElementById('status');
+  s.className = `status ${type}`;
+  s.textContent = msg;
+  s.style.display = 'block';
+}
+
+function reset() {
+  selectedFile = null;
+  fileInput.value = '';
+  preview.style.display = 'none';
+  dropZone.classList.remove('has-file');
+  dropZone.querySelector('.drop-text').innerHTML = 'Drop chart image here or <strong>click to browse</strong>';
+  document.getElementById('caption').value = '';
+  document.getElementById('upload-btn').disabled = true;
+}
+
+function renderUploads() {
+  if (!uploads.length) return;
+  document.getElementById('recent-card').style.display = 'block';
+  const list = document.getElementById('uploads-list');
+  list.innerHTML = uploads.slice(0, 10).map((u, i) => `
+    <div class="upload-item">
+      <img class="upload-thumb" src="${u.thumb || ''}" onerror="this.style.display='none'">
+      <div class="upload-info">
+        <div class="upload-lesson">${u.lessonName}</div>
+        <div class="upload-name">${u.caption || u.filename}</div>
+      </div>
+      <button class="upload-del" onclick="copyUrl(${i})" title="Copy URL">📋</button>
+    </div>
+  `).join('');
+}
+
+function copyUrl(i) {
+  navigator.clipboard.writeText(uploads[i].publicUrl);
+  showStatus('success', '📋 URL copied to clipboard!');
+}
+</script>
+</body>
+</html>
