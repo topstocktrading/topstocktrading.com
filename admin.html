@@ -17,16 +17,15 @@
   .wrap{max-width:860px;margin:0 auto;padding:40px 24px;}
   h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:#fff;margin-bottom:4px;}
   .sub{font-size:14px;color:var(--muted);margin-bottom:36px;}
-
   .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
   .card-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
   .card-title span{font-size:11px;font-weight:400;color:var(--muted);font-family:'DM Sans',sans-serif;}
-
   label{display:block;font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
   select,input[type=text]{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;margin-bottom:18px;}
   select:focus,input[type=text]:focus{border-color:var(--green);}
   select option{background:var(--dark);}
-
+  textarea{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:90px;transition:border-color 0.2s;margin-bottom:18px;line-height:1.6;}
+  textarea:focus{border-color:var(--green);}
   .drop-zone{border:2px dashed var(--border);border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;position:relative;margin-bottom:18px;}
   .drop-zone:hover,.drop-zone.drag{border-color:var(--green);background:rgba(0,210,122,0.04);}
   .drop-zone.has-file{border-color:var(--green);background:rgba(0,210,122,0.06);}
@@ -35,27 +34,21 @@
   .drop-text strong{color:var(--green);}
   .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
   .preview{max-width:100%;max-height:200px;border-radius:8px;margin-top:14px;border:1px solid var(--border);}
-
   .btn{background:var(--green);color:#0a0c10;border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.2s;width:100%;}
   .btn:hover{background:#00e888;}
   .btn:disabled{opacity:0.4;cursor:not-allowed;}
-
   .status{border-radius:8px;padding:14px 18px;font-size:14px;margin-top:16px;display:none;}
   .status.success{background:rgba(0,210,122,0.08);border:1px solid rgba(0,210,122,0.3);color:var(--green);}
   .status.error{background:rgba(224,92,92,0.08);border:1px solid rgba(224,92,92,0.3);color:var(--red);}
   .status.loading{background:rgba(107,114,128,0.08);border:1px solid var(--border);color:var(--muted);}
-
   .uploads-list{display:flex;flex-direction:column;gap:10px;}
-  .upload-item{background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
-  .upload-thumb{width:48px;height:36px;object-fit:cover;border-radius:4px;border:1px solid var(--border);}
+  .upload-item{background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px;}
+  .upload-thumb{width:64px;height:48px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;}
   .upload-info{flex:1;}
   .upload-lesson{font-size:12px;color:var(--green);font-weight:600;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;}
-  .upload-name{font-size:12px;color:var(--muted);}
-  .upload-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;}
+  .upload-caption{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
+  .upload-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:4px;flex-shrink:0;}
   .upload-del:hover{color:var(--red);}
-
-  .tip{font-size:12px;color:var(--muted);margin-top:-10px;margin-bottom:18px;line-height:1.6;}
-
   #login-screen{position:fixed;inset:0;background:var(--dark);z-index:1000;display:flex;align-items:center;justify-content:center;}
   .login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center;}
   .login-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#fff;margin-bottom:4px;}
@@ -63,6 +56,7 @@
   .login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
   .login-box h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:#fff;margin-bottom:20px;}
   .login-err{font-size:13px;color:var(--red);margin-top:10px;display:none;}
+  .caption-hint{font-size:12px;color:var(--muted);margin-top:-12px;margin-bottom:18px;line-height:1.6;font-style:italic;}
 </style>
 </head>
 <body>
@@ -185,8 +179,9 @@
       </optgroup>
     </select>
 
-    <label>Caption <span style="font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;">(optional — describe what the chart shows)</span></label>
-    <input type="text" id="caption" placeholder="e.g. NVDA 5min breakout from tight consolidation on 04/14">
+    <label>Chart Caption <span style="font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;">(shows below the image on the members page)</span></label>
+    <textarea id="caption" placeholder="Describe what the chart shows in 2-3 sentences. What pattern is it? What happened? What should the student notice?"></textarea>
+    <div class="caption-hint">💡 Example: "NVDA consolidates in a tight range between $194.40 and $194.75 for 90 minutes on low volume. Green lines mark the range boundaries. Price breaks out with a volume surge and runs to $196.91 — textbook breakout."</div>
 
     <div class="drop-zone" id="drop-zone">
       <div class="drop-icon">📸</div>
@@ -271,34 +266,37 @@ async function uploadImage() {
   const lessonId = document.getElementById('lesson-select').value;
   const caption = document.getElementById('caption').value.trim();
   const btn = document.getElementById('upload-btn');
-  const status = document.getElementById('status');
 
   btn.disabled = true;
   showStatus('loading', '⏳ Uploading...');
 
   const ext = selectedFile.name.split('.').pop();
-  const filename = `${lessonId}-${Date.now()}.${ext}`;
+  const ts = Date.now();
+  const filename = `${lessonId}-${ts}.${ext}`;
+  const captionFilename = `${lessonId}-${ts}.txt`;
 
   try {
-    const res = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`, {
+    // Upload image
+    const imgRes = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': selectedFile.type,
-        'x-upsert': 'true'
-      },
+      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': selectedFile.type, 'x-upsert': 'true' },
       body: selectedFile
     });
+    if (!imgRes.ok) { const e = await imgRes.json(); throw new Error(e.message || 'Image upload failed'); }
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.message || 'Upload failed');
+    // Upload caption as .txt file if caption exists
+    if (caption) {
+      await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${captionFilename}`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'text/plain', 'x-upsert': 'true' },
+        body: caption
+      });
     }
 
     const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${filename}`;
     const lessonName = LESSON_NAMES[lessonId] || lessonId;
 
-    uploads.unshift({ lessonId, lessonName, filename, publicUrl, caption, thumb: preview.src, ts: Date.now() });
+    uploads.unshift({ lessonId, lessonName, filename, publicUrl, caption, thumb: preview.src, ts });
     localStorage.setItem('tst_uploads', JSON.stringify(uploads.slice(0, 50)));
 
     showStatus('success', `✅ Uploaded! "${lessonName}" chart is now live on the members page.`);
@@ -336,9 +334,9 @@ function renderUploads() {
       <img class="upload-thumb" src="${u.thumb || ''}" onerror="this.style.display='none'">
       <div class="upload-info">
         <div class="upload-lesson">${u.lessonName}</div>
-        <div class="upload-name">${u.caption || u.filename}</div>
+        <div class="upload-caption">${u.caption || '<em style="color:#3a4455">No caption</em>'}</div>
       </div>
-      <button class="upload-del" onclick="copyUrl(${i})" title="Copy URL">📋</button>
+      <button class="upload-del" onclick="copyUrl(${i})" title="Copy image URL">📋</button>
     </div>
   `).join('');
 }
