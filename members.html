@@ -815,7 +815,7 @@ function loadLesson(id){
   if(INTROS[id]){
     const I=INTROS[id];
     const sec=COURSE.find(s=>s.id===id);
-    html=`<div class="sec-intro-card"><span class="sic-badge">${sec?sec.label:id}</span><h2>${(sec?sec.label:id).toUpperCase()}</h2><p>${I.desc}</p><div class="topics-wrap">${I.topics.map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div></div>${rq()}`;
+    html=`<div class="sec-intro-card"><span class="sic-badge">${sec?sec.label:id}</span><h2>${(sec?sec.label:id).toUpperCase()}</h2><p>${I.desc}</p><div class="topics-wrap">${I.topics.map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div></div>`;
   } else if(typeof CANDLE_SECTIONS!=='undefined'&&CANDLE_SECTIONS[id]){
     const cs=CANDLE_SECTIONS[id];
     html=`<div class="lesson-tag">Beginner Fundamentals — Candlesticks</div><div class="lesson-title">${cs.name.toUpperCase()}</div><div class="lesson-meta"><span>📖 Written lesson</span></div><div class="lc">${cs.html}</div>${notesPanel(id)}`;
@@ -828,7 +828,7 @@ function loadLesson(id){
   } else {
     const title=lesson?lesson.title:id;
     const secLabel=lesson?lesson.sec:'';
-    html=`<div class="lesson-tag">${secLabel}</div><div class="lesson-title">${title.toUpperCase()}</div><div class="lesson-meta"><span>📖 Written lesson</span><span>🎬 Video included</span></div><div class="video-wrap"><div class="vid-ph"><div class="vid-icon">▶</div><p>Video coming soon</p></div></div><div class="lc"><div class="cs-wrap"><div class="cs-icon">📝</div><h3>COMING SOON</h3><p>This lesson is being prepared. Check back after launch!</p></div></div>${notesPanel(id)}`;
+    html=`<div class="lesson-tag">${secLabel}</div><div class="lesson-title">${title.toUpperCase()}</div><div class="lesson-meta"><span>📖 Written lesson</span><span>🎬 Video included</span></div><div class="lc"><div class="cs-wrap"><div class="cs-icon">📝</div><h3>COMING SOON</h3><p>This lesson is being prepared. Check back after launch!</p></div></div>${notesPanel(id)}`;
   }
 
   const isIntro=INTROS[id]!==undefined;
