@@ -1025,6 +1025,7 @@ function loadLesson(id){
     const I=INTROS[id];
     const sec=COURSE.find(s=>s.id===id);
     html=`<div class="sec-intro-card"><span class="sic-badge">${sec?sec.label:id}</span><h2>${(sec?sec.label:id).toUpperCase()}</h2><p>${I.desc}</p><div class="topics-wrap">${I.topics.map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div></div>`;
+  if(window.TST_QUIZ&&window.TST_QUIZ.getQuiz(id)){html+='<div style="margin-top:32px">'+window.TST_QUIZ.render(id)+'</div>';}
   } else if(typeof CANDLE_SECTIONS!=='undefined'&&CANDLE_SECTIONS[id]){
     const cs=CANDLE_SECTIONS[id];
     html=`<div class="lesson-tag">Beginner Fundamentals — Candlesticks</div><div class="lesson-title">${cs.name.toUpperCase()}</div><div class="lesson-meta"><span>📖 Written lesson</span></div><div class="lc">${cs.html}</div>${notesPanel(id)}`;
