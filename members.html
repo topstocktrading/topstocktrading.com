@@ -219,6 +219,14 @@
   .quiz-retake-btn:hover{background:rgba(34,197,94,.1);}
   .quiz-congrats{text-align:center;color:var(--green);font-size:15px;padding:20px;border:1px solid var(--green);border-radius:10px;background:rgba(34,197,94,.05);}
 
+  
+  .quiz-page-wrap{max-width:800px;}
+  .quiz-page-header{margin-bottom:32px;}
+  .quiz-page-label{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:14px;background:rgba(0,210,122,0.12);color:var(--green);}
+  .quiz-page-header h2{font-family:'Bebas Neue','Rajdhani',sans-serif;font-size:36px;letter-spacing:2px;color:#fff;margin-bottom:8px;}
+  .quiz-page-header p{font-size:15px;color:var(--muted);line-height:1.7;}
+  .sidebar-quiz-tab .mod-name{color:var(--green) !important;font-weight:700;}
+
   </style>
 
 </head>
@@ -646,6 +654,7 @@ const COURSE=[
     {id:'gs-3',name:'Building Your Trading Setup'},
   ]},
   {id:'beginner',label:'Beginner',badge:'beginner',modules:[
+    {id:'quiz-beginner',name:'Section Quiz'},
     {id:'b-pillars',name:'The 3 Pillars of Trading'},
     {id:'b-types',name:'Types of Traders'},
     {id:'b-hours',name:'Market Hours'},
@@ -669,6 +678,7 @@ const COURSE=[
     {id:'b-rm',name:'Risk Management',subs:['Position Sizing Formula','Max Loss Per Trade','Max Loss Per Day','Paper Trading Protocol']},
   ]},
   {id:'intermediate',label:'Intermediate',badge:'intermediate',modules:[
+    {id:'quiz-intermediate',name:'Section Quiz'},
     {id:'n1',name:'Stock Personalities & Behavior'},
     {id:'n-ssvs',name:'Setup vs Signal'},
     {id:'n-corr',name:'Position Correlation'},
@@ -689,6 +699,7 @@ const COURSE=[
     {id:'a5-6',name:'Building Your Stock Universe'},
   ]},
   {id:'smallcaps',label:'Small Caps',badge:'advanced',modules:[
+    {id:'quiz-smallcaps',name:'Section Quiz'},
     {id:'sc-intro',name:'What Is a Small Cap'},
     {id:'a1-2',name:'Float & Why It Matters'},
     {id:'a1-1',name:'Short Squeezes'},
@@ -705,6 +716,7 @@ const COURSE=[
     {id:'sc-para',name:'The Parabolic Move'},
   ]},
   {id:'options',label:'Options',badge:'options',modules:[
+    {id:'quiz-options',name:'Section Quiz'},
     {id:'o1',name:'Intro to Options'},
     {id:'o7',name:'Dates & Expiration'},
     {id:'o2',name:'Strike Prices'},
@@ -721,6 +733,7 @@ const COURSE=[
     {id:'o-roll',name:'Rolling Options Positions'},
   ]},
   {id:'swingtrading',label:'Swing Trading',badge:'intermediate',modules:[
+    {id:'quiz-swingtrading',name:'Section Quiz'},
     {id:'st-intro',name:'What Is Swing Trading'},
     {id:'a2-0',name:'Breakout Swings'},
     {id:'a2-1',name:'Earnings Plays'},
@@ -745,6 +758,7 @@ const COURSE=[
     {id:'n-opening',name:'The Opening Drive'},
   ]},
   {id:'psychology',label:'Psychology',badge:'psychology',modules:[
+    {id:'quiz-psychology',name:'Section Quiz'},
     {id:'p1',name:'Psychology & Overtrading'},
     {id:'p2',name:'Base Hits Over Home Runs'},
     {id:'p3',name:'The Playbook Mindset'},
@@ -1021,11 +1035,19 @@ function loadLesson(id){
   const lesson=al[idx],prev=al[idx-1],next=al[idx+1];
   let html='';
 
-  if(INTROS[id]){
+  if(id&&id.startsWith('quiz-')){
+    const qSectionId=id.replace('quiz-','');
+    const qSec=COURSE.find(function(s){return s.id===qSectionId;});
+    const qLabel=qSec?qSec.label:qSectionId;
+    if(window.TST_QUIZ&&window.TST_QUIZ.getQuiz(qSectionId)){
+      html='<div class="quiz-page-wrap"><div class="quiz-page-header"><span class="quiz-page-label">'+qLabel+'</span><h2>Section Quiz</h2><p>Test your knowledge before moving on. Answer all questions and submit to see your results. You need 75% or higher to pass.</p></div>'+window.TST_QUIZ.render(qSectionId)+'</div>';
+    } else {
+      html='<div class="lesson-content"><p>No quiz available for this section yet.</p></div>';
+    }
+  } else if(INTROS[id]){
     const I=INTROS[id];
     const sec=COURSE.find(s=>s.id===id);
     html=`<div class="sec-intro-card"><span class="sic-badge">${sec?sec.label:id}</span><h2>${(sec?sec.label:id).toUpperCase()}</h2><p>${I.desc}</p><div class="topics-wrap">${I.topics.map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div></div>`;
-  if(window.TST_QUIZ&&window.TST_QUIZ.getQuiz(id)){html+='<div style="margin-top:32px">'+window.TST_QUIZ.render(id)+'</div>';}
   } else if(typeof CANDLE_SECTIONS!=='undefined'&&CANDLE_SECTIONS[id]){
     const cs=CANDLE_SECTIONS[id];
     html=`<div class="lesson-tag">Beginner Fundamentals — Candlesticks</div><div class="lesson-title">${cs.name.toUpperCase()}</div><div class="lesson-meta"><span>📖 Written lesson</span></div><div class="lc">${cs.html}</div>${notesPanel(id)}`;
