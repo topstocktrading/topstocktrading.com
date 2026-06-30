@@ -167,7 +167,59 @@
   .ai-in:focus{border-color:var(--green);}
   .ai-send{background:var(--green);color:#0a0c10;border:none;border-radius:7px;padding:9px 13px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;}
   @media(max-width:768px){.sidebar{display:none;}.main{padding:24px 16px;}.progress-ring{display:none;}}
-</style>
+
+  .quiz-container{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:32px;margin-top:32px;}
+  .quiz-header{margin-bottom:24px;}
+  .quiz-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:8px;}
+  .quiz-meta{font-size:13px;color:var(--muted);margin-bottom:12px;}
+  .quiz-passed-badge{display:inline-block;background:#0d2e1a;color:var(--green);font-size:13px;font-weight:700;padding:6px 14px;border-radius:20px;border:1px solid var(--green);margin-bottom:12px;}
+  .quiz-progress{height:4px;background:var(--border);border-radius:2px;margin-bottom:32px;overflow:hidden;}
+  .quiz-progress-bar{height:100%;background:var(--green);border-radius:2px;transition:width 0.3s;}
+  .quiz-q{padding:24px 0;border-bottom:1px solid var(--border);}
+  .quiz-q:last-child{border-bottom:none;}
+  .quiz-q-num{font-size:11px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;}
+  .quiz-q-text{font-size:17px;font-weight:600;color:var(--text);line-height:1.5;margin-bottom:20px;}
+  .quiz-choices{display:flex;flex-direction:column;gap:10px;}
+  .quiz-choice{display:flex;align-items:center;gap:14px;padding:14px 18px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .15s;}
+  .quiz-choice:hover{border-color:var(--green);background:rgba(34,197,94,.05);}
+  .quiz-choice input{display:none;}
+  .quiz-choice:has(input:checked){border-color:var(--green);background:rgba(34,197,94,.08);}
+  .quiz-choice-letter{width:28px;height:28px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .15s;}
+  .quiz-choice:has(input:checked) .quiz-choice-letter{background:var(--green);color:#000;}
+  .quiz-choice-text{font-size:15px;color:var(--text);line-height:1.4;}
+  .quiz-choice-correct{border-color:#22c55e !important;background:rgba(34,197,94,.12) !important;}
+  .quiz-choice-correct .quiz-choice-letter{background:#22c55e !important;color:#000 !important;}
+  .quiz-choice-wrong{border-color:#ef4444 !important;background:rgba(239,68,68,.08) !important;}
+  .quiz-choice-wrong .quiz-choice-letter{background:#ef4444 !important;color:#fff !important;}
+  .quiz-actions{margin-top:32px;text-align:center;}
+  .quiz-submit-btn{background:var(--green);color:#000;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:.05em;padding:16px 48px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;}
+  .quiz-submit-btn:hover{background:#1aaa50;transform:translateY(-1px);}
+  .quiz-warning{color:#ef4444;font-size:13px;margin-top:12px;}
+  .quiz-results{margin-top:32px;}
+  .quiz-score-card{text-align:center;padding:32px;border-radius:14px;margin-bottom:32px;}
+  .quiz-passed{background:rgba(34,197,94,.1);border:2px solid var(--green);}
+  .quiz-failed{background:rgba(239,68,68,.08);border:2px solid rgba(239,68,68,.4);}
+  .quiz-score-num{font-family:'Rajdhani',sans-serif;font-size:64px;font-weight:900;line-height:1;}
+  .quiz-passed .quiz-score-num{color:var(--green);}
+  .quiz-failed .quiz-score-num{color:#ef4444;}
+  .quiz-score-label{font-size:18px;font-weight:700;margin:8px 0 4px;}
+  .quiz-passed .quiz-score-label{color:var(--green);}
+  .quiz-failed .quiz-score-label{color:#ef4444;}
+  .quiz-score-sub{font-size:13px;color:var(--muted);}
+  .quiz-review{margin-bottom:28px;}
+  .quiz-review-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;}
+  .quiz-wrong-item{padding:16px;background:var(--bg);border:1px solid var(--border);border-radius:10px;margin-bottom:12px;}
+  .quiz-wrong-q{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;}
+  .quiz-wrong-yours{font-size:13px;color:var(--muted);margin-bottom:4px;}
+  .quiz-wrong-ans{color:#ef4444;font-weight:600;}
+  .quiz-correct-ans{color:var(--green);font-weight:600;}
+  .quiz-hint-text{font-size:13px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);line-height:1.6;}
+  .quiz-perfect{text-align:center;color:var(--green);font-size:16px;font-weight:600;padding:16px;}
+  .quiz-retake-btn{display:block;margin:24px auto 0;background:transparent;border:1.5px solid var(--green);color:var(--green);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:15px;padding:12px 36px;border-radius:10px;cursor:pointer;transition:all .2s;}
+  .quiz-retake-btn:hover{background:rgba(34,197,94,.1);}
+  .quiz-congrats{text-align:center;color:var(--green);font-size:15px;padding:20px;border:1px solid var(--green);border-radius:10px;background:rgba(34,197,94,.05);}
+
+  </style>
 
 </head>
 <body>
@@ -1022,5 +1074,7 @@ function addMsg(text,type,id){
   msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
 }
 </script>
+
+<script src="quiz.js"></script>
 </body>
 </html>
