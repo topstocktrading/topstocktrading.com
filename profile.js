@@ -575,12 +575,13 @@ var TST_ADMIN = {
 // ============================================================
 
 window.addEventListener('load', function() {
-  // Override the existing showProfileDashboard function
+  // Save original and override
   var origShowProfile = window.showProfileDashboard;
+  window.showProfileDashboard_original = origShowProfile;
   window.showProfileDashboard = function() {
     var mc = document.getElementById('mc');
     if (!mc) { if (origShowProfile) origShowProfile(); return; }
-    mc.innerHTML = TST_JOURNAL.renderProfilePage();
+    TST_JOURNAL.renderProfilePage();
     // Load overview stats
     setTimeout(async function() {
       var user = await getUser();
