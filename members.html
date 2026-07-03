@@ -392,9 +392,13 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL='https://jjecwvcxbocogvwsjwmr.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
+// Initialize Supabase client
+const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
+if (!supabase) console.warn('Supabase client not loaded');
 async function loadLessonCharts(lessonId){try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i,'');var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;" loading="lazy"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
 const LESSONS={
 'b-pillars':{title:'The 3 Pillars of Trading',content:`<p>Before you ever look at a chart, open a brokerage account, or place a trade — you need to understand what separates consistently profitable traders from everyone else. It's not a secret indicator. It's not a special scanner. It's three things done consistently.</p><h3>Pillar 1 — Idea Generation</h3><p>Where does the trade come from? Every good trade starts with a reason. A catalyst. A setup. News, earnings, technical breakout, sector rotation — something that makes this stock worth paying attention to right now. Idea generation is your filter. It's how you go from 8,000 stocks to the 3-5 that actually deserve your attention today.</p><h3>Pillar 2 — The Setup</h3><p>Once you have an idea, you need a setup. The setup answers the question — where exactly do I get in, where am I wrong, and where am I taking profits? A setup is not "I think this stock is going up." A setup is specific — entry, stop, target. Specificity is everything.</p><h3>Pillar 3 — Risk Management</h3><p>This is the one most beginners skip and the reason most beginners fail. Risk management answers the question — how much of my account am I willing to lose on this single trade? The answer should never be more than 1-2%. Ever. One bad trade should never threaten your ability to come back tomorrow.</p><div class="callout"><div class="callout-label">TST Edge</div><p>The order matters. Idea first. Setup second. Risk third. Most beginners do it backwards — they size up first, find a setup second, and never had an idea to begin with. That's why they lose.</p></div>`},
@@ -1075,6 +1079,7 @@ async function doLogin(){
   const errEl=document.getElementById('lerr');
   const btn=document.querySelector('.login-btn');
   if(!e||!p){errEl.textContent='Please enter your email and password.';errEl.style.display='block';return;}
+  if(!supabase){errEl.textContent='Authentication service not loaded. Please refresh the page.';errEl.style.display='block';return;}
   if(btn){btn.textContent='Signing in...';btn.disabled=true;}
   errEl.style.display='none';
   try {
