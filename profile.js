@@ -50,22 +50,30 @@ var TST_JOURNAL = {
 
   // Render the full My Profile page with tabs
   renderProfilePage: function() {
-    var html = '<div class="profile-page">' +
+    // First run the original behavioral dashboard
+    if (window.showProfileDashboard_original) {
+      window.showProfileDashboard_original();
+    }
+    // Then append trade journal tabs below
+    var mc = document.getElementById('mc');
+    if (!mc) return;
+    var journalDiv = document.createElement('div');
+    journalDiv.className = 'profile-page';
+    journalDiv.style.cssText = 'margin-top:32px;border-top:1px solid var(--border);padding-top:32px;';
+    journalDiv.innerHTML =
       '<div class="profile-header">' +
         '<div class="profile-header-label">TST Academy</div>' +
-        '<h2 class="profile-header-title">My Profile</h2>' +
+        '<h2 class="profile-header-title">Trade Journal</h2>' +
       '</div>' +
       '<div class="profile-tabs">' +
-        '<button class="profile-tab active" onclick="TST_JOURNAL.switchTab(\'overview\', this)">Overview</button>' +
-        '<button class="profile-tab" onclick="TST_JOURNAL.switchTab(\'journal\', this)">Trade Journal</button>' +
+        '<button class="profile-tab active" onclick="TST_JOURNAL.switchTab(\'journal\', this)">Journal</button>' +
         '<button class="profile-tab" onclick="TST_JOURNAL.switchTab(\'performance\', this)">Performance</button>' +
-        '<button class="profile-tab" onclick="TST_JOURNAL.switchTab(\'behavioral\', this)">Behavioral Profile</button>' +
       '</div>' +
-      '<div class="profile-tab-content" id="profileTabContent">' +
-        this.renderOverview() +
-      '</div>' +
-    '</div>';
-    return html;
+      '<div id="profileTabContent">' +
+        TST_JOURNAL.renderJournalTab() +
+      '</div>';
+    mc.appendChild(journalDiv);
+    setTimeout(function(){ TST_JOURNAL.loadTrades(); }, 300);
   },
 
   switchTab: function(tab, btn) {
