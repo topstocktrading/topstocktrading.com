@@ -7,10 +7,19 @@
 // SUPABASE HELPERS
 // ============================================================
 
+function getSupabase() {
+  // Use auth.js client if available, fall back to window.supabase
+  if (window.getSupabaseClient) return window.getSupabaseClient();
+  if (window._supabaseClient) return window._supabaseClient;
+  if (window.supabase && window.supabase.auth) return window.supabase;
+  return null;
+}
+
 async function getUser() {
-  if (!window.supabase) return null;
+  var client = getSupabase();
+  if (!client) return null;
   try {
-    var r = await window.supabase.auth.getUser();
+    var r = await client.auth.getUser();
     return r.data ? r.data.user : null;
   } catch(e) { return null; }
 }
@@ -249,7 +258,7 @@ var TST_JOURNAL = {
     };
 
     try {
-      var result = await window.supabase.from('trades').insert([trade]);
+      var result = await getSupabase().from('trades').insert([trade]);
       if (result.error) throw result.error;
       TST_JOURNAL.clearForm();
       TST_JOURNAL.loadTrades();
@@ -274,7 +283,7 @@ var TST_JOURNAL = {
     var user = await getUser();
     if (!user) { wrap.innerHTML = '<div class="loading-state">Please log in to view trades.</div>'; return; }
     try {
-      var result = await window.supabase.from('trades').select('*').eq('user_id', user.id).order('entry_time', {ascending: false}).limit(50);
+      var result = await getSupabase().from('trades').select('*').eq('user_id', user.id).order('entry_time', {ascending: false}).limit(50);
       if (result.error) throw result.error;
       var trades = result.data || [];
       if (!trades.length) {
@@ -324,7 +333,7 @@ var TST_JOURNAL = {
     var user = await getUser();
     if (!user) { wrap.innerHTML = '<div class="loading-state">Please log in.</div>'; return; }
     try {
-      var result = await window.supabase.from('trades').select('*').eq('user_id', user.id);
+      var result = await getSupabase().from('trades').select('*').eq('user_id', user.id);
       if (result.error) throw result.error;
       var trades = result.data || [];
       if (trades.length < 3) {
@@ -465,7 +474,7 @@ var TST_ADMIN = {
     var wrap = document.getElementById('adminContent');
     if (!wrap) return;
     try {
-      var result = await window.supabase.from('trades').select('user_id, ticker, setup_type, pnl, entry_time, created_at').order('created_at', {ascending: false}).limit(500);
+      var result = await getSupabase().from('trades').select('user_id, ticker, setup_type, pnl, entry_time, created_at').order('created_at', {ascending: false}).limit(500);
       if (result.error) throw result.error;
       var trades = result.data || [];
 
@@ -478,7 +487,7 @@ var TST_ADMIN = {
         if ((t.pnl||0) > 0) byUser[t.user_id].wins++;
       });
 
-      var quizResult = await window.supabase.from('quiz_results').select('*').order('updated_at', {ascending:false}).limit(200);
+      var quizResult = await getSupabase().from('quiz_results').select('*').order('updated_at', {ascending:false}).limit(200);
       var quizzes = quizResult.data || [];
       var quizByUser = {};
       quizzes.forEach(function(q){ if(!quizByUser[q.user_id]) quizByUser[q.user_id] = []; quizByUser[q.user_id].push(q); });
@@ -544,7 +553,7 @@ window.addEventListener('load', function() {
       var user = await getUser();
       if (!user) return;
       try {
-        var result = await window.supabase.from('trades').select('pnl, setup_type').eq('user_id', user.id);
+        var result = await getSupabase().from('trades').select('pnl, setup_type').eq('user_id', user.id);
         if (result.error) return;
         var trades = result.data || [];
         if (!trades.length) return;
@@ -837,7 +846,7 @@ var TST_CSV = {
     });
 
     try {
-      var result = await window.supabase.from('trades').insert(toInsert);
+      var result = await getSupabase().from('trades').insert(toInsert);
       if (result.error) throw result.error;
       if (status) { status.style.color = '#22c55e'; status.textContent = trades.length + ' trades imported successfully!'; }
       window._csvPendingTrades = null;
