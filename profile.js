@@ -297,6 +297,7 @@ var TST_JOURNAL = {
           '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td>' +
           '<td>'+(t.hold_minutes !== null ? t.hold_minutes+'m' : '—')+'</td>' +
           '<td><span class="trade-result" style="color:'+winColor+'">'+winLoss+'</span></td>' +
+        '<td>'+(t.source==='csv'&&t.entry_time?'<button class="chart-view-btn" onclick="TST_CHART.openChart(this,&quot;'+t.ticker+'&quot;,&quot;'+t.entry_time+'&quot;,&quot;'+(t.exit_time||'')+'&quot;,'+t.actual_entry+','+t.exit_price+','+(t.planned_stop||'null')+'&quot;'+t.direction+'&quot;,'+t.pnl+')">📈</button>':'')+'</td>' +
         '</tr>';
       }).join('');
       wrap.innerHTML = '<div class="trade-table-wrap"><table class="trade-table">' +
