@@ -347,7 +347,7 @@ var TST_JOURNAL = {
           '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td>' +
           '<td>'+(t.hold_minutes !== null ? t.hold_minutes+'m' : '—')+'</td>' +
           '<td><span class="trade-result" style="color:'+winColor+'">'+winLoss+'</span></td>' +
-        '<td>'+(t.source==='csv'&&t.entry_time?'<button class="chart-view-btn" onclick="TST_CHART.openChart(this,&quot;'+t.ticker+'&quot;,&quot;'+t.entry_time+'&quot;,&quot;'+(t.exit_time||'')+'&quot;,'+t.actual_entry+','+t.exit_price+','+(t.planned_stop||'null')+'&quot;'+t.direction+'&quot;,'+t.pnl+')">📈</button>':'')+'</td>' +
+        '<td>'+(t.source==='csv'&&t.entry_time?'<button class="chart-view-btn" onclick="TST_CHART.openChart(this,\'' +t.ticker+ '\',\'' +t.entry_time+ '\',\'' +(t.exit_time||'')+ '\','+t.actual_entry+','+t.exit_price+','+(t.planned_stop||'null')+',\'' +t.direction+ '\','+t.pnl+',\'' +(t.id||'')+ '\',\'' +(t.setup_type||'Untagged')+ '\')">' +(t.setup_type&&t.setup_type!=='Untagged'?'📈':'📈 Tag')+ '</button>':'')+'</td>' +
         '</tr>';
       }).join('');
       wrap.innerHTML = '<div class="trade-table-wrap"><table class="trade-table">' +
@@ -701,7 +701,7 @@ var TST_CSV = {
         source: 'csv',
         is_option: isOption,
         // Fields student fills in
-        setup_type: 'Other',
+        setup_type: 'Untagged',
         exit_reason: pnl > 0 ? 'Target Hit' : 'Stop Hit',
         notes: null,
         planned_entry: null,
@@ -832,12 +832,7 @@ var TST_CSV = {
         '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td>' +
         '<td>$'+t.actual_entry.toFixed(2)+' → $'+t.exit_price.toFixed(2)+'</td>' +
         '<td>'+(t.hold_minutes !== null ? t.hold_minutes+'m' : '—')+'</td>' +
-        '<td>' +
-          '<select class="csv-setup-select" data-idx="'+i+'" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;width:180px;">' +
-            setupOpts +
-          '</select>' +
-        '</td>' +
-        '<td><input type="text" class="csv-notes-input" data-idx="'+i+'" placeholder="Notes..." style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;width:140px;"></td>' +
+        '<td><span style="font-size:11px;color:var(--muted);">Tag via chart</span></td>' +
       '</tr>';
     }).join('');
 
@@ -852,7 +847,7 @@ var TST_CSV = {
       '</div>' +
       '<div class="trade-table-wrap" style="margin-bottom:16px;">' +
         '<table class="trade-table">' +
-          '<thead><tr><th>Trade</th><th>P&L</th><th>Entry → Exit</th><th>Hold</th><th>Setup Type</th><th>Notes</th></tr></thead>' +
+          '<thead><tr><th>Trade</th><th>P&L</th><th>Entry → Exit</th><th>Hold</th><th>Setup</th></tr></thead>' +
           '<tbody>'+rows+'</tbody>' +
         '</table>' +
       '</div>' +
@@ -889,15 +884,8 @@ var TST_CSV = {
     var status = document.getElementById('csvImportStatus');
     if (status) { status.style.display = 'block'; status.style.color = 'var(--muted)'; status.textContent = 'Importing trades...'; }
 
-    // Collect setup types and notes from the preview table
-    document.querySelectorAll('.csv-setup-select').forEach(function(sel) {
-      var idx = parseInt(sel.dataset.idx);
-      if (trades[idx]) trades[idx].setup_type = sel.value || 'Other';
-    });
-    document.querySelectorAll('.csv-notes-input').forEach(function(inp) {
-      var idx = parseInt(inp.dataset.idx);
-      if (trades[idx]) trades[idx].notes = inp.value.trim() || null;
-    });
+    // Setup type will be tagged from chart modal after import
+    // Default to 'Untagged' so student knows to tag it
 
     // Add user_id and created_at
     var toInsert = trades.map(function(t) {
@@ -958,8 +946,9 @@ var TST_CHART = {
     return '<button class="chart-view-btn" onclick="TST_CHART.openChart(\''+trade.id+'\', \''+trade.ticker+'\', \''+trade.entry_time+'\', \''+trade.exit_time+'\', '+trade.actual_entry+', '+trade.exit_price+', '+(trade.planned_stop||'null')+', \''+trade.direction+'\', '+trade.pnl+')" title="View Chart">📈</button>';
   },
 
-  openChart: function(btn, ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction, pnl) {
+  openChart: function(btn, ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction, pnl, tradeId, currentSetup) {
     var id = ticker + '_' + entryTime;
+    var tradeId = tradeId || id;
     // Create modal
     var modal = document.createElement('div');
     modal.id = 'chartModal';
@@ -980,6 +969,13 @@ var TST_CHART = {
           '<span class="legend-item"><span style="color:#22c55e">▲</span> Entry $'+entryPrice+'</span>' +
           '<span class="legend-item"><span style="color:#ef4444">▼</span> Exit $'+exitPrice+'</span>' +
           (stopPrice ? '<span class="legend-item"><span style="color:#f59e0b">─ ─</span> Stop $'+stopPrice+'</span>' : '') +
+        '</div>' +
+        '<div class="chart-tag-row" id="chartTagRow_'+tradeId+'">' +
+          '<div class="chart-tag-label">Tag Setup:</div>' +
+          '<select class="chart-setup-select" id="chartSetup_'+tradeId+'" onchange="TST_CHART.saveSetup(\''+tradeId+'\', this.value)">' +
+          '<option value=\"Untagged\">Untagged</option><option value=\"TST Flag Breakout\">TST Flag Breakout</option><option value=\"TST Dip Buy\">TST Dip Buy</option><option value=\"TST Breakout\">TST Breakout</option><option value=\"TST Reversal\">TST Reversal</option><option value=\"TST Momentum\">TST Momentum</option><option value=\"TST Liquidity Sweep\">TST Liquidity Sweep</option><option value=\"TST Gap Play\">TST Gap Play</option><option value=\"TST V-Shape Recovery\">TST V-Shape Recovery</option><option value=\"TST VWAP Reclaim\">TST VWAP Reclaim</option><option value=\"TST Opening Drive\">TST Opening Drive</option><option value=\"Other\">Other</option>' +
+          '</select>' +
+          '<span class="chart-tag-saved" id="chartTagSaved_'+tradeId+'" style="display:none;color:var(--green);font-size:12px;">✓ Saved</span>' +
         '</div>' +
       '</div>';
 
@@ -1009,6 +1005,23 @@ var TST_CHART = {
     script.src = 'https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js';
     script.onload = callback;
     document.head.appendChild(script);
+  },
+
+  saveSetup: async function(tradeId, setupType) {
+    try {
+      var client = getSupabase();
+      if (!client) return;
+      await client.from('trades').update({setup_type: setupType}).eq('id', tradeId);
+      var savedEl = document.getElementById('chartTagSaved_' + tradeId);
+      if (savedEl) {
+        savedEl.style.display = 'inline';
+        setTimeout(function(){ savedEl.style.display = 'none'; }, 2000);
+      }
+      // Refresh trade list in background
+      if (window.TST_JOURNAL) setTimeout(function(){ TST_JOURNAL.loadTrades(); }, 500);
+    } catch(e) {
+      console.log('Setup save error:', e);
+    }
   },
 
   fetchAndRender: async function(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction) {
