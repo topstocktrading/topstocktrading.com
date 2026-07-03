@@ -227,115 +227,6 @@
   .quiz-page-header p{font-size:15px;color:var(--muted);line-height:1.7;}
   .sidebar-quiz-tab .mod-name{color:var(--green) !important;font-weight:700;}
 
-  
-  /* PROFILE SYSTEM */
-  .profile-page{max-width:960px;margin:0 auto;}
-  .profile-header{margin-bottom:28px;}
-  .profile-header-label{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
-  .profile-header-title{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;color:var(--text);}
-  .profile-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;}
-  .profile-tab{background:transparent;border:none;border-bottom:2px solid transparent;padding:10px 20px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:-1px;}
-  .profile-tab:hover{color:var(--text);}
-  .profile-tab.active{color:var(--green);border-bottom-color:var(--green);}
-  .profile-section{padding:4px 0;}
-  .overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
-  @media(max-width:768px){.overview-grid{grid-template-columns:repeat(2,1fr);}}
-  .overview-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
-  .ov-card-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
-  .ov-card-num{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:var(--text);line-height:1;margin-bottom:4px;}
-  .ov-card-num.ov-small{font-size:20px;}
-  .ov-card-sub{font-size:12px;color:var(--muted);}
-  .overview-actions{display:flex;gap:12px;}
-  .btn-primary-green{background:var(--green);color:#000;border:none;border-radius:10px;padding:12px 28px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .2s;}
-  .btn-primary-green:hover{background:#1aaa50;transform:translateY(-1px);}
-  .btn-outline-green{background:transparent;color:var(--green);border:1.5px solid var(--green);border-radius:10px;padding:12px 28px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .2s;}
-  .btn-outline-green:hover{background:rgba(34,197,94,.08);}
-  .journal-form-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;}
-  .journal-form-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:20px;}
-  .journal-form{display:grid;gap:16px;}
-  .form-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-  @media(max-width:600px){.form-row{grid-template-columns:1fr;}}
-  .form-field{display:flex;flex-direction:column;gap:6px;}
-  .form-field label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
-  .form-field input,.form-field select{background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:inherit;transition:border-color .2s;outline:none;}
-  .form-field input:focus,.form-field select:focus{border-color:var(--green);}
-  .form-field select option{background:var(--bg);}
-  .journal-history{margin-top:8px;}
-  .journal-history-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;}
-  .trade-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);}
-  .trade-table{width:100%;border-collapse:collapse;font-size:13px;}
-  .trade-table thead tr{background:rgba(255,255,255,.03);}
-  .trade-table th{padding:12px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
-  .trade-table td{padding:12px 16px;border-bottom:1px solid rgba(30,40,32,.5);color:var(--text);}
-  .trade-table tr:last-child td{border-bottom:none;}
-  .trade-table tbody tr:hover{background:rgba(255,255,255,.02);}
-  .trade-ticker{font-weight:700;font-size:14px;color:var(--text);}
-  .trade-date{font-size:11px;color:var(--muted);margin-top:2px;}
-  .trade-direction{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px;}
-  .trade-direction.long{background:rgba(34,197,94,.12);color:#22c55e;}
-  .trade-direction.short{background:rgba(239,68,68,.12);color:#ef4444;}
-  .trade-setup{font-size:11px;color:var(--muted);background:var(--border);padding:3px 8px;border-radius:4px;}
-  .trade-result{font-size:11px;font-weight:700;letter-spacing:.5px;}
-  .perf-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
-  @media(max-width:600px){.perf-stats-grid{grid-template-columns:repeat(2,1fr);}}
-  .perf-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;}
-  .perf-stat-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-  .perf-stat-num{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--text);}
-  .perf-tables-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
-  @media(max-width:700px){.perf-tables-grid{grid-template-columns:1fr;}}
-  .perf-table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
-  .perf-table-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;}
-  .loading-state{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px;}
-  .empty-state{text-align:center;padding:48px 24px;}
-  .empty-icon{font-size:40px;margin-bottom:16px;}
-  .empty-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;}
-  .empty-sub{font-size:14px;color:var(--muted);line-height:1.7;}
-  .behavioral-locked{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:center;}
-  .locked-icon{font-size:40px;margin-bottom:16px;}
-  .locked-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:16px;}
-  .locked-body{font-size:14px;color:var(--muted);line-height:1.8;max-width:600px;margin:0 auto;}
-  .admin-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px;}
-  .admin-stat{background:var(--surface);border:1px solid #f59e0b33;border-radius:14px;padding:20px;text-align:center;}
-  .admin-stat-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#f59e0b;margin-bottom:8px;}
-  .admin-stat-num{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--text);}
-  .admin-uid{font-family:monospace;font-size:12px;color:var(--muted);}
-
-  
-  /* CSV IMPORT */
-  .csv-import-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;}
-  .csv-import-header{margin-bottom:20px;}
-  .csv-import-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:6px;}
-  .csv-import-sub{font-size:13px;color:var(--muted);line-height:1.6;}
-  .csv-drop-zone{border:2px dashed var(--border);border-radius:12px;padding:40px 24px;text-align:center;cursor:pointer;transition:all .2s;}
-  .csv-drop-zone:hover{border-color:var(--green);background:rgba(34,197,94,.04);}
-  .csv-drop-icon{font-size:32px;margin-bottom:12px;}
-  .csv-drop-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;}
-  .csv-drop-sub{font-size:13px;color:var(--muted);}
-  .csv-error{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:10px;padding:16px;color:#ef4444;font-size:14px;margin-top:16px;}
-  .csv-preview-header{margin-bottom:16px;}
-  .csv-preview-count{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--green);margin-bottom:4px;}
-  .csv-preview-sub{font-size:13px;color:var(--muted);}
-  .csv-setup-select,.csv-notes-input{outline:none;}
-  .csv-setup-select:focus,.csv-notes-input:focus{border-color:var(--green) !important;}
-
-  /* CHART BUTTON */
-  .chart-view-btn{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:14px;transition:all .2s;color:var(--green);}
-  .chart-view-btn:hover{background:rgba(34,197,94,.2);}
-
-  /* CHART MODAL */
-  .chart-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;}
-  .chart-modal-inner{background:var(--surface);border:1px solid var(--border);border-radius:20px;width:100%;max-width:900px;overflow:hidden;}
-  .chart-modal-header{display:flex;align-items:flex-start;justify-content:space-between;padding:20px 24px;border-bottom:1px solid var(--border);}
-  .chart-modal-ticker{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:4px;}
-  .chart-modal-meta{font-size:13px;color:var(--muted);}
-  .chart-modal-close{background:var(--border);border:none;border-radius:8px;width:32px;height:32px;color:var(--muted);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-  .chart-modal-close:hover{background:rgba(239,68,68,.2);color:#ef4444;}
-  .chart-container{padding:4px;min-height:380px;background:#0a0f0d;}
-  .chart-loading{text-align:center;padding:80px 24px;color:var(--muted);font-size:14px;}
-  .chart-no-data{text-align:center;padding:60px 24px;color:var(--muted);font-size:14px;line-height:1.7;}
-  .chart-legend{display:flex;gap:20px;padding:12px 24px;border-top:1px solid var(--border);flex-wrap:wrap;}
-  .legend-item{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;}
-
   </style>
 
 </head>
@@ -350,7 +241,6 @@
     <div class="input-group"><label>Password</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="login-btn" onclick="doLogin()">Access My Course</button>
     <div class="login-error" id="lerr">Incorrect email or password.</div>
-    <div style="margin-top:16px;font-size:12px;color:var(--muted);">First time? Your login was emailed to you when you enrolled.</div>
   </div>
 </div>
 
@@ -392,13 +282,9 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 const SUPABASE_URL='https://jjecwvcxbocogvwsjwmr.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
-// Initialize Supabase client
-const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
-if (!supabase) console.warn('Supabase client not loaded');
 async function loadLessonCharts(lessonId){try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i,'');var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;" loading="lazy"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
 const LESSONS={
 'b-pillars':{title:'The 3 Pillars of Trading',content:`<p>Before you ever look at a chart, open a brokerage account, or place a trade — you need to understand what separates consistently profitable traders from everyone else. It's not a secret indicator. It's not a special scanner. It's three things done consistently.</p><h3>Pillar 1 — Idea Generation</h3><p>Where does the trade come from? Every good trade starts with a reason. A catalyst. A setup. News, earnings, technical breakout, sector rotation — something that makes this stock worth paying attention to right now. Idea generation is your filter. It's how you go from 8,000 stocks to the 3-5 that actually deserve your attention today.</p><h3>Pillar 2 — The Setup</h3><p>Once you have an idea, you need a setup. The setup answers the question — where exactly do I get in, where am I wrong, and where am I taking profits? A setup is not "I think this stock is going up." A setup is specific — entry, stop, target. Specificity is everything.</p><h3>Pillar 3 — Risk Management</h3><p>This is the one most beginners skip and the reason most beginners fail. Risk management answers the question — how much of my account am I willing to lose on this single trade? The answer should never be more than 1-2%. Ever. One bad trade should never threaten your ability to come back tomorrow.</p><div class="callout"><div class="callout-label">TST Edge</div><p>The order matters. Idea first. Setup second. Risk third. Most beginners do it backwards — they size up first, find a setup second, and never had an idea to begin with. That's why they lose.</p></div>`},
@@ -1073,62 +959,15 @@ function showProfileDashboard(){
   window.scrollTo(0,0);
 }
 
-async function doLogin(){
-  const e=document.getElementById('le').value.trim();
-  const p=document.getElementById('lp').value.trim();
-  const errEl=document.getElementById('lerr');
-  const btn=document.querySelector('.login-btn');
-  if(!e||!p){errEl.textContent='Please enter your email and password.';errEl.style.display='block';return;}
-  if(!supabase){errEl.textContent='Authentication service not loaded. Please refresh the page.';errEl.style.display='block';return;}
-  if(btn){btn.textContent='Signing in...';btn.disabled=true;}
-  errEl.style.display='none';
-  try {
-    const {data,error}=await supabase.auth.signInWithPassword({email:e,password:p});
-    if(error){
-      errEl.textContent=error.message||'Incorrect email or password.';
-      errEl.style.display='block';
-      if(btn){btn.textContent='Access My Course';btn.disabled=false;}
-      return;
-    }
-    const user=data.user;
-    const displayName=user.email.split('@')[0];
+function doLogin(){
+  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value.trim();
+  if(e===DEMO.email&&p===DEMO.password){
     document.getElementById('login-screen').style.display='none';
-    document.getElementById('sname').textContent=displayName;
+    document.getElementById('sname').textContent=DEMO.name;
     buildSidebar();loadLesson('beginner');
-  } catch(err){
-    errEl.textContent='Login error. Please try again.';
-    errEl.style.display='block';
-    if(btn){btn.textContent='Access My Course';btn.disabled=false;}
-  }
+  } else { document.getElementById('lerr').style.display='block'; }
 }
-async function doLogout(){
-  await supabase.auth.signOut();
-  document.getElementById('login-screen').style.display='flex';
-  document.getElementById('le').value='';
-  document.getElementById('lp').value='';
-  document.getElementById('sname').textContent='Trader';
-}
-
-// Check for existing Supabase session on page load
-async function checkExistingSession(){
-  try {
-    const {data:{session}}=await supabase.auth.getSession();
-    if(session&&session.user){
-      const displayName=session.user.email.split('@')[0];
-      document.getElementById('login-screen').style.display='none';
-      document.getElementById('sname').textContent=displayName;
-      buildSidebar();loadLesson('beginner');
-    }
-  } catch(e){ console.log('Session check:',e); }
-}
-
-// Auto-check session when page loads
-document.addEventListener('DOMContentLoaded',function(){
-  setTimeout(checkExistingSession, 500);
-});
-
-// Also update admin check to use real email
-window.TST_ADMIN_EMAIL = 'h@topstocktrading.com';
+function doLogout(){document.getElementById('login-screen').style.display='flex';document.getElementById('le').value='';document.getElementById('lp').value='';}
 
 function allLessons(){
   const all=[];
@@ -1260,7 +1099,5 @@ function addMsg(text,type,id){
 </script>
 
 <script src="quiz.js"></script>
-
-<script src="profile.js"></script>
 </body>
 </html>
