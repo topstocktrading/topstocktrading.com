@@ -36,6 +36,7 @@
     client.auth.getSession().then(function(result) {
       var session = result.data ? result.data.session : null;
       if (session && session.user) {
+        window._currentUser = session.user;
         var displayName = session.user.email.split('@')[0];
         var loginScreen = document.getElementById('login-screen');
         var sname = document.getElementById('sname');
