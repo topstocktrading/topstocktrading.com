@@ -441,7 +441,7 @@ var TST_JOURNAL = {
 
 var TST_ADMIN = {
 
-  ADMIN_EMAIL: 'topstocktrading@gmail.com',
+  ADMIN_EMAIL: 'h@topstocktrading.com',
 
   isAdmin: async function() {
     var email = await getUserEmail();
