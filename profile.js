@@ -568,3 +568,506 @@ window.addEventListener('load', function() {
     if (window.scrollTo) window.scrollTo(0,0);
   };
 });
+
+
+// ============================================================
+// CSV IMPORT — Webull + major brokerages
+// ============================================================
+
+var TST_CSV = {
+
+  // Detect brokerage from CSV headers
+  detectBrokerage: function(headers) {
+    var h = headers.join(',').toLowerCase();
+    if (h.includes('filled time') && h.includes('avg price')) return 'webull';
+    if (h.includes('exec time') && h.includes('spread')) return 'td';
+    if (h.includes('activity date') && h.includes('trans code')) return 'robinhood';
+    if (h.includes('date/time') && h.includes('quantity') && h.includes('t. price')) return 'ibkr';
+    return 'unknown';
+  },
+
+  // Parse Webull options/stock CSV
+  parseWebull: function(rows, headers) {
+    var trades = [];
+    var hi = {};
+    headers.forEach(function(h, i) { hi[h.trim()] = i; });
+
+    // Group by symbol to match buys and sells
+    var bySymbol = {};
+    rows.forEach(function(row) {
+      if (!row || row.length < 5) return;
+      var status = (row[hi['Status']] || '').trim();
+      if (status !== 'Filled') return;
+      var symbol = (row[hi['Symbol']] || '').trim();
+      var side = (row[hi['Side']] || '').trim();
+      var qty = parseInt(row[hi['Filled']] || row[hi['Qty']] || '0');
+      var price = parseFloat((row[hi['Avg Price']] || row[hi['Price']] || '0').replace('@','').trim());
+      var timeStr = (row[hi['Filled Time']] || row[hi['Time']] || '').trim();
+      if (!symbol || !qty || !price || !timeStr) return;
+      if (!bySymbol[symbol]) bySymbol[symbol] = {buys:[], sells:[]};
+      var entry = {qty: qty, price: price, time: timeStr};
+      if (side === 'Buy') bySymbol[symbol].buys.push(entry);
+      else if (side === 'Sell') bySymbol[symbol].sells.push(entry);
+    });
+
+    // Match buys to sells
+    Object.keys(bySymbol).forEach(function(symbol) {
+      var d = bySymbol[symbol];
+      if (!d.buys.length || !d.sells.length) return;
+
+      d.buys.sort(function(a,b){ return new Date(a.time) - new Date(b.time); });
+      d.sells.sort(function(a,b){ return new Date(a.time) - new Date(b.time); });
+
+      var totalBuyQty = d.buys.reduce(function(s,b){ return s+b.qty; }, 0);
+      var totalSellQty = d.sells.reduce(function(s,b){ return s+b.qty; }, 0);
+      var avgBuy = d.buys.reduce(function(s,b){ return s+b.price*b.qty; },0) / totalBuyQty;
+      var avgSell = d.sells.reduce(function(s,b){ return s+b.price*b.qty; },0) / totalSellQty;
+      var matchedQty = Math.min(totalBuyQty, totalSellQty);
+      var pnl = Math.round((avgSell - avgBuy) * matchedQty * 100) / 100;
+
+      // Parse times
+      var entryTime = TST_CSV.parseWebullTime(d.buys[0].time);
+      var exitTime = TST_CSV.parseWebullTime(d.sells[d.sells.length-1].time);
+      var holdMins = entryTime && exitTime ? Math.round((exitTime - entryTime) / 60000) : null;
+
+      trades.push({
+        ticker: symbol,
+        direction: 'Long',
+        actual_entry: Math.round(avgBuy * 10000) / 10000,
+        exit_price: Math.round(avgSell * 10000) / 10000,
+        qty: matchedQty,
+        pnl: pnl,
+        entry_time: entryTime ? entryTime.toISOString() : null,
+        exit_time: exitTime ? exitTime.toISOString() : null,
+        hold_minutes: holdMins,
+        source: 'csv',
+        // Fields student fills in
+        setup_type: 'Other',
+        exit_reason: pnl > 0 ? 'Target Hit' : 'Stop Hit',
+        notes: null,
+        planned_entry: null,
+        planned_stop: null,
+        actual_stop: null,
+        planned_qty: matchedQty
+      });
+    });
+
+    return trades;
+  },
+
+  parseWebullTime: function(str) {
+    if (!str) return null;
+    try {
+      // Format: "01/02/2026 09:35:58 EST" or "EDT"
+      var clean = str.replace(' EST','').replace(' EDT','').replace(' CST','').replace(' PST','').trim();
+      // MM/DD/YYYY HH:MM:SS
+      var parts = clean.split(' ');
+      if (parts.length >= 2) {
+        var dateParts = parts[0].split('/');
+        var timeParts = parts[1].split(':');
+        if (dateParts.length === 3 && timeParts.length === 3) {
+          return new Date(
+            parseInt(dateParts[2]),
+            parseInt(dateParts[0]) - 1,
+            parseInt(dateParts[1]),
+            parseInt(timeParts[0]),
+            parseInt(timeParts[1]),
+            parseInt(timeParts[2])
+          );
+        }
+      }
+      return new Date(str);
+    } catch(e) { return null; }
+  },
+
+  // Main CSV parser entry point
+  parseCSV: function(text) {
+    var lines = text.trim().split('\n');
+    if (lines.length < 2) return {error: 'File appears empty.'};
+
+    var headers = lines[0].split(',').map(function(h){ return h.replace(/"/g,'').trim(); });
+    var brokerage = TST_CSV.detectBrokerage(headers);
+
+    var rows = lines.slice(1).map(function(line) {
+      // Handle quoted commas
+      var result = [];
+      var inQuote = false;
+      var current = '';
+      for (var i = 0; i < line.length; i++) {
+        var ch = line[i];
+        if (ch === '"') { inQuote = !inQuote; continue; }
+        if (ch === ',' && !inQuote) { result.push(current.trim()); current = ''; continue; }
+        current += ch;
+      }
+      result.push(current.trim());
+      return result;
+    }).filter(function(r){ return r.some(function(c){ return c.length > 0; }); });
+
+    var trades = [];
+    if (brokerage === 'webull') {
+      trades = TST_CSV.parseWebull(rows, headers);
+    } else {
+      return {error: 'Brokerage not recognized. Currently supporting Webull CSV exports. More brokerages coming soon.'};
+    }
+
+    if (!trades.length) return {error: 'No completed trades found in this file. Make sure you are exporting filled orders.'};
+    return {trades: trades, brokerage: brokerage};
+  },
+
+  // Render the import UI
+  renderImportUI: function() {
+    return '<div class="csv-import-wrap" id="csvImportWrap">' +
+      '<div class="csv-import-header">' +
+        '<div class="csv-import-title">Import from Brokerage</div>' +
+        '<div class="csv-import-sub">Export your order history from Webull and upload it here. Trades import automatically with entry/exit prices, P&L, and timestamps. You just add the setup type and notes.</div>' +
+      '</div>' +
+      '<div class="csv-drop-zone" id="csvDropZone" onclick="document.getElementById(\'csvFileInput\').click()">' +
+        '<div class="csv-drop-icon">📂</div>' +
+        '<div class="csv-drop-title">Click to upload CSV</div>' +
+        '<div class="csv-drop-sub">Webull order export · Drag and drop or click to browse</div>' +
+        '<input type="file" id="csvFileInput" accept=".csv" style="display:none" onchange="TST_CSV.handleFile(this.files[0])">' +
+      '</div>' +
+      '<div id="csvPreview" style="display:none"></div>' +
+    '</div>';
+  },
+
+  handleFile: function(file) {
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var result = TST_CSV.parseCSV(e.target.result);
+      if (result.error) {
+        TST_CSV.showPreviewError(result.error);
+      } else {
+        TST_CSV.showPreview(result.trades, result.brokerage);
+      }
+    };
+    reader.readAsText(file);
+
+    // Drag visual feedback
+    var dz = document.getElementById('csvDropZone');
+    if (dz) dz.style.borderColor = 'var(--green)';
+  },
+
+  showPreviewError: function(msg) {
+    var preview = document.getElementById('csvPreview');
+    if (!preview) return;
+    preview.style.display = 'block';
+    preview.innerHTML = '<div class="csv-error">'+msg+'</div>';
+  },
+
+  showPreview: function(trades, brokerage) {
+    var preview = document.getElementById('csvPreview');
+    if (!preview) return;
+
+    var setupTypes = ['TST Flag Breakout','TST Dip Buy','TST Breakout','TST Reversal','TST Momentum','TST Liquidity Sweep','TST Gap Play','TST V-Shape Recovery','TST VWAP Reclaim','TST Opening Drive','Other'];
+    var setupOpts = setupTypes.map(function(s){ return '<option value="'+s+'">'+(s==='Other'?'— Select Setup —':s)+'</option>'; }).join('');
+
+    var rows = trades.map(function(t, i) {
+      var pnlColor = t.pnl > 0 ? '#22c55e' : '#ef4444';
+      var pnlStr = (t.pnl >= 0 ? '+' : '') + '$' + Math.abs(t.pnl).toFixed(2);
+      var dateStr = t.entry_time ? new Date(t.entry_time).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+      var timeStr = t.entry_time ? new Date(t.entry_time).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) : '';
+      return '<tr>' +
+        '<td><div class="trade-ticker">'+t.ticker+'</div><div class="trade-date">'+dateStr+' '+timeStr+'</div></td>' +
+        '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td>' +
+        '<td>$'+t.actual_entry.toFixed(2)+' → $'+t.exit_price.toFixed(2)+'</td>' +
+        '<td>'+(t.hold_minutes !== null ? t.hold_minutes+'m' : '—')+'</td>' +
+        '<td>' +
+          '<select class="csv-setup-select" data-idx="'+i+'" style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;width:180px;">' +
+            setupOpts +
+          '</select>' +
+        '</td>' +
+        '<td><input type="text" class="csv-notes-input" data-idx="'+i+'" placeholder="Notes..." style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;width:140px;"></td>' +
+      '</tr>';
+    }).join('');
+
+    // Store trades in memory for later
+    window._csvPendingTrades = trades;
+
+    preview.style.display = 'block';
+    preview.innerHTML =
+      '<div class="csv-preview-header">' +
+        '<div class="csv-preview-count">'+trades.length+' trades found from '+brokerage.charAt(0).toUpperCase()+brokerage.slice(1)+'</div>' +
+        '<div class="csv-preview-sub">Add setup types below, then confirm to import all trades.</div>' +
+      '</div>' +
+      '<div class="trade-table-wrap" style="margin-bottom:16px;">' +
+        '<table class="trade-table">' +
+          '<thead><tr><th>Trade</th><th>P&L</th><th>Entry → Exit</th><th>Hold</th><th>Setup Type</th><th>Notes</th></tr></thead>' +
+          '<tbody>'+rows+'</tbody>' +
+        '</table>' +
+      '</div>' +
+      '<div style="display:flex;gap:12px;">' +
+        '<button class="btn-primary-green" onclick="TST_CSV.confirmImport()">Import All '+trades.length+' Trades</button>' +
+        '<button class="btn-outline-green" onclick="TST_CSV.cancelImport()">Cancel</button>' +
+      '</div>' +
+      '<div id="csvImportStatus" style="margin-top:12px;font-size:13px;display:none;"></div>';
+  },
+
+  confirmImport: async function() {
+    var trades = window._csvPendingTrades;
+    if (!trades || !trades.length) return;
+
+    var user = await getUser();
+    if (!user) { alert('Please log in first.'); return; }
+
+    var status = document.getElementById('csvImportStatus');
+    if (status) { status.style.display = 'block'; status.style.color = 'var(--muted)'; status.textContent = 'Importing trades...'; }
+
+    // Collect setup types and notes from the preview table
+    document.querySelectorAll('.csv-setup-select').forEach(function(sel) {
+      var idx = parseInt(sel.dataset.idx);
+      if (trades[idx]) trades[idx].setup_type = sel.value || 'Other';
+    });
+    document.querySelectorAll('.csv-notes-input').forEach(function(inp) {
+      var idx = parseInt(inp.dataset.idx);
+      if (trades[idx]) trades[idx].notes = inp.value.trim() || null;
+    });
+
+    // Add user_id and created_at
+    var toInsert = trades.map(function(t) {
+      return Object.assign({}, t, {
+        user_id: user.id,
+        created_at: new Date().toISOString()
+      });
+    });
+
+    try {
+      var result = await window.supabase.from('trades').insert(toInsert);
+      if (result.error) throw result.error;
+      if (status) { status.style.color = '#22c55e'; status.textContent = trades.length + ' trades imported successfully!'; }
+      window._csvPendingTrades = null;
+      setTimeout(function() {
+        var preview = document.getElementById('csvPreview');
+        if (preview) preview.style.display = 'none';
+        TST_JOURNAL.loadTrades();
+      }, 1500);
+    } catch(e) {
+      if (status) { status.style.color = '#ef4444'; status.textContent = 'Error: ' + (e.message || 'Unknown error'); }
+    }
+  },
+
+  cancelImport: function() {
+    window._csvPendingTrades = null;
+    var preview = document.getElementById('csvPreview');
+    if (preview) { preview.style.display = 'none'; preview.innerHTML = ''; }
+    var dz = document.getElementById('csvDropZone');
+    if (dz) dz.style.borderColor = '';
+  },
+
+  setupDragDrop: function() {
+    var dz = document.getElementById('csvDropZone');
+    if (!dz) return;
+    dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.style.borderColor = 'var(--green)'; dz.style.background = 'rgba(34,197,94,0.05)'; });
+    dz.addEventListener('dragleave', function(){ dz.style.borderColor = ''; dz.style.background = ''; });
+    dz.addEventListener('drop', function(e){
+      e.preventDefault();
+      dz.style.borderColor = '';
+      dz.style.background = '';
+      var file = e.dataTransfer.files[0];
+      if (file && file.name.endsWith('.csv')) TST_CSV.handleFile(file);
+    });
+  }
+};
+
+// ============================================================
+// CHART VIEWER — Shows candlestick chart with entry/exit arrows
+// Uses TradingView Lightweight Charts (free, open source)
+// ============================================================
+
+var TST_CHART = {
+
+  // Only show chart button for CSV-imported trades
+  renderChartBtn: function(trade) {
+    if (trade.source !== 'csv' || !trade.entry_time) return '';
+    return '<button class="chart-view-btn" onclick="TST_CHART.openChart(\''+trade.id+'\', \''+trade.ticker+'\', \''+trade.entry_time+'\', \''+trade.exit_time+'\', '+trade.actual_entry+', '+trade.exit_price+', '+(trade.planned_stop||'null')+', \''+trade.direction+'\', '+trade.pnl+')" title="View Chart">📈</button>';
+  },
+
+  openChart: function(id, ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction, pnl) {
+    // Create modal
+    var modal = document.createElement('div');
+    modal.id = 'chartModal';
+    modal.className = 'chart-modal';
+    modal.innerHTML =
+      '<div class="chart-modal-inner">' +
+        '<div class="chart-modal-header">' +
+          '<div>' +
+            '<div class="chart-modal-ticker">'+ticker+'</div>' +
+            '<div class="chart-modal-meta">'+direction+' &nbsp;·&nbsp; Entry: $'+entryPrice+' &nbsp;·&nbsp; Exit: $'+exitPrice+' &nbsp;·&nbsp; <span style="color:'+(pnl>=0?'#22c55e':'#ef4444')+';font-weight:700;">'+(pnl>=0?'+':'')+'$'+Math.abs(pnl).toFixed(2)+'</span></div>' +
+          '</div>' +
+          '<button class="chart-modal-close" onclick="TST_CHART.closeChart()">✕</button>' +
+        '</div>' +
+        '<div id="chartContainer" class="chart-container">' +
+          '<div class="chart-loading">Loading chart data...</div>' +
+        '</div>' +
+        '<div class="chart-legend">' +
+          '<span class="legend-item"><span style="color:#22c55e">▲</span> Entry $'+entryPrice+'</span>' +
+          '<span class="legend-item"><span style="color:#ef4444">▼</span> Exit $'+exitPrice+'</span>' +
+          (stopPrice ? '<span class="legend-item"><span style="color:#f59e0b">─ ─</span> Stop $'+stopPrice+'</span>' : '') +
+        '</div>' +
+      '</div>';
+
+    document.body.appendChild(modal);
+    document.body.style.overflow = 'hidden';
+
+    // Load Lightweight Charts then fetch data
+    TST_CHART.loadLightweightCharts(function() {
+      TST_CHART.fetchAndRender(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction);
+    });
+
+    // Close on backdrop click
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) TST_CHART.closeChart();
+    });
+  },
+
+  closeChart: function() {
+    var modal = document.getElementById('chartModal');
+    if (modal) modal.remove();
+    document.body.style.overflow = '';
+  },
+
+  loadLightweightCharts: function(callback) {
+    if (window.LightweightCharts) { callback(); return; }
+    var script = document.createElement('script');
+    script.src = 'https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js';
+    script.onload = callback;
+    document.head.appendChild(script);
+  },
+
+  fetchAndRender: async function(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction) {
+    var container = document.getElementById('chartContainer');
+    if (!container) return;
+
+    try {
+      // Get the underlying ticker (strip options formatting)
+      var underlying = ticker.replace(/\d{6}[CP]\d+$/, '') || ticker;
+      // For options, use the underlying stock
+      var chartTicker = underlying;
+
+      // Determine date range — show the full trading day
+      var entryDate = new Date(entryTime);
+      var startDate = new Date(entryDate);
+      startDate.setHours(9, 0, 0, 0);
+      var endDate = new Date(entryDate);
+      endDate.setHours(16, 30, 0, 0);
+
+      // Format dates for Yahoo Finance
+      var period1 = Math.floor(startDate.getTime() / 1000) - 3600;
+      var period2 = Math.floor(endDate.getTime() / 1000) + 3600;
+
+      // Fetch 1-minute data from Yahoo Finance via a CORS proxy
+      // Using allorigins as a free CORS proxy
+      var yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/' + chartTicker +
+        '?interval=1m&period1=' + period1 + '&period2=' + period2;
+      var proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(yahooUrl);
+
+      var response = await fetch(proxyUrl);
+      var data = await response.json();
+      var parsed = JSON.parse(data.contents);
+
+      var chart_data = parsed.chart.result[0];
+      var timestamps = chart_data.timestamp;
+      var ohlcv = chart_data.indicators.quote[0];
+
+      if (!timestamps || !timestamps.length) {
+        container.innerHTML = '<div class="chart-no-data">No chart data available for this date. The market may have been closed.</div>';
+        return;
+      }
+
+      // Build candle data
+      var candles = timestamps.map(function(ts, i) {
+        return {
+          time: ts,
+          open: ohlcv.open[i],
+          high: ohlcv.high[i],
+          low: ohlcv.low[i],
+          close: ohlcv.close[i]
+        };
+      }).filter(function(c) {
+        return c.open !== null && c.high !== null && c.low !== null && c.close !== null;
+      });
+
+      container.innerHTML = '';
+      container.style.height = '380px';
+
+      // Create chart
+      var chart = LightweightCharts.createChart(container, {
+        width: container.clientWidth,
+        height: 380,
+        layout: { background: { color: '#0a0f0d' }, textColor: '#6b7c6e' },
+        grid: { vertLines: { color: '#1e2820' }, horzLines: { color: '#1e2820' } },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+        rightPriceScale: { borderColor: '#1e2820' },
+        timeScale: { borderColor: '#1e2820', timeVisible: true, secondsVisible: false }
+      });
+
+      var candleSeries = chart.addCandlestickSeries({
+        upColor: '#22c55e',
+        downColor: '#ef4444',
+        borderUpColor: '#22c55e',
+        borderDownColor: '#ef4444',
+        wickUpColor: '#22c55e',
+        wickDownColor: '#ef4444'
+      });
+
+      candleSeries.setData(candles);
+
+      // Entry marker
+      var entryTs = Math.floor(new Date(entryTime).getTime() / 1000);
+      var exitTs = exitTime ? Math.floor(new Date(exitTime).getTime() / 1000) : null;
+
+      var markers = [];
+
+      markers.push({
+        time: entryTs,
+        position: direction === 'Long' ? 'belowBar' : 'aboveBar',
+        color: '#22c55e',
+        shape: direction === 'Long' ? 'arrowUp' : 'arrowDown',
+        text: 'BUY $' + entryPrice,
+        size: 2
+      });
+
+      if (exitTs) {
+        markers.push({
+          time: exitTs,
+          position: direction === 'Long' ? 'aboveBar' : 'belowBar',
+          color: '#ef4444',
+          shape: direction === 'Long' ? 'arrowDown' : 'arrowUp',
+          text: 'SELL $' + exitPrice,
+          size: 2
+        });
+      }
+
+      candleSeries.setMarkers(markers);
+
+      // Stop price line
+      if (stopPrice) {
+        var stopLine = chart.addLineSeries({
+          color: '#f59e0b',
+          lineWidth: 1,
+          lineStyle: LightweightCharts.LineStyle.Dashed,
+          priceLineVisible: false,
+          lastValueVisible: false
+        });
+        stopLine.setData([
+          {time: candles[0].time, value: stopPrice},
+          {time: candles[candles.length-1].time, value: stopPrice}
+        ]);
+      }
+
+      // Fit to content
+      chart.timeScale().fitContent();
+
+      // Scroll to entry candle
+      chart.timeScale().scrollToPosition(0, false);
+
+    } catch(e) {
+      if (container) {
+        container.innerHTML = '<div class="chart-no-data">Could not load chart data. ' +
+          'You can <a href="https://finance.yahoo.com/chart/' + ticker + '" target="_blank" style="color:var(--green)">view this chart on Yahoo Finance</a> instead.</div>';
+      }
+    }
+  }
+};
+
