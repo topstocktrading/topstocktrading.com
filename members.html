@@ -350,6 +350,7 @@
     <div class="input-group"><label>Password</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="login-btn" onclick="doLogin()">Access My Course</button>
     <div class="login-error" id="lerr">Incorrect email or password.</div>
+    <div style="margin-top:16px;font-size:12px;color:var(--muted);">First time? Your login was emailed to you when you enrolled.</div>
   </div>
 </div>
 
@@ -1068,15 +1069,61 @@ function showProfileDashboard(){
   window.scrollTo(0,0);
 }
 
-function doLogin(){
-  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value.trim();
-  if(e===DEMO.email&&p===DEMO.password){
+async function doLogin(){
+  const e=document.getElementById('le').value.trim();
+  const p=document.getElementById('lp').value.trim();
+  const errEl=document.getElementById('lerr');
+  const btn=document.querySelector('.login-btn');
+  if(!e||!p){errEl.textContent='Please enter your email and password.';errEl.style.display='block';return;}
+  if(btn){btn.textContent='Signing in...';btn.disabled=true;}
+  errEl.style.display='none';
+  try {
+    const {data,error}=await supabase.auth.signInWithPassword({email:e,password:p});
+    if(error){
+      errEl.textContent=error.message||'Incorrect email or password.';
+      errEl.style.display='block';
+      if(btn){btn.textContent='Access My Course';btn.disabled=false;}
+      return;
+    }
+    const user=data.user;
+    const displayName=user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
-    document.getElementById('sname').textContent=DEMO.name;
+    document.getElementById('sname').textContent=displayName;
     buildSidebar();loadLesson('beginner');
-  } else { document.getElementById('lerr').style.display='block'; }
+  } catch(err){
+    errEl.textContent='Login error. Please try again.';
+    errEl.style.display='block';
+    if(btn){btn.textContent='Access My Course';btn.disabled=false;}
+  }
 }
-function doLogout(){document.getElementById('login-screen').style.display='flex';document.getElementById('le').value='';document.getElementById('lp').value='';}
+async function doLogout(){
+  await supabase.auth.signOut();
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('le').value='';
+  document.getElementById('lp').value='';
+  document.getElementById('sname').textContent='Trader';
+}
+
+// Check for existing Supabase session on page load
+async function checkExistingSession(){
+  try {
+    const {data:{session}}=await supabase.auth.getSession();
+    if(session&&session.user){
+      const displayName=session.user.email.split('@')[0];
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('sname').textContent=displayName;
+      buildSidebar();loadLesson('beginner');
+    }
+  } catch(e){ console.log('Session check:',e); }
+}
+
+// Auto-check session when page loads
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(checkExistingSession, 500);
+});
+
+// Also update admin check to use real email
+window.TST_ADMIN_EMAIL = 'h@topstocktrading.com';
 
 function allLessons(){
   const all=[];
