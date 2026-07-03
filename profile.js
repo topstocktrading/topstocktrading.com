@@ -95,6 +95,8 @@ var TST_JOURNAL = {
   // JOURNAL TAB
   // ============================================================
   renderJournalTab: function() {
+    // Wire up drag/drop after render
+    setTimeout(function(){ if(window.TST_CSV) TST_CSV.setupDragDrop(); }, 100);
     var setupTypes = ['TST Flag Breakout','TST Dip Buy','TST Breakout','TST Reversal','TST Momentum','TST Liquidity Sweep','TST Gap Play','TST V-Shape Recovery','TST VWAP Reclaim','TST Opening Drive','Other'];
     var exitReasons = ['Stop Hit','Target Hit','Manual Exit - Profit','Manual Exit - Loss','Time Exit','Trailing Stop','Other'];
     var setupOpts = setupTypes.map(function(s){ return '<option value="'+s+'">'+s+'</option>'; }).join('');
@@ -102,6 +104,7 @@ var TST_JOURNAL = {
 
     return '<div class="profile-section">' +
       // LOG NEW TRADE FORM
+      TST_CSV.renderImportUI() +
       '<div class="journal-form-wrap">' +
         '<div class="journal-form-title">Log a Trade</div>' +
         '<div class="journal-form" id="tradeForm">' +
@@ -297,7 +300,7 @@ var TST_JOURNAL = {
         '</tr>';
       }).join('');
       wrap.innerHTML = '<div class="trade-table-wrap"><table class="trade-table">' +
-        '<thead><tr><th>Ticker</th><th>Direction</th><th>Setup</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Hold</th><th>Result</th></tr></thead>' +
+        '<thead><tr><th>Ticker</th><th>Direction</th><th>Setup</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Hold</th><th>Result</th><th></th></tr></thead>' +
         '<tbody>'+rows+'</tbody>' +
       '</table></div>';
     } catch(e) {
@@ -883,7 +886,8 @@ var TST_CHART = {
     return '<button class="chart-view-btn" onclick="TST_CHART.openChart(\''+trade.id+'\', \''+trade.ticker+'\', \''+trade.entry_time+'\', \''+trade.exit_time+'\', '+trade.actual_entry+', '+trade.exit_price+', '+(trade.planned_stop||'null')+', \''+trade.direction+'\', '+trade.pnl+')" title="View Chart">📈</button>';
   },
 
-  openChart: function(id, ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction, pnl) {
+  openChart: function(btn, ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction, pnl) {
+    var id = ticker + '_' + entryTime;
     // Create modal
     var modal = document.createElement('div');
     modal.id = 'chartModal';
