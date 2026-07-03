@@ -983,9 +983,7 @@ var TST_CHART = {
     document.body.style.overflow = 'hidden';
 
     // Load Lightweight Charts then fetch data
-    TST_CHART.loadLightweightCharts(function() {
-      TST_CHART.fetchAndRender(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction);
-    });
+    TST_CHART.fetchAndRender(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction);
 
     // Close on backdrop click
     modal.addEventListener('click', function(e) {
@@ -1024,139 +1022,67 @@ var TST_CHART = {
     }
   },
 
-  fetchAndRender: async function(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction) {
+  fetchAndRender: function(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction) {
     var container = document.getElementById('chartContainer');
     if (!container) return;
 
-    try {
-      // Get the underlying ticker (strip options formatting)
-      var underlying = ticker.replace(/\d{6}[CP]\d+$/, '') || ticker;
-      // For options, use the underlying stock
-      var chartTicker = underlying;
+    // Get underlying ticker (strip options suffix like QQQ260616C00720000 -> QQQ)
+    var underlying = ticker.replace(/\d{6}[CP]\d+$/, '') || ticker;
 
-      // Determine date range — show the full trading day
-      var entryDate = new Date(entryTime);
-      var startDate = new Date(entryDate);
-      startDate.setHours(9, 0, 0, 0);
-      var endDate = new Date(entryDate);
-      endDate.setHours(16, 30, 0, 0);
+    // Get trading date from entry time
+    var entryDate = new Date(entryTime);
+    var dateStr = entryDate.getFullYear() + '-' +
+      String(entryDate.getMonth()+1).padStart(2,'0') + '-' +
+      String(entryDate.getDate()).padStart(2,'0');
 
-      // Format dates for Yahoo Finance
-      var period1 = Math.floor(startDate.getTime() / 1000) - 3600;
-      var period2 = Math.floor(endDate.getTime() / 1000) + 3600;
+    container.innerHTML = '';
+    container.style.height = '460px';
+    container.style.position = 'relative';
 
-      // Fetch 1-minute data from Yahoo Finance via a CORS proxy
-      // Using allorigins as a free CORS proxy
-      var yahooUrl = 'https://query1.finance.yahoo.com/v8/finance/chart/' + chartTicker +
-        '?interval=1m&period1=' + period1 + '&period2=' + period2;
-      var proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent(yahooUrl);
+    // TradingView widget - free, no API key needed
+    var widgetDiv = document.createElement('div');
+    widgetDiv.style.height = '420px';
+    container.appendChild(widgetDiv);
 
-      var response = await fetch(proxyUrl);
-      var data = await response.json();
-      var parsed = JSON.parse(data.contents);
+    var script = document.createElement('script');
+    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
+    script.async = true;
+    script.innerHTML = JSON.stringify({
+      autosize: true,
+      symbol: 'NASDAQ:' + underlying,
+      interval: '5',
+      timezone: 'America/New_York',
+      theme: 'dark',
+      style: '1',
+      locale: 'en',
+      enable_publishing: false,
+      allow_symbol_change: false,
+      hide_top_toolbar: false,
+      hide_legend: false,
+      save_image: false,
+      calendar: false,
+      hide_volume: false,
+      support_host: 'https://www.tradingview.com',
+      container_id: 'tv_chart_' + underlying
+    });
 
-      var chart_data = parsed.chart.result[0];
-      var timestamps = chart_data.timestamp;
-      var ohlcv = chart_data.indicators.quote[0];
+    widgetDiv.id = 'tv_chart_' + underlying;
+    widgetDiv.appendChild(script);
 
-      if (!timestamps || !timestamps.length) {
-        container.innerHTML = '<div class="chart-no-data">No chart data available for this date. The market may have been closed.</div>';
-        return;
-      }
+    // Show trade info panel below chart
+    var infoPanel = document.createElement('div');
+    infoPanel.style.cssText = 'padding:12px 16px;background:var(--bg);border-top:1px solid var(--border);font-size:13px;color:var(--muted);display:flex;gap:24px;flex-wrap:wrap;';
+    
+    var entryStr = new Date(entryTime).toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'});
+    var exitStr = exitTime ? new Date(exitTime).toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'}) : 'Open';
 
-      // Build candle data
-      var candles = timestamps.map(function(ts, i) {
-        return {
-          time: ts,
-          open: ohlcv.open[i],
-          high: ohlcv.high[i],
-          low: ohlcv.low[i],
-          close: ohlcv.close[i]
-        };
-      }).filter(function(c) {
-        return c.open !== null && c.high !== null && c.low !== null && c.close !== null;
-      });
-
-      container.innerHTML = '';
-      container.style.height = '380px';
-
-      // Create chart
-      var chart = LightweightCharts.createChart(container, {
-        width: container.clientWidth,
-        height: 380,
-        layout: { background: { color: '#0a0f0d' }, textColor: '#6b7c6e' },
-        grid: { vertLines: { color: '#1e2820' }, horzLines: { color: '#1e2820' } },
-        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-        rightPriceScale: { borderColor: '#1e2820' },
-        timeScale: { borderColor: '#1e2820', timeVisible: true, secondsVisible: false }
-      });
-
-      var candleSeries = chart.addCandlestickSeries({
-        upColor: '#22c55e',
-        downColor: '#ef4444',
-        borderUpColor: '#22c55e',
-        borderDownColor: '#ef4444',
-        wickUpColor: '#22c55e',
-        wickDownColor: '#ef4444'
-      });
-
-      candleSeries.setData(candles);
-
-      // Entry marker
-      var entryTs = Math.floor(new Date(entryTime).getTime() / 1000);
-      var exitTs = exitTime ? Math.floor(new Date(exitTime).getTime() / 1000) : null;
-
-      var markers = [];
-
-      markers.push({
-        time: entryTs,
-        position: direction === 'Long' ? 'belowBar' : 'aboveBar',
-        color: '#22c55e',
-        shape: direction === 'Long' ? 'arrowUp' : 'arrowDown',
-        text: 'BUY $' + entryPrice,
-        size: 2
-      });
-
-      if (exitTs) {
-        markers.push({
-          time: exitTs,
-          position: direction === 'Long' ? 'aboveBar' : 'belowBar',
-          color: '#ef4444',
-          shape: direction === 'Long' ? 'arrowDown' : 'arrowUp',
-          text: 'SELL $' + exitPrice,
-          size: 2
-        });
-      }
-
-      candleSeries.setMarkers(markers);
-
-      // Stop price line
-      if (stopPrice) {
-        var stopLine = chart.addLineSeries({
-          color: '#f59e0b',
-          lineWidth: 1,
-          lineStyle: LightweightCharts.LineStyle.Dashed,
-          priceLineVisible: false,
-          lastValueVisible: false
-        });
-        stopLine.setData([
-          {time: candles[0].time, value: stopPrice},
-          {time: candles[candles.length-1].time, value: stopPrice}
-        ]);
-      }
-
-      // Fit to content
-      chart.timeScale().fitContent();
-
-      // Scroll to entry candle
-      chart.timeScale().scrollToPosition(0, false);
-
-    } catch(e) {
-      if (container) {
-        container.innerHTML = '<div class="chart-no-data">Could not load chart data. ' +
-          'You can <a href="https://finance.yahoo.com/chart/' + ticker + '" target="_blank" style="color:var(--green)">view this chart on Yahoo Finance</a> instead.</div>';
-      }
-    }
+    infoPanel.innerHTML =
+      '<span><strong style="color:#22c55e">▲ Entry</strong> $' + entryPrice + ' at ' + entryStr + '</span>' +
+      '<span><strong style="color:#ef4444">▼ Exit</strong> $' + exitPrice + ' at ' + exitStr + '</span>' +
+      (stopPrice ? '<span><strong style="color:#f59e0b">─ Stop</strong> $' + stopPrice + '</span>' : '') +
+      '<span style="color:var(--muted);font-size:11px;">Navigate to ' + dateStr + ' on the chart above to see your trade</span>';
+    
+    container.appendChild(infoPanel);
   }
 };
 
