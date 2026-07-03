@@ -256,7 +256,10 @@ var TST_JOURNAL = {
     }
 
     var mult = direction === 'Long' ? 1 : -1;
-    var pnl = (exitPrice - actualEntry) * mult * qty;
+    // Detect options contract (ticker contains digits like QQQ260616C00720000)
+    var isOpt = /\d{6}[CP]\d+/.test(ticker);
+    var cMult = isOpt ? 100 : 1;
+    var pnl = (exitPrice - actualEntry) * mult * qty * cMult;
     var holdMins = null;
     if (entryTime && exitTime) {
       holdMins = Math.round((new Date(exitTime) - new Date(entryTime)) / 60000);
@@ -666,7 +669,10 @@ var TST_CSV = {
       var avgBuy = d.buys.reduce(function(s,b){ return s+b.price*b.qty; },0) / totalBuyQty;
       var avgSell = d.sells.reduce(function(s,b){ return s+b.price*b.qty; },0) / totalSellQty;
       var matchedQty = Math.min(totalBuyQty, totalSellQty);
-      var pnl = Math.round((avgSell - avgBuy) * matchedQty * 100) / 100;
+      // Detect if this is an options contract (long symbol with digits+C/P+digits)
+      var isOption = /^[A-Z]+\d{6}[CP]\d+$/.test(symbol);
+      var contractMult = isOption ? 100 : 1;
+      var pnl = Math.round((avgSell - avgBuy) * matchedQty * contractMult * 100) / 100;
 
       // Parse times
       var entryTime = TST_CSV.parseWebullTime(d.buys[0].time);
@@ -684,6 +690,7 @@ var TST_CSV = {
         exit_time: exitTime ? exitTime.toISOString() : null,
         hold_minutes: holdMins,
         source: 'csv',
+        is_option: isOption,
         // Fields student fills in
         setup_type: 'Other',
         exit_reason: pnl > 0 ? 'Target Hit' : 'Stop Hit',
