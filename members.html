@@ -227,6 +227,79 @@
   .quiz-page-header p{font-size:15px;color:var(--muted);line-height:1.7;}
   .sidebar-quiz-tab .mod-name{color:var(--green) !important;font-weight:700;}
 
+  
+  /* PROFILE SYSTEM */
+  .profile-page{max-width:960px;margin:0 auto;}
+  .profile-header{margin-bottom:28px;}
+  .profile-header-label{font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+  .profile-header-title{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;color:var(--text);}
+  .profile-tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;}
+  .profile-tab{background:transparent;border:none;border-bottom:2px solid transparent;padding:10px 20px;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px;color:var(--muted);cursor:pointer;transition:all .2s;margin-bottom:-1px;}
+  .profile-tab:hover{color:var(--text);}
+  .profile-tab.active{color:var(--green);border-bottom-color:var(--green);}
+  .profile-section{padding:4px 0;}
+  .overview-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+  @media(max-width:768px){.overview-grid{grid-template-columns:repeat(2,1fr);}}
+  .overview-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
+  .ov-card-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .ov-card-num{font-family:'Rajdhani',sans-serif;font-size:32px;font-weight:700;color:var(--text);line-height:1;margin-bottom:4px;}
+  .ov-card-num.ov-small{font-size:20px;}
+  .ov-card-sub{font-size:12px;color:var(--muted);}
+  .overview-actions{display:flex;gap:12px;}
+  .btn-primary-green{background:var(--green);color:#000;border:none;border-radius:10px;padding:12px 28px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .2s;}
+  .btn-primary-green:hover{background:#1aaa50;transform:translateY(-1px);}
+  .btn-outline-green{background:transparent;color:var(--green);border:1.5px solid var(--green);border-radius:10px;padding:12px 28px;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .2s;}
+  .btn-outline-green:hover{background:rgba(34,197,94,.08);}
+  .journal-form-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:28px;}
+  .journal-form-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:20px;}
+  .journal-form{display:grid;gap:16px;}
+  .form-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  @media(max-width:600px){.form-row{grid-template-columns:1fr;}}
+  .form-field{display:flex;flex-direction:column;gap:6px;}
+  .form-field label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+  .form-field input,.form-field select{background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;font-family:inherit;transition:border-color .2s;outline:none;}
+  .form-field input:focus,.form-field select:focus{border-color:var(--green);}
+  .form-field select option{background:var(--bg);}
+  .journal-history{margin-top:8px;}
+  .journal-history-title{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--text);margin-bottom:16px;}
+  .trade-table-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border);}
+  .trade-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .trade-table thead tr{background:rgba(255,255,255,.03);}
+  .trade-table th{padding:12px 16px;text-align:left;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
+  .trade-table td{padding:12px 16px;border-bottom:1px solid rgba(30,40,32,.5);color:var(--text);}
+  .trade-table tr:last-child td{border-bottom:none;}
+  .trade-table tbody tr:hover{background:rgba(255,255,255,.02);}
+  .trade-ticker{font-weight:700;font-size:14px;color:var(--text);}
+  .trade-date{font-size:11px;color:var(--muted);margin-top:2px;}
+  .trade-direction{font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.5px;}
+  .trade-direction.long{background:rgba(34,197,94,.12);color:#22c55e;}
+  .trade-direction.short{background:rgba(239,68,68,.12);color:#ef4444;}
+  .trade-setup{font-size:11px;color:var(--muted);background:var(--border);padding:3px 8px;border-radius:4px;}
+  .trade-result{font-size:11px;font-weight:700;letter-spacing:.5px;}
+  .perf-stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:28px;}
+  @media(max-width:600px){.perf-stats-grid{grid-template-columns:repeat(2,1fr);}}
+  .perf-stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center;}
+  .perf-stat-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .perf-stat-num{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--text);}
+  .perf-tables-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media(max-width:700px){.perf-tables-grid{grid-template-columns:1fr;}}
+  .perf-table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;}
+  .perf-table-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;}
+  .loading-state{text-align:center;padding:48px 24px;color:var(--muted);font-size:14px;}
+  .empty-state{text-align:center;padding:48px 24px;}
+  .empty-icon{font-size:40px;margin-bottom:16px;}
+  .empty-title{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--text);margin-bottom:8px;}
+  .empty-sub{font-size:14px;color:var(--muted);line-height:1.7;}
+  .behavioral-locked{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px;text-align:center;}
+  .locked-icon{font-size:40px;margin-bottom:16px;}
+  .locked-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--text);margin-bottom:16px;}
+  .locked-body{font-size:14px;color:var(--muted);line-height:1.8;max-width:600px;margin:0 auto;}
+  .admin-stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:8px;}
+  .admin-stat{background:var(--surface);border:1px solid #f59e0b33;border-radius:14px;padding:20px;text-align:center;}
+  .admin-stat-label{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#f59e0b;margin-bottom:8px;}
+  .admin-stat-num{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:var(--text);}
+  .admin-uid{font-family:monospace;font-size:12px;color:var(--muted);}
+
   </style>
 
 </head>
@@ -1099,5 +1172,7 @@ function addMsg(text,type,id){
 </script>
 
 <script src="quiz.js"></script>
+
+<script src="profile.js"></script>
 </body>
 </html>
