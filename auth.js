@@ -104,6 +104,7 @@
         return;
       }
       var user = result.data.user;
+      window._currentUser = user;
       var displayName = user.email.split('@')[0];
       var loginScreen = document.getElementById('login-screen');
       var sname = document.getElementById('sname');
@@ -126,6 +127,7 @@
     if (loginScreen) loginScreen.style.display = 'flex';
     if (leEl) leEl.value = '';
     if (lpEl) lpEl.value = '';
+    window._currentUser = null;
     if (client) {
       client.auth.signOut().catch(function(e) { console.log('Signout:', e); });
     }
