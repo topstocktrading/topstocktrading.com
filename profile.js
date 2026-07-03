@@ -16,11 +16,24 @@ function getSupabase() {
 }
 
 async function getUser() {
+  // Check cached user first (set by auth.js on successful login)
+  if (window._currentUser) return window._currentUser;
+  // Try Supabase client
   var client = getSupabase();
   if (!client) return null;
   try {
     var r = await client.auth.getUser();
-    return r.data ? r.data.user : null;
+    if (r.data && r.data.user) {
+      window._currentUser = r.data.user;
+      return r.data.user;
+    }
+    // Try session as fallback
+    var s = await client.auth.getSession();
+    if (s.data && s.data.session && s.data.session.user) {
+      window._currentUser = s.data.session.user;
+      return s.data.session.user;
+    }
+    return null;
   } catch(e) { return null; }
 }
 
@@ -223,7 +236,24 @@ var TST_JOURNAL = {
     errDiv.style.display = 'none';
 
     var user = await getUser();
-    if (!user) { errDiv.textContent = 'Not logged in.'; errDiv.style.display = 'block'; return; }
+    if (!user) {
+      // Last resort - try getting session directly
+      var client2 = getSupabase();
+      if (client2) {
+        try {
+          var sess = await client2.auth.getSession();
+          if (sess.data && sess.data.session) {
+            window._currentUser = sess.data.session.user;
+            user = sess.data.session.user;
+          }
+        } catch(e2) {}
+      }
+      if (!user) {
+        errDiv.textContent = 'Session error - please refresh the page and log in again.';
+        errDiv.style.display = 'block';
+        return;
+      }
+    }
 
     var mult = direction === 'Long' ? 1 : -1;
     var pnl = (exitPrice - actualEntry) * mult * qty;
@@ -822,7 +852,23 @@ var TST_CSV = {
     if (!trades || !trades.length) return;
 
     var user = await getUser();
-    if (!user) { alert('Please log in first.'); return; }
+    if (!user) {
+      var client3 = getSupabase();
+      if (client3) {
+        try {
+          var sess2 = await client3.auth.getSession();
+          if (sess2.data && sess2.data.session) {
+            window._currentUser = sess2.data.session.user;
+            user = sess2.data.session.user;
+          }
+        } catch(e3) {}
+      }
+      if (!user) {
+        var status2 = document.getElementById('csvImportStatus');
+        if (status2) { status2.style.display='block'; status2.style.color='#ef4444'; status2.textContent='Session expired - please refresh and log in again.'; }
+        return;
+      }
+    }
 
     var status = document.getElementById('csvImportStatus');
     if (status) { status.style.display = 'block'; status.style.color = 'var(--muted)'; status.textContent = 'Importing trades...'; }
