@@ -1095,7 +1095,20 @@ function computeProfile(){
 function showProfileDashboard(){
   if(window.TST_PROFILE){
     window.TST_PROFILE.render();
+    return;
   }
+  // profile.js not loaded yet - wait for it
+  var attempts = 0;
+  var wait = setInterval(function(){
+    attempts++;
+    if(window.TST_PROFILE){
+      clearInterval(wait);
+      window.TST_PROFILE.render();
+    } else if(attempts > 20){
+      clearInterval(wait);
+      document.getElementById('mc').innerHTML = '<div style="padding:40px;color:#ef4444;">Profile system failed to load. Please refresh the page.</div>';
+    }
+  }, 100);
 }
 
 function doLogin(){
@@ -1238,7 +1251,7 @@ function addMsg(text,type,id){
 </script>
 
 <script src="auth.js"></script>
-<script src="profile.js?v=4"></script>
+<script src="profile.js?v=5"></script>
 <script src="quiz.js"></script>
 </body>
 </html>
