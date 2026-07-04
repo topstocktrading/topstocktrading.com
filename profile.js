@@ -1,3 +1,4 @@
+// TST Academy Profile System v3
 
 // TST Academy — Profile System
 // Trade Journal, Performance Dashboard, Admin Panel
@@ -618,9 +619,10 @@ var TST_PROFILE = {
         }).join('') || '<div class="tst-empty">No messages yet.</div>';
 
         body.innerHTML =
-          '<div class="msg-wrap">' +
-            '<div class="msg-header"><div class="msg-title">Message Center</div><div class="msg-sub">All student conversations</div></div>' +
-            '<div class="msg-threads">' + threadHTML + '</div>' +
+          '<div style="max-width:760px;">' +
+            '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:4px;letter-spacing:0.5px;">Message Center</div>' +
+            '<div style="font-size:13px;color:#6b7c6e;margin-bottom:24px;">All student conversations</div>' +
+            '<div style="background:#111712;border:1px solid #1e2820;border-radius:12px;overflow:hidden;">' + threadHTML + '</div>' +
           '</div>';
 
       } else if (tier === '10k' || tier === 'mentorship') {
@@ -638,12 +640,13 @@ var TST_PROFILE = {
         }).join('') || '<div style="text-align:center;padding:32px;color:var(--muted);font-size:14px;">No messages yet. Send your first message below.</div>';
 
         body.innerHTML =
-          '<div class="msg-wrap">' +
-            '<div class="msg-header"><div class="msg-title">Message Center</div><div class="msg-sub">Direct line to TST Academy — responses within 24-48 hours</div></div>' +
-            '<div class="msg-thread-body" id="msgThreadBody">' + msgHTML + '</div>' +
-            '<div class="msg-compose">' +
-              '<textarea id="msgInput" placeholder="Ask a question, request a trade review, or share what you are working on..." rows="3" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:14px;resize:vertical;font-family:inherit;outline:none;"></textarea>' +
-              '<button class="btn-primary-green" style="margin-top:10px;" onclick="TST_PROFILE.sendMessage()">Send Message</button>' +
+          '<div style="max-width:760px;">' +
+            '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:4px;letter-spacing:0.5px;">Message Center</div>' +
+            '<div style="font-size:13px;color:#6b7c6e;margin-bottom:24px;">Direct line to TST Academy — responses within 24-48 hours</div>' +
+            '<div id="msgThreadBody" style="min-height:300px;max-height:500px;overflow-y:auto;padding:16px 0;display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">' + msgHTML + '</div>' +
+            '<div style="margin-top:8px;">' +
+              '<textarea id="msgInput" placeholder="Ask a question, request a trade review, or share what you are working on..." rows="3" style="width:100%;background:#111712;border:1.5px solid #1e2820;border-radius:10px;padding:14px;color:#f0f4f1;font-size:14px;resize:vertical;font-family:inherit;outline:none;box-sizing:border-box;"></textarea>' +
+              '<button onclick="TST_PROFILE.sendMessage()" style="margin-top:10px;background:#22c55e;color:#000;border:none;border-radius:10px;padding:12px 28px;font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Send Message</button>' +
             '</div>' +
           '</div>';
 
@@ -654,15 +657,16 @@ var TST_PROFILE = {
         }, 100);
 
       } else {
-        // Base tier — read only announcements
+        // Base tier
         body.innerHTML =
-          '<div class="msg-wrap">' +
-            '<div class="msg-header"><div class="msg-title">Message Center</div></div>' +
-            '<div class="tst-locked-card">' +
-              '<div class="tst-lock-icon">💬</div>' +
-              '<div class="tst-lock-title">Direct Messaging</div>' +
-              '<div class="tst-lock-body">Direct messaging with TST Academy is available on the Mentorship plan. Mentorship members can ask questions and get responses. 10K members additionally get personal trade reviews and quarterly 1:1 sessions.</div>' +
-              '<button class="btn-primary-green" style="margin-top:16px;">Upgrade to Mentorship</button>' +
+          '<div style="max-width:760px;">' +
+            '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:4px;letter-spacing:0.5px;">Message Center</div>' +
+            '<div style="font-size:13px;color:#6b7c6e;margin-bottom:32px;">Direct line to TST Academy</div>' +
+            '<div style="background:#111712;border:1px solid #1e2820;border-radius:16px;padding:48px;text-align:center;">' +
+              '<div style="font-size:40px;margin-bottom:16px;">💬</div>' +
+              '<div style="font-family:Rajdhani,sans-serif;font-size:22px;font-weight:700;color:#f0f4f1;margin-bottom:12px;">Direct Messaging</div>' +
+              '<div style="font-size:14px;color:#6b7c6e;line-height:1.8;max-width:480px;margin:0 auto 24px;">Direct messaging with TST Academy is available on the Mentorship plan. Ask questions, request trade reviews, and get personal feedback on your trading.</div>' +
+              '<button style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:12px 28px;font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;cursor:pointer;">Upgrade to Mentorship</button>' +
             '</div>' +
           '</div>';
       }
