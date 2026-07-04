@@ -77,16 +77,16 @@ var TST_PROFILE = {
     var tier = await this.getTier();
 
     mc.innerHTML =
-      '<div class="tst-profile-wrap">' +
-        '<div class="tst-profile-tabs" id="tstProfileTabs">' +
+      '<div style="max-width:880px;">' +
+        '<div style="display:flex;gap:0;border-bottom:1px solid #1e2820;margin-bottom:28px;flex-wrap:wrap;" id="tstProfileTabs">' +
           '<button class="tst-tab active" onclick="TST_PROFILE.switchTab(\'dashboard\', this)">Dashboard</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'journal\', this)">Journal</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'messages\', this)">Messages</button>' +
         '</div>' +
-        '<div class="tst-tab-body" id="tstTabBody">' +
-          '<div class="tst-loading">Loading your dashboard...</div>' +
+        '<div id="tstTabBody">' +
+          '<div style="text-align:center;padding:48px;color:#6b7c6e;">Loading dashboard...</div>' +
         '</div>' +
       '</div>';
 
@@ -113,167 +113,150 @@ var TST_PROFILE = {
   // TAB 1 — DASHBOARD
   // ============================================================
   renderDashboard: async function(body, tier) {
-    body.innerHTML = '<div class="tst-loading">Loading dashboard...</div>';
+    body.innerHTML = '<div style="text-align:center;padding:48px;color:#6b7c6e;font-size:14px;">Loading dashboard...</div>';
     var user = await getUser();
-    if (!user) { body.innerHTML = '<div class="tst-empty">Please log in.</div>'; return; }
+    if (!user) { body.innerHTML = '<div style="text-align:center;padding:48px;color:#6b7c6e;">Please log in.</div>'; return; }
 
     try {
       var client = getSupabase();
-
-      // Load trades
       var tradesRes = await client.from('trades').select('*').eq('user_id', user.id);
       var trades = tradesRes.data || [];
-
-      // Load quiz results
       var quizRes = await client.from('quiz_results').select('*').eq('user_id', user.id);
       var quizzes = quizRes.data || [];
 
-      // Course progress from BEHAVIOR object
-      var behavior = window.BEHAVIOR || {};
-      var lessonTimes = behavior.lessonTimes || {};
+      // Course progress
+      var completedLessons = Object.keys((window.BEHAVIOR||{}).lessonTimes||{}).length;
       var totalLessons = 0;
-      var completedLessons = Object.keys(lessonTimes).length;
-      if (window.COURSE) {
-        window.COURSE.forEach(function(s) {
-          if (s.modules) s.modules.forEach(function(m) {
-            if (m.subs) totalLessons += m.subs.length;
-            else totalLessons++;
-          });
-        });
-      }
-      var progress = totalLessons > 0 ? Math.round(completedLessons / totalLessons * 100) : 0;
+      if (window.COURSE) window.COURSE.forEach(function(s){ if(s.modules) s.modules.forEach(function(m){ if(m.subs) totalLessons+=m.subs.length; else totalLessons++; }); });
+      var progress = totalLessons > 0 ? Math.round(completedLessons/totalLessons*100) : 0;
 
-      // Quiz performance
+      // Quiz stats
       var passedQuizzes = quizzes.filter(function(q){ return q.passed; });
-      var strongSections = passedQuizzes.filter(function(q){ return q.score >= 90; });
-      var struggleSections = quizzes.filter(function(q){ return !q.passed; });
+      var failedQuizzes = quizzes.filter(function(q){ return !q.passed; });
 
-      // Trading snapshot
-      var wins = trades.filter(function(t){ return t.pnl > 0; });
-      var losses = trades.filter(function(t){ return t.pnl < 0; });
-      var totalPnl = trades.reduce(function(s,t){ return s + (t.pnl||0); }, 0);
+      // Trade stats
+      var wins = trades.filter(function(t){ return (t.pnl||0)>0; });
+      var losses = trades.filter(function(t){ return (t.pnl||0)<0; });
+      var totalPnl = trades.reduce(function(s,t){ return s+(t.pnl||0); },0);
       var winRate = trades.length ? Math.round(wins.length/trades.length*100) : null;
+      var avgWin = wins.length ? wins.reduce(function(s,t){ return s+(t.pnl||0); },0)/wins.length : 0;
+      var avgLoss = losses.length ? Math.abs(losses.reduce(function(s,t){ return s+(t.pnl||0); },0)/losses.length) : 0;
 
       // Best setup
       var bySetup = {};
-      trades.forEach(function(t) {
-        if (!t.setup_type || t.setup_type === 'Untagged' || t.setup_type === 'Other') return;
-        if (!bySetup[t.setup_type]) bySetup[t.setup_type] = {wins:0,total:0};
-        bySetup[t.setup_type].total++;
-        if (t.pnl > 0) bySetup[t.setup_type].wins++;
+      trades.forEach(function(t){
+        var s=t.setup_type;
+        if(!s||s==='Untagged'||s==='Other') return;
+        if(!bySetup[s]) bySetup[s]={wins:0,total:0};
+        bySetup[s].total++;
+        if((t.pnl||0)>0) bySetup[s].wins++;
       });
-      var bestSetup = null, bestWR = 0;
-      Object.keys(bySetup).forEach(function(s) {
-        var wr = bySetup[s].wins/bySetup[s].total;
-        if (bySetup[s].total >= 3 && wr > bestWR) { bestWR = wr; bestSetup = s; }
-      });
+      var bestSetup=null, bestWR=0;
+      Object.keys(bySetup).forEach(function(s){ var wr=bySetup[s].wins/bySetup[s].total; if(bySetup[s].total>=2&&wr>bestWR){bestWR=wr;bestSetup=s;} });
 
-      // Worst time of day
-      var byHour = {};
-      trades.forEach(function(t) {
-        if (!t.entry_time) return;
-        var h = new Date(t.entry_time).getHours();
-        if (!byHour[h]) byHour[h] = {wins:0,total:0,pnl:0};
-        byHour[h].total++;
-        byHour[h].pnl += (t.pnl||0);
-        if ((t.pnl||0) > 0) byHour[h].wins++;
+      // Worst hour
+      var byHour={};
+      trades.forEach(function(t){
+        if(!t.entry_time) return;
+        var h=new Date(t.entry_time).getHours();
+        if(!byHour[h]) byHour[h]={wins:0,total:0,pnl:0};
+        byHour[h].total++;byHour[h].pnl+=(t.pnl||0);
+        if((t.pnl||0)>0) byHour[h].wins++;
       });
-      var worstHour = null, worstPnl = 0;
-      Object.keys(byHour).forEach(function(h) {
-        if (byHour[h].total >= 3 && byHour[h].pnl < worstPnl) {
-          worstPnl = byHour[h].pnl; worstHour = h;
-        }
-      });
+      var worstHour=null,worstPnl=0;
+      Object.keys(byHour).forEach(function(h){ if(byHour[h].total>=2&&byHour[h].pnl<worstPnl){worstPnl=byHour[h].pnl;worstHour=h;} });
 
-      // Generate written briefing
-      var briefingLines = [];
-      if (trades.length === 0) {
-        briefingLines.push('No trades logged yet. Upload your Webull CSV in the Journal tab to start tracking your performance.');
+      // Briefing
+      var briefing=[];
+      if(!trades.length) {
+        briefing.push('No trades logged yet. Upload your Webull CSV in the Journal tab to start tracking your performance.');
       } else {
-        if (winRate >= 55) briefingLines.push('Your win rate of ' + winRate + '% is above average — you are identifying valid setups.');
-        else if (winRate >= 45) briefingLines.push('Your win rate of ' + winRate + '% is near breakeven — focus on setup quality before size.');
-        else briefingLines.push('Your win rate of ' + winRate + '% needs improvement — review your entry criteria in the course.');
-
-        if (totalPnl > 0) briefingLines.push('You are net profitable with $' + totalPnl.toFixed(0) + ' across ' + trades.length + ' logged trades. Keep the process tight.');
-        else briefingLines.push('You are net down $' + Math.abs(totalPnl).toFixed(0) + ' across ' + trades.length + ' trades. Focus on cutting losers faster.');
-
-        if (bestSetup) briefingLines.push('Your strongest setup is ' + bestSetup.replace('TST ','') + ' with a ' + Math.round(bestWR*100) + '% win rate. Lean into this.');
-        if (worstHour !== null) {
-          var hrLabel = parseInt(worstHour) < 12 ? worstHour+':00 AM' : (parseInt(worstHour)-12||12)+':00 PM';
-          briefingLines.push('Your ' + hrLabel + ' trades are dragging your P&L. Consider avoiding that window or reducing size.');
-        }
-
-        var avgWin = wins.length ? wins.reduce(function(s,t){return s+(t.pnl||0);},0)/wins.length : 0;
-        var avgLoss = losses.length ? Math.abs(losses.reduce(function(s,t){return s+(t.pnl||0);},0)/losses.length) : 0;
-        if (avgLoss > avgWin * 1.3 && losses.length >= 3) briefingLines.push('Your average loss ($' + avgLoss.toFixed(0) + ') is larger than your average win ($' + avgWin.toFixed(0) + '). This is the most common P&L killer — tighten your stops.');
+        if(winRate>=55) briefing.push('Win rate of '+winRate+'% is above average — you are identifying valid setups.');
+        else if(winRate>=45) briefing.push('Win rate of '+winRate+'% is near breakeven — focus on setup quality before increasing size.');
+        else briefing.push('Win rate of '+winRate+'% needs improvement — review your entry criteria in the course.');
+        if(totalPnl>0) briefing.push('Net profitable at +$'+totalPnl.toFixed(0)+' across '+trades.length+' logged trades. Keep the process tight.');
+        else briefing.push('Net down $'+Math.abs(totalPnl).toFixed(0)+' across '+trades.length+' trades. Focus on cutting losers faster and protecting winners.');
+        if(bestSetup) briefing.push('Strongest setup: '+bestSetup.replace('TST ','')+' with '+Math.round(bestWR*100)+'% win rate. Lean into this and take fewer trades in setups where you underperform.');
+        if(worstHour!==null){ var hl=parseInt(worstHour)<12?worstHour+':00 AM':(parseInt(worstHour)-12||12)+':00 PM'; briefing.push(hl+' trades are dragging your P&L. Consider reducing size or sitting out that window entirely.'); }
+        if(avgLoss>avgWin*1.3&&losses.length>=3) briefing.push('Average loss ($'+avgLoss.toFixed(0)+') exceeds average win ($'+avgWin.toFixed(0)+'). Tighten your stop placement — this single fix can make you consistently profitable at your current win rate.');
       }
+      if(progress>0&&progress<100) briefing.push('Course is '+progress+'% complete. Prioritize finishing the remaining lessons.');
 
-      if (progress > 0 && progress < 100) briefingLines.push('Course is ' + progress + '% complete. Finish the remaining lessons before trading full size.');
+      // Colors
+      var pnlC=totalPnl>=0?'#22c55e':'#ef4444';
+      var wrC=winRate>=55?'#22c55e':winRate>=45?'#f59e0b':'#ef4444';
+      var pnlStr=totalPnl>=0?'+$'+totalPnl.toFixed(0):'-$'+Math.abs(totalPnl).toFixed(0);
 
-      // Render
-      var pnlColor = totalPnl >= 0 ? '#22c55e' : '#ef4444';
-      var wrColor = winRate >= 55 ? '#22c55e' : winRate >= 45 ? '#f59e0b' : '#ef4444';
+      // CARD STYLE
+      var cs='background:#111712;border:1px solid #1e2820;border-radius:14px;padding:22px;';
+      var labelS='font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:10px;font-family:Rajdhani,sans-serif;';
+      var numS='font-family:Rajdhani,sans-serif;font-size:38px;font-weight:900;line-height:1;margin-bottom:4px;';
+      var subS='font-size:12px;color:#6b7c6e;';
 
       body.innerHTML =
-        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:0;">' +
-          // Course progress card
-          '<div class="dash-card dash-full">' +
-            '<div class="dash-card-label">Course Progress</div>' +
-            '<div class="dash-progress-bar-wrap">' +
-              '<div class="dash-progress-bar" style="width:' + progress + '%"></div>' +
+        // ROW 1 — Course progress full width
+        '<div style="'+cs+'margin-bottom:16px;">' +
+          '<div style="'+labelS+'">Course Progress</div>' +
+          '<div style="display:flex;align-items:center;gap:16px;">' +
+            '<div style="flex:1;height:8px;background:#1e2820;border-radius:4px;overflow:hidden;">' +
+              '<div style="height:100%;width:'+progress+'%;background:#22c55e;border-radius:4px;transition:width .6s;"></div>' +
             '</div>' +
-            '<div class="dash-progress-meta">' + completedLessons + ' of ' + totalLessons + ' lessons visited &nbsp;·&nbsp; ' + progress + '% complete</div>' +
-            (quizzes.length > 0 ?
-              '<div class="dash-quiz-row">' +
-                '<span class="dash-quiz-chip good">' + passedQuizzes.length + ' sections passed</span>' +
-                (struggleSections.length > 0 ? '<span class="dash-quiz-chip warn">' + struggleSections.length + ' need review</span>' : '') +
-              '</div>' : '') +
+            '<div style="font-family:Rajdhani,sans-serif;font-weight:700;font-size:18px;color:#22c55e;">'+progress+'%</div>' +
           '</div>' +
+          '<div style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">' +
+            '<span style="font-size:12px;color:#6b7c6e;">'+completedLessons+' of '+totalLessons+' lessons visited</span>' +
+            (passedQuizzes.length?'<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(34,197,94,.1);color:#22c55e;">'+passedQuizzes.length+' quizzes passed</span>':'') +
+            (failedQuizzes.length?'<span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:rgba(245,158,11,.1);color:#f59e0b;">'+failedQuizzes.length+' need review</span>':'') +
+          '</div>' +
+        '</div>' +
 
-          // Trading snapshot cards
-          (trades.length > 0 ? (
-          '<div class="dash-card">' +
-            '<div class="dash-card-label">Win Rate</div>' +
-            '<div class="dash-card-num" style="color:' + wrColor + '">' + (winRate !== null ? winRate + '%' : '—') + '</div>' +
-            '<div class="dash-card-sub">' + trades.length + ' trades logged</div>' +
-          '</div>' +
-          '<div class="dash-card">' +
-            '<div class="dash-card-label">Total P&L</div>' +
-            '<div class="dash-card-num" style="color:' + pnlColor + '">' + (totalPnl >= 0 ? '+' : '') + '$' + Math.abs(totalPnl).toFixed(0) + '</div>' +
-            '<div class="dash-card-sub">all logged trades</div>' +
-          '</div>' +
-          '<div class="dash-card">' +
-            '<div class="dash-card-label">Best Setup</div>' +
-            '<div class="dash-card-num dash-card-sm">' + (bestSetup ? bestSetup.replace('TST ','') : '—') + '</div>' +
-            '<div class="dash-card-sub">' + (bestSetup ? Math.round(bestWR*100) + '% win rate' : 'Tag your trades to see') + '</div>' +
-          '</div>'
-          ) : (
-          '<div class="dash-card dash-empty-card">' +
-            '<div class="dash-empty-icon">📊</div>' +
-            '<div class="dash-empty-msg">No trades logged yet</div>' +
-            '<button class="dash-action-btn" onclick="TST_PROFILE.switchTab(\'journal\', document.querySelectorAll(\'.tst-tab\')[1])">Upload CSV →</button>' +
-          '</div>'
-          )) +
-
-          // Written briefing
-          '<div class="dash-card dash-full dash-briefing">' +
-            '<div class="dash-card-label">Your Briefing</div>' +
-            '<div class="dash-briefing-content">' +
-              briefingLines.map(function(line) {
-                return '<div class="dash-briefing-line">' +
-                  '<span class="dash-briefing-dot"></span>' +
-                  '<span>' + line + '</span>' +
-                '</div>';
-              }).join('') +
+        // ROW 2 — 3 trading stat cards
+        (trades.length > 0 ?
+          '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;">' +
+            '<div style="'+cs+'">' +
+              '<div style="'+labelS+'">Win Rate</div>' +
+              '<div style="'+numS+'color:'+wrC+'">'+winRate+'%</div>' +
+              '<div style="'+subS+'">'+trades.length+' trades logged</div>' +
             '</div>' +
-          '</div>' +
+            '<div style="'+cs+'">' +
+              '<div style="'+labelS+'">Total P&L</div>' +
+              '<div style="'+numS+'color:'+pnlC+'">'+pnlStr+'</div>' +
+              '<div style="'+subS+'">all logged trades</div>' +
+            '</div>' +
+            '<div style="'+cs+'">' +
+              '<div style="'+labelS+'">Best Setup</div>' +
+              '<div style="font-family:Rajdhani,sans-serif;font-size:22px;font-weight:700;color:#f0f4f1;line-height:1.2;margin-bottom:4px;">'+(bestSetup?bestSetup.replace('TST ',''):'—')+'</div>' +
+              '<div style="'+subS+'">'+(bestSetup?Math.round(bestWR*100)+'% win rate':'Tag trades to unlock')+'</div>' +
+            '</div>' +
+          '</div>'
+        :
+          '<div style="'+cs+'margin-bottom:16px;text-align:center;padding:32px;">' +
+            '<div style="font-size:36px;margin-bottom:12px;">📊</div>' +
+            '<div style="font-family:Rajdhani,sans-serif;font-size:18px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">No trades logged yet</div>' +
+            '<div style="font-size:13px;color:#6b7c6e;margin-bottom:20px;">Import your Webull CSV in the Journal tab to start tracking performance.</div>' +
+            '<button onclick="TST_PROFILE.switchTab('journal', document.querySelectorAll('.tst-tab')[1])" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:10px 24px;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Go to Journal →</button>' +
+          '</div>'
+        ) +
 
+        // ROW 3 — Your Briefing
+        '<div style="'+cs+'border-left:3px solid #22c55e;">' +
+          '<div style="'+labelS+'color:#22c55e;">Your Briefing</div>' +
+          '<div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">' +
+            briefing.map(function(line){
+              return '<div style="display:flex;align-items:flex-start;gap:12px;">' +
+                '<div style="width:6px;height:6px;border-radius:50%;background:#22c55e;flex-shrink:0;margin-top:7px;"></div>' +
+                '<span style="font-size:14px;color:#f0f4f1;line-height:1.7;">'+line+'</span>' +
+              '</div>';
+            }).join('') +
+          '</div>' +
         '</div>';
 
     } catch(e) {
-      body.innerHTML = '<div class="tst-empty">Error loading dashboard: ' + (e.message||'Unknown') + '</div>';
+      body.innerHTML = '<div style="text-align:center;padding:48px;color:#ef4444;">Error loading dashboard: '+(e.message||'Unknown')+'</div>';
     }
-  },
+  }
+
+    },
 
   // ============================================================
   // TAB 2 — JOURNAL
