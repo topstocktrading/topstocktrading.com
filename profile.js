@@ -1038,23 +1038,35 @@ var TST_CHART = {
 
     try {
       // Direct Yahoo Finance fetch - works from browser without proxy
-      var urls = [
-        'https://query1.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=1m&period1=' + period1 + '&period2=' + period2 + '&includePrePost=false',
-        'https://query2.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=1m&period1=' + period1 + '&period2=' + period2 + '&includePrePost=false'
+      // Try multiple Yahoo Finance endpoints and CORS proxies
+      var baseUrl1 = 'https://query1.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=1m&period1=' + period1 + '&period2=' + period2 + '&includePrePost=false';
+      var baseUrl2 = 'https://query2.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=2m&period1=' + period1 + '&period2=' + period2;
+
+      var attempts = [
+        // Direct Yahoo attempts
+        { url: baseUrl1, opts: { headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' }, mode: 'cors' }, direct: true },
+        { url: baseUrl2, opts: { headers: { 'Accept': 'application/json' }, mode: 'cors' }, direct: true },
+        // CORS proxy attempts
+        { url: 'https://corsproxy.io/?' + encodeURIComponent(baseUrl1), opts: {}, direct: false },
+        { url: 'https://api.allorigins.win/get?url=' + encodeURIComponent(baseUrl1), opts: {}, direct: false, allorigins: true },
+        { url: 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(baseUrl1), opts: {}, direct: false }
       ];
 
       var parsed = null;
-      for (var i = 0; i < urls.length; i++) {
+      for (var i = 0; i < attempts.length; i++) {
         try {
-          var resp = await fetch(urls[i], {
-            headers: { 'Accept': 'application/json' },
-            mode: 'cors'
-          });
-          if (resp.ok) {
+          var a = attempts[i];
+          var resp = await fetch(a.url, a.opts);
+          if (!resp.ok) continue;
+          if (a.allorigins) {
+            var wrapper = await resp.json();
+            parsed = JSON.parse(wrapper.contents);
+          } else {
             parsed = await resp.json();
-            break;
           }
-        } catch(e) { continue; }
+          if (parsed && parsed.chart && parsed.chart.result) break;
+          parsed = null;
+        } catch(e) { parsed = null; continue; }
       }
 
       if (!parsed || !parsed.chart || !parsed.chart.result || !parsed.chart.result[0]) {
