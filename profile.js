@@ -1022,67 +1022,157 @@ var TST_CHART = {
     }
   },
 
-  fetchAndRender: function(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction) {
+  fetchAndRender: async function(ticker, entryTime, exitTime, entryPrice, exitPrice, stopPrice, direction) {
     var container = document.getElementById('chartContainer');
     if (!container) return;
 
-    // Get underlying ticker (strip options suffix like QQQ260616C00720000 -> QQQ)
+    // Strip options suffix to get underlying: QQQ260616C00720000 -> QQQ
     var underlying = ticker.replace(/\d{6}[CP]\d+$/, '') || ticker;
 
-    // Get trading date from entry time
     var entryDate = new Date(entryTime);
-    var dateStr = entryDate.getFullYear() + '-' +
-      String(entryDate.getMonth()+1).padStart(2,'0') + '-' +
-      String(entryDate.getDate()).padStart(2,'0');
+    var period1 = Math.floor(entryDate.getTime()/1000) - 7200;
+    var period2 = Math.floor(entryDate.getTime()/1000) + 28800;
 
-    container.innerHTML = '';
-    container.style.height = '460px';
-    container.style.position = 'relative';
+    container.innerHTML = '<div class="chart-loading">Loading chart data...</div>';
+    container.style.height = '420px';
 
-    // TradingView widget - free, no API key needed
-    var widgetDiv = document.createElement('div');
-    widgetDiv.style.height = '420px';
-    container.appendChild(widgetDiv);
+    try {
+      // Direct Yahoo Finance fetch - works from browser without proxy
+      var urls = [
+        'https://query1.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=1m&period1=' + period1 + '&period2=' + period2 + '&includePrePost=false',
+        'https://query2.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=1m&period1=' + period1 + '&period2=' + period2 + '&includePrePost=false'
+      ];
 
-    var script = document.createElement('script');
-    script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-    script.async = true;
-    script.innerHTML = JSON.stringify({
-      autosize: true,
-      symbol: 'NASDAQ:' + underlying,
-      interval: '5',
-      timezone: 'America/New_York',
-      theme: 'dark',
-      style: '1',
-      locale: 'en',
-      enable_publishing: false,
-      allow_symbol_change: false,
-      hide_top_toolbar: false,
-      hide_legend: false,
-      save_image: false,
-      calendar: false,
-      hide_volume: false,
-      support_host: 'https://www.tradingview.com',
-      container_id: 'tv_chart_' + underlying
-    });
+      var parsed = null;
+      for (var i = 0; i < urls.length; i++) {
+        try {
+          var resp = await fetch(urls[i], {
+            headers: { 'Accept': 'application/json' },
+            mode: 'cors'
+          });
+          if (resp.ok) {
+            parsed = await resp.json();
+            break;
+          }
+        } catch(e) { continue; }
+      }
 
-    widgetDiv.id = 'tv_chart_' + underlying;
-    widgetDiv.appendChild(script);
+      if (!parsed || !parsed.chart || !parsed.chart.result || !parsed.chart.result[0]) {
+        throw new Error('No data returned');
+      }
 
-    // Show trade info panel below chart
-    var infoPanel = document.createElement('div');
-    infoPanel.style.cssText = 'padding:12px 16px;background:var(--bg);border-top:1px solid var(--border);font-size:13px;color:var(--muted);display:flex;gap:24px;flex-wrap:wrap;';
-    
-    var entryStr = new Date(entryTime).toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'});
-    var exitStr = exitTime ? new Date(exitTime).toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit'}) : 'Open';
+      var chartData = parsed.chart.result[0];
+      var timestamps = chartData.timestamp;
+      var quote = chartData.indicators.quote[0];
 
-    infoPanel.innerHTML =
-      '<span><strong style="color:#22c55e">▲ Entry</strong> $' + entryPrice + ' at ' + entryStr + '</span>' +
-      '<span><strong style="color:#ef4444">▼ Exit</strong> $' + exitPrice + ' at ' + exitStr + '</span>' +
-      (stopPrice ? '<span><strong style="color:#f59e0b">─ Stop</strong> $' + stopPrice + '</span>' : '') +
-      '<span style="color:var(--muted);font-size:11px;">Navigate to ' + dateStr + ' on the chart above to see your trade</span>';
-    
-    container.appendChild(infoPanel);
+      if (!timestamps || timestamps.length === 0) {
+        throw new Error('No candles for this date');
+      }
+
+      // Filter to market hours only (9:30-16:00 ET)
+      var candles = [];
+      for (var j = 0; j < timestamps.length; j++) {
+        var o = quote.open[j], h = quote.high[j], l = quote.low[j], c = quote.close[j];
+        if (o === null || h === null || l === null || c === null) continue;
+        var d = new Date(timestamps[j] * 1000);
+        var hr = d.getUTCHours() - 5; // EST offset (approximate)
+        if (hr < 9 || hr >= 16) continue;
+        candles.push({ time: timestamps[j], open: o, high: h, low: l, close: c });
+      }
+
+      if (candles.length === 0) throw new Error('No market hours data');
+
+      // Load Lightweight Charts then render
+      if (!window.LightweightCharts) {
+        await new Promise(function(resolve, reject) {
+          var s = document.createElement('script');
+          s.src = 'https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js';
+          s.onload = resolve;
+          s.onerror = reject;
+          document.head.appendChild(s);
+        });
+      }
+
+      container.innerHTML = '';
+      container.style.height = '380px';
+
+      var chart = LightweightCharts.createChart(container, {
+        width: container.clientWidth,
+        height: 380,
+        layout: { background: { color: '#0a0f0d' }, textColor: '#6b7c6e' },
+        grid: { vertLines: { color: '#1e2820' }, horzLines: { color: '#1e2820' } },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+        rightPriceScale: { borderColor: '#1e2820' },
+        timeScale: { borderColor: '#1e2820', timeVisible: true, secondsVisible: false }
+      });
+
+      var series = chart.addCandlestickSeries({
+        upColor: '#22c55e', downColor: '#ef4444',
+        borderUpColor: '#22c55e', borderDownColor: '#ef4444',
+        wickUpColor: '#22c55e', wickDownColor: '#ef4444'
+      });
+
+      series.setData(candles);
+
+      // Add entry/exit markers
+      var markers = [];
+      var entryTs = Math.floor(new Date(entryTime).getTime() / 1000);
+
+      // Find closest candle to entry time
+      var closestEntry = candles.reduce(function(prev, curr) {
+        return Math.abs(curr.time - entryTs) < Math.abs(prev.time - entryTs) ? curr : prev;
+      });
+
+      markers.push({
+        time: closestEntry.time,
+        position: direction === 'Long' ? 'belowBar' : 'aboveBar',
+        color: '#22c55e',
+        shape: direction === 'Long' ? 'arrowUp' : 'arrowDown',
+        text: 'ENTRY $' + entryPrice,
+        size: 2
+      });
+
+      if (exitTime) {
+        var exitTs = Math.floor(new Date(exitTime).getTime() / 1000);
+        var closestExit = candles.reduce(function(prev, curr) {
+          return Math.abs(curr.time - exitTs) < Math.abs(prev.time - exitTs) ? curr : prev;
+        });
+        markers.push({
+          time: closestExit.time,
+          position: direction === 'Long' ? 'aboveBar' : 'belowBar',
+          color: '#ef4444',
+          shape: direction === 'Long' ? 'arrowDown' : 'arrowUp',
+          text: 'EXIT $' + exitPrice,
+          size: 2
+        });
+      }
+
+      series.setMarkers(markers);
+
+      // Stop line
+      if (stopPrice && candles.length) {
+        var stopSeries = chart.addLineSeries({
+          color: '#f59e0b', lineWidth: 1,
+          lineStyle: 2,
+          priceLineVisible: false, lastValueVisible: false
+        });
+        stopSeries.setData([
+          { time: candles[0].time, value: stopPrice },
+          { time: candles[candles.length-1].time, value: stopPrice }
+        ]);
+      }
+
+      chart.timeScale().fitContent();
+
+    } catch(e) {
+      container.innerHTML =
+        '<div class="chart-no-data">' +
+          '<div style="font-size:24px;margin-bottom:12px;">📊</div>' +
+          '<div style="font-weight:600;margin-bottom:8px;">Chart data unavailable</div>' +
+          '<div style="font-size:13px;line-height:1.7;margin-bottom:16px;">Could not load 1-minute data for ' + underlying + '.<br>This can happen for older dates or when the data provider is unavailable.</div>' +
+          '<a href="https://finance.yahoo.com/chart/' + underlying + '" target="_blank" style="color:var(--green);font-size:13px;">View on Yahoo Finance →</a>' +
+        '</div>';
+    }
   }
 };
 
