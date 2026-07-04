@@ -46,234 +46,319 @@ async function getUserEmail() {
 // TRADE JOURNAL
 // ============================================================
 
-var TST_JOURNAL = {
 
-  // Render the full My Profile page with tabs
-  renderProfilePage: function() {
-    // First run the original behavioral dashboard
-    if (window.showProfileDashboard_original) {
-      window.showProfileDashboard_original();
-    }
-    // Then append trade journal tabs below
+// ============================================================
+// TST ACADEMY — MAIN PROFILE DASHBOARD SYSTEM
+// Tabs: Dashboard, Journal, Trading Data, Notes, Message Center
+// ============================================================
+
+var TST_PROFILE = {
+
+  // Tier detection — extend this when Stripe is live
+  getTier: async function() {
+    var user = await getUser();
+    if (!user) return 'none';
+    // Admin gets all access
+    if (user.email === 'h@topstocktrading.com') return '10k';
+    // Check Supabase for tier — defaults to 'base' until Stripe sets it
+    try {
+      var client = getSupabase();
+      var result = await client.from('user_tiers').select('tier').eq('user_id', user.id).single();
+      if (result.data && result.data.tier) return result.data.tier;
+    } catch(e) {}
+    return 'base';
+  },
+
+  // Main render — called by showProfileDashboard override
+  render: async function() {
     var mc = document.getElementById('mc');
     if (!mc) return;
-    var journalDiv = document.createElement('div');
-    journalDiv.className = 'profile-page';
-    journalDiv.style.cssText = 'margin-top:32px;border-top:1px solid var(--border);padding-top:32px;';
-    journalDiv.innerHTML =
-      '<div class="profile-header">' +
-        '<div class="profile-header-label">TST Academy</div>' +
-        '<h2 class="profile-header-title">Trade Journal</h2>' +
-      '</div>' +
-      '<div class="profile-tabs">' +
-        '<button class="profile-tab active" onclick="TST_JOURNAL.switchTab(\'journal\', this)">Journal</button>' +
-        '<button class="profile-tab" onclick="TST_JOURNAL.switchTab(\'performance\', this)">Performance</button>' +
-      '</div>' +
-      '<div id="profileTabContent">' +
-        TST_JOURNAL.renderJournalTab() +
+
+    var tier = await this.getTier();
+
+    mc.innerHTML =
+      '<div class="tst-profile-wrap">' +
+        '<div class="tst-profile-tabs" id="tstProfileTabs">' +
+          '<button class="tst-tab active" onclick="TST_PROFILE.switchTab(\'dashboard\', this)">Dashboard</button>' +
+          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'journal\', this)">Journal</button>' +
+          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
+          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
+          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'messages\', this)">Messages</button>' +
+        '</div>' +
+        '<div class="tst-tab-body" id="tstTabBody">' +
+          '<div class="tst-loading">Loading your dashboard...</div>' +
+        '</div>' +
       '</div>';
-    mc.appendChild(journalDiv);
-    setTimeout(function(){ TST_JOURNAL.loadTrades(); }, 300);
+
+    this.loadTab('dashboard', tier);
   },
 
   switchTab: function(tab, btn) {
-    document.querySelectorAll('.profile-tab').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    var content = document.getElementById('profileTabContent');
-    if (!content) return;
-    if (tab === 'overview') content.innerHTML = TST_JOURNAL.renderOverview();
-    if (tab === 'journal') { content.innerHTML = TST_JOURNAL.renderJournalTab(); TST_JOURNAL.loadTrades(); }
-    if (tab === 'performance') { content.innerHTML = TST_JOURNAL.renderPerformanceTab(); TST_JOURNAL.loadPerformance(); }
-    if (tab === 'behavioral') content.innerHTML = TST_JOURNAL.renderBehavioralTab();
+    document.querySelectorAll('.tst-tab').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    TST_PROFILE.getTier().then(function(tier){ TST_PROFILE.loadTab(tab, tier); });
+  },
+
+  loadTab: async function(tab, tier) {
+    var body = document.getElementById('tstTabBody');
+    if (!body) return;
+    if (tab === 'dashboard') await this.renderDashboard(body, tier);
+    if (tab === 'journal')   await this.renderJournal(body, tier);
+    if (tab === 'trading')   await this.renderTrading(body, tier);
+    if (tab === 'notes')     await this.renderNotes(body, tier);
+    if (tab === 'messages')  await this.renderMessages(body, tier);
   },
 
   // ============================================================
-  // OVERVIEW TAB
+  // TAB 1 — DASHBOARD
   // ============================================================
-  renderOverview: function() {
-    return '<div class="profile-section">' +
-      '<div class="overview-grid">' +
-        '<div class="overview-card">' +
-          '<div class="ov-card-label">Total Trades Logged</div>' +
-          '<div class="ov-card-num" id="ovTotalTrades">—</div>' +
-          '<div class="ov-card-sub">in your journal</div>' +
-        '</div>' +
-        '<div class="overview-card">' +
-          '<div class="ov-card-label">Overall Win Rate</div>' +
-          '<div class="ov-card-num" id="ovWinRate">—</div>' +
-          '<div class="ov-card-sub">across all setups</div>' +
-        '</div>' +
-        '<div class="overview-card">' +
-          '<div class="ov-card-label">Total P&L</div>' +
-          '<div class="ov-card-num" id="ovPnl">—</div>' +
-          '<div class="ov-card-sub">all logged trades</div>' +
-        '</div>' +
-        '<div class="overview-card">' +
-          '<div class="ov-card-label">Best Setup</div>' +
-          '<div class="ov-card-num ov-small" id="ovBestSetup">—</div>' +
-          '<div class="ov-card-sub">highest win rate</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="overview-actions">' +
-        '<button class="btn-primary-green" onclick="TST_JOURNAL.switchTab(\'journal\', document.querySelectorAll(\'.profile-tab\')[1])">Log a Trade</button>' +
-        '<button class="btn-outline-green" onclick="TST_JOURNAL.switchTab(\'performance\', document.querySelectorAll(\'.profile-tab\')[2])">View Performance</button>' +
-      '</div>' +
-    '</div>';
+  renderDashboard: async function(body, tier) {
+    body.innerHTML = '<div class="tst-loading">Loading dashboard...</div>';
+    var user = await getUser();
+    if (!user) { body.innerHTML = '<div class="tst-empty">Please log in.</div>'; return; }
+
+    try {
+      var client = getSupabase();
+
+      // Load trades
+      var tradesRes = await client.from('trades').select('*').eq('user_id', user.id);
+      var trades = tradesRes.data || [];
+
+      // Load quiz results
+      var quizRes = await client.from('quiz_results').select('*').eq('user_id', user.id);
+      var quizzes = quizRes.data || [];
+
+      // Course progress from BEHAVIOR object
+      var behavior = window.BEHAVIOR || {};
+      var lessonTimes = behavior.lessonTimes || {};
+      var totalLessons = 0;
+      var completedLessons = Object.keys(lessonTimes).length;
+      if (window.COURSE) {
+        window.COURSE.forEach(function(s) {
+          if (s.modules) s.modules.forEach(function(m) {
+            if (m.subs) totalLessons += m.subs.length;
+            else totalLessons++;
+          });
+        });
+      }
+      var progress = totalLessons > 0 ? Math.round(completedLessons / totalLessons * 100) : 0;
+
+      // Quiz performance
+      var passedQuizzes = quizzes.filter(function(q){ return q.passed; });
+      var strongSections = passedQuizzes.filter(function(q){ return q.score >= 90; });
+      var struggleSections = quizzes.filter(function(q){ return !q.passed; });
+
+      // Trading snapshot
+      var wins = trades.filter(function(t){ return t.pnl > 0; });
+      var losses = trades.filter(function(t){ return t.pnl < 0; });
+      var totalPnl = trades.reduce(function(s,t){ return s + (t.pnl||0); }, 0);
+      var winRate = trades.length ? Math.round(wins.length/trades.length*100) : null;
+
+      // Best setup
+      var bySetup = {};
+      trades.forEach(function(t) {
+        if (!t.setup_type || t.setup_type === 'Untagged' || t.setup_type === 'Other') return;
+        if (!bySetup[t.setup_type]) bySetup[t.setup_type] = {wins:0,total:0};
+        bySetup[t.setup_type].total++;
+        if (t.pnl > 0) bySetup[t.setup_type].wins++;
+      });
+      var bestSetup = null, bestWR = 0;
+      Object.keys(bySetup).forEach(function(s) {
+        var wr = bySetup[s].wins/bySetup[s].total;
+        if (bySetup[s].total >= 3 && wr > bestWR) { bestWR = wr; bestSetup = s; }
+      });
+
+      // Worst time of day
+      var byHour = {};
+      trades.forEach(function(t) {
+        if (!t.entry_time) return;
+        var h = new Date(t.entry_time).getHours();
+        if (!byHour[h]) byHour[h] = {wins:0,total:0,pnl:0};
+        byHour[h].total++;
+        byHour[h].pnl += (t.pnl||0);
+        if ((t.pnl||0) > 0) byHour[h].wins++;
+      });
+      var worstHour = null, worstPnl = 0;
+      Object.keys(byHour).forEach(function(h) {
+        if (byHour[h].total >= 3 && byHour[h].pnl < worstPnl) {
+          worstPnl = byHour[h].pnl; worstHour = h;
+        }
+      });
+
+      // Generate written briefing
+      var briefingLines = [];
+      if (trades.length === 0) {
+        briefingLines.push('No trades logged yet. Upload your Webull CSV in the Journal tab to start tracking your performance.');
+      } else {
+        if (winRate >= 55) briefingLines.push('Your win rate of ' + winRate + '% is above average — you are identifying valid setups.');
+        else if (winRate >= 45) briefingLines.push('Your win rate of ' + winRate + '% is near breakeven — focus on setup quality before size.');
+        else briefingLines.push('Your win rate of ' + winRate + '% needs improvement — review your entry criteria in the course.');
+
+        if (totalPnl > 0) briefingLines.push('You are net profitable with $' + totalPnl.toFixed(0) + ' across ' + trades.length + ' logged trades. Keep the process tight.');
+        else briefingLines.push('You are net down $' + Math.abs(totalPnl).toFixed(0) + ' across ' + trades.length + ' trades. Focus on cutting losers faster.');
+
+        if (bestSetup) briefingLines.push('Your strongest setup is ' + bestSetup.replace('TST ','') + ' with a ' + Math.round(bestWR*100) + '% win rate. Lean into this.');
+        if (worstHour !== null) {
+          var hrLabel = parseInt(worstHour) < 12 ? worstHour+':00 AM' : (parseInt(worstHour)-12||12)+':00 PM';
+          briefingLines.push('Your ' + hrLabel + ' trades are dragging your P&L. Consider avoiding that window or reducing size.');
+        }
+
+        var avgWin = wins.length ? wins.reduce(function(s,t){return s+(t.pnl||0);},0)/wins.length : 0;
+        var avgLoss = losses.length ? Math.abs(losses.reduce(function(s,t){return s+(t.pnl||0);},0)/losses.length) : 0;
+        if (avgLoss > avgWin * 1.3 && losses.length >= 3) briefingLines.push('Your average loss ($' + avgLoss.toFixed(0) + ') is larger than your average win ($' + avgWin.toFixed(0) + '). This is the most common P&L killer — tighten your stops.');
+      }
+
+      if (progress > 0 && progress < 100) briefingLines.push('Course is ' + progress + '% complete. Finish the remaining lessons before trading full size.');
+
+      // Render
+      var pnlColor = totalPnl >= 0 ? '#22c55e' : '#ef4444';
+      var wrColor = winRate >= 55 ? '#22c55e' : winRate >= 45 ? '#f59e0b' : '#ef4444';
+
+      body.innerHTML =
+        '<div class="dash-grid">' +
+          // Course progress card
+          '<div class="dash-card dash-full">' +
+            '<div class="dash-card-label">Course Progress</div>' +
+            '<div class="dash-progress-bar-wrap">' +
+              '<div class="dash-progress-bar" style="width:' + progress + '%"></div>' +
+            '</div>' +
+            '<div class="dash-progress-meta">' + completedLessons + ' of ' + totalLessons + ' lessons visited &nbsp;·&nbsp; ' + progress + '% complete</div>' +
+            (quizzes.length > 0 ?
+              '<div class="dash-quiz-row">' +
+                '<span class="dash-quiz-chip good">' + passedQuizzes.length + ' sections passed</span>' +
+                (struggleSections.length > 0 ? '<span class="dash-quiz-chip warn">' + struggleSections.length + ' need review</span>' : '') +
+              '</div>' : '') +
+          '</div>' +
+
+          // Trading snapshot cards
+          (trades.length > 0 ? (
+          '<div class="dash-card">' +
+            '<div class="dash-card-label">Win Rate</div>' +
+            '<div class="dash-card-num" style="color:' + wrColor + '">' + (winRate !== null ? winRate + '%' : '—') + '</div>' +
+            '<div class="dash-card-sub">' + trades.length + ' trades logged</div>' +
+          '</div>' +
+          '<div class="dash-card">' +
+            '<div class="dash-card-label">Total P&L</div>' +
+            '<div class="dash-card-num" style="color:' + pnlColor + '">' + (totalPnl >= 0 ? '+' : '') + '$' + Math.abs(totalPnl).toFixed(0) + '</div>' +
+            '<div class="dash-card-sub">all logged trades</div>' +
+          '</div>' +
+          '<div class="dash-card">' +
+            '<div class="dash-card-label">Best Setup</div>' +
+            '<div class="dash-card-num dash-card-sm">' + (bestSetup ? bestSetup.replace('TST ','') : '—') + '</div>' +
+            '<div class="dash-card-sub">' + (bestSetup ? Math.round(bestWR*100) + '% win rate' : 'Tag your trades to see') + '</div>' +
+          '</div>'
+          ) : (
+          '<div class="dash-card dash-empty-card">' +
+            '<div class="dash-empty-icon">📊</div>' +
+            '<div class="dash-empty-msg">No trades logged yet</div>' +
+            '<button class="dash-action-btn" onclick="TST_PROFILE.switchTab(\'journal\', document.querySelectorAll(\'.tst-tab\')[1])">Upload CSV →</button>' +
+          '</div>'
+          )) +
+
+          // Written briefing
+          '<div class="dash-card dash-full dash-briefing">' +
+            '<div class="dash-card-label">Your Briefing</div>' +
+            '<div class="dash-briefing-content">' +
+              briefingLines.map(function(line) {
+                return '<div class="dash-briefing-line">' +
+                  '<span class="dash-briefing-dot"></span>' +
+                  '<span>' + line + '</span>' +
+                '</div>';
+              }).join('') +
+            '</div>' +
+          '</div>' +
+
+        '</div>';
+
+    } catch(e) {
+      body.innerHTML = '<div class="tst-empty">Error loading dashboard: ' + (e.message||'Unknown') + '</div>';
+    }
   },
 
   // ============================================================
-  // JOURNAL TAB
+  // TAB 2 — JOURNAL
   // ============================================================
-  renderJournalTab: function() {
-    // Wire up drag/drop after render
-    setTimeout(function(){ if(window.TST_CSV) TST_CSV.setupDragDrop(); }, 100);
-    var setupTypes = ['TST Flag Breakout','TST Dip Buy','TST Breakout','TST Reversal','TST Momentum','TST Liquidity Sweep','TST Gap Play','TST V-Shape Recovery','TST VWAP Reclaim','TST Opening Drive','Other'];
+  renderJournal: async function(body, tier) {
+    var setupTypes = ['Untagged','TST Flag Breakout','TST Dip Buy','TST Breakout','TST Reversal','TST Momentum','TST Liquidity Sweep','TST Gap Play','TST V-Shape Recovery','TST VWAP Reclaim','TST Opening Drive','Other'];
     var exitReasons = ['Stop Hit','Target Hit','Manual Exit - Profit','Manual Exit - Loss','Time Exit','Trailing Stop','Other'];
     var setupOpts = setupTypes.map(function(s){ return '<option value="'+s+'">'+s+'</option>'; }).join('');
     var exitOpts = exitReasons.map(function(r){ return '<option value="'+r+'">'+r+'</option>'; }).join('');
 
-    return '<div class="profile-section">' +
-      // LOG NEW TRADE FORM
+    setTimeout(function(){ if(window.TST_CSV) TST_CSV.setupDragDrop(); TST_PROFILE.loadTrades(); }, 200);
+
+    body.innerHTML =
       TST_CSV.renderImportUI() +
       '<div class="journal-form-wrap">' +
-        '<div class="journal-form-title">Log a Trade</div>' +
-        '<div class="journal-form" id="tradeForm">' +
+        '<div class="journal-form-title">Log a Trade Manually</div>' +
+        '<div class="journal-form">' +
           '<div class="form-row">' +
-            '<div class="form-field">' +
-              '<label>Ticker Symbol</label>' +
-              '<input type="text" id="f_ticker" placeholder="QQQ" maxlength="10" style="text-transform:uppercase">' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Direction</label>' +
-              '<select id="f_direction"><option value="Long">Long</option><option value="Short">Short</option></select>' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Setup Type</label>' +
-              '<select id="f_setup">'+setupOpts+'</select>' +
-            '</div>' +
+            '<div class="form-field"><label>Ticker Symbol</label><input type="text" id="f_ticker" placeholder="QQQ" maxlength="10" style="text-transform:uppercase"></div>' +
+            '<div class="form-field"><label>Direction</label><select id="f_direction"><option value="Long">Long</option><option value="Short">Short</option></select></div>' +
+            '<div class="form-field"><label>Setup Type</label><select id="f_setup">'+setupOpts+'</select></div>' +
           '</div>' +
           '<div class="form-row">' +
-            '<div class="form-field">' +
-              '<label>Entry Date & Time</label>' +
-              '<input type="datetime-local" id="f_entry_time">' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Exit Date & Time</label>' +
-              '<input type="datetime-local" id="f_exit_time">' +
-            '</div>' +
+            '<div class="form-field"><label>Entry Date & Time</label><input type="datetime-local" id="f_entry_time"></div>' +
+            '<div class="form-field"><label>Exit Date & Time</label><input type="datetime-local" id="f_exit_time"></div>' +
           '</div>' +
           '<div class="form-row">' +
-            '<div class="form-field">' +
-              '<label>Planned Entry $</label>' +
-              '<input type="number" id="f_planned_entry" placeholder="0.00" step="0.01">' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Actual Entry $</label>' +
-              '<input type="number" id="f_actual_entry" placeholder="0.00" step="0.01">' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Exit Price $</label>' +
-              '<input type="number" id="f_exit_price" placeholder="0.00" step="0.01">' +
-            '</div>' +
+            '<div class="form-field"><label>Actual Entry $</label><input type="number" id="f_actual_entry" placeholder="0.00" step="0.01"></div>' +
+            '<div class="form-field"><label>Exit Price $</label><input type="number" id="f_exit_price" placeholder="0.00" step="0.01"></div>' +
+            '<div class="form-field"><label>Exit Reason</label><select id="f_exit_reason">'+exitOpts+'</select></div>' +
           '</div>' +
           '<div class="form-row">' +
-            '<div class="form-field">' +
-              '<label>Planned Stop $</label>' +
-              '<input type="number" id="f_planned_stop" placeholder="0.00" step="0.01">' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Actual Stop $</label>' +
-              '<input type="number" id="f_actual_stop" placeholder="0.00" step="0.01">' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Exit Reason</label>' +
-              '<select id="f_exit_reason">'+exitOpts+'</select>' +
-            '</div>' +
+            '<div class="form-field"><label>Planned Entry $</label><input type="number" id="f_planned_entry" placeholder="0.00" step="0.01"></div>' +
+            '<div class="form-field"><label>Planned Stop $</label><input type="number" id="f_planned_stop" placeholder="0.00" step="0.01"></div>' +
+            '<div class="form-field"><label>Shares / Contracts</label><input type="number" id="f_qty" placeholder="1" step="1"></div>' +
           '</div>' +
-          '<div class="form-row">' +
-            '<div class="form-field">' +
-              '<label>Shares / Contracts</label>' +
-              '<input type="number" id="f_qty" placeholder="100" step="1">' +
-            '</div>' +
-            '<div class="form-field">' +
-              '<label>Planned Shares / Contracts</label>' +
-              '<input type="number" id="f_planned_qty" placeholder="100" step="1">' +
-            '</div>' +
-          '</div>' +
-          '<div class="form-field" style="grid-column:1/-1">' +
-            '<label>Notes (optional)</label>' +
-            '<textarea id="f_notes" placeholder="What were you thinking? What did you see?" rows="3" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;resize:vertical;font-family:inherit;"></textarea>' +
-          '</div>' +
+          '<div class="form-field"><label>Notes</label><textarea id="f_notes" placeholder="What did you see? Why did you take it?" rows="3" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:14px;resize:vertical;font-family:inherit;outline:none;"></textarea></div>' +
           '<div id="formError" style="color:#ef4444;font-size:13px;display:none;margin-top:8px;"></div>' +
-          '<div style="display:flex;gap:12px;margin-top:20px;">' +
-            '<button class="btn-primary-green" onclick="TST_JOURNAL.submitTrade()">Log Trade</button>' +
-            '<button class="btn-outline-green" onclick="TST_JOURNAL.clearForm()">Clear</button>' +
+          '<div style="display:flex;gap:12px;margin-top:16px;">' +
+            '<button class="btn-primary-green" onclick="TST_PROFILE.submitTrade()">Log Trade</button>' +
+            '<button class="btn-outline-green" onclick="TST_PROFILE.clearForm()">Clear</button>' +
           '</div>' +
         '</div>' +
       '</div>' +
-      // TRADE HISTORY
       '<div class="journal-history">' +
         '<div class="journal-history-title">Trade History</div>' +
-        '<div id="tradeHistoryWrap"><div class="loading-state">Loading your trades...</div></div>' +
-      '</div>' +
-    '</div>';
+        '<div id="tradeHistoryWrap"><div class="tst-loading">Loading trades...</div></div>' +
+      '</div>';
   },
 
   submitTrade: async function() {
-    var ticker = document.getElementById('f_ticker').value.trim().toUpperCase();
-    var direction = document.getElementById('f_direction').value;
-    var setup = document.getElementById('f_setup').value;
-    var entryTime = document.getElementById('f_entry_time').value;
-    var exitTime = document.getElementById('f_exit_time').value;
-    var plannedEntry = parseFloat(document.getElementById('f_planned_entry').value);
-    var actualEntry = parseFloat(document.getElementById('f_actual_entry').value);
-    var exitPrice = parseFloat(document.getElementById('f_exit_price').value);
-    var plannedStop = parseFloat(document.getElementById('f_planned_stop').value);
-    var actualStop = parseFloat(document.getElementById('f_actual_stop').value);
-    var exitReason = document.getElementById('f_exit_reason').value;
-    var qty = parseInt(document.getElementById('f_qty').value);
-    var plannedQty = parseInt(document.getElementById('f_planned_qty').value);
-    var notes = document.getElementById('f_notes').value.trim();
+    var ticker = (document.getElementById('f_ticker')||{}).value || '';
+    var direction = (document.getElementById('f_direction')||{}).value || 'Long';
+    var setup = (document.getElementById('f_setup')||{}).value || 'Other';
+    var entryTime = (document.getElementById('f_entry_time')||{}).value || '';
+    var exitTime = (document.getElementById('f_exit_time')||{}).value || '';
+    var actualEntry = parseFloat((document.getElementById('f_actual_entry')||{}).value || '0');
+    var exitPrice = parseFloat((document.getElementById('f_exit_price')||{}).value || '0');
+    var exitReason = (document.getElementById('f_exit_reason')||{}).value || 'Other';
+    var plannedEntry = parseFloat((document.getElementById('f_planned_entry')||{}).value || '0');
+    var plannedStop = parseFloat((document.getElementById('f_planned_stop')||{}).value || '0');
+    var qty = parseInt((document.getElementById('f_qty')||{}).value || '1');
+    var notes = (document.getElementById('f_notes')||{}).value || '';
     var errDiv = document.getElementById('formError');
 
+    ticker = ticker.trim().toUpperCase();
     if (!ticker || !entryTime || !actualEntry || !exitPrice || !qty) {
-      errDiv.textContent = 'Please fill in: Ticker, Entry Time, Actual Entry, Exit Price, and Shares.';
-      errDiv.style.display = 'block';
+      if (errDiv) { errDiv.textContent = 'Please fill in: Ticker, Entry Time, Actual Entry, Exit Price, and Shares.'; errDiv.style.display = 'block'; }
       return;
     }
-    errDiv.style.display = 'none';
+    if (errDiv) errDiv.style.display = 'none';
 
     var user = await getUser();
     if (!user) {
-      // Last resort - try getting session directly
-      var client2 = getSupabase();
-      if (client2) {
-        try {
-          var sess = await client2.auth.getSession();
-          if (sess.data && sess.data.session) {
-            window._currentUser = sess.data.session.user;
-            user = sess.data.session.user;
-          }
-        } catch(e2) {}
-      }
-      if (!user) {
-        errDiv.textContent = 'Session error - please refresh the page and log in again.';
-        errDiv.style.display = 'block';
-        return;
-      }
+      if (errDiv) { errDiv.textContent = 'Please log in first.'; errDiv.style.display = 'block'; }
+      return;
     }
 
     var mult = direction === 'Long' ? 1 : -1;
-    // Detect options contract (ticker contains digits like QQQ260616C00720000)
     var isOpt = /\d{6}[CP]\d+/.test(ticker);
     var cMult = isOpt ? 100 : 1;
-    var pnl = (exitPrice - actualEntry) * mult * qty * cMult;
-    var holdMins = null;
-    if (entryTime && exitTime) {
-      holdMins = Math.round((new Date(exitTime) - new Date(entryTime)) / 60000);
-    }
-    var slippage = isNaN(plannedEntry) ? null : (actualEntry - plannedEntry) * mult;
-    var dollarRisk = isNaN(plannedStop) ? null : Math.abs(actualEntry - plannedStop) * qty;
+    var pnl = Math.round((exitPrice - actualEntry) * mult * qty * cMult * 100) / 100;
+    var holdMins = entryTime && exitTime ? Math.round((new Date(exitTime) - new Date(entryTime)) / 60000) : null;
+    var slippage = !isNaN(plannedEntry) && plannedEntry ? (actualEntry - plannedEntry) * mult : null;
+    var dollarRisk = !isNaN(plannedStop) && plannedStop ? Math.abs(actualEntry - plannedStop) * qty : null;
 
     var trade = {
       user_id: user.id,
@@ -286,35 +371,36 @@ var TST_JOURNAL = {
       actual_entry: actualEntry,
       exit_price: exitPrice,
       planned_stop: isNaN(plannedStop) ? null : plannedStop,
-      actual_stop: isNaN(actualStop) ? null : actualStop,
+      actual_stop: null,
       exit_reason: exitReason,
       qty: qty,
-      planned_qty: isNaN(plannedQty) ? null : plannedQty,
-      pnl: Math.round(pnl * 100) / 100,
+      planned_qty: qty,
+      pnl: pnl,
       hold_minutes: holdMins,
-      slippage: slippage ? Math.round(slippage * 10000) / 10000 : null,
-      dollar_risk: dollarRisk ? Math.round(dollarRisk * 100) / 100 : null,
-      notes: notes || null,
+      slippage: slippage,
+      dollar_risk: dollarRisk,
+      notes: notes.trim() || null,
+      source: 'manual',
+      is_option: isOpt,
       created_at: new Date().toISOString()
     };
 
     try {
-      var result = await getSupabase().from('trades').insert([trade]);
+      var client = getSupabase();
+      var result = await client.from('trades').insert([trade]);
       if (result.error) throw result.error;
-      TST_JOURNAL.clearForm();
-      TST_JOURNAL.loadTrades();
+      TST_PROFILE.clearForm();
+      TST_PROFILE.loadTrades();
       var btn = document.querySelector('.btn-primary-green');
-      if (btn) { btn.textContent = 'Trade Logged!'; setTimeout(function(){ btn.textContent = 'Log Trade'; }, 2000); }
+      if (btn) { var orig = btn.textContent; btn.textContent = 'Trade Logged!'; setTimeout(function(){ btn.textContent = orig; }, 2000); }
     } catch(e) {
-      errDiv.textContent = 'Error saving trade: ' + (e.message || 'Unknown error');
-      errDiv.style.display = 'block';
+      if (errDiv) { errDiv.textContent = 'Error: ' + (e.message||'Unknown'); errDiv.style.display = 'block'; }
     }
   },
 
   clearForm: function() {
-    ['f_ticker','f_entry_time','f_exit_time','f_planned_entry','f_actual_entry','f_exit_price','f_planned_stop','f_actual_stop','f_qty','f_planned_qty','f_notes'].forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) el.value = '';
+    ['f_ticker','f_entry_time','f_exit_time','f_actual_entry','f_exit_price','f_planned_entry','f_planned_stop','f_qty','f_notes'].forEach(function(id){
+      var el = document.getElementById(id); if (el) el.value = '';
     });
   },
 
@@ -322,81 +408,81 @@ var TST_JOURNAL = {
     var wrap = document.getElementById('tradeHistoryWrap');
     if (!wrap) return;
     var user = await getUser();
-    if (!user) { wrap.innerHTML = '<div class="loading-state">Please log in to view trades.</div>'; return; }
+    if (!user) { wrap.innerHTML = '<div class="tst-empty">Please log in to view trades.</div>'; return; }
     try {
-      var result = await getSupabase().from('trades').select('*').eq('user_id', user.id).order('entry_time', {ascending: false}).limit(50);
+      var client = getSupabase();
+      var result = await client.from('trades').select('*').eq('user_id', user.id).order('entry_time', {ascending: false}).limit(100);
       if (result.error) throw result.error;
       var trades = result.data || [];
       if (!trades.length) {
-        wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">No trades logged yet</div><div class="empty-sub">Log your first trade above to start tracking your performance.</div></div>';
+        wrap.innerHTML = '<div class="tst-empty"><div class="empty-icon">📊</div><div class="empty-title">No trades logged yet</div><div class="empty-sub">Import your Webull CSV above or log a trade manually.</div></div>';
         return;
       }
       var rows = trades.map(function(t) {
-        var pnlColor = t.pnl > 0 ? '#22c55e' : t.pnl < 0 ? '#ef4444' : '#6b7c6e';
-        var pnlStr = (t.pnl >= 0 ? '+' : '') + '$' + t.pnl.toFixed(2);
-        var dateStr = t.entry_time ? new Date(t.entry_time).toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '—';
-        var timeStr = t.entry_time ? new Date(t.entry_time).toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'}) : '';
-        var winLoss = t.pnl > 0 ? 'WIN' : t.pnl < 0 ? 'LOSS' : 'BE';
-        var winColor = t.pnl > 0 ? '#22c55e' : t.pnl < 0 ? '#ef4444' : '#6b7c6e';
-        return '<tr class="trade-row">' +
-          '<td><div class="trade-ticker">'+t.ticker+'</div><div class="trade-date">'+dateStr+' '+timeStr+'</div></td>' +
-          '<td><span class="trade-direction '+t.direction.toLowerCase()+'">'+t.direction+'</span></td>' +
-          '<td><span class="trade-setup">'+t.setup_type+'</span></td>' +
-          '<td>$'+t.actual_entry+'</td>' +
-          '<td>$'+t.exit_price+'</td>' +
-          '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td>' +
-          '<td>'+(t.hold_minutes !== null ? t.hold_minutes+'m' : '—')+'</td>' +
-          '<td><span class="trade-result" style="color:'+winColor+'">'+winLoss+'</span></td>' +
-        '<td>'+(t.source==='csv'&&t.entry_time?'<button class="chart-view-btn" onclick="TST_CHART.openChart(this,\'' +t.ticker+ '\',\'' +t.entry_time+ '\',\'' +(t.exit_time||'')+ '\','+t.actual_entry+','+t.exit_price+','+(t.planned_stop||'null')+',\'' +t.direction+ '\','+t.pnl+',\'' +(t.id||'')+ '\',\'' +(t.setup_type||'Untagged')+ '\')">' +(t.setup_type&&t.setup_type!=='Untagged'?'📈':'📈 Tag')+ '</button>':'')+'</td>' +
+        var pnlColor = (t.pnl||0) > 0 ? '#22c55e' : (t.pnl||0) < 0 ? '#ef4444' : '#6b7c6e';
+        var pnlStr = ((t.pnl||0) >= 0 ? '+' : '') + '$' + Math.abs(t.pnl||0).toFixed(2);
+        var dateStr = t.entry_time ? new Date(t.entry_time).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+        var timeStr = t.entry_time ? new Date(t.entry_time).toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}) : '';
+        var winLoss = (t.pnl||0) > 0 ? 'WIN' : (t.pnl||0) < 0 ? 'LOSS' : 'BE';
+        var winColor = (t.pnl||0) > 0 ? '#22c55e' : (t.pnl||0) < 0 ? '#ef4444' : '#6b7c6e';
+        var setupTag = t.setup_type && t.setup_type !== 'Untagged' ? t.setup_type.replace('TST ','') : '<span style="color:#f59e0b;font-size:11px;">Untagged</span>';
+        var chartBtn = (t.source === 'csv' && t.entry_time)
+          ? '<button class="chart-view-btn" onclick="TST_CHART.openChart(this,\'' + t.ticker + '\',\'' + t.entry_time + '\',\'' + (t.exit_time||'') + '\',' + t.actual_entry + ',' + t.exit_price + ',' + (t.planned_stop||'null') + ',\'' + t.direction + '\',' + (t.pnl||0) + ',\'' + (t.id||'') + '\',\'' + (t.setup_type||'Untagged') + '\')">📈</button>'
+          : '';
+        return '<tr>' +
+          '<td><div class="trade-ticker">' + t.ticker + '</div><div class="trade-date">' + dateStr + ' ' + timeStr + '</div></td>' +
+          '<td><span class="trade-direction ' + t.direction.toLowerCase() + '">' + t.direction + '</span></td>' +
+          '<td>' + setupTag + '</td>' +
+          '<td>$' + (t.actual_entry||0) + '</td>' +
+          '<td>$' + (t.exit_price||0) + '</td>' +
+          '<td style="color:' + pnlColor + ';font-weight:700;">' + pnlStr + '</td>' +
+          '<td>' + (t.hold_minutes !== null && t.hold_minutes !== undefined ? t.hold_minutes + 'm' : '—') + '</td>' +
+          '<td><span class="trade-result" style="color:' + winColor + '">' + winLoss + '</span></td>' +
+          '<td>' + chartBtn + '</td>' +
         '</tr>';
       }).join('');
       wrap.innerHTML = '<div class="trade-table-wrap"><table class="trade-table">' +
-        '<thead><tr><th>Ticker</th><th>Direction</th><th>Setup</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Hold</th><th>Result</th><th></th></tr></thead>' +
-        '<tbody>'+rows+'</tbody>' +
+        '<thead><tr><th>Trade</th><th>Dir</th><th>Setup</th><th>Entry</th><th>Exit</th><th>P&L</th><th>Hold</th><th>Result</th><th></th></tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
       '</table></div>';
     } catch(e) {
-      wrap.innerHTML = '<div class="loading-state">Error loading trades: ' + (e.message || 'Unknown') + '</div>';
+      wrap.innerHTML = '<div class="tst-empty">Error: ' + (e.message||'Unknown') + '</div>';
     }
   },
 
   // ============================================================
-  // PERFORMANCE TAB
+  // TAB 3 — TRADING DATA
   // ============================================================
-  renderPerformanceTab: function() {
-    return '<div class="profile-section">' +
-      '<div id="perfContent"><div class="loading-state">Loading performance data...</div></div>' +
-    '</div>';
-  },
-
-  loadPerformance: async function() {
-    var wrap = document.getElementById('perfContent');
-    if (!wrap) return;
+  renderTrading: async function(body, tier) {
+    body.innerHTML = '<div class="tst-loading">Loading trading data...</div>';
     var user = await getUser();
-    if (!user) { wrap.innerHTML = '<div class="loading-state">Please log in.</div>'; return; }
+    if (!user) { body.innerHTML = '<div class="tst-empty">Please log in.</div>'; return; }
+
     try {
-      var result = await getSupabase().from('trades').select('*').eq('user_id', user.id);
+      var client = getSupabase();
+      var result = await client.from('trades').select('*').eq('user_id', user.id);
       if (result.error) throw result.error;
       var trades = result.data || [];
+
       if (trades.length < 3) {
-        wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">📈</div><div class="empty-title">Not enough data yet</div><div class="empty-sub">Log at least 3 trades to see your performance breakdown.</div></div>';
+        body.innerHTML = '<div class="tst-empty"><div class="empty-icon">📈</div><div class="empty-title">Not enough data yet</div><div class="empty-sub">Log at least 3 trades to see your full performance breakdown.</div></div>';
         return;
       }
 
-      var wins = trades.filter(function(t){ return t.pnl > 0; });
-      var losses = trades.filter(function(t){ return t.pnl < 0; });
-      var totalPnl = trades.reduce(function(s,t){ return s + t.pnl; }, 0);
+      var wins = trades.filter(function(t){ return (t.pnl||0) > 0; });
+      var losses = trades.filter(function(t){ return (t.pnl||0) < 0; });
+      var totalPnl = trades.reduce(function(s,t){ return s + (t.pnl||0); }, 0);
       var winRate = Math.round(wins.length / trades.length * 100);
-      var avgWin = wins.length ? wins.reduce(function(s,t){ return s+t.pnl; },0)/wins.length : 0;
-      var avgLoss = losses.length ? losses.reduce(function(s,t){ return s+t.pnl; },0)/losses.length : 0;
+      var avgWin = wins.length ? wins.reduce(function(s,t){ return s+(t.pnl||0); },0)/wins.length : 0;
+      var avgLoss = losses.length ? losses.reduce(function(s,t){ return s+(t.pnl||0); },0)/losses.length : 0;
 
       // By setup
       var bySetup = {};
       trades.forEach(function(t) {
-        if (!bySetup[t.setup_type]) bySetup[t.setup_type] = {wins:0,losses:0,pnl:0,count:0};
-        bySetup[t.setup_type].count++;
-        bySetup[t.setup_type].pnl += t.pnl;
-        if (t.pnl > 0) bySetup[t.setup_type].wins++;
-        else if (t.pnl < 0) bySetup[t.setup_type].losses++;
+        var s = t.setup_type || 'Untagged';
+        if (!bySetup[s]) bySetup[s] = {wins:0,total:0,pnl:0};
+        bySetup[s].total++; bySetup[s].pnl += (t.pnl||0);
+        if ((t.pnl||0) > 0) bySetup[s].wins++;
       });
 
       // By hour
@@ -404,223 +490,270 @@ var TST_JOURNAL = {
       trades.forEach(function(t) {
         if (!t.entry_time) return;
         var h = new Date(t.entry_time).getHours();
-        if (!byHour[h]) byHour[h] = {wins:0,losses:0,pnl:0,count:0};
-        byHour[h].count++;
-        byHour[h].pnl += t.pnl;
-        if (t.pnl > 0) byHour[h].wins++;
-        else if (t.pnl < 0) byHour[h].losses++;
+        if (!byHour[h]) byHour[h] = {wins:0,total:0,pnl:0};
+        byHour[h].total++; byHour[h].pnl += (t.pnl||0);
+        if ((t.pnl||0) > 0) byHour[h].wins++;
       });
 
-      // Setup rows
-      var setupRows = Object.keys(bySetup).sort(function(a,b){ return bySetup[b].count - bySetup[a].count; }).map(function(s) {
-        var d = bySetup[s];
-        var wr = Math.round(d.wins/d.count*100);
-        var pnlStr = (d.pnl>=0?'+':'')+'$'+Math.round(d.pnl);
-        var pnlColor = d.pnl > 0 ? '#22c55e' : '#ef4444';
-        var wrColor = wr >= 60 ? '#22c55e' : wr >= 45 ? '#f59e0b' : '#ef4444';
-        return '<tr><td>'+s+'</td><td>'+d.count+'</td>' +
-          '<td style="color:'+wrColor+';font-weight:700;">'+wr+'%</td>' +
-          '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td></tr>';
-      }).join('');
+      // By day of week
+      var byDay = {0:{n:'Sun',wins:0,total:0,pnl:0},1:{n:'Mon',wins:0,total:0,pnl:0},2:{n:'Tue',wins:0,total:0,pnl:0},3:{n:'Wed',wins:0,total:0,pnl:0},4:{n:'Thu',wins:0,total:0,pnl:0},5:{n:'Fri',wins:0,total:0,pnl:0},6:{n:'Sat',wins:0,total:0,pnl:0}};
+      trades.forEach(function(t) {
+        if (!t.entry_time) return;
+        var d = new Date(t.entry_time).getDay();
+        byDay[d].total++; byDay[d].pnl += (t.pnl||0);
+        if ((t.pnl||0) > 0) byDay[d].wins++;
+      });
 
-      // Hour rows
-      var hourLabels = {9:'9 AM',10:'10 AM',11:'11 AM',12:'12 PM',13:'1 PM',14:'2 PM',15:'3 PM',16:'4 PM'};
-      var hourRows = Object.keys(byHour).sort(function(a,b){ return a-b; }).map(function(h) {
-        var d = byHour[h];
-        var wr = Math.round(d.wins/d.count*100);
-        var pnlStr = (d.pnl>=0?'+':'')+'$'+Math.round(d.pnl);
-        var pnlColor = d.pnl > 0 ? '#22c55e' : '#ef4444';
-        var wrColor = wr >= 60 ? '#22c55e' : wr >= 45 ? '#f59e0b' : '#ef4444';
-        return '<tr><td>'+(hourLabels[h]||h+':00')+'</td><td>'+d.count+'</td>' +
-          '<td style="color:'+wrColor+';font-weight:700;">'+wr+'%</td>' +
-          '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td></tr>';
-      }).join('');
+      function makeTableRows(obj, keyLabel) {
+        return Object.keys(obj).sort(function(a,b){ return obj[b].total - obj[a].total; }).filter(function(k){ return obj[k].total > 0; }).map(function(k) {
+          var d = obj[k];
+          var wr = d.total ? Math.round(d.wins/d.total*100) : 0;
+          var pnlStr = (d.pnl>=0?'+':'') + '$' + Math.abs(d.pnl).toFixed(0);
+          var wrColor = wr >= 60 ? '#22c55e' : wr >= 45 ? '#f59e0b' : '#ef4444';
+          var pnlColor = d.pnl >= 0 ? '#22c55e' : '#ef4444';
+          var label = keyLabel === 'hour' ? (parseInt(k) < 12 ? k+':00 AM' : (parseInt(k)-12||12)+':00 PM') : keyLabel === 'day' ? d.n : k.replace('TST ','');
+          return '<tr><td>' + label + '</td><td>' + d.total + '</td><td style="color:'+wrColor+';font-weight:700;">' + wr + '%</td><td style="color:'+pnlColor+';font-weight:700;">' + pnlStr + '</td></tr>';
+        }).join('');
+      }
 
       var pnlColor = totalPnl >= 0 ? '#22c55e' : '#ef4444';
-      var pnlStr = (totalPnl>=0?'+':'')+'$'+Math.abs(totalPnl).toFixed(2);
+      var wrColor = winRate >= 55 ? '#22c55e' : winRate >= 45 ? '#f59e0b' : '#ef4444';
 
-      wrap.innerHTML =
+      var behavioralHTML = '';
+      if (tier === 'base') {
+        behavioralHTML = '<div class="dash-card dash-full tst-locked-card">' +
+          '<div class="tst-lock-icon">🔬</div>' +
+          '<div class="tst-lock-title">Behavioral Analysis</div>' +
+          '<div class="tst-lock-body">Pattern detection, archetype assignment, and intervention recommendations are available on the Mentorship plan ($500/month). Your data is being collected — upgrade any time to unlock.</div>' +
+          '<button class="btn-primary-green" style="margin-top:16px;">Upgrade to Mentorship</button>' +
+        '</div>';
+      } else {
+        behavioralHTML = '<div class="dash-card dash-full"><div class="dash-card-label">Behavioral Profile</div><div style="color:var(--muted);font-size:14px;padding:16px 0;">Behavioral engine activates after 20 trades. Keep logging your trades.</div></div>';
+      }
+
+      body.innerHTML =
         '<div class="perf-stats-grid">' +
-          '<div class="perf-stat"><div class="perf-stat-label">Total Trades</div><div class="perf-stat-num">'+trades.length+'</div></div>' +
-          '<div class="perf-stat"><div class="perf-stat-label">Win Rate</div><div class="perf-stat-num" style="color:'+(winRate>=55?'#22c55e':winRate>=45?'#f59e0b':'#ef4444')+'">'+winRate+'%</div></div>' +
-          '<div class="perf-stat"><div class="perf-stat-label">Total P&L</div><div class="perf-stat-num" style="color:'+pnlColor+'">'+pnlStr+'</div></div>' +
-          '<div class="perf-stat"><div class="perf-stat-label">Avg Winner</div><div class="perf-stat-num" style="color:#22c55e">+$'+avgWin.toFixed(0)+'</div></div>' +
-          '<div class="perf-stat"><div class="perf-stat-label">Avg Loser</div><div class="perf-stat-num" style="color:#ef4444">$'+avgLoss.toFixed(0)+'</div></div>' +
-          '<div class="perf-stat"><div class="perf-stat-label">Win/Loss Ratio</div><div class="perf-stat-num">'+(losses.length ? (Math.abs(avgWin/avgLoss)).toFixed(2) : '—')+'</div></div>' +
+          '<div class="perf-stat"><div class="perf-stat-label">Trades</div><div class="perf-stat-num">' + trades.length + '</div></div>' +
+          '<div class="perf-stat"><div class="perf-stat-label">Win Rate</div><div class="perf-stat-num" style="color:'+wrColor+'">' + winRate + '%</div></div>' +
+          '<div class="perf-stat"><div class="perf-stat-label">Total P&L</div><div class="perf-stat-num" style="color:'+pnlColor+'">' + (totalPnl>=0?'+':'') + '$' + Math.abs(totalPnl).toFixed(0) + '</div></div>' +
+          '<div class="perf-stat"><div class="perf-stat-label">Avg Winner</div><div class="perf-stat-num" style="color:#22c55e">+$' + avgWin.toFixed(0) + '</div></div>' +
+          '<div class="perf-stat"><div class="perf-stat-label">Avg Loser</div><div class="perf-stat-num" style="color:#ef4444">$' + Math.abs(avgLoss).toFixed(0) + '</div></div>' +
+          '<div class="perf-stat"><div class="perf-stat-label">Win/Loss Ratio</div><div class="perf-stat-num">' + (losses.length && avgLoss ? Math.abs(avgWin/avgLoss).toFixed(2) : '—') + '</div></div>' +
         '</div>' +
         '<div class="perf-tables-grid">' +
-          '<div class="perf-table-wrap">' +
-            '<div class="perf-table-title">Performance by Setup</div>' +
-            '<table class="trade-table">' +
-              '<thead><tr><th>Setup</th><th>Trades</th><th>Win Rate</th><th>P&L</th></tr></thead>' +
-              '<tbody>'+setupRows+'</tbody>' +
-            '</table>' +
-          '</div>' +
-          '<div class="perf-table-wrap">' +
-            '<div class="perf-table-title">Performance by Time of Day</div>' +
-            '<table class="trade-table">' +
-              '<thead><tr><th>Hour</th><th>Trades</th><th>Win Rate</th><th>P&L</th></tr></thead>' +
-              '<tbody>'+hourRows+'</tbody>' +
-            '</table>' +
-          '</div>' +
-        '</div>';
-
-    } catch(e) {
-      wrap.innerHTML = '<div class="loading-state">Error: ' + (e.message || 'Unknown') + '</div>';
-    }
-  },
-
-  // ============================================================
-  // BEHAVIORAL PROFILE TAB
-  // ============================================================
-  renderBehavioralTab: function() {
-    return '<div class="profile-section">' +
-      '<div class="behavioral-locked">' +
-        '<div class="locked-icon">🔬</div>' +
-        '<div class="locked-title">Behavioral Profile</div>' +
-        '<div class="locked-body">Your behavioral engine is actively collecting data as you log trades. Pattern detection activates after your first 20 trades.<br><br>Behavioral profile analysis — including pattern detection, archetype assignment, and intervention recommendations — is available to Mentorship and 10K members.<br><br><strong>Continue logging your trades</strong> — the data is being saved and will power your full behavioral profile the moment you unlock this tier.</div>' +
-        '<div id="behavioralPreview" style="margin-top:24px;"></div>' +
-      '</div>' +
-    '</div>';
-  }
-};
-
-// ============================================================
-// ADMIN PANEL
-// ============================================================
-
-var TST_ADMIN = {
-
-  ADMIN_EMAIL: 'h@topstocktrading.com',
-
-  isAdmin: async function() {
-    var email = await getUserEmail();
-    return email === this.ADMIN_EMAIL;
-  },
-
-  render: async function() {
-    var isAdmin = await this.isAdmin();
-    if (!isAdmin) return '<div class="profile-section"><div class="loading-state">Access denied.</div></div>';
-
-    return '<div class="profile-page">' +
-      '<div class="profile-header">' +
-        '<div class="profile-header-label" style="color:#f59e0b">Admin Panel</div>' +
-        '<h2 class="profile-header-title">Student Dashboard</h2>' +
-      '</div>' +
-      '<div id="adminContent"><div class="loading-state">Loading students...</div></div>' +
-    '</div>';
-  },
-
-  load: async function() {
-    var wrap = document.getElementById('adminContent');
-    if (!wrap) return;
-    try {
-      var result = await getSupabase().from('trades').select('user_id, ticker, setup_type, pnl, entry_time, created_at').order('created_at', {ascending: false}).limit(500);
-      if (result.error) throw result.error;
-      var trades = result.data || [];
-
-      // Group by user
-      var byUser = {};
-      trades.forEach(function(t) {
-        if (!byUser[t.user_id]) byUser[t.user_id] = {trades:[], totalPnl:0, wins:0};
-        byUser[t.user_id].trades.push(t);
-        byUser[t.user_id].totalPnl += t.pnl || 0;
-        if ((t.pnl||0) > 0) byUser[t.user_id].wins++;
-      });
-
-      var quizResult = await getSupabase().from('quiz_results').select('*').order('updated_at', {ascending:false}).limit(200);
-      var quizzes = quizResult.data || [];
-      var quizByUser = {};
-      quizzes.forEach(function(q){ if(!quizByUser[q.user_id]) quizByUser[q.user_id] = []; quizByUser[q.user_id].push(q); });
-
-      var rows = Object.keys(byUser).map(function(uid) {
-        var d = byUser[uid];
-        var tc = d.trades.length;
-        var wr = tc ? Math.round(d.wins/tc*100) : 0;
-        var pnl = d.totalPnl;
-        var pnlStr = (pnl>=0?'+':'')+'$'+Math.abs(pnl).toFixed(0);
-        var pnlColor = pnl >= 0 ? '#22c55e' : '#ef4444';
-        var wrColor = wr >= 55 ? '#22c55e' : wr >= 45 ? '#f59e0b' : '#ef4444';
-        var shortId = uid.substring(0,8)+'...';
-        var qCount = quizByUser[uid] ? quizByUser[uid].filter(function(q){return q.passed;}).length : 0;
-        var lastTrade = d.trades[0] ? new Date(d.trades[0].created_at).toLocaleDateString() : '—';
-        return '<tr>' +
-          '<td><span class="admin-uid">'+shortId+'</span></td>' +
-          '<td>'+tc+'</td>' +
-          '<td style="color:'+wrColor+';font-weight:700;">'+wr+'%</td>' +
-          '<td style="color:'+pnlColor+';font-weight:700;">'+pnlStr+'</td>' +
-          '<td>'+qCount+' passed</td>' +
-          '<td>'+lastTrade+'</td>' +
-        '</tr>';
-      }).join('');
-
-      var totalStudents = Object.keys(byUser).length;
-      var totalTrades = trades.length;
-      var totalPnlAll = trades.reduce(function(s,t){ return s+(t.pnl||0); }, 0);
-
-      wrap.innerHTML =
-        '<div class="admin-stats-row">' +
-          '<div class="admin-stat"><div class="admin-stat-label">Active Students</div><div class="admin-stat-num">'+totalStudents+'</div></div>' +
-          '<div class="admin-stat"><div class="admin-stat-label">Total Trades Logged</div><div class="admin-stat-num">'+totalTrades+'</div></div>' +
-          '<div class="admin-stat"><div class="admin-stat-label">Aggregate P&L</div><div class="admin-stat-num" style="color:'+(totalPnlAll>=0?'#22c55e':'#ef4444')+'">'+(totalPnlAll>=0?'+':'')+'$'+Math.abs(totalPnlAll).toFixed(0)+'</div></div>' +
+          '<div class="perf-table-wrap"><div class="perf-table-title">By Setup</div><table class="trade-table"><thead><tr><th>Setup</th><th>Trades</th><th>Win %</th><th>P&L</th></tr></thead><tbody>' + makeTableRows(bySetup, 'setup') + '</tbody></table></div>' +
+          '<div class="perf-table-wrap"><div class="perf-table-title">By Time of Day</div><table class="trade-table"><thead><tr><th>Hour</th><th>Trades</th><th>Win %</th><th>P&L</th></tr></thead><tbody>' + makeTableRows(byHour, 'hour') + '</tbody></table></div>' +
+          '<div class="perf-table-wrap"><div class="perf-table-title">By Day of Week</div><table class="trade-table"><thead><tr><th>Day</th><th>Trades</th><th>Win %</th><th>P&L</th></tr></thead><tbody>' + makeTableRows(byDay, 'day') + '</tbody></table></div>' +
         '</div>' +
-        '<div class="perf-table-wrap" style="margin-top:24px;">' +
-          '<div class="perf-table-title">All Students</div>' +
-          '<table class="trade-table">' +
-            '<thead><tr><th>Student ID</th><th>Trades</th><th>Win Rate</th><th>P&L</th><th>Quizzes</th><th>Last Active</th></tr></thead>' +
-            '<tbody>'+rows+'</tbody>' +
-          '</table>' +
-        '</div>';
+        behavioralHTML;
+
     } catch(e) {
-      wrap.innerHTML = '<div class="loading-state">Error: ' + (e.message||'Unknown') + '</div>';
+      body.innerHTML = '<div class="tst-empty">Error: ' + (e.message||'Unknown') + '</div>';
     }
+  },
+
+  // ============================================================
+  // TAB 4 — NOTES
+  // ============================================================
+  renderNotes: async function(body, tier) {
+    body.innerHTML = '<div class="tst-loading">Loading notes...</div>';
+    var user = await getUser();
+    if (!user) { body.innerHTML = '<div class="tst-empty">Please log in.</div>'; return; }
+
+    // Load existing note
+    var noteContent = '';
+    try {
+      var client = getSupabase();
+      var result = await client.from('user_notes').select('content').eq('user_id', user.id).single();
+      if (result.data) noteContent = result.data.content || '';
+    } catch(e) {}
+
+    body.innerHTML =
+      '<div class="notes-wrap">' +
+        '<div class="notes-header">' +
+          '<div class="notes-title">My Trading Notes</div>' +
+          '<div class="notes-sub">Write anything here — your rules, your setups, your observations. Saves automatically.</div>' +
+        '</div>' +
+        '<textarea id="notesEditor" class="notes-editor" placeholder="Write your trading notes, rules, setups, and observations here...">' + noteContent + '</textarea>' +
+        '<div class="notes-actions">' +
+          '<button class="btn-primary-green" onclick="TST_PROFILE.saveNotes()">Save Notes</button>' +
+          '<span id="notesSaveStatus" style="font-size:13px;color:var(--muted);margin-left:12px;"></span>' +
+        '</div>' +
+      '</div>';
+  },
+
+  saveNotes: async function() {
+    var editor = document.getElementById('notesEditor');
+    var status = document.getElementById('notesSaveStatus');
+    if (!editor) return;
+    var user = await getUser();
+    if (!user) return;
+    try {
+      var client = getSupabase();
+      await client.from('user_notes').upsert({
+        user_id: user.id,
+        content: editor.value,
+        updated_at: new Date().toISOString()
+      });
+      if (status) { status.textContent = '✓ Saved'; setTimeout(function(){ status.textContent = ''; }, 2000); }
+    } catch(e) {
+      if (status) { status.style.color = '#ef4444'; status.textContent = 'Error saving.'; }
+    }
+  },
+
+  // ============================================================
+  // TAB 5 — MESSAGE CENTER
+  // ============================================================
+  renderMessages: async function(body, tier) {
+    body.innerHTML = '<div class="tst-loading">Loading messages...</div>';
+    var user = await getUser();
+    if (!user) { body.innerHTML = '<div class="tst-empty">Please log in.</div>'; return; }
+
+    var isAdmin = user.email === 'h@topstocktrading.com';
+
+    try {
+      var client = getSupabase();
+
+      if (isAdmin) {
+        // Admin sees all conversations
+        var result = await client.from('messages').select('*').order('created_at', {ascending: false}).limit(100);
+        var msgs = result.data || [];
+        var byUser = {};
+        msgs.forEach(function(m) {
+          if (!byUser[m.user_id]) byUser[m.user_id] = [];
+          byUser[m.user_id].push(m);
+        });
+
+        var threadHTML = Object.keys(byUser).map(function(uid) {
+          var userMsgs = byUser[uid];
+          var latest = userMsgs[0];
+          return '<div class="msg-thread-item" onclick="TST_PROFILE.openThread(\'' + uid + '\')">' +
+            '<div class="msg-thread-name">' + uid.substring(0,8) + '...</div>' +
+            '<div class="msg-thread-preview">' + (latest.content||'').substring(0,60) + '</div>' +
+            '<div class="msg-thread-time">' + new Date(latest.created_at).toLocaleDateString() + '</div>' +
+          '</div>';
+        }).join('') || '<div class="tst-empty">No messages yet.</div>';
+
+        body.innerHTML =
+          '<div class="msg-wrap">' +
+            '<div class="msg-header"><div class="msg-title">Message Center</div><div class="msg-sub">All student conversations</div></div>' +
+            '<div class="msg-threads">' + threadHTML + '</div>' +
+          '</div>';
+
+      } else if (tier === '10k' || tier === 'mentorship') {
+        // Students can send and receive messages
+        var result2 = await client.from('messages').select('*').eq('user_id', user.id).order('created_at', {ascending: true}).limit(100);
+        var msgs2 = result2.data || [];
+
+        var msgHTML = msgs2.map(function(m) {
+          var isMe = m.sender === 'student';
+          return '<div class="msg-bubble ' + (isMe ? 'msg-mine' : 'msg-theirs') + '">' +
+            '<div class="msg-bubble-label">' + (isMe ? 'You' : 'TST Academy') + '</div>' +
+            '<div class="msg-bubble-content">' + m.content + '</div>' +
+            '<div class="msg-bubble-time">' + new Date(m.created_at).toLocaleString() + '</div>' +
+          '</div>';
+        }).join('') || '<div style="text-align:center;padding:32px;color:var(--muted);font-size:14px;">No messages yet. Send your first message below.</div>';
+
+        body.innerHTML =
+          '<div class="msg-wrap">' +
+            '<div class="msg-header"><div class="msg-title">Message Center</div><div class="msg-sub">Direct line to TST Academy — responses within 24-48 hours</div></div>' +
+            '<div class="msg-thread-body" id="msgThreadBody">' + msgHTML + '</div>' +
+            '<div class="msg-compose">' +
+              '<textarea id="msgInput" placeholder="Ask a question, request a trade review, or share what you are working on..." rows="3" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:14px;resize:vertical;font-family:inherit;outline:none;"></textarea>' +
+              '<button class="btn-primary-green" style="margin-top:10px;" onclick="TST_PROFILE.sendMessage()">Send Message</button>' +
+            '</div>' +
+          '</div>';
+
+        // Scroll to bottom
+        setTimeout(function(){
+          var tb = document.getElementById('msgThreadBody');
+          if (tb) tb.scrollTop = tb.scrollHeight;
+        }, 100);
+
+      } else {
+        // Base tier — read only announcements
+        body.innerHTML =
+          '<div class="msg-wrap">' +
+            '<div class="msg-header"><div class="msg-title">Message Center</div></div>' +
+            '<div class="tst-locked-card">' +
+              '<div class="tst-lock-icon">💬</div>' +
+              '<div class="tst-lock-title">Direct Messaging</div>' +
+              '<div class="tst-lock-body">Direct messaging with TST Academy is available on the Mentorship plan. Mentorship members can ask questions and get responses. 10K members additionally get personal trade reviews and quarterly 1:1 sessions.</div>' +
+              '<button class="btn-primary-green" style="margin-top:16px;">Upgrade to Mentorship</button>' +
+            '</div>' +
+          '</div>';
+      }
+    } catch(e) {
+      body.innerHTML = '<div class="tst-empty">Error: ' + (e.message||'Unknown') + '</div>';
+    }
+  },
+
+  sendMessage: async function() {
+    var input = document.getElementById('msgInput');
+    if (!input || !input.value.trim()) return;
+    var user = await getUser();
+    if (!user) return;
+    try {
+      var client = getSupabase();
+      await client.from('messages').insert([{
+        user_id: user.id,
+        content: input.value.trim(),
+        sender: 'student',
+        created_at: new Date().toISOString()
+      }]);
+      input.value = '';
+      await TST_PROFILE.renderMessages(document.getElementById('tstTabBody'), await TST_PROFILE.getTier());
+    } catch(e) { alert('Error sending message: ' + (e.message||'Unknown')); }
+  },
+
+  openThread: async function(userId) {
+    var body = document.getElementById('tstTabBody');
+    if (!body) return;
+    var client = getSupabase();
+    var result = await client.from('messages').select('*').eq('user_id', userId).order('created_at', {ascending: true});
+    var msgs = result.data || [];
+
+    var msgHTML = msgs.map(function(m) {
+      var isStudent = m.sender === 'student';
+      return '<div class="msg-bubble ' + (isStudent ? 'msg-mine' : 'msg-theirs') + '">' +
+        '<div class="msg-bubble-label">' + (isStudent ? 'Student' : 'TST Academy') + '</div>' +
+        '<div class="msg-bubble-content">' + m.content + '</div>' +
+        '<div class="msg-bubble-time">' + new Date(m.created_at).toLocaleString() + '</div>' +
+      '</div>';
+    }).join('');
+
+    body.innerHTML =
+      '<div class="msg-wrap">' +
+        '<button class="btn-outline-green" style="margin-bottom:20px;" onclick="TST_PROFILE.switchTab(\'messages\', null)">← Back</button>' +
+        '<div class="msg-thread-body">' + msgHTML + '</div>' +
+        '<div class="msg-compose">' +
+          '<textarea id="adminReplyInput" placeholder="Reply to this student..." rows="3" style="width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;padding:12px;color:var(--text);font-size:14px;resize:vertical;font-family:inherit;outline:none;"></textarea>' +
+          '<button class="btn-primary-green" style="margin-top:10px;" onclick="TST_PROFILE.adminReply(\'' + userId + '\')">Send Reply</button>' +
+        '</div>' +
+      '</div>';
+  },
+
+  adminReply: async function(userId) {
+    var input = document.getElementById('adminReplyInput');
+    if (!input || !input.value.trim()) return;
+    var client = getSupabase();
+    await client.from('messages').insert([{
+      user_id: userId,
+      content: input.value.trim(),
+      sender: 'admin',
+      created_at: new Date().toISOString()
+    }]);
+    input.value = '';
+    await TST_PROFILE.openThread(userId);
   }
 };
 
-// ============================================================
-// HOOK INTO MEMBERS.HTML
-// Override showProfileDashboard to use our new system
-// ============================================================
-
+// Override showProfileDashboard
 window.addEventListener('load', function() {
-  // Save original and override
-  var origShowProfile = window.showProfileDashboard;
-  window.showProfileDashboard_original = origShowProfile;
+  var orig = window.showProfileDashboard;
+  window.showProfileDashboard_original = orig;
   window.showProfileDashboard = function() {
-    var mc = document.getElementById('mc');
-    if (!mc) { if (origShowProfile) origShowProfile(); return; }
-    TST_JOURNAL.renderProfilePage();
-    // Load overview stats
-    setTimeout(async function() {
-      var user = await getUser();
-      if (!user) return;
-      try {
-        var result = await getSupabase().from('trades').select('pnl, setup_type').eq('user_id', user.id);
-        if (result.error) return;
-        var trades = result.data || [];
-        if (!trades.length) return;
-        var wins = trades.filter(function(t){ return t.pnl > 0; });
-        var wr = Math.round(wins.length/trades.length*100);
-        var totalPnl = trades.reduce(function(s,t){ return s+t.pnl; }, 0);
-        var bySetup = {};
-        trades.forEach(function(t){
-          if(!bySetup[t.setup_type]) bySetup[t.setup_type]={wins:0,count:0};
-          bySetup[t.setup_type].count++;
-          if(t.pnl>0) bySetup[t.setup_type].wins++;
-        });
-        var bestSetup = Object.keys(bySetup).sort(function(a,b){
-          return (bySetup[b].wins/bySetup[b].count)-(bySetup[a].wins/bySetup[a].count);
-        })[0];
-        var pnlColor = totalPnl >= 0 ? '#22c55e' : '#ef4444';
-        var wrColor = wr >= 55 ? '#22c55e' : wr >= 45 ? '#f59e0b' : '#ef4444';
-        var el;
-        el = document.getElementById('ovTotalTrades'); if(el) el.textContent = trades.length;
-        el = document.getElementById('ovWinRate'); if(el){ el.textContent = wr+'%'; el.style.color = wrColor; }
-        el = document.getElementById('ovPnl'); if(el){ el.textContent = (totalPnl>=0?'+':'')+'$'+Math.abs(totalPnl).toFixed(0); el.style.color = pnlColor; }
-        el = document.getElementById('ovBestSetup'); if(el && bestSetup) el.textContent = bestSetup.replace('TST ','');
-      } catch(e) {}
-    }, 100);
-    if (window.scrollTo) window.scrollTo(0,0);
+    TST_PROFILE.render();
   };
 });
 
