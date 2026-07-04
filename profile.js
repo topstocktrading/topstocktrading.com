@@ -1065,15 +1065,14 @@ var TST_CHART = {
       });
 
       // Filter to regular market hours only (9:30 AM - 4:00 PM ET)
-      // Polygon timestamps are in UTC, ET is UTC-4 or UTC-5
+      // Polygon timestamps are in UTC milliseconds
+      // EDT (Apr-Nov): UTC-4 => market = 13:30-20:00 UTC
+      // EST (Nov-Mar): UTC-5 => market = 14:30-21:00 UTC
+      // Use wide filter 13:00-21:30 UTC to safely cover both
       candles = candles.filter(function(c) {
         var d = new Date(c.time * 1000);
-        var utcH = d.getUTCHours();
-        var utcM = d.getUTCMinutes();
-        var utcMins = utcH * 60 + utcM;
-        // 9:30 AM ET = 13:30 UTC (EDT) or 14:30 UTC (EST)
-        // 4:00 PM ET = 20:00 UTC (EDT) or 21:00 UTC (EST)
-        return (utcMins >= 810 && utcMins < 1200) || (utcMins >= 870 && utcMins < 1260);
+        var utcMins = d.getUTCHours() * 60 + d.getUTCMinutes();
+        return utcMins >= 780 && utcMins <= 1290; // 13:00 to 21:30 UTC
       });
 
       if (candles.length === 0) throw new Error('No market hours candles');
@@ -1119,7 +1118,26 @@ var TST_CHART = {
       series.setData(candles);
 
       // Find closest candle to entry time
-      var entryTs = Math.floor(new Date(entryTime).getTime() / 1000);
+      // entryTime from Webull is in ET - convert to match Polygon UTC timestamps
+      var entryDateObj = new Date(entryTime);
+      var entryTs = Math.floor(entryDateObj.getTime() / 1000);
+      // If the time was stored without timezone info, it may be interpreted as local time
+      // Polygon candle times are in UTC, so we need to ensure alignment
+      // Check if our candles are in a reasonable range - if entryTs falls outside candles,
+      // it means there's an offset issue - try adjusting by ET offset (4 or 5 hours)
+      var inRange = candles.some(function(c) { return Math.abs(c.time - entryTs) < 300; });
+      if (!inRange) {
+        // Try EDT offset (UTC-4 = +14400 seconds)
+        var entryTsEDT = entryTs + 14400;
+        var inRangeEDT = candles.some(function(c) { return Math.abs(c.time - entryTsEDT) < 300; });
+        if (inRangeEDT) entryTs = entryTsEDT;
+        else {
+          // Try EST offset (UTC-5 = +18000 seconds)
+          var entryTsEST = entryTs + 18000;
+          var inRangeEST = candles.some(function(c) { return Math.abs(c.time - entryTsEST) < 300; });
+          if (inRangeEST) entryTs = entryTsEST;
+        }
+      }
       var closestEntry = candles.reduce(function(prev, curr) {
         return Math.abs(curr.time - entryTs) < Math.abs(prev.time - entryTs) ? curr : prev;
       });
@@ -1135,6 +1153,9 @@ var TST_CHART = {
 
       if (exitTime) {
         var exitTs = Math.floor(new Date(exitTime).getTime() / 1000);
+        // Apply same offset correction as entry
+        var etOffset = entryTs - Math.floor(new Date(entryTime).getTime() / 1000);
+        exitTs = exitTs + etOffset;
         var closestExit = candles.reduce(function(prev, curr) {
           return Math.abs(curr.time - exitTs) < Math.abs(prev.time - exitTs) ? curr : prev;
         });
