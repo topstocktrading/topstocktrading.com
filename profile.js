@@ -1026,75 +1026,59 @@ var TST_CHART = {
     var container = document.getElementById('chartContainer');
     if (!container) return;
 
-    // Strip options suffix to get underlying: QQQ260616C00720000 -> QQQ
+    // Strip options suffix: QQQ260616C00720000 -> QQQ
     var underlying = ticker.replace(/\d{6}[CP]\d+$/, '') || ticker;
 
     var entryDate = new Date(entryTime);
-    var period1 = Math.floor(entryDate.getTime()/1000) - 7200;
-    var period2 = Math.floor(entryDate.getTime()/1000) + 28800;
+    var dateStr = entryDate.getFullYear() + '-' +
+      String(entryDate.getMonth()+1).padStart(2,'0') + '-' +
+      String(entryDate.getDate()).padStart(2,'0');
 
     container.innerHTML = '<div class="chart-loading">Loading chart data...</div>';
     container.style.height = '420px';
 
     try {
-      // Direct Yahoo Finance fetch - works from browser without proxy
-      // Try multiple Yahoo Finance endpoints and CORS proxies
-      var baseUrl1 = 'https://query1.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=1m&period1=' + period1 + '&period2=' + period2 + '&includePrePost=false';
-      var baseUrl2 = 'https://query2.finance.yahoo.com/v8/finance/chart/' + underlying + '?interval=2m&period1=' + period1 + '&period2=' + period2;
+      // Polygon.io free API - no CORS issues, works from browser
+      var POLY_KEY = 'r4QqeZK_UrcI_6JPgVybHQbSzktLumdP';
+      var polyUrl = 'https://api.polygon.io/v2/aggs/ticker/' + underlying +
+        '/range/1/minute/' + dateStr + '/' + dateStr +
+        '?adjusted=true&sort=asc&limit=500&apiKey=' + POLY_KEY;
 
-      var attempts = [
-        // Direct Yahoo attempts
-        { url: baseUrl1, opts: { headers: { 'Accept': 'application/json', 'User-Agent': 'Mozilla/5.0' }, mode: 'cors' }, direct: true },
-        { url: baseUrl2, opts: { headers: { 'Accept': 'application/json' }, mode: 'cors' }, direct: true },
-        // CORS proxy attempts
-        { url: 'https://corsproxy.io/?' + encodeURIComponent(baseUrl1), opts: {}, direct: false },
-        { url: 'https://api.allorigins.win/get?url=' + encodeURIComponent(baseUrl1), opts: {}, direct: false, allorigins: true },
-        { url: 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(baseUrl1), opts: {}, direct: false }
-      ];
+      var resp = await fetch(polyUrl);
+      if (!resp.ok) throw new Error('Polygon response: ' + resp.status);
+      var polyData = await resp.json();
 
-      var parsed = null;
-      for (var i = 0; i < attempts.length; i++) {
-        try {
-          var a = attempts[i];
-          var resp = await fetch(a.url, a.opts);
-          if (!resp.ok) continue;
-          if (a.allorigins) {
-            var wrapper = await resp.json();
-            parsed = JSON.parse(wrapper.contents);
-          } else {
-            parsed = await resp.json();
-          }
-          if (parsed && parsed.chart && parsed.chart.result) break;
-          parsed = null;
-        } catch(e) { parsed = null; continue; }
+      if (!polyData.results || polyData.results.length === 0) {
+        throw new Error('No data for ' + dateStr);
       }
 
-      if (!parsed || !parsed.chart || !parsed.chart.result || !parsed.chart.result[0]) {
-        throw new Error('No data returned');
-      }
+      // Convert Polygon format to LightweightCharts format
+      // Polygon returns: t=timestamp(ms), o=open, h=high, l=low, c=close, v=volume
+      var candles = polyData.results.map(function(bar) {
+        return {
+          time: Math.floor(bar.t / 1000), // convert ms to seconds
+          open: bar.o,
+          high: bar.h,
+          low: bar.l,
+          close: bar.c
+        };
+      });
 
-      var chartData = parsed.chart.result[0];
-      var timestamps = chartData.timestamp;
-      var quote = chartData.indicators.quote[0];
+      // Filter to regular market hours only (9:30 AM - 4:00 PM ET)
+      // Polygon timestamps are in UTC, ET is UTC-4 or UTC-5
+      candles = candles.filter(function(c) {
+        var d = new Date(c.time * 1000);
+        var utcH = d.getUTCHours();
+        var utcM = d.getUTCMinutes();
+        var utcMins = utcH * 60 + utcM;
+        // 9:30 AM ET = 13:30 UTC (EDT) or 14:30 UTC (EST)
+        // 4:00 PM ET = 20:00 UTC (EDT) or 21:00 UTC (EST)
+        return (utcMins >= 810 && utcMins < 1200) || (utcMins >= 870 && utcMins < 1260);
+      });
 
-      if (!timestamps || timestamps.length === 0) {
-        throw new Error('No candles for this date');
-      }
+      if (candles.length === 0) throw new Error('No market hours candles');
 
-      // Filter to market hours only (9:30-16:00 ET)
-      var candles = [];
-      for (var j = 0; j < timestamps.length; j++) {
-        var o = quote.open[j], h = quote.high[j], l = quote.low[j], c = quote.close[j];
-        if (o === null || h === null || l === null || c === null) continue;
-        var d = new Date(timestamps[j] * 1000);
-        var hr = d.getUTCHours() - 5; // EST offset (approximate)
-        if (hr < 9 || hr >= 16) continue;
-        candles.push({ time: timestamps[j], open: o, high: h, low: l, close: c });
-      }
-
-      if (candles.length === 0) throw new Error('No market hours data');
-
-      // Load Lightweight Charts then render
+      // Load Lightweight Charts library
       if (!window.LightweightCharts) {
         await new Promise(function(resolve, reject) {
           var s = document.createElement('script');
@@ -1115,7 +1099,15 @@ var TST_CHART = {
         grid: { vertLines: { color: '#1e2820' }, horzLines: { color: '#1e2820' } },
         crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
         rightPriceScale: { borderColor: '#1e2820' },
-        timeScale: { borderColor: '#1e2820', timeVisible: true, secondsVisible: false }
+        timeScale: {
+          borderColor: '#1e2820',
+          timeVisible: true,
+          secondsVisible: false,
+          tickMarkFormatter: function(time) {
+            var d = new Date(time * 1000);
+            return d.getUTCHours() + ':' + String(d.getUTCMinutes()).padStart(2,'0');
+          }
+        }
       });
 
       var series = chart.addCandlestickSeries({
@@ -1126,23 +1118,20 @@ var TST_CHART = {
 
       series.setData(candles);
 
-      // Add entry/exit markers
-      var markers = [];
-      var entryTs = Math.floor(new Date(entryTime).getTime() / 1000);
-
       // Find closest candle to entry time
+      var entryTs = Math.floor(new Date(entryTime).getTime() / 1000);
       var closestEntry = candles.reduce(function(prev, curr) {
         return Math.abs(curr.time - entryTs) < Math.abs(prev.time - entryTs) ? curr : prev;
       });
 
-      markers.push({
+      var markers = [{
         time: closestEntry.time,
         position: direction === 'Long' ? 'belowBar' : 'aboveBar',
         color: '#22c55e',
         shape: direction === 'Long' ? 'arrowUp' : 'arrowDown',
         text: 'ENTRY $' + entryPrice,
         size: 2
-      });
+      }];
 
       if (exitTime) {
         var exitTs = Math.floor(new Date(exitTime).getTime() / 1000);
@@ -1159,18 +1148,22 @@ var TST_CHART = {
         });
       }
 
+      // Sort markers by time (required)
+      markers.sort(function(a,b){ return a.time - b.time; });
       series.setMarkers(markers);
 
-      // Stop line
+      // Stop price line
       if (stopPrice && candles.length) {
         var stopSeries = chart.addLineSeries({
           color: '#f59e0b', lineWidth: 1,
           lineStyle: 2,
-          priceLineVisible: false, lastValueVisible: false
+          priceLineVisible: false,
+          lastValueVisible: true,
+          title: 'Stop'
         });
         stopSeries.setData([
-          { time: candles[0].time, value: stopPrice },
-          { time: candles[candles.length-1].time, value: stopPrice }
+          { time: candles[0].time, value: parseFloat(stopPrice) },
+          { time: candles[candles.length-1].time, value: parseFloat(stopPrice) }
         ]);
       }
 
@@ -1179,10 +1172,10 @@ var TST_CHART = {
     } catch(e) {
       container.innerHTML =
         '<div class="chart-no-data">' +
-          '<div style="font-size:24px;margin-bottom:12px;">📊</div>' +
-          '<div style="font-weight:600;margin-bottom:8px;">Chart data unavailable</div>' +
-          '<div style="font-size:13px;line-height:1.7;margin-bottom:16px;">Could not load 1-minute data for ' + underlying + '.<br>This can happen for older dates or when the data provider is unavailable.</div>' +
-          '<a href="https://finance.yahoo.com/chart/' + underlying + '" target="_blank" style="color:var(--green);font-size:13px;">View on Yahoo Finance →</a>' +
+          '<div style="font-size:32px;margin-bottom:12px;">📊</div>' +
+          '<div style="font-weight:600;color:var(--text);margin-bottom:8px;">Chart unavailable</div>' +
+          '<div style="font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:16px;">' + (e.message || 'Could not load data') + '</div>' +
+          '<a href="https://finance.yahoo.com/chart/' + underlying + '" target="_blank" style="color:var(--green);font-size:13px;text-decoration:none;">View ' + underlying + ' on Yahoo Finance →</a>' +
         '</div>';
     }
   }
