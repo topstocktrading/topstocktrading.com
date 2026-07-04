@@ -1093,49 +1093,9 @@ function computeProfile(){
 }
 
 function showProfileDashboard(){
-  const p=computeProfile();
-  const profileColors={'Momentum Chaser':'#00d27a','Sniper':'#00a8ff','Swing Specialist':'#f59e0b','Hybrid':'#a855f7','Undetermined':'#6b7280'};
-  const color=profileColors[p.profile]||'#6b7280';
-  const scoreBar=(val,label)=>val===null
-    ?`<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;color:#6b7280;margin-bottom:4px;"><span>${label}</span><span>No data yet</span></div><div style="height:4px;background:#1e2330;border-radius:2px;"></div></div>`
-    :`<div style="margin-bottom:10px;"><div style="display:flex;justify-content:space-between;font-size:12px;color:#6b7280;margin-bottom:4px;"><span>${label}</span><span style="color:${val>=60?'#00d27a':val>=40?'#f59e0b':'#e05c5c'}">${val}%</span></div><div style="height:4px;background:#1e2330;border-radius:2px;overflow:hidden;"><div style="height:100%;width:${val}%;background:${val>=60?'#00d27a':val>=40?'#f59e0b':'#e05c5c'};border-radius:2px;"></div></div></div>`;
-  document.getElementById('mc').innerHTML=`
-    <div style="margin-bottom:24px;">
-      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:${color};font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:8px;">TST Behavioral Profile</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:#fff;margin-bottom:4px;">YOUR TRADER PROFILE</div>
-      <div style="font-size:13px;color:#6b7280;">Updated automatically as you complete lessons and quizzes</div>
-    </div>
-    <div style="background:#12151c;border:2px solid ${color}44;border-radius:16px;padding:28px;margin-bottom:20px;">
-      <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
-        <div style="width:56px;height:56px;border-radius:50%;background:${color}22;border:2px solid ${color};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;color:${color};">${p.profile.charAt(0)}</div>
-        <div><div style="font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:2px;color:#fff;">${p.profile.toUpperCase()}</div><div style="font-size:13px;color:#6b7280;">${p.totalQuizzes} behavioral data points collected</div></div>
-      </div>
-      ${p.totalQuizzes<10?`<div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:8px;padding:12px 16px;font-size:13px;color:#f59e0b;">Complete more lessons and quizzes to refine your profile. Minimum 10 data points needed for accuracy.</div>`:''}
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;">
-      <div style="background:#12151c;border:1px solid #1e2330;border-radius:12px;padding:20px;">
-        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;">Accuracy by Category</div>
-        ${scoreBar(p.scores.breakout,'Breakout Patterns')}
-        ${scoreBar(p.scores.dip,'Dip Buy Setups')}
-        ${scoreBar(p.scores.momentum,'Momentum Reading')}
-        ${scoreBar(p.scores.patience,'Patience & Timing')}
-        ${scoreBar(p.scores.risk,'Risk Management')}
-      </div>
-      <div style="background:#12151c;border:1px solid #1e2330;border-radius:12px;padding:20px;">
-        <div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;">Behavioral Signals</div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1e2330;"><span style="font-size:13px;color:#6b7280;">Impulsive answers</span><span style="font-size:13px;font-weight:500;color:${p.impulsiveCount>5?'#e05c5c':'#00d27a'}">${p.impulsiveCount}</span></div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #1e2330;"><span style="font-size:13px;color:#6b7280;">Deliberate answers</span><span style="font-size:13px;font-weight:500;color:#00d27a">${p.deliberateCount}</span></div>
-        <div style="display:flex;justify-content:space-between;"><span style="font-size:13px;color:#6b7280;">Lessons revisited</span><span style="font-size:13px;font-weight:500;color:#00a8ff">${Object.keys(BEHAVIOR.retries).length}</span></div>
-      </div>
-    </div>
-    ${p.traits.length?`<div style="background:#12151c;border:1px solid #1e2330;border-radius:12px;padding:20px;margin-bottom:16px;"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#fff;margin-bottom:12px;">Identified Traits</div>${p.traits.map(t=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px;color:#e8eaf0;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#00d27a" stroke-width="1.5"/><polyline points="4,7 6,9.5 10,4.5" stroke="#00d27a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>${t}</div>`).join('')}</div>`:''}
-    ${p.warnings.length?`<div style="background:rgba(224,92,92,0.06);border:1px solid rgba(224,92,92,0.2);border-radius:12px;padding:20px;margin-bottom:16px;"><div style="font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:#e05c5c;margin-bottom:12px;">Areas to Watch</div>${p.warnings.map(w=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:13px;color:#e8eaf0;"><span style="color:#e05c5c;flex-shrink:0;margin-top:1px;">!</span>${w}</div>`).join('')}</div>`:''}
-    <div style="background:rgba(0,210,122,0.04);border:1px solid rgba(0,210,122,0.15);border-radius:12px;padding:20px;margin-bottom:24px;"><div style="font-size:13px;color:#6b7280;line-height:1.7;">This profile is built from your actual course behavior — how fast you answer, which concepts you master, which you revisit. It updates automatically as you progress. Your VIP Inner Circle playbook will be built using this data combined with your profile questionnaire.</div></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;padding-top:28px;border-top:1px solid #1e2330;">
-      <button class="nav-btn" onclick="loadLesson('beginner')">← Back to Course</button>
-      <button class="nav-btn primary" onclick="loadLesson('beginner')">Continue Course →</button>
-    </div>`;
-  window.scrollTo(0,0);
+  if(window.TST_PROFILE){
+    window.TST_PROFILE.render();
+  }
 }
 
 function doLogin(){
