@@ -215,7 +215,7 @@ var TST_PROFILE = {
       var wrColor = winRate >= 55 ? '#22c55e' : winRate >= 45 ? '#f59e0b' : '#ef4444';
 
       body.innerHTML =
-        '<div class="dash-grid">' +
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:0;">' +
           // Course progress card
           '<div class="dash-card dash-full">' +
             '<div class="dash-card-label">Course Progress</div>' +
