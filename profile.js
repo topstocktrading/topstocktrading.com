@@ -553,15 +553,13 @@ var TST_PROFILE = {
     } catch(e) {}
 
     body.innerHTML =
-      '<div class="notes-wrap">' +
-        '<div class="notes-header">' +
-          '<div class="notes-title">My Trading Notes</div>' +
-          '<div class="notes-sub">Write anything here — your rules, your setups, your observations. Saves automatically.</div>' +
-        '</div>' +
-        '<textarea id="notesEditor" class="notes-editor" placeholder="Write your trading notes, rules, setups, and observations here...">' + noteContent + '</textarea>' +
-        '<div class="notes-actions">' +
-          '<button class="btn-primary-green" onclick="TST_PROFILE.saveNotes()">Save Notes</button>' +
-          '<span id="notesSaveStatus" style="font-size:13px;color:var(--muted);margin-left:12px;"></span>' +
+      '<div style="max-width:800px;">' +
+        '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:6px;letter-spacing:0.5px;">My Trading Notes</div>' +
+        '<div style="font-size:13px;color:#6b7c6e;margin-bottom:20px;line-height:1.6;">Write anything here — your trading rules, setup criteria, observations, lessons learned. Saves to your account.</div>' +
+        '<textarea id="notesEditor" placeholder="Write your notes here..." style="width:100%;min-height:480px;background:#111712;border:1.5px solid #1e2820;border-radius:12px;padding:20px;color:#f0f4f1;font-size:15px;line-height:1.7;resize:vertical;font-family:inherit;outline:none;display:block;box-sizing:border-box;">' + noteContent + '</textarea>' +
+        '<div style="display:flex;align-items:center;margin-top:14px;gap:16px;">' +
+          '<button onclick="TST_PROFILE.saveNotes()" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:12px 28px;font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.5px;cursor:pointer;">Save Notes</button>' +
+          '<span id="notesSaveStatus" style="font-size:13px;color:#6b7c6e;"></span>' +
         '</div>' +
       '</div>';
   },
