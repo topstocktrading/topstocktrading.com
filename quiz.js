@@ -486,4 +486,348 @@ document.addEventListener('change', function(e) {
   var answered = container.querySelectorAll('input[type=radio]:checked').length;
   var pbar = document.getElementById('qpb_' + sectionId);
   if (pbar) pbar.style.width = Math.round((answered / total) * 100) + '%';
-});
+});// BEGINNER QUESTIONS
+const beginnerQuestions = [
+  {
+    q: "What does a long lower wick on a candle tell you about buyer and seller behavior during that period?",
+    variants: [
+      "What does a long lower wick on a candle reveal about what happened during that time period?",
+      "If a candle has a very long lower wick, what does that tell you about the battle between buyers and sellers?",
+      "A candle closes near its high but has a very long lower wick. What happened during that period?"
+    ],
+    a: "Sellers pushed price down significantly during the period but buyers stepped in aggressively and rejected those lower prices, pushing price back up before the candle closed. The wick represents the range that was tested and rejected.",
+    hint: "Think about what the wick represents — it shows where price went but was not accepted.",
+    options: [
+      "Sellers pushed price down but buyers rejected the lower prices and pushed it back up before the close",
+      "Buyers were in control the entire period and price only moved upward",
+      "The stock had low volume and did not move much during that period",
+      "Sellers won the battle and price closed near the lows"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a Doji and what does it signal when it appears after an extended trend?",
+    variants: [
+      "A candle has an almost identical open and close with wicks on both sides. What type of candle is this and what does it mean after a long uptrend?",
+      "What does a Doji candlestick look like and why is its location on the chart important?",
+      "After a stock has been trending up for several days a Doji appears. What should you take from this?"
+    ],
+    a: "A Doji has nearly the same open and close price, creating a very small body with wicks on both sides. It signals indecision — neither buyers nor sellers won that period. When it appears after an extended trend it is a warning that momentum is slowing and a reversal may be coming.",
+    hint: "The body of a Doji is almost nonexistent. Think about what it means when neither side wins.",
+    options: [
+      "A candle with nearly the same open and close signaling indecision — potential reversal warning after an extended trend",
+      "A large green candle signaling that buyers are fully in control and the trend will continue",
+      "A candle that only forms at the bottom of downtrends as a reversal signal",
+      "A candle with no wicks showing total conviction from one side"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a bullish engulfing pattern and why is it more significant near a support level?",
+    variants: [
+      "Describe a bullish engulfing pattern and explain why location matters when evaluating it.",
+      "A large green candle completely covers the previous red candle's body. What is this pattern called and when is it most meaningful?",
+      "What makes a bullish engulfing pattern high probability versus low probability?"
+    ],
+    a: "A bullish engulfing pattern is two candles — a red candle followed by a green candle that completely engulfs the prior red candle's body. It shows a powerful shift from selling to buying pressure. Near a support level it is more significant because buyers are defending a known price level, making the reversal more likely to hold.",
+    hint: "Context matters. The same pattern means more at certain price levels than others.",
+    options: [
+      "Two candles where a green candle completely covers the prior red body — most significant near support where buyers are defending a known level",
+      "A single large green candle that appears at the top of an uptrend signaling continuation",
+      "Two green candles in a row — more significant the further from support they appear",
+      "A pattern that only works on daily charts and is not reliable on intraday timeframes"
+    ],
+    correct: 0
+  },
+  {
+    q: "Why is a candle CLOSE above resistance more significant than a wick through it?",
+    variants: [
+      "A stock wicks above a resistance level but closes back below it. Is this a breakout? Why or why not?",
+      "What is the difference between a wick through resistance and a candle close above resistance?",
+      "You are watching a key resistance level. Price pokes above it briefly then pulls back. What does this tell you?"
+    ],
+    a: "A wick through resistance means price briefly tested that level but was rejected — sellers won and pushed price back below. A close above resistance means the market accepted that price level, buyers overpowered sellers, and the level has been genuinely broken. Closing price is where the majority of participants agreed to end the period.",
+    hint: "Where price closes is where the market decided it belongs. A wick is just a test.",
+    options: [
+      "A close above resistance shows the market accepted the new price level — a wick just means it was tested and rejected",
+      "A wick above resistance is actually more significant because it shows buyers pushed price higher",
+      "Both are equally significant — any touch of resistance is a valid breakout signal",
+      "Neither matters — you should only trade breakouts on the daily chart"
+    ],
+    correct: 0
+  },
+  {
+    q: "A stock breaks above resistance on half its average volume. What does this tell you and what should you do?",
+    variants: [
+      "You see a breakout above a key level but notice volume is well below average. How do you evaluate this setup?",
+      "What does low volume on a breakout candle tell you about the move's reliability?",
+      "A stock clears resistance for the first time in weeks but volume is 0.5x the average. Do you take the trade?"
+    ],
+    a: "Low volume on a breakout is a major red flag. It means institutions are not participating — the move is being driven by retail traders or algorithms and lacks real conviction. These breakouts frequently fail and reverse back below resistance. You should wait for volume to confirm the move before entering or avoid the trade entirely.",
+    hint: "Volume tells you who is participating. No institutional volume means no conviction.",
+    options: [
+      "Low volume breakout lacks institutional conviction and is likely to fail — wait for volume confirmation or skip it",
+      "Low volume is actually better because it means less selling pressure and the move is cleaner",
+      "Volume does not matter on breakouts — price action alone is sufficient for entry",
+      "Take the trade immediately before volume picks up and the stock gets crowded"
+    ],
+    correct: 0
+  },
+  {
+    q: "What should volume look like during a flag consolidation for the setup to be valid?",
+    variants: [
+      "During the pullback phase of a bull flag, what should you observe happening to volume?",
+      "How does volume behavior during a flag consolidation confirm or invalidate the setup?",
+      "A stock pulls back after a big move. Volume during the pullback is spiking higher than the initial move. Is this a valid flag setup?"
+    ],
+    a: "Volume should dry up significantly during the flag consolidation — dropping well below average. This shows that sellers are not aggressively pushing price lower and the pullback is orderly profit-taking rather than genuine distribution. When volume contracts during the flag it sets up a high-probability breakout when buyers return with force.",
+    hint: "If sellers were truly in control during the pullback, volume would be high. Low volume means they are not.",
+    options: [
+      "Volume should dry up and contract during the flag — low volume confirms sellers are exhausted and buyers will return",
+      "Volume should increase during the flag to confirm that buyers are actively accumulating",
+      "Volume during the flag does not matter — only the breakout volume is relevant",
+      "Volume should match the initial move to show equal participation on both sides"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does a volume climax spike often signal at the end of a sharp move?",
+    variants: [
+      "A stock has been selling off hard for 3 days and on day 4 volume spikes to 10x the average on another sharp drop. What might this signal?",
+      "What is a volume climax and why does extreme volume often appear at turning points?",
+      "You see an enormous volume spike on a sharp move down. What should you be thinking about?"
+    ],
+    a: "A volume climax spike — extreme volume on a sharp move — often signals exhaustion of the dominant side. On a selloff it means panic sellers are all exiting at once, which frequently marks a short-term bottom because once all the sellers have sold there is no one left to push price lower. It does not guarantee a reversal but it is a significant warning that the move is mature.",
+    hint: "Extreme volume means a lot of participants acted at once. Think about what happens when everyone who wants to sell has already sold.",
+    options: [
+      "Exhaustion of the dominant side — on a selloff it signals panic selling may be climaxing and a reversal could be near",
+      "Confirmation that the trend is healthy and will continue strongly in the same direction",
+      "A signal to add to your position in the direction of the move",
+      "A meaningless event that happens randomly and should be ignored"
+    ],
+    correct: 0
+  },
+  {
+    q: "What happens to a resistance level once it is broken with conviction and strong volume?",
+    variants: [
+      "A stock has been rejected at $55 three times. It finally breaks above $55 on huge volume. What does $55 now represent?",
+      "Explain the concept of resistance flipping to support after a breakout.",
+      "After a clean breakout above a major resistance level, where would you look to buy a pullback?"
+    ],
+    a: "Former resistance becomes support. Once a level is broken with conviction, the traders who were selling there are now buyers on any pullback because they want to defend the price they already committed to. Institutions also frequently buy pullbacks to broken resistance levels. This is why the first pullback after a breakout is often a high-probability entry.",
+    hint: "Think about what the traders who were selling at that level do after it breaks above them.",
+    options: [
+      "Former resistance becomes support — traders who sold there now buy pullbacks to defend that level",
+      "The broken resistance level becomes meaningless and should be ignored going forward",
+      "Resistance remains resistance — a breakout above it is usually temporary and price will return below",
+      "The level becomes an area of uncertainty with no predictive value in either direction"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a higher low and what does a series of higher lows tell you about who is in control?",
+    variants: [
+      "A stock pulls back to $48 then rallies, then pulls back to $51, then rallies again. What pattern is forming and what does it mean?",
+      "Define a higher low and explain its significance in identifying trend strength.",
+      "You notice each pullback in a stock is finding support at a higher price than the last pullback. What does this tell you?"
+    ],
+    a: "A higher low occurs when a pullback finds support at a higher price than the previous pullback. A series of higher lows means buyers are stepping in earlier and earlier — they are not waiting for price to fall as far before buying. This shows accumulation and confirms that buyers are in control. It is one of the key characteristics of a healthy uptrend.",
+    hint: "If buyers keep stepping in at higher and higher prices, what does that tell you about demand?",
+    options: [
+      "Buyers are stepping in earlier each time — it signals accumulation and confirms buyers are in control of the trend",
+      "The stock is becoming increasingly risky because it is making higher highs and could reverse at any time",
+      "Higher lows are only significant on weekly charts — intraday higher lows have no predictive value",
+      "It means sellers are getting stronger because they are defending lower price levels each time"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a lower high and what does it tell you about the health of an uptrend?",
+    variants: [
+      "A stock rallies to $60, pulls back, rallies to $58, pulls back, rallies to $55. What pattern is forming and what does it mean?",
+      "You are long a stock and notice each rally is reaching a lower peak than the previous one. What should you be thinking?",
+      "Define a lower high and explain why it is a warning signal even if price has not broken a support level yet."
+    ],
+    a: "A lower high occurs when a bounce or rally fails at a lower price than the previous bounce. It means sellers are getting more aggressive — they are stepping in earlier to sell before price can reach the previous high. A series of lower highs in what was an uptrend is a significant warning that buyers are losing control, even before any support level breaks.",
+    hint: "If sellers keep stepping in at lower and lower prices, demand is weakening. What does that mean for the trend?",
+    options: [
+      "Sellers are stepping in earlier each time — warns that buyer momentum is fading even if support has not broken yet",
+      "Lower highs are a normal part of any healthy uptrend and should not cause concern",
+      "It signals that the stock is consolidating before a major breakout to new highs",
+      "Lower highs only matter if price is also making lower lows at the same time"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is the difference between a breakout and a fakeout and how do you avoid entering a fakeout?",
+    variants: [
+      "A stock breaks above a key resistance level and you enter long. Ten minutes later it reverses back below the level. What happened and how could you have avoided it?",
+      "How do you distinguish a genuine breakout from a fakeout before you enter the trade?",
+      "What are the two most important criteria that separate a real breakout from a false one?"
+    ],
+    a: "A breakout is a genuine move above resistance accepted by the market — confirmed by a candle close above the level and above-average volume. A fakeout is when price briefly pierces a level but quickly reverses back below it. You avoid fakeouts by waiting for a full candle close above the level rather than entering on a wick, and requiring volume to be above average on the breakout candle.",
+    hint: "Two things confirm a real breakout: where the candle closes and whether volume is showing up.",
+    options: [
+      "Wait for a candle close above the level with above-average volume — a wick through on low volume is usually a fakeout",
+      "Enter immediately when price touches resistance so you get the best possible entry before the breakout",
+      "Fakeouts only happen on low-quality stocks — blue chip stocks always have genuine breakouts",
+      "Use a stop loss above the resistance level to protect against fakeouts after you enter"
+    ],
+    correct: 0
+  },
+  {
+    q: "What are the two components of a bull flag and where is the entry point?",
+    variants: [
+      "Break down the structure of a bull flag pattern and identify where you would enter the trade.",
+      "A stock surges 15% in an hour then pulls back tightly for 20 minutes in a channel. What pattern is forming and where do you enter?",
+      "Describe a bull flag from start to finish including the exact entry trigger."
+    ],
+    a: "A bull flag has two components — the flag pole (the sharp initial move up driven by a catalyst and volume) and the flag (the tight orderly pullback that follows on lower volume). The entry point is a break above the highest candle in the flag consolidation, confirmed by a volume spike showing buyers are returning.",
+    hint: "One component shows the strength of the move, the other is the rest period before continuation.",
+    options: [
+      "Flag pole (sharp move up) and flag (tight pullback) — entry is on a break above the flag highs with volume",
+      "The breakout candle and the retest — entry is when price retests the original breakout level",
+      "The accumulation zone and the markup phase — entry is at the very start of the accumulation",
+      "Support and resistance — entry is when price bounces off the support level inside the flag"
+    ],
+    correct: 0
+  },
+  {
+    q: "Where does the stop loss go on a bull flag trade and why?",
+    variants: [
+      "You enter a bull flag breakout. Where exactly do you place your stop and what is the reasoning behind that level?",
+      "Why does the stop on a bull flag go below the flag lows and not somewhere else?",
+      "A bull flag breaks out and you enter. Price pulls back into the flag. At what point is the trade officially wrong?"
+    ],
+    a: "The stop goes below the lowest candle in the flag consolidation. If price returns below the flag low the pattern is invalidated — the pullback was not a healthy flag, buyers have lost control, and the breakout has failed. Placing the stop at the flag low is technically logical because that is the exact level where the trade thesis breaks down.",
+    hint: "Your stop should go at the level that PROVES your trade idea is wrong.",
+    options: [
+      "Below the lowest candle in the flag — if price returns there the pattern is invalidated and the thesis is wrong",
+      "Below the bottom of the flag pole — the entire move must be protected",
+      "A fixed dollar amount below your entry regardless of chart structure",
+      "At the prior day's low since that is the most significant support level"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does an ascending triangle tell you about the battle between buyers and sellers?",
+    variants: [
+      "A stock keeps hitting the same resistance level while making higher lows below it. What pattern is forming and what does it reveal?",
+      "Explain the psychology behind an ascending triangle — what are buyers doing and what are sellers doing?",
+      "Why does an ascending triangle typically resolve to the upside?"
+    ],
+    a: "An ascending triangle shows buyers getting more aggressive — making higher lows, meaning they are willing to pay more each time — while sellers are defending a fixed resistance level. Eventually buyers overwhelm the fixed supply at resistance. The pattern typically resolves bullishly because buyers are clearly gaining strength while sellers are holding a static line that is gradually being eroded.",
+    hint: "One side is getting stronger while the other is holding a fixed level. That imbalance has to resolve somehow.",
+    options: [
+      "Buyers are getting more aggressive with higher lows while sellers hold a fixed level — buyers eventually overwhelm resistance",
+      "Sellers are gaining strength as they successfully hold resistance and will eventually push price sharply lower",
+      "Both buyers and sellers are equally matched and the pattern resolves randomly in either direction",
+      "The pattern shows institutional distribution at resistance and almost always resolves to the downside"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does it mean when a large wall on the ask disappears as price approaches it?",
+    variants: [
+      "You see 50,000 shares offered at $25.00 on Level 2. As price gets close that wall suddenly vanishes. What does this tell you?",
+      "A massive ask wall disappears right before price reaches it. Is this bullish or bearish and why?",
+      "On Level 2 you notice a huge sell order at a key resistance level evaporates as price approaches. How do you interpret this?"
+    ],
+    a: "When a large ask wall disappears as price approaches it, it is typically a bullish signal. It means the seller who placed that order either pulled it because they no longer want to sell at that price or it was a fake wall designed to scare buyers — a tactic called spoofing. The disappearance of resistance often leads to a sharp move up because there is now less supply blocking the way.",
+    hint: "If the wall was real supply and it disappeared, what does that mean for the path of least resistance?",
+    options: [
+      "Typically bullish — the supply that was blocking price has been removed, clearing the path for a move higher",
+      "Bearish — it means a large seller has filled their entire position and price will now drop sharply",
+      "Neutral — walls appear and disappear constantly and have no predictive value",
+      "Bearish — it means a market maker is pulling liquidity ahead of a major sell program"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does aggressive tape — large prints hitting the ask repeatedly — tell you about direction?",
+    variants: [
+      "You are watching the time and sales and see large green prints hitting the ask over and over. What does this tell you about what is happening in the stock?",
+      "How do you read the tape to determine if a move is real versus fading?",
+      "Large blocks are printing at the ask price consistently. What does this signal about buyer conviction?"
+    ],
+    a: "Large prints hitting the ask means buyers are so eager to own the stock that they are paying the sellers asking price rather than waiting for a better price. This shows urgency and conviction from the buying side. Consistent aggressive buying at the ask is a bullish signal — it tells you institutions or motivated buyers are accumulating and not waiting around.",
+    hint: "When you hit the ask instead of bidding below it, you are saying you need to own this right now. What does that urgency signal?",
+    options: [
+      "Buyers are aggressively paying the ask — shows urgency and conviction, bullish signal of strong demand",
+      "Sellers are offloading large positions at the ask to get out quickly before price drops",
+      "The tape is showing equal buying and selling activity with no clear directional bias",
+      "Large prints at the ask mean price is about to reverse because sellers are meeting the demand"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is the 1% rule and why does it exist?",
+    variants: [
+      "Explain the 1% rule in trading and the mathematical reason it is essential for account survival.",
+      "Why do professional traders limit their risk to 1% per trade even when they are highly confident in a setup?",
+      "What is the purpose of the 1% rule and what problem does it solve?"
+    ],
+    a: "The 1% rule means never risking more than 1% of your total account on a single trade. It exists because it makes account survival mathematically near-impossible to violate — even 10 consecutive losses only cost you 10% of your account. At higher risk percentages a losing streak can end your trading career. It also removes emotional attachment to individual trades because no single trade can devastate your account.",
+    hint: "Think about what happens to your account after 10 losing trades in a row at different risk percentages.",
+    options: [
+      "Never risk more than 1% per trade — ensures 10 consecutive losses only cost 10% of your account, protecting you from career-ending drawdowns",
+      "Only trade stocks that have moved more than 1% from their opening price to ensure enough volatility",
+      "Limit your daily trading activity to 1 hour per day to avoid overtrading and emotional decisions",
+      "Never let a single trade account for more than 1% of your daily volume to avoid moving the market"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a daily max loss rule and what should you do the moment you hit it?",
+    variants: [
+      "You set a $300 daily max loss before the market opened. You hit it at 10:15 AM. What do you do?",
+      "Why is a daily max loss rule considered one of the most important risk management tools for a trader?",
+      "Explain the purpose of a daily max loss limit and what happens psychologically when traders ignore it."
+    ],
+    a: "A daily max loss rule is a hard dollar limit you set before the market opens — the maximum you are willing to lose in one day. The moment you hit it you close your platform and stop trading for the day, no exceptions. It exists because your worst trading decisions happen after you have already taken losses — revenge trading, oversizing, emotional entries. The daily max loss rule stops the bleeding before a bad day becomes a catastrophic one.",
+    hint: "Your best risk management decisions are made before the market opens, not after you are already down.",
+    options: [
+      "Close your platform and stop trading immediately — your judgment is impaired after losses and the rule exists to prevent catastrophic days",
+      "Take one more trade to try to recover the losses since you are already at your limit anyway",
+      "Reduce your position size by half and continue trading more carefully for the rest of the day",
+      "Switch to paper trading for the rest of the day to practice without risking more real money"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a 2:1 risk reward ratio and why does it matter even if your win rate is below 50%?",
+    variants: [
+      "Explain how a 2:1 risk reward ratio can make a trader profitable even when they lose more trades than they win.",
+      "You risk $100 on every trade and target $200. Your win rate is 40%. Are you profitable and why?",
+      "Why do professional traders refuse to take trades with less than 2:1 risk reward regardless of how confident they feel?"
+    ],
+    a: "A 2:1 risk reward ratio means your target profit is twice your potential loss on every trade. It matters at a below-50% win rate because the math still works in your favor — if you win 40% of trades risking $100 to make $200, you make $200 on 4 wins and lose $100 on 6 losses, netting +$200 over 10 trades. It builds a mathematical edge that does not require you to be right most of the time.",
+    hint: "Do the math on 10 trades at 40% win rate with 2:1 risk reward. Add up the wins and losses.",
+    options: [
+      "Your profit target is twice your stop loss — at 40% win rate you are still profitable because winners outweigh losers mathematically",
+      "A 2:1 ratio only works when your win rate is above 50% — below that the math does not work out",
+      "The ratio only matters on swing trades — for day trades you should target at least 5:1 risk reward",
+      "Risk reward ratios are personal preference — some traders prefer 1:1 ratios with higher win rates"
+    ],
+    correct: 0
+  },
+  {
+    q: "Why is the period between 11:30 AM and 2:00 PM considered the most dangerous time to trade and what should you do differently during that window?",
+    variants: [
+      "A new trader asks why experienced traders often stop trading around 11:30 AM. What do you tell them?",
+      "What happens to volume and volatility during midday and how should that change your behavior?",
+      "You are up $400 at 11:45 AM. What should you think about doing and why?"
+    ],
+    a: "Midday is the most dangerous trading period because institutional volume drops dramatically, spreads widen, and price moves become choppy and random rather than directional. Setups that work in the morning stop working at midday because there is not enough real participation to sustain moves. Most experienced traders either stop trading entirely from 11:30 to 2:00 PM or dramatically reduce their size. If you are profitable in the morning the best move is often to protect those gains and wait for the afternoon session.",
+    hint: "What happens when institutional volume leaves the market? Who is left trading and what does their behavior look like?",
+    options: [
+      "Volume drops, moves become choppy and random — most experienced traders stop or reduce size significantly during this window",
+      "Midday is actually the best time to trade because volatility is lower and setups are cleaner and more reliable",
+      "The only change needed is to use tighter stops since price moves are smaller during midday",
+      "Midday danger only applies to small cap stocks — large caps like SPY and QQQ trade normally all day"
+    ],
+    correct: 0
+  }
+];
+
+
