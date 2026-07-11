@@ -830,4 +830,433 @@ const beginnerQuestions = [
   }
 ];
 
+// INTERMEDIATE QUESTIONS
+const intermediateQuestions = [
+  {
+    q: "QQQ is down 1.5% and trending below VWAP all morning. You have a long setup forming on a tech stock. What should you do and why?",
+    variants: [
+      "The Nasdaq is selling off hard and below VWAP. A tech stock on your watchlist shows a long setup. Do you take it?",
+      "You have a strong long setup on an individual stock but the market is clearly in a downtrend this morning. How do you handle this?",
+      "Market is red across the board and QQQ is below VWAP. Your setup triggers on a tech name. What is your decision?"
+    ],
+    a: "Skip the trade or dramatically reduce size. When the index is trending below VWAP in a downtrend, the tide is going out — most individual stocks, especially tech, will struggle to move up against that pressure. Even a perfect setup has a much lower probability of working when the overall market is selling. You only take high-probability trades, and fighting the index is not one of them.",
+    hint: "Think about how hard it is for a single stock to swim upstream when the whole market is selling.",
+    options: [
+      "Skip or reduce size significantly — trading long against a downtrending index dramatically lowers your probability",
+      "Take the trade with full size since individual stock setups can work regardless of market direction",
+      "Take the trade but use a wider stop since the market selloff may cause more volatility",
+      "Wait exactly 30 minutes then take the trade since morning selloffs usually reverse by mid-morning"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does it mean when a stock is holding green while the overall market is selling off and why is this significant?",
+    variants: [
+      "The S&P 500 is down 1% but a stock on your watchlist is up 2%. What does this tell you about that stock?",
+      "Define relative strength in the context of day trading and explain why it matters when selecting trades.",
+      "You notice a stock refusing to sell off despite heavy market pressure. What does this signal?"
+    ],
+    a: "A stock holding green while the market sells off is showing exceptional relative strength — it means there is genuine institutional demand absorbing all the selling pressure. This is one of the most bullish signals you can see because if the stock is this strong when the market is weak, imagine how far it can run when the market turns around. Relative strength is one of the best filters for finding the strongest trade candidates each day.",
+    hint: "If a stock is green while everything else is red, something significant is happening beneath the surface.",
+    options: [
+      "Exceptional relative strength — institutional demand is absorbing selling pressure and the stock will likely lead when the market recovers",
+      "A temporary anomaly that will correct once the market stabilizes and selling pressure spreads to all stocks",
+      "A warning sign that the stock is about to reverse hard since it cannot sustain its gains against a down market",
+      "It means the stock is thinly traded and not correlated to the market — not useful for trading decisions"
+    ],
+    correct: 0
+  },
+  {
+    q: "The VIX spikes from 14 to 28 overnight. How should this change your trading behavior the next morning?",
+    variants: [
+      "You wake up and the VIX has doubled overnight. What adjustments do you make to your trading plan?",
+      "What does a VIX spike tell you about market conditions and how do you adapt?",
+      "Fear index doubles overnight. Walk through how this changes your approach to the next trading session."
+    ],
+    a: "A VIX spike means volatility has doubled — stocks will move much faster and further in both directions. You should reduce position size significantly because your stops need to be wider to avoid being shaken out by noise, and wider stops with normal size means much more dollar risk. You should also be more selective with setups, avoid chasing moves, and be prepared for whipsaw price action that invalidates setups quickly.",
+    hint: "If everything is moving twice as fast, what happens to your risk if you keep the same position size?",
+    options: [
+      "Reduce size significantly — wider moves mean wider stops and normal size would risk much more than 1% of your account",
+      "Increase size to take advantage of the larger moves and potentially make more money from the volatility",
+      "Trade exactly the same since volatility affects all traders equally and your edge remains the same",
+      "Stop trading entirely since high VIX days are always losing days for retail traders"
+    ],
+    correct: 0
+  },
+  {
+    q: "You notice a stock consistently respects its 9 EMA on the 5-minute chart every single day. How do you use this information?",
+    variants: [
+      "A stock has bounced off the 9 EMA on the 5-minute chart 15 times in the past two weeks. What do you do with this data?",
+      "What does it mean when a stock has a personality that respects a specific moving average?",
+      "You have studied a stock and noticed it treats the 9 EMA as perfect support in uptrends. How does this change your entries?"
+    ],
+    a: "You use the 9 EMA as your entry trigger — buying pullbacks to that level in an uptrend rather than chasing breakouts. Stocks develop personalities and when one consistently respects a specific level it creates a repeatable, high-probability entry. You wait for price to pull back and touch or come close to the 9 EMA, then enter on the first sign of a bounce with your stop just below it. This gives you a tighter stop and better risk reward than entering on a breakout.",
+    hint: "If you know exactly where a stock tends to find support, how can you use that to get a better entry?",
+    options: [
+      "Use the 9 EMA as your entry trigger — buy pullbacks to that level with a stop just below it for tighter risk",
+      "Avoid trading that stock since predictable patterns attract too many traders and stop runs are more common",
+      "Use the 9 EMA as a sell signal — when price returns to the EMA it means the uptrend is ending",
+      "Only use this information on daily charts since intraday EMA patterns are too inconsistent to trade"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is average daily range and how do you use it to set realistic price targets?",
+    variants: [
+      "How does knowing a stock's average daily range help you set price targets on your trades?",
+      "A stock has an average daily range of $3. It has already moved $2.80 today. How does this affect a new long entry?",
+      "Explain how average daily range prevents traders from setting unrealistic targets."
+    ],
+    a: "Average daily range is the typical dollar distance a stock travels from its daily low to daily high. If a stock averages $3 of movement per day and has already moved $2.80, it is unlikely to move another $3 — it is near its range limit. You use this to set realistic targets and to avoid entering trades late in the day when most of the range has already been consumed. Chasing a stock that has already used up its daily range is one of the most common beginner mistakes.",
+    hint: "Every stock has a daily energy budget. Once it is spent, the odds of another big move drop sharply.",
+    options: [
+      "It tells you how much movement is left in the day — avoid entering when most of the average range has already been used",
+      "Use it as a minimum price target — only take trades where your target exceeds the average daily range",
+      "Average daily range only matters for swing trades — day traders should ignore it entirely",
+      "Double the average daily range to set your target since strong catalyst days always exceed average ranges"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does it mean when a stock is extended and why is it dangerous to buy in that condition?",
+    variants: [
+      "A stock is up 25% from its opening price and still moving. What does extended mean in this context and what is the risk?",
+      "Why do experienced traders avoid buying stocks that are already significantly extended from their base?",
+      "Define extended in trading terms and explain the specific risk it creates for buyers."
+    ],
+    a: "Extended means a stock has moved far from its base or last consolidation point — it has already run significantly and is far above any logical support level. Buying extended means your stop has to be very wide to be below meaningful support, which means large dollar risk, or you place a tight stop that gets hit by normal fluctuations. Extended stocks also tend to attract profit-taking from early buyers which creates sharp reversals. The rule is let it consolidate and form a new base before entering.",
+    hint: "If a stock is far from support, where does your stop go? And what happens when early buyers decide to take profits?",
+    options: [
+      "Too far from support — stop must be very wide creating excessive risk, and profit-taking from early buyers causes sharp reversals",
+      "Extended stocks are the best entries because momentum is confirmed and the move has proven itself",
+      "Extended only applies to stocks above their 52-week high — stocks below that level are never considered extended",
+      "Buy extended stocks with a tighter than normal stop since the momentum will protect you from major reversals"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a catalyst and why does a gap with a catalyst behave differently than a gap without one?",
+    variants: [
+      "Two stocks gap up 8% at the open. One has earnings that beat expectations. The other has no news. How do you treat them differently?",
+      "Explain why the presence or absence of a catalyst dramatically changes how you trade a gap.",
+      "What is the difference between a catalyst gap and a sympathy or low-float gap with no news?"
+    ],
+    a: "A catalyst is a specific news event — earnings beat, FDA approval, major contract, analyst upgrade — that provides a fundamental reason for the move. A catalyst gap tends to hold and continue because institutional buyers validate the news and keep stepping in. A gap without a catalyst is often driven by thin pre-market conditions and tends to fade quickly once the market opens and real volume arrives. Always know the catalyst before trading a gap.",
+    hint: "Institutions react to real news. Without news, who is actually driving the pre-market move?",
+    options: [
+      "Catalyst gaps tend to hold and continue — institutions validate real news. No-catalyst gaps often fade once real volume arrives",
+      "Gaps without catalysts are more tradeable because they are purely technical without the unpredictability of news reactions",
+      "Both gaps behave identically — the percentage of the gap is what determines whether it holds or fades",
+      "Catalyst gaps are more dangerous because the news is already priced in and the stock immediately reverses"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a pre-market gapper and what four things should you know about it before the market opens?",
+    variants: [
+      "You find a stock gapping up 12% in pre-market. What four pieces of information do you research before the open?",
+      "Walk through your pre-market research process for a significant gapper on your watchlist.",
+      "What is the minimum information you need about a gapper before you are prepared to trade it at the open?"
+    ],
+    a: "A pre-market gapper is a stock moving significantly above or below the prior close before 9:30 AM. Before trading it you need to know: 1) The catalyst — what specific news is driving the move and is it real and significant? 2) The float — how many shares are available to trade and will this create volatility? 3) Key levels — where is the pre-market high, prior day close, and any major support or resistance? 4) Volume — is pre-market volume already elevated confirming institutional interest?",
+    hint: "Four things: why is it moving, how many shares exist, where are the key prices, and who is participating?",
+    options: [
+      "Catalyst, float, key levels (pre-market high, prior close), and pre-market volume — all four before the open",
+      "Just the catalyst and the percentage gap — the other information can be gathered after the market opens",
+      "The float, the short interest, the options chain, and the analyst ratings — fundamental data is most important",
+      "Pre-market high and the prior close — these two levels are sufficient to trade any gapper safely"
+    ],
+    correct: 0
+  },
+  {
+    q: "Why should you remove a stock from your active watchlist once it has already made its big move for the day?",
+    variants: [
+      "A stock on your watchlist ran 20% in the first 30 minutes. Should it stay on your active watchlist? Why or why not?",
+      "What is the danger of continuing to watch and trade a stock that has already made its major move?",
+      "Explain the concept of daily range in the context of removing stocks from your watchlist."
+    ],
+    a: "Once a stock has made its big move it has likely consumed most of its average daily range — the energy for the day is spent. Continuing to watch it pulls your attention away from fresh setups that have not moved yet. Traders who keep watching stocks that have already run tend to overtrade them, chasing every small bounce and breakdown and getting chopped up in the noise. Fresh setups are always higher probability than trying to squeeze more out of a stock that has already moved.",
+    hint: "A stock only has so much movement in a day. Once it has moved, where is a better place to focus your attention?",
+    options: [
+      "It has consumed its daily range and watching it pulls focus from fresh setups — higher probability trades exist elsewhere",
+      "Keep it on the watchlist since stocks that move big in the morning often have a second major move in the afternoon",
+      "Remove it only if it reverses — if it continues grinding higher it still has potential and deserves attention",
+      "Always keep movers on your watchlist regardless of how much they have moved since they attract the most volume"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is confluence and give an example of three things that would create confluence on a long setup?",
+    variants: [
+      "Define confluence in trading and explain why more confluence factors increase the probability of a trade working.",
+      "What does it mean when multiple factors align on the same trade and how does this affect your conviction?",
+      "Give a specific example of a high-confluence long setup using at least three confirming factors."
+    ],
+    a: "Confluence means multiple independent factors are all pointing to the same trade at the same time, stacking the odds in your favor. An example of a high-confluence long setup: price is at a bull flag breakout level AND that level is also a prior resistance turned support AND VWAP is below price confirming bullish bias AND the overall market QQQ is trending above VWAP. Each factor alone is decent — all four together create a significantly higher probability setup.",
+    hint: "Each factor alone gives you some edge. Multiple factors pointing the same direction multiply that edge.",
+    options: [
+      "Multiple independent factors aligning — e.g. bull flag breakout at key support with volume and QQQ above VWAP all at once",
+      "Two moving averages crossing on the same chart — this is the most reliable form of confluence available",
+      "Any setup where both the daily and weekly chart show the same candlestick pattern at the same time",
+      "Confluence means the setup has worked at least three times in the past — historical repetition confirms the pattern"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is the difference between a setup and a signal and why does entering on a setup instead of a signal cost most traders money?",
+    variants: [
+      "Explain the difference between identifying a setup and waiting for a signal — and why most traders jump in too early.",
+      "A bull flag is forming but has not broken out yet. Is this a setup or a signal? When do you enter?",
+      "Why do experienced traders wait for a signal rather than entering the moment they identify a setup?"
+    ],
+    a: "A setup is the conditions that make a trade possible — a stock forming a flag, approaching support, or consolidating near resistance. A signal is the trigger that tells you the move is actually happening — the breakout candle closing above the flag with volume. Entering on a setup means entering before the trade has proven itself, which means you are guessing at the outcome. Entering on a signal means the move has started and you are joining confirmed momentum with defined risk.",
+    hint: "A setup is the loaded gun. A signal is when it actually fires. When do you act?",
+    options: [
+      "Setup is the condition, signal is the trigger — entering on setup means guessing, entering on signal means confirmed momentum",
+      "They are the same thing — a setup is just another word for a signal in most trading contexts",
+      "Enter on the setup to get a better price since waiting for the signal means you always buy at the high",
+      "Setups are for swing traders and signals are for day traders — different timeframes use different terminology"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is the first 5 candles rule and why do many experienced traders avoid trading during that window?",
+    variants: [
+      "Why do some experienced traders refuse to take trades in the first 5 minutes of market open?",
+      "Explain what happens during the first 5 candles of the trading day and why it creates a dangerous environment.",
+      "What makes the first 5 minutes of the trading day uniquely risky compared to the rest of the session?"
+    ],
+    a: "The first 5 candles on a 1-minute chart — the first 5 minutes after the open — represent the most chaotic and unpredictable period of the day. Pre-market orders flood in, stop hunts occur, and price can move violently in both directions before finding its real direction. Many experienced traders watch the first 5 candles to understand the opening range and directional bias without committing capital during the most unpredictable window. Acting too fast in the first 5 minutes is one of the leading causes of unnecessary morning losses.",
+    hint: "Think about how many orders have been queued up overnight just waiting to hit the market at 9:30.",
+    options: [
+      "First 5 minutes are the most chaotic — pre-market orders flood in, stop hunts occur, and real direction is unclear until the dust settles",
+      "The first 5 candles represent the highest probability trades of the day since volume and volatility are at their peak",
+      "The rule only applies on earnings days — on normal days the first 5 minutes are fine to trade",
+      "Experienced traders avoid the first 5 candles because spreads are too wide to enter positions profitably"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is the opening range and how do traders use it as a reference point throughout the day?",
+    variants: [
+      "Define the opening range and explain how it is used to make trading decisions later in the session.",
+      "A stock establishes a high of $52.40 and a low of $51.20 in the first 30 minutes. How do you use these levels?",
+      "Why is the opening range considered one of the most important reference points for intraday traders?"
+    ],
+    a: "The opening range is the high and low established in the first 15 to 30 minutes of trading. It represents the initial battle between buyers and sellers after the open. Traders use it as a reference throughout the day — a break above the opening range high with volume is bullish and signals potential for continuation upward. A break below the opening range low is bearish. Price often rotates between these levels during midday and breaks out of the range in the afternoon.",
+    hint: "The opening range is where the first significant battle of the day was fought. That battlefield becomes reference for the rest of the day.",
+    options: [
+      "High and low of first 15-30 minutes — break above is bullish, break below is bearish, levels act as reference all day",
+      "The range between the prior day close and the opening price — used to determine gap fill targets",
+      "The distance between VWAP and the first candle close — used to set intraday profit targets",
+      "A fixed range of 50 cents above and below the opening price used as default stop placement"
+    ],
+    correct: 0
+  },
+  {
+    q: "Why do experienced traders reduce size or stop trading entirely during the 11:30 AM to 2:00 PM window?",
+    variants: [
+      "What specifically happens to market conditions between 11:30 AM and 2:00 PM that makes it the most dangerous trading window?",
+      "You are profitable at 11:45 AM. An experienced trader tells you to stop trading. Why?",
+      "Describe the characteristics of midday trading and why the strategies that work at the open stop working then."
+    ],
+    a: "During midday institutional volume drops significantly as large funds go to lunch and pause activity. Without institutional participation the bid-ask spreads widen, moves become smaller and more random, and the clean directional trends that create good setups disappear. Strategies that work at the open — momentum, breakouts, VWAP plays — stop working reliably because there is not enough real volume to sustain moves. Most experienced traders protect their morning profits by sitting out this window rather than giving them back on choppy trades.",
+    hint: "Remove the institutions from the market and what is left? Who is still trading and what does their behavior look like?",
+    options: [
+      "Institutional volume drops sharply — spreads widen, moves become random, and momentum strategies stop working reliably",
+      "Midday is dangerous because breaking news is most likely to hit during lunch hours creating unpredictable gaps",
+      "The algo programs that run at the open shut down at 11:30 making price action purely retail-driven and more predictable",
+      "Tax regulations require institutional funds to stop trading during midday to prevent market manipulation"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is power hour and what typically drives the increased volume and volatility in the final hour?",
+    variants: [
+      "Define power hour and explain the mechanics behind why the final hour of trading is often the most active.",
+      "Why does volume typically surge in the last hour of the trading day and what types of moves does this create?",
+      "What causes power hour and how should you adjust your trading approach during 3:00 to 4:00 PM?"
+    ],
+    a: "Power hour is the final hour of trading from 3:00 to 4:00 PM ET. Volume surges during this period because institutional funds are making final position adjustments before the close, index funds are rebalancing, and traders are closing or adjusting positions rather than holding overnight. This creates strong directional moves that tend to follow the direction the stock or market has been trending all day. Stocks that have been strong all day often make their strongest move in the final hour.",
+    hint: "Think about what large funds need to do before the close and how all those orders hitting the market at once creates movement.",
+    options: [
+      "Final hour volume surge from institutional rebalancing and position adjustments — tends to accelerate the day's existing trend",
+      "Power hour is random volatility caused by retail traders making impulsive end-of-day decisions",
+      "Increased volume from after-hours traders entering positions early before the market closes",
+      "Power hour only occurs on expiration Fridays when options traders are forced to cover positions"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does selling into strength mean and why is it better than waiting for your exact target?",
+    variants: [
+      "Explain the concept of selling into strength and why professional traders prefer it over holding for a fixed target.",
+      "A stock is running hard toward your target. Do you wait for the exact number or sell now? Why?",
+      "Why do experienced traders take profits while a stock is still moving rather than waiting for it to stop?"
+    ],
+    a: "Selling into strength means taking profits while price is still moving in your favor — while the bid is active and buyers are still aggressive — rather than waiting for price to hit your exact target and reverse. By the time price hits your target it may be losing momentum, spread is widening, and you may end up getting a worse fill than if you sold into the move. Selling into strength gets you out at strong prices with minimal slippage and removes the emotional greed of holding for more.",
+    hint: "It is easier to sell when there are aggressive buyers. What happens to liquidity once the move is over?",
+    options: [
+      "Taking profits while buyers are still aggressive gives better fills and avoids the reversal that often happens right at targets",
+      "Always wait for your exact target — selling early trains you to take less than you planned and hurts profitability",
+      "Selling into strength only applies to options — for stock positions always hold to the exact target price",
+      "Sell into strength only when the position is losing — for winning trades always hold until the target is reached"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a trailing stop and when should you switch from a fixed stop to a trailing stop?",
+    variants: [
+      "Define a trailing stop and explain the specific trigger that tells you to switch from your original stop to a trailing stop.",
+      "Your trade is working and price has moved significantly past your entry. How do you use a trailing stop to protect profits?",
+      "When does it make sense to move from a fixed stop at your original risk level to a trailing stop?"
+    ],
+    a: "A trailing stop is a stop that moves up with price as the trade goes in your favor — locking in more profit as the stock rises while still giving the trade room to breathe. You switch from a fixed stop to a trailing stop when the trade has moved enough to justify protecting profits — typically after hitting your first target or after price has moved at least 1.5 to 2 times your original risk in your favor. At that point you trail the stop below recent candle lows or key levels rather than holding your original entry stop.",
+    hint: "Once you have significant profit, the goal changes from managing risk to locking in gains. That is when the trailing stop takes over.",
+    options: [
+      "A stop that moves with price — switch to it after hitting first target or moving 1.5-2x your risk in your favor to lock in gains",
+      "A stop placed a fixed dollar amount below current price regardless of chart structure — used from the moment you enter",
+      "Switch to a trailing stop as soon as you are breakeven since protecting capital is always the priority",
+      "Trailing stops are only for swing trades — intraday traders should always use fixed stops at their original level"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does it mean when a stock fails to make a new high on a bounce after a strong move up and why is it a warning signal?",
+    variants: [
+      "A stock made a high of $55, pulled back, bounced back up to $54.20, then started pulling back again. What does this tell you?",
+      "Explain the significance of a failed new high attempt after a strong upward move.",
+      "Price cannot reclaim its previous high on the second attempt. What does this reveal about buying and selling pressure?"
+    ],
+    a: "When a stock cannot make a new high on a bounce it means buyers are losing strength — they could not push price back to where it was before. This is the first sign of a potential trend reversal. It creates a lower high which is the beginning of a downtrend structure. If you are long this is a signal to tighten your stop or begin taking profits. If you are watching it as a potential short, a failed new high followed by a break below the last pullback low is a solid short setup.",
+    hint: "If buyers could not push it back to the previous high, what does that tell you about who is gaining the upper hand?",
+    options: [
+      "Buying pressure is weakening — creates a lower high which is the first sign of potential trend reversal, time to tighten stops",
+      "A positive sign showing the stock is consolidating before a powerful breakout to new highs",
+      "Completely normal and expected — stocks never go straight up and failed new highs are part of every healthy uptrend",
+      "Only significant if it happens three times in a row — one failed new high attempt is not enough data to act on"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is the 9 EMA and how do day traders use it as a dynamic support level during an uptrend?",
+    variants: [
+      "Explain how the 9 EMA functions as dynamic support during an intraday uptrend.",
+      "A stock is in a strong uptrend on the 5-minute chart and keeps touching the 9 EMA before bouncing. How do you trade this?",
+      "What makes the 9 EMA more useful than a horizontal support level for intraday trading?"
+    ],
+    a: "The 9 EMA is the 9-period exponential moving average — one of the most watched short-term momentum indicators for day traders. In a strong uptrend on the 5-minute chart price repeatedly pulls back to touch the 9 EMA and bounces. Day traders use these touches as entry points — buying the dip to the 9 EMA with a stop just below it. Unlike horizontal support which is static, the 9 EMA is dynamic and rises with the trend, giving you progressively better entries as the stock moves higher.",
+    hint: "A moving average moves with the stock. How does that make it more useful than a fixed horizontal line?",
+    options: [
+      "9 EMA rises with the trend providing dynamic support — traders buy touches of it with tight stops just below for high-probability entries",
+      "The 9 EMA is a sell signal — when price touches it in an uptrend it means momentum is fading and you should exit",
+      "Use the 9 EMA only as a directional filter — never as an actual entry or exit trigger on intraday charts",
+      "The 9 EMA is only useful on daily charts — on intraday charts it moves too fast to be a reliable support level"
+    ],
+    correct: 0
+  },
+  {
+    q: "What does it mean when the 9 EMA crosses below the 20 EMA on a 5-minute chart mid-session?",
+    variants: [
+      "You are watching a stock and notice the 9 EMA has crossed below the 20 EMA on the 5-minute chart. What does this signal?",
+      "Explain the bearish significance of a 9 EMA crossing below the 20 EMA during the trading session.",
+      "The short-term moving average crosses below the medium-term moving average on your chart. What action do you consider?"
+    ],
+    a: "When the 9 EMA crosses below the 20 EMA it is a bearish momentum signal — the short-term average is now below the medium-term average meaning recent price action is weaker than the broader trend. On a 5-minute chart mid-session this warns that the stock is losing upside momentum and may be transitioning from uptrend to downtrend. If you are long it is a warning to tighten stops or exit. It does not guarantee a reversal but it tells you the momentum has shifted.",
+    hint: "When the faster moving average falls below the slower one, which direction is short-term momentum pointing?",
+    options: [
+      "Bearish momentum shift — short-term price action weakening below medium-term trend, tighten stops on longs or consider exit",
+      "A bullish signal showing the stock is compressing before a powerful breakout above both moving averages",
+      "Completely neutral — moving average crosses on 5-minute charts are too noisy to use as trading signals",
+      "A buy signal — when the 9 EMA dips below the 20 EMA it creates the best risk reward entry in an uptrend"
+    ],
+    correct: 0
+  },
+  {
+    q: "Why do the 50 SMA and 200 SMA matter to day traders even though they are long-term averages?",
+    variants: [
+      "As a day trader focused on intraday moves, why should you care about the 50-day and 200-day moving averages?",
+      "A stock approaches its 200-day moving average on the daily chart. How does this affect your intraday trading plan?",
+      "Explain why long-term moving averages create meaningful support and resistance for short-term traders."
+    ],
+    a: "The 50 SMA and 200 SMA matter because institutions use them as reference points for buying and selling decisions. When a stock approaches a major moving average on the daily chart it attracts a huge concentration of institutional orders — some buying at that level as support and some selling into it as resistance. This creates real price reactions that day traders can trade around. A day trader ignoring a major daily moving average may take a long position right into a massive institutional sell wall.",
+    hint: "These averages matter because of WHO watches them, not just what they show mathematically.",
+    options: [
+      "Institutions use them as buy and sell reference points — approaching these levels on the daily chart creates real institutional order flow day traders can trade around",
+      "They do not matter for day traders at all — only swing traders and investors need to watch long-term moving averages",
+      "They only matter on the last trading day of each month when funds rebalance based on these averages",
+      "Use them only as directional filters — buy above 200 SMA, sell below it, without using them as specific entry levels"
+    ],
+    correct: 0
+  },
+  {
+    q: "What are the three conditions that must be present for a valid Gap and Go setup?",
+    variants: [
+      "Walk through the three criteria you check before taking a Gap and Go trade at the open.",
+      "A stock gaps up 8% at the open. What three things do you confirm before entering a Gap and Go?",
+      "What separates a valid Gap and Go setup from a gap that will fade and reverse?"
+    ],
+    a: "Three conditions for a valid Gap and Go: 1) A real catalyst — the gap must have a specific fundamental reason behind it such as earnings beat, FDA approval, or major news. Random gaps without news tend to fade. 2) Above-average pre-market volume — institutional participation must be confirmed before the open. 3) Price holding above the pre-market high after the open — the stock must continue to show strength by not fading back below where it gapped from, confirming buyers remain in control after the open.",
+    hint: "Why did it gap, who is participating, and is it still holding strength after the open?",
+    options: [
+      "Real catalyst, above-average pre-market volume, and price holding above pre-market high after the open",
+      "Gap size above 5%, pre-market high above prior day high, and float below 50 million shares",
+      "Positive earnings, analyst upgrade, and sector confirmation from at least two other stocks in the same space",
+      "Gap above prior day close, VWAP reclaim within first 10 minutes, and RSI above 60 on the 5-minute chart"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a VWAP reclaim entry and what makes it a high-probability setup?",
+    variants: [
+      "Describe a VWAP reclaim setup and explain the specific conditions that make it worth trading.",
+      "A stock drops below VWAP early in the session then claws its way back above it with strong volume. What setup is forming and why is it significant?",
+      "What is the logic behind a VWAP reclaim trade and where do you enter and stop?"
+    ],
+    a: "A VWAP reclaim entry occurs when a stock drops below VWAP, then recovers and closes a candle back above it with strong volume. It is high probability because VWAP is where institutions benchmark their orders — when a stock reclaims VWAP it means institutional buyers are stepping back in and defending that level. The entry is on the first candle that closes above VWAP, the stop goes below VWAP, and the target is the next significant resistance level. It is one of the cleanest intraday entries because the risk is clearly defined.",
+    hint: "VWAP is the institutional benchmark. What happens when institutions decide to start buying again after a dip?",
+    options: [
+      "Stock drops below VWAP then closes back above it with volume — institutional buyers re-entering gives it high probability with clear defined risk",
+      "Stock touches VWAP for the first time all day — the first touch of VWAP is always the strongest entry signal",
+      "Stock stays above VWAP all day without ever testing it — entering on the first pullback toward VWAP",
+      "VWAP reclaim only works in the first 30 minutes — after that institutions have already completed their orders"
+    ],
+    correct: 0
+  },
+  {
+    q: "What is a dip buy and what conditions must be present for it to be valid rather than catching a falling knife?",
+    variants: [
+      "Explain the difference between a valid dip buy and catching a falling knife.",
+      "A stock you like has pulled back 8% from its high. What conditions do you need to see before buying the dip?",
+      "What separates a high-probability dip buy from an emotional entry into a stock that is still in freefall?"
+    ],
+    a: "A valid dip buy requires three things: 1) The overall trend must still be intact — you are buying a pullback within an uptrend, not a broken downtrend. 2) Price must show stabilization — the selling must slow down and ideally show a base or consolidation before you enter, not still actively selling off. 3) There should be a defined support level to buy near — a prior high, moving average, or VWAP — so you have a logical stop. Catching a falling knife is entering while price is still in freefall with no sign of stabilization and no nearby support.",
+    hint: "A dip buy needs a floor to stand on. Without stabilization and a support level you are guessing at the bottom.",
+    options: [
+      "Trend intact, price stabilizing at a defined support level — without all three you are catching a falling knife not buying a dip",
+      "Any pullback of more than 5% from the day's high qualifies as a valid dip buy in a strong uptrending stock",
+      "Buy the dip immediately when price drops to VWAP regardless of how fast it fell or whether it is still falling",
+      "Dip buys are only valid after the first hour of trading — pre-10 AM dips are always falling knives"
+    ],
+    correct: 0
+  },
+  {
+    q: "You see that the FOMC announcement is at 2:00 PM today. How does this change your trading plan for that day?",
+    variants: [
+      "The Fed is announcing its rate decision at 2:00 PM. Walk through how this affects your trading for the entire day.",
+      "What specific adjustments do you make to your trading plan on FOMC announcement days?",
+      "How does a major scheduled news event like the Fed announcement change your risk management and timing?"
+    ],
+    a: "On FOMC days you make several adjustments: trade lighter size in the morning knowing that any gains can be wiped out by the 2:00 PM announcement, take profits earlier rather than holding into the announcement, stop trading or go flat by 1:30 PM before the release, and avoid holding any position through the announcement since the market can move violently in either direction regardless of the actual news. After the announcement you wait for the initial volatility to settle — usually 15 to 30 minutes — before looking for new setups in the new direction.",
+    hint: "Binary events create binary outcomes. How do you protect yourself when you cannot predict which way it will go?",
+    options: [
+      "Trade smaller morning, take profits early, go flat by 1:30 PM, wait 15-30 minutes after announcement for volatility to settle before re-entering",
+      "Trade normally until 2:00 PM then double your size to take advantage of the increased post-announcement volatility",
+      "Avoid trading entirely for the full day since FOMC days are always unpredictable and no setups are tradeable",
+      "Only trade after the announcement — morning trading on FOMC days is fine since the news has not hit yet"
+    ],
+    correct: 0
+  }
+];
+
 
