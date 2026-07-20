@@ -399,3 +399,141 @@ smallcaps: {
     ]
   },
 
+};
+
+// ============================================================
+// QUIZ ENGINE
+// ============================================================
+
+(function(){
+  function pickVariant(q){
+    if(q.variants&&q.variants.length){
+      return q.variants[Math.floor(Math.random()*q.variants.length)];
+    }
+    // New flat format: q, choices, answer, hint
+    return { q: q.q, choices: q.choices, answer: q.answer, hint: q.hint };
+  }
+
+  function getQuiz(sectionId){
+    return QUIZ_DATA[sectionId]||null;
+  }
+
+  function render(sectionId){
+    const quiz=QUIZ_DATA[sectionId];
+    if(!quiz)return '<p>Quiz not found.</p>';
+    const state={answers:{},submitted:false};
+    const questions=quiz.questions.map(function(q,i){
+      const v=pickVariant(q);
+      return{id:q.id,q:v.q,choices:v.choices,answer:(v.answer!==undefined?v.answer:q.answer),hint:(v.hint||q.hint||'')};
+    });
+    window['__quiz_state_'+sectionId]=state;
+    window['__quiz_questions_'+sectionId]=questions;
+    let html='';
+    questions.forEach(function(q,i){
+      html+='<div class="quiz-q" id="qq-'+sectionId+'-'+i+'">';
+      html+='<div class="quiz-q-num">Question '+(i+1)+' of '+questions.length+'</div>';
+      html+='<div class="quiz-q-text">'+q.q+'</div>';
+      html+='<div class="quiz-choices">';
+      q.choices.forEach(function(c,ci){
+        html+='<label class="quiz-choice" id="qc-'+sectionId+'-'+i+'-'+ci+'" onclick="selectAnswer(''+sectionId+'','+i+','+ci+')">';
+        html+='<span class="choice-letter">'+String.fromCharCode(65+ci)+'</span>';
+        html+='<span class="choice-text">'+c+'</span>';
+        html+='</label>';
+      });
+      html+='</div>';
+      html+='<div class="quiz-hint" id="qh-'+sectionId+'-'+i+'" style="display:none">'+q.hint+'</div>';
+      html+='</div>';
+    });
+    html+='<div class="quiz-footer"><button class="quiz-submit-btn" onclick="submitQuiz(''+sectionId+'')" id="submit-'+sectionId+'">Submit Quiz</button></div>';
+    html+='<div class="quiz-result" id="qr-'+sectionId+'" style="display:none"></div>';
+    return html;
+  }
+
+  window.selectAnswer=function(sectionId,qIdx,choiceIdx){
+    const state=window['__quiz_state_'+sectionId];
+    if(state.submitted)return;
+    state.answers[qIdx]=choiceIdx;
+    const questions=window['__quiz_questions_'+sectionId];
+    const quiz=QUIZ_DATA[sectionId];
+    const allChoices=document.querySelectorAll('[id^="qc-'+sectionId+'-'+qIdx+'-"]');
+    allChoices.forEach(function(el){el.classList.remove('selected');});
+    const selected=document.getElementById('qc-'+sectionId+'-'+qIdx+'-'+choiceIdx);
+    if(selected)selected.classList.add('selected');
+    // Update progress
+    const answered=Object.keys(state.answers).length;
+    const total=questions.length;
+    const pct=Math.round((answered/total)*100);
+    const pbar=document.getElementById('quiz-pbar-'+sectionId);
+    if(pbar)pbar.style.width=pct+'%';
+  };
+
+  window.submitQuiz=function(sectionId){
+    const state=window['__quiz_state_'+sectionId];
+    const questions=window['__quiz_questions_'+sectionId];
+    const quiz=QUIZ_DATA[sectionId];
+    if(Object.keys(state.answers).length<questions.length){
+      alert('Please answer all questions before submitting.');return;
+    }
+    state.submitted=true;
+    let correct=0;
+    questions.forEach(function(q,i){
+      const userAns=state.answers[i];
+      const correctAns=q.answer;
+      const qEl=document.getElementById('qq-'+sectionId+'-'+i);
+      const choiceEls=document.querySelectorAll('[id^="qc-'+sectionId+'-'+i+'-"]');
+      choiceEls.forEach(function(el,ci){
+        el.classList.remove('selected');
+        if(ci===correctAns)el.classList.add('correct');
+        else if(ci===userAns&&userAns!==correctAns)el.classList.add('incorrect');
+      });
+      const hint=document.getElementById('qh-'+sectionId+'-'+i);
+      if(hint)hint.style.display='block';
+      if(userAns===correctAns)correct++;
+    });
+    const score=Math.round((correct/questions.length)*100);
+    const passed=score>=(quiz.passingScore||75);
+    const resultEl=document.getElementById('qr-'+sectionId);
+    if(resultEl){
+      resultEl.style.display='block';
+      resultEl.innerHTML='<div class="quiz-score '+(passed?'quiz-passed':'quiz-failed')+'">'
+        +'<div class="quiz-score-num">'+score+'%</div>'
+        +'<div class="quiz-score-label">'+(passed?'PASSED — Well done!':'Not quite — review and retry')+'</div>'
+        +'<div class="quiz-score-detail">'+correct+' of '+questions.length+' correct</div>'
+        +(passed?'':'<button class="quiz-retry-btn" onclick="retryQuiz(''+sectionId+'')">Retry Quiz</button>')
+        +'</div>';
+    }
+    const submitBtn=document.getElementById('submit-'+sectionId);
+    if(submitBtn)submitBtn.style.display='none';
+    // Save result
+    saveResult(sectionId,score,passed);
+  };
+
+  window.retryQuiz=function(sectionId){
+    const container=document.querySelector('.quiz-page-wrap');
+    if(container){
+      const html=window.TST_QUIZ.render(sectionId);
+      container.innerHTML='<div class="quiz-page-header"><span class="quiz-page-label">'+sectionId+'</span><h2>Section Quiz</h2><p>Test your knowledge before moving on. You need 75% or higher to pass.</p></div>'+html;
+    }
+  };
+
+  async function saveResult(sectionId,score,passed){
+    try{
+      const {data:{user}}=await window.supabase.auth.getUser();
+      if(!user)return;
+      const attempts=(window['__quiz_attempts_'+sectionId]||0)+1;
+      window['__quiz_attempts_'+sectionId]=attempts;
+      await window.supabase.from('quiz_results').upsert({
+        user_id:user.id,
+        section:sectionId,
+        score:score,
+        passed:passed,
+        attempts:attempts,
+        updated_at:new Date().toISOString()
+      });
+    }catch(e){console.log('Quiz save error:',e);}
+  }
+
+  window.TST_QUIZ={getQuiz:getQuiz,render:render};
+})();
+
+// Track progress bar as user selects answers
