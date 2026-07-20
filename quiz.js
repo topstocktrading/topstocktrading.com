@@ -243,41 +243,54 @@ const QUIZ_DATA = {
       ]}  ]
   },
 
-options: {
-    title: "Options Mastery Test",
+smallcaps: {
+    title: "Small Cap Trading Mastery Test",
+    section: "smallcaps",
+    passingScore: 75,
+    questions: [
+      { id:"sc1", q:"What is float and why does it matter for small cap trading?", choices:["Float is total shares outstanding — higher float means safer trades","Float is the number of shares available for public trading — low float means limited supply which causes larger price moves on volume","Float is the daily average volume of a stock","Float only matters for options traders not equity traders"], answer:1, hint:"Float = supply. Limited supply plus increased demand equals explosive moves. That is why low float small caps move so fast." },
+      { id:"sc2", q:"A short squeeze is most likely to occur when:", choices:["Short interest is very low and the stock is already up 50%","A heavily shorted stock with low float gets a positive catalyst forcing shorts to cover which drives price higher","The stock is breaking down and short sellers are adding to positions","Volume is below average and price is consolidating"], answer:1, hint:"Short squeeze = forced buying. High short interest plus positive catalyst plus low float equals explosive upside as shorts are forced to cover." },
+      { id:"sc3", q:"Why do small cap stocks halt during big moves?", choices:["Halts are punishment for traders who bought at the top","Circuit breaker halts trigger automatically when price moves too far too fast in either direction — they occur on big up and down moves","Halts only occur when the company requests a pause for a news announcement","Halts only happen to stocks under $1"], answer:1, hint:"Halts are automatic circuit breakers. They fire on both big up and big down moves. They are not selective." },
+      { id:"sc4", q:"News catalysts that typically cause small cap stocks to spike include:", choices:["Earnings beats on large cap stocks in the same sector","FDA approvals, contract wins, partnership announcements, or any material positive news that changes the fundamental story","Insider buying on NYSE-listed large caps","Dividend increases on blue chip stocks"], answer:1, hint:"Small caps move on their own specific news. FDA approvals, contracts, partnerships — events that materially change the company's story." },
+      { id:"sc5", q:"The most dangerous time to buy a small cap stock is:", choices:["At the open when volume is highest","After it has already spiked 100%+ and is extended far from any base with no consolidation","When it is pulling back to VWAP on the first dip","When pre-market volume is showing unusual activity before the open"], answer:1, hint:"Buying an already extended move means you are the last buyer. When the move runs out of buyers the only direction is down." },
+      { id:"sc6", q:"Level 2 quotes on small cap stocks help you:", choices:["Predict exactly where the stock will go","See the bid and ask depth — where buyers and sellers are lined up — to understand real-time supply and demand pressure","Determine the company's fundamental value","Set your daily loss limit based on spread width"], answer:1, hint:"Level 2 shows you the order book. On thin stocks you can see where big walls of supply and demand are sitting." },
+      { id:"sc7", q:"Float rotation means:", choices:["When short sellers rotate out of their positions before the close","The entire float trades hands in a single session — a sign of extreme volume and interest that can sustain a move","When a stock's float changes due to a secondary offering","Rotating between multiple small cap positions throughout the day"], answer:1, hint:"Float rotation = entire supply traded. If a stock has 2M float and 5M shares trade, the float rotated 2.5 times. That shows extreme conviction." },
+      { id:"sc8", q:"The bid-ask spread on a small cap stock is $0.15 wide. This means:", choices:["The stock has strong liquidity and is easy to trade","You are immediately down $0.15 per share the moment you enter — spreads are a hidden cost that matters significantly on small caps","The spread is irrelevant since small caps always move enough to cover it","Wide spreads are always better than tight spreads for traders"], answer:1, hint:"Every wide spread is an immediate loss at entry. On small caps these spreads can be $0.10-$0.50 or more. That is real money." },
+      { id:"sc9", q:"Morning panics on small cap stocks are characterized by:", choices:["Steady selling pressure throughout the entire morning session","A sharp violent sell-off from the open followed by a potential recovery when sellers are exhausted and buyers step in","A gap down that continues lower all day with no recovery","Random price movement with no predictable pattern"], answer:1, hint:"Morning panics follow a pattern: sharp drop, exhaustion of sellers, then potential recovery. The key is waiting for seller exhaustion before entry." },
+      { id:"sc10", q:"Proper sizing on small cap stocks compared to large cap stocks should be:", choices:["The same size since the P&L is what matters not the number of shares","Smaller in shares but structured to risk the same dollar amount — small caps are more volatile and wider stops are needed","Larger to take advantage of the bigger percentage moves","Based entirely on how confident you feel about the setup"], answer:1, hint:"Same dollar risk, fewer shares. Small caps have wider natural swings. Your stop on a small cap might be $0.50 where a large cap stop is $0.10." },
+      { id:"sc11", q:"A stock has 500,000 float and 2 million shares traded in the first 30 minutes. This tells you:", choices:["The stock is being manipulated and should be avoided","The float has rotated 4 times — this is extreme volume showing massive interest and the move could continue to attract more buyers","The volume is too high and a reversal is imminent","Volume above 1 million always means a halt is coming"], answer:1, hint:"4x float rotation in 30 minutes is extraordinary volume. Stocks with this kind of participation can sustain moves much longer than normal." },
+      { id:"sc12", q:"When a small cap stock halts on the way up, the best approach after the halt resumes is:", choices:["Immediately buy as much as possible since the halt confirms more upside","Wait and observe the first few minutes after the halt resumes before making any decision — post-halt action is often unpredictable","Short the stock since halts always lead to reversals","Place a limit order at the halt price and wait for it to fill"], answer:1, hint:"Halts create uncertainty. Post-halt action is unpredictable. Observe first, react to what you see, do not assume direction." },
+      { id:"sc13", q:"Short interest of 40% on a small cap stock means:", choices:["40% of shareholders plan to sell their shares soon","40% of the available float has been sold short — a significant short position that could fuel a squeeze if positive news hits","The stock has declined 40% from its high","40% of daily volume is from short sellers"], answer:1, hint:"Short interest is the percentage of float sold short. 40% is very high — these shorts must buy back eventually which could fuel a squeeze." },
+      { id:"sc14", q:"The primary reason to avoid holding a small cap position overnight is:", choices:["Overnight trading fees are too expensive","Small caps are highly sensitive to after-hours news and can gap dramatically against your position with no ability to exit","Small caps do not trade after hours at all","Overnight holds always lead to lower open prices on small caps"], answer:1, hint:"Small caps react violently to news. Bad news after hours means a gap down open you cannot escape. The overnight risk is disproportionate to the potential reward." },
+      { id:"sc15", q:"When a small cap stock you are watching has no news catalyst but is spiking on high volume, you should:", choices:["Buy immediately since volume always means more upside","Wait to identify the catalyst before entry — unknown catalyst moves are unpredictable and the move may reverse when the reason becomes clear or fails to materialize","Short it since moves without catalysts always reverse","Ignore it since only catalyst-driven moves are tradeable"] , answer:1, hint:"No catalyst means unknown risk. The move could be real or it could be manipulation. Identifying the why before entry is critical risk management." }
+    ]
+  },
+
+  options: {
+    title: "Options Trading Mastery Test",
     section: "options",
     passingScore: 75,
     questions: [
-      { id:"op1", variants:[
-        { q:"What does buying a call option give you the right to do?", choices:["Sell 100 shares at the strike price before expiration","Buy 100 shares at the strike price before expiration","Receive a dividend payment","Short the stock at market price"], answer:1, hint:"A call gives you the right to BUY. A put gives you the right to SELL." },
-        { q:"You buy a $50 call on a stock currently at $48. This option is:", choices:["In the money","Out of the money","At the money","Deep in the money"], answer:1, hint:"Strike price above current price on a call = out of the money. You need the stock to move to your strike first." },
-        { q:"A call option expires worthless when:", choices:["The stock closes above the strike price","The stock closes below the strike price at expiration","You sell it before expiration","Implied volatility increases"], answer:1, hint:"Calls only have value if the stock is above the strike at expiration. Below = worthless." }
-      ]},
-      { id:"op2", variants:[
-        { q:"Delta of 0.50 on a call option means:", choices:["The option will expire in 50 days","For every $1 the stock moves up, the option gains roughly $0.50","The option has a 50% chance of being worthless","You need 50 shares to hedge it"], answer:1, hint:"Delta measures how much the option price moves per $1 move in the underlying stock." },
-        { q:"Which Greek measures the rate at which an option loses value as time passes?", choices:["Delta","Gamma","Theta","Vega"], answer:2, hint:"Theta is time decay. Every day that passes costs you money as an option buyer." },
-        { q:"You are long calls and there are 3 days to expiration. Theta is working:", choices:["In your favor since less time means more urgency","Against you aggressively since decay accelerates near expiration","Neutrally since theta only matters on puts","In your favor only if implied volatility is rising"], answer:1, hint:"Theta decay is not linear. It accelerates dramatically in the final days before expiration." }
-      ]},
-      { id:"op3", variants:[
-        { q:"Implied volatility (IV) measures:", choices:["How much the stock has moved historically","The market's expectation of future price movement baked into option premiums","The number of days until expiration","Whether the option is in or out of the money"], answer:1, hint:"IV is forward-looking. High IV = expensive options. Low IV = cheap options." },
-        { q:"You buy calls right before an earnings announcement when IV is very high. The stock moves up 5% but your options lose value. Why?", choices:["You bought puts by mistake","IV crush — implied volatility collapsed after the announcement removing premium from your options","The delta was too low","You should have bought weekly options instead"], answer:1, hint:"This is IV crush. The event removes uncertainty. Options become cheaper even if the stock moves your way." },
-        { q:"When is it generally better to BUY options versus SELL options?", choices:["When implied volatility is very high","When implied volatility is very low — options are cheap and you have room to expand","Always buy, never sell","When you expect the stock to stay flat"], answer:1, hint:"Buy options when IV is low = cheap premium. Sell options when IV is high = collect expensive premium." }
-      ]},
-      { id:"op4", variants:[
-        { q:"A $5 option contract controls how many shares?", choices:["5 shares","50 shares","100 shares","500 shares"], answer:2, hint:"Every standard option contract represents 100 shares. So a $5 option costs $500 total." },
-        { q:"You buy a call with a strike of $100 and the stock is at $110 at expiration. Your intrinsic value is:", choices:["$0","$5","$10","$110"], answer:2, hint:"Intrinsic value = stock price minus strike price for calls. $110 - $100 = $10 per share = $1,000 per contract." },
-        { q:"What is the maximum loss when BUYING an option?", choices:["Unlimited","The full premium paid","The difference between strike and current price","50% of the premium paid"], answer:1, hint:"As a buyer your maximum loss is always capped at what you paid for the option. That is your defined risk." }
-      ]},
-      { id:"op5", variants:[
-        { q:"LEAPs are options with expiration dates:", choices:["Within the current week","Within 30 days","More than one year away","Exactly 90 days out"], answer:2, hint:"LEAPs = Long-term Equity Anticipation Securities. They give you a long runway for your thesis to play out." },
-        { q:"Why are LEAPs useful for directional trades on strong companies?", choices:["They have higher delta than short-term options","They give you time for the thesis to develop without theta destroying your position quickly","They are always cheaper than short-term options","They cannot expire worthless"], answer:1, hint:"LEAPs are slower theta decay. You have a year or more for the stock to move your way." },
-        { q:"The biggest risk of buying far out-of-the-money options is:", choices:["Limited upside potential","You need a very large move just to break even and they expire worthless most of the time","They are too expensive","The broker requires special approval"], answer:1, hint:"OTM options are cheap for a reason. The stock needs a massive move just to reach your strike. Most expire at zero." }
-      ]},
-      { id:"op6", variants:[
-        { q:"Proper position sizing for options means risking no more than:", choices:["50% of your account on any single option trade","5-10% of your account on any single option position","Whatever the broker allows based on margin","The same dollar amount as your stock trades regardless of leverage"], answer:1, hint:"Options can go to zero. Never risk more than you can afford to lose completely. 5-10% per trade is the discipline." },
-        { q:"You have a $20,000 account and want to buy call options. Using a 5% risk rule your maximum loss on this trade should be:", choices:["$2,000","$1,000","$500","$200"], answer:1, hint:"5% of $20,000 = $1,000. That is the maximum premium you should spend because options can go to zero." },
-        { q:"Which approach has better defined risk?", choices:["Buying 10 contracts of a $0.50 option","Buying 2 contracts of a $2.50 option","Both have the same risk","Neither has defined risk"], answer:0, hint:"Same total cost at $500 each. But 10 contracts at $0.50 is riskier because it is further OTM and more likely to expire worthless." }
-      ]}
+      { id:"op1", q:"What does buying a call option give you the right to do?", choices:["Sell 100 shares at the strike price before expiration","Buy 100 shares at the strike price before expiration","Receive dividends from the underlying stock","Short the stock at the current market price"], answer:1, hint:"Calls give the right to BUY. Puts give the right to SELL. Never mix these up — getting this wrong costs you money immediately." },
+      { id:"op2", q:"You buy a call with a $50 strike on a stock trading at $47. This option is:", choices:["In the money — the stock is close enough to the strike","Out of the money — the stock must move above $50 for this to have intrinsic value","At the money — the stock is within $3 of the strike","Deep in the money — any option within $5 is considered deep ITM"], answer:1, hint:"ITM calls have strike below stock price. OTM calls have strike above stock price. At $47 with a $50 strike you need $3 more of movement just to break even at intrinsic value." },
+      { id:"op3", q:"What is the maximum loss when buying a call or put option?", choices:["Unlimited since options have leverage","The full premium paid for the option","The difference between the strike price and the stock price","50% of the premium — brokers cap losses at half the position"], answer:1, hint:"Buying options = defined risk. You can only lose what you paid. That is the benefit of being a buyer. The option goes to zero at worst." },
+      { id:"op4", q:"Delta of 0.60 on a call option means:", choices:["The option expires in 60 days","For every $1 the stock moves up the option gains approximately $0.60","There is a 60% chance the option expires in the money","You need 60 shares of stock to delta hedge this position"], answer:1, hint:"Delta = how much the option price moves per $1 in the underlying. Delta 0.60 means for every dollar the stock gains you gain $0.60 on the option." },
+      { id:"op5", q:"Theta in options trading measures:", choices:["How much the option price changes when the stock moves $1","The daily rate at which an option loses value from time passing","How sensitive the option is to implied volatility changes","The change in delta as the stock price moves"], answer:1, hint:"Theta is time decay. Every single day that passes the option is worth less. As a buyer theta works against you. As a seller theta works for you." },
+      { id:"op6", q:"You buy calls on a stock before earnings when implied volatility is very high. The stock beats earnings and moves up 8% but your calls lose value. The most likely reason is:", choices:["You accidentally bought puts instead of calls","IV crush — implied volatility collapsed after the announcement removing premium from your options even though the stock moved your direction","The broker made an error in your fill","Delta was too low to capture the move"], answer:1, hint:"IV crush is real and devastating. Options price in expected movement before events. After the event uncertainty drops and premium evaporates. This happens even when you are directionally correct." },
+      { id:"op7", q:"When is it generally better to BUY options rather than SELL them?", choices:["When implied volatility is very high and premium is expensive","When implied volatility is very low — you buy cheap premium with room to expand if volatility increases","Always buy options — selling options has unlimited risk","When you think the stock will stay flat"], answer:1, hint:"Buy low IV, sell high IV. When IV is low options are cheap. When IV is high options are expensive. As a buyer you want cheap premium." },
+      { id:"op8", q:"A $3.00 option contract costs you how much total?", choices:["$3.00","$30.00","$300.00","$3,000.00"], answer:2, hint:"Every standard options contract represents 100 shares. So a $3.00 option costs $3.00 × 100 = $300 per contract." },
+      { id:"op9", q:"You hold a call with a $100 strike and the stock closes at $115 at expiration. Your intrinsic value per share is:", choices:["$100","$115","$15","$0 since the stock moved too far"], answer:2, hint:"Intrinsic value for calls = stock price minus strike price. $115 - $100 = $15 per share = $1,500 per contract." },
+      { id:"op10", q:"LEAPs differ from standard options primarily because:", choices:["They can only be used on ETFs not individual stocks","They have expiration dates more than one year away giving your thesis time to develop","They have much higher delta than short-term options","They cannot be sold before expiration"], answer:1, hint:"LEAPs give you time. Short-term options lose value fast. LEAPs let you take a long-term directional view without theta destroying your position in weeks." },
+      { id:"op11", q:"Vega measures an option's sensitivity to:", choices:["Time decay","Changes in the underlying stock price","Changes in implied volatility","Changes in interest rates"], answer:2, hint:"Vega = volatility sensitivity. When IV goes up option prices go up regardless of stock movement. High vega means your option is very sensitive to volatility changes." },
+      { id:"op12", q:"You own a call option and the stock gaps up 15% overnight. Which Greek most amplifies your gain on the open?", choices:["Theta","Vega","Gamma","Rho"], answer:2, hint:"Gamma measures the rate of change of delta. Near the money options have high gamma meaning as the stock moves your delta accelerates — your gains compound faster." },
+      { id:"op13", q:"Proper position sizing for options means your maximum loss on any single trade should be:", choices:["As large as possible since options have defined risk","No more than 5-10% of your total trading capital since options can and do go to zero","The same as your average stock trade in dollar terms","Whatever feels appropriate based on your conviction level"], answer:1, hint:"Options can go to zero. Completely. If you risk 20% of your account on one options trade and it expires worthless you just lost 20% of everything. 5-10% max." },
+      { id:"op14", q:"A covered call strategy involves:", choices:["Buying calls while simultaneously shorting the stock","Selling call options against shares you already own to collect premium","Buying both a call and a put on the same stock","Buying calls on a stock then selling them before expiration"], answer:1, hint:"Covered call = you own the shares and sell someone else the right to buy them at the strike. You collect premium. The stock is your cover if they exercise." },
+      { id:"op15", q:"A cash-secured put strategy is most appropriate when:", choices:["You want unlimited upside on a stock you are very bullish on","You are willing to buy a stock at a lower price and want to collect premium while waiting for it to come to your level","You want to hedge a long stock position against downside","You believe a stock will be very volatile and want to profit from the movement"], answer:1, hint:"Cash-secured put = you sell someone the right to put stock to you at the strike. You collect premium. If it falls below your strike you buy the shares at your desired price." },
+      { id:"op16", q:"What does rolling an options position mean?", choices:["Closing a losing options position and immediately switching to stocks","Closing the current options position and opening a new one at a different strike or expiration to extend the trade or adjust the thesis","Adding more contracts to an existing winning options position","Converting options into shares at expiration"], answer:1, hint:"Rolling = close current position, open new one. You roll out to buy more time or roll up/down to adjust your strike based on how the trade is developing." },
+      { id:"op17", q:"The bid-ask spread on an options contract is $0.50 wide. On a $2.00 option this represents:", choices:["A negligible cost that should not affect your decision","25% of the option's value — a significant hidden cost that must be factored into your risk and break-even calculation","A standard spread that all options carry","A signal that the option is overpriced and should be avoided"], answer:1, hint:"$0.50 spread on a $2.00 option means you immediately lose 25% of your position if you need to exit. Wide spreads are a real cost. Always factor spreads into your actual break-even." },
+      { id:"op18", q:"0DTE options (zero days to expiration) are most dangerous because:", choices:["They cannot be sold before 3:30 PM","Theta decay is at its most extreme — the options can lose nearly all their value in hours if the stock does not move your direction immediately","They require special broker approval to trade","They have unlimited loss potential unlike standard options"], answer:1, hint:"0DTE options have maximum theta. Every minute that passes they lose value. They require the stock to move in your direction quickly. They are not forgiving of being slightly wrong on timing." },
+      { id:"op19", q:"Vertical spreads reduce your risk in options trading by:", choices:["Eliminating theta decay entirely on your position","Capping both your maximum loss and maximum gain — you buy one option and sell another at a different strike to reduce net premium paid","Doubling your position size while keeping the same dollar risk","Allowing you to hold through earnings without IV crush risk"], answer:1, hint:"Spreads = defined risk and defined reward. You sacrifice some upside in exchange for reducing the premium you risk. They make sense when options are expensive or when you want to lower your break-even." },
+      { id:"op20", q:"Expected move on a stock into earnings using options pricing tells you:", choices:["Exactly where the stock will close after earnings","The one standard deviation move the options market is pricing in — approximately 68% of the time the stock stays within this range after the announcement","The implied volatility rank compared to the past year","Which direction the market expects the stock to move"], answer:1, hint:"Expected move is the market's forecast of the likely range. One standard deviation means 68% probability of staying in that range. Use it to set realistic targets and size appropriately." }
     ]
   },
 
@@ -286,26 +299,21 @@ options: {
     section: "longterm",
     passingScore: 75,
     questions: [
-      { id:"lt1", variants:[
-        { q:"The primary goal of fundamental analysis is to:", choices:["Predict short-term price movements","Determine the intrinsic value of a business to decide if the current price is a good deal","Find stocks with high volume and momentum","Identify breakout patterns on weekly charts"], answer:1, hint:"Fundamentals answer: is this a good business and is it priced fairly? Everything else follows." },
-        { q:"A stock with a P/E ratio of 8 versus an industry average of 25 suggests:", choices:["The stock is overvalued and should be avoided","The stock may be undervalued or there is a serious problem with the business","The company has high growth potential","The stock will definitely outperform"], answer:1, hint:"Low P/E versus peers is a starting point not a conclusion. It means dig deeper — cheap or broken?" },
-        { q:"Revenue growth year over year of 30% with improving profit margins tells you:", choices:["The company is growing and becoming more efficient — a positive fundamental signal","The company is spending too much","Growth without profitability is always a red flag","This only matters for tech stocks"], answer:0, hint:"Revenue growth plus expanding margins = the business is scaling efficiently. That is what you want to own." }
-      ]},
-      { id:"lt2", variants:[
-        { q:"The best time to buy a fundamentally strong stock using technical analysis is:", choices:["At all-time highs regardless of chart structure","At a key support level or during a controlled pullback to a major moving average","When it has already moved up 50% from its base","Immediately when you complete your fundamental research"], answer:1, hint:"Fundamentals tell you WHAT to buy. Technicals tell you WHEN. Waiting for a good entry improves your R:R significantly." },
-        { q:"A stock you researched and love fundamentally drops 15% on no news. You should:", choices:["Sell immediately to avoid further losses","Panic and assume you missed something","Revisit your thesis — if nothing changed this could be a better buying opportunity","Add aggressively to your position immediately"], answer:2, hint:"Price drops without news changes are often gifts. But always re-check the thesis first before adding." },
-        { q:"Technical analysis adds value to long-term investing by helping you:", choices:["Replace fundamental research entirely","Time your entries and exits to avoid buying at extended highs or adding during breakdowns","Identify daily momentum for quick trades","Determine earnings per share growth rates"], answer:1, hint:"Buying a great company at the wrong price still costs you. Technicals help you not overpay." }
-      ]},
-      { id:"lt3", variants:[
-        { q:"Portfolio diversification primarily helps you:", choices:["Maximize returns by owning more stocks","Reduce the impact of any single position going wrong on your total portfolio","Eliminate all market risk","Trade more frequently with lower risk per trade"], answer:1, hint:"Diversification does not maximize returns. It reduces the damage a single bad call can do to your overall portfolio." },
-        { q:"You own 15 stocks all in the same sector. Your portfolio is:", choices:["Well diversified because you own 15 different companies","Not diversified — sector concentration means they will all move together in a downturn","Too small to be considered a real portfolio","Optimally positioned for sector rotation"], answer:1, hint:"True diversification means different sectors, different business types. 15 tech stocks is not diversification." },
-        { q:"When should you SELL a long-term position?", choices:["Whenever the stock drops more than 5%","When the original thesis is broken, the company fundamentals deteriorate, or you find a clearly better opportunity","When it has been 12 months since you bought it","Only after it doubles so you take profits"], answer:1, hint:"Sell when the reason you bought it is no longer true. Not because of price alone." }
-      ]},
-      { id:"lt4", variants:[
-        { q:"A company with strong revenue growth but consistent net losses is:", choices:["Always a bad investment and should be avoided","A potential investment if growth is accelerating and the path to profitability is clear","Always a great buy since growth is all that matters","Only appropriate for day traders not long-term investors"], answer:1, hint:"Many great companies lost money early. Amazon lost money for years. Context and trajectory matter more than current profits." },
-        { q:"The difference between short-term capital gains and long-term capital gains tax rates creates an incentive to:", choices:["Trade as frequently as possible to compound faster","Hold positions for more than one year to qualify for the lower long-term rate","Sell all positions before year end regardless of performance","Only buy dividend stocks"], answer:1, hint:"Positions held over 12 months qualify for long-term capital gains rates which are significantly lower than ordinary income rates." },
-        { q:"Dollar cost averaging means:", choices:["Buying exactly $1 worth of stock per trade","Investing a fixed dollar amount at regular intervals regardless of price","Only buying when price drops below your average cost","Averaging down on losing positions"], answer:1, hint:"DCA removes the pressure of timing the market perfectly. You buy more shares when cheap and fewer when expensive." }
-      ]}
+      { id:"lt1", q:"The primary purpose of fundamental analysis is to:", choices:["Predict short-term price movements using earnings reports","Determine whether a business is worth owning at its current price by evaluating its financial health and growth trajectory","Find stocks with the highest technical momentum","Identify breakout patterns on weekly charts"], answer:1, hint:"Fundamentals answer: is this a good business and am I paying a fair price? Technicals then tell you when to buy it." },
+      { id:"lt2", q:"A stock's P/E ratio of 12 versus a sector average of 28 most likely means:", choices:["The stock is always a strong buy since it is cheap relative to peers","The stock may be undervalued — or there is a serious problem with the business. The P/E is a starting point for deeper research not a conclusion","The company is growing faster than its peers","The stock is too cheap to be worth owning"], answer:1, hint:"Low P/E versus peers starts a question not ends one. Is it cheap because it is overlooked? Or because the business is deteriorating? You must find out which." },
+      { id:"lt3", q:"The best entry point for a fundamentally strong stock is typically:", choices:["Immediately after completing your research regardless of price action","During a controlled pullback to a key moving average or support level on the daily or weekly chart","At all-time highs since strong stocks always make new highs","After a 30% decline since any company worth owning eventually recovers"], answer:1, hint:"Fundamentals tell you WHAT to buy. Technicals tell you WHEN. Paying attention to entry price dramatically improves your return even on the best companies." },
+      { id:"lt4", q:"Revenue growing 25% year over year with expanding profit margins tells you:", choices:["The company is burning through cash and will likely need to raise capital","The business is scaling efficiently — growing while becoming more profitable is the ideal fundamental signature","Revenue growth without profitability is always dangerous","This only matters for growth stocks not value stocks"], answer:1, hint:"Revenue growth plus margin expansion is the best fundamental combination. The business is getting bigger AND more efficient. That is what you want to own." },
+      { id:"lt5", q:"The correct reason to SELL a long-term position is:", choices:["The stock has dropped more than 10% from your entry","The original thesis is broken — the business has fundamentally changed, deteriorated, or you have identified a clearly better use of that capital","You have held it for exactly 12 months","The stock has doubled and it is time to take profits"], answer:1, hint:"Sell when the reason you bought is no longer true. Price alone is not a reason to sell a fundamentally sound business. The thesis is what matters." },
+      { id:"lt6", q:"Dollar cost averaging helps long-term investors primarily by:", choices:["Guaranteeing a profit on every position","Removing the pressure of timing the market perfectly by investing a fixed amount at regular intervals — buying more shares when cheap and fewer when expensive","Maximizing the number of shares purchased regardless of price","Eliminating all risk in long-term investing"], answer:1, hint:"DCA takes emotion out of the equation. You invest the same dollar amount consistently. When prices drop you automatically buy more shares. When prices rise you buy fewer." },
+      { id:"lt7", q:"Owning 12 different technology stocks represents:", choices:["Strong diversification since you own 12 different companies","Poor diversification — sector concentration means all positions move together in tech downturns leaving you fully exposed to one sector's risk","Optimal portfolio construction for a growth investor","The maximum recommended number of positions"], answer:1, hint:"Diversification requires different sectors and business types not just different company names. 12 tech stocks will all sell off together in a tech downturn." },
+      { id:"lt8", q:"A company with strong revenue growth but no current profitability:", choices:["Should always be avoided by serious long-term investors","May still be a strong investment if growth is accelerating and a clear path to profitability exists — many of the greatest investments were unprofitable early","Is automatically a speculative trade not an investment","Only qualifies as an investment if it pays a dividend"], answer:1, hint:"Amazon lost money for years. So did many of the most successful companies in history. Context and trajectory matter more than current profitability alone." },
+      { id:"lt9", q:"The long-term capital gains tax rate applies to positions held:", choices:["More than 6 months","More than one year","More than 2 years","Any position not sold at a loss"], answer:1, hint:"Positions held over 12 months qualify for long-term capital gains rates which are significantly lower than short-term rates taxed as ordinary income. This directly impacts your net return." },
+      { id:"lt10", q:"Portfolio rebalancing means:", choices:["Selling all positions every year and starting fresh","Periodically adjusting your portfolio back to your target allocation by trimming positions that have grown too large and adding to underweight ones","Adding new money to your best performing positions only","Moving all assets to cash during market downturns"], answer:1, hint:"Rebalancing keeps your actual risk exposure aligned with your intended risk. A position that doubles in size now represents twice the risk in your portfolio." },
+      { id:"lt11", q:"A stock you own drops 20% but no news has been released. Your first action should be:", choices:["Immediately sell to prevent further losses","Re-examine your original thesis — if nothing fundamental has changed this may be a better buying opportunity not a reason to sell","Add aggressively to your position immediately since the thesis has not changed","Call your broker to ask what happened"], answer:1, hint:"Price drops without news require thesis review not panic. If the business is still intact you may be getting a gift. If the thesis is changing, that is your signal to act." },
+      { id:"lt12", q:"Free cash flow is considered a more reliable measure of business health than earnings because:", choices:["Free cash flow is always higher than reported earnings","Earnings can be manipulated by accounting methods while free cash flow measures actual cash the business generates after all capital expenditures","Free cash flow includes stock-based compensation making it more comprehensive","Earnings do not account for debt"], answer:1, hint:"Cash is harder to fake than earnings. Companies can use legal accounting methods to inflate reported earnings while actual cash generation tells a more honest story." },
+      { id:"lt13", q:"Fundamental analysis becomes most powerful when combined with technical analysis because:", choices:["Technical analysis can predict earnings surprises","Technicals help you time your entry into fundamentally sound companies — avoiding buying at extended highs and identifying controlled pullbacks as better entry points","Fundamental analysis without technicals has no value","Technical analysis eliminates the need for fundamental research"], answer:1, hint:"Use fundamentals to find the right company. Use technicals to find the right price. Paying attention to entry dramatically improves returns even on the best businesses." },
+      { id:"lt14", q:"What does a company's debt-to-equity ratio tell you?", choices:["How profitable the company is relative to its peers","How much debt the company uses to finance its assets relative to shareholder equity — high ratios mean higher financial risk especially during economic downturns","The percentage of revenue that goes to paying interest","How likely the stock is to be acquired by a larger company"], answer:1, hint:"Debt-to-equity measures financial leverage. High leverage amplifies gains in good times but can threaten survival in bad times. Know how much debt a company carries before owning it long-term." },
+      { id:"lt15", q:"The wash sale rule prevents you from:", choices:["Selling a stock for a loss and immediately rebuying it to capture the tax loss — you must wait 30 days before buying a substantially identical security","Trading the same stock more than once per day","Owning more than 5% of a company's float","Taking profits on long-term positions before 12 months"], answer:1, hint:"Wash sale rule: you cannot sell a stock for a tax loss and buy it back within 30 days. The IRS disallows the loss if you do. You must wait 31 days to rebuy and still claim the deduction." }
     ]
   },
 
@@ -314,31 +322,26 @@ options: {
     section: "advanced",
     passingScore: 80,
     questions: [
-      { id:"adv1", variants:[
-        { q:"Pre-market preparation should always include:", choices:["Checking social media for hot tickers","Building a watchlist based on overnight news, gap ups and downs, and confirming setups with pre-defined entry levels and risk","Opening positions pre-market on your best ideas","Waiting for the market to open with no preparation"], answer:1, hint:"Your edge on open comes from preparation. Walking in without a plan means reacting instead of executing." },
-        { q:"The most important thing to define BEFORE entering any trade is:", choices:["The price target","Your maximum loss — where you are getting out if wrong","The expected hold time","What other traders think about the setup"], answer:1, hint:"Risk first. Always. If you do not know your exit on the losing side before you enter, you are gambling." },
-        { q:"A personal playbook should contain:", choices:["Every trading setup that exists regardless of whether you trade it","Only the specific setups you have tested and have positive expectancy in — your actual edge","General market rules from books","The setups your favorite trader uses"], answer:1, hint:"Your playbook is your edge. It should only contain what YOU have proven works for YOU. Not someone else's setups." }
-      ]},
-      { id:"adv2", variants:[
-        { q:"Real price action reading means understanding:", choices:["What the indicators on your chart are telling you","How price is behaving in real time — where buyers and sellers are stepping in and out — not what the indicator says","The exact pattern name for every candle formation","What the chart will do next based on historical patterns"], answer:1, hint:"Price action is raw. It is the auction between buyers and sellers happening in real time. Indicators just describe what already happened." },
-        { q:"A stock consolidates for 3 weeks in a tight range with declining volume then breaks out on 3x average volume. This tells you:", choices:["Sellers dried up during consolidation and buyers stepped in aggressively on the break — high conviction move","The stock is about to reverse since it moved too far too fast","Volume spikes always mean distribution and selling","The pattern is only valid if it occurs above the 200 day moving average"], answer:0, hint:"Volume contraction during consolidation = sellers gave up. Volume expansion on breakout = buyers in control." },
-        { q:"The difference between a Level 1 and Level 2 trader is:", choices:["Level 2 traders use more indicators","Level 2 traders have moved beyond following rules to understanding WHY the rules work — they read the market not the pattern","Level 2 traders trade larger size","Level 2 traders have been trading for more than 5 years"], answer:1, hint:"Pattern recognition is Level 1. Understanding the supply and demand logic behind the pattern is Level 2." }
-      ]},
-      { id:"adv3", variants:[
-        { q:"You have had 3 consecutive losing days. The most advanced response is:", choices:["Take a larger position on your next trade to recover faster","Cut your size in half and only take your A+ setups until you find your rhythm again","Stop trading for a full month","Switch strategies since your current approach is not working"], answer:1, hint:"Drawdowns call for smaller size not larger size. Protect capital first. Get back to green slowly with only your best setups." },
-        { q:"A setup that works 70% of the time with a 1:1 R:R is:", choices:["A strong edge worth trading aggressively","Barely profitable and one slippage from breakeven — you need better R:R or higher win rate","Not worth trading since the win rate is not high enough","Better than a setup with 50% win rate and 3:1 R:R"], answer:1, hint:"EV = (0.70 × 1R) - (0.30 × 1R) = +0.40R. Barely positive. One bad streak erases weeks of gains. Better to improve R:R." },
-        { q:"Your biggest edge as a retail trader over institutional traders is:", choices:["Access to better data and technology","Size — you can enter and exit positions without moving the market and can trade setups too small for institutions","More experience","Higher leverage limits"], answer:1, hint:"Institutions cannot trade small caps or small positions. Your size is your superpower. Use setups they cannot touch." }
-      ]},
-      { id:"adv4", variants:[
-        { q:"Advanced small cap trading requires understanding that halts:", choices:["Only occur when a stock is going down","Can occur in either direction — circuit breaker halts happen on both big up and down moves — and create the most dangerous reentry points","Are always buying opportunities","Signal the end of a move"], answer:1, hint:"Halts create false breakouts and dangerous reentries. The move before the halt is often not the move that follows." },
-        { q:"When building your advanced playbook, the most important metric to track per setup is:", choices:["Win rate alone","Expected value — the combination of win rate and average R:R ratio that tells you if you actually have edge","Number of trades taken","How the setup looks visually"], answer:1, hint:"Win rate without R:R means nothing. EV is the only honest measure of whether your setup has a real edge." },
-        { q:"A trader with a 45% win rate averaging 2.5R on winners and 1R on losers has:", choices:["A losing edge since they win less than half their trades","A strong positive edge — EV = (0.45 × 2.5R) - (0.55 × 1R) = +0.575R per trade","A breakeven edge","An edge that only works in trending markets"], answer:1, hint:"Do the EV math. Win rate alone means nothing. 45% win rate with 2.5:1 R:R is a very profitable system over time." }
-      ]},
-      { id:"adv5", variants:[
-        { q:"In a choppy low-volume market day the best advanced approach is:", choices:["Trade more frequently to find what is working","Reduce size significantly or sit out — choppy markets destroy P&L for active traders","Switch to swing trading for the day","Only trade the first 30 minutes then stop"], answer:0, hint:"Not every day is tradeable. Recognizing a choppy day early and protecting capital is an advanced skill most traders never develop." },
-        { q:"The purpose of reviewing your trades every week is:", choices:["To feel good about your winners","To identify patterns in your mistakes and wins so you can reinforce what works and eliminate what does not","To calculate your tax liability","To update your social media with your performance"], answer:1, hint:"Weekly review is how you build your edge over time. Without it you repeat mistakes indefinitely." },
-        { q:"Advanced swing traders hold positions overnight because:", choices:["They are lazy and do not want to monitor intraday","The daily chart is their primary timeframe and multi-day moves need time to develop — they accept overnight risk as part of the strategy","They cannot access their brokerage during market hours","Overnight holds are always safer than intraday"], answer:1, hint:"Swing traders trade the daily chart. The big moves play out over days and weeks. You cannot capture that in a single session." }
-      ]}
+      { id:"adv1", q:"Pre-market preparation must always include:", choices:["Checking social media for trending tickers and copying what others are watching","Building a structured watchlist with catalyst, setup, entry level, and stop defined for each name before the open","Opening positions pre-market on your best ideas to get ahead of the move","Waiting for the market to open and reacting to whatever moves first"], answer:1, hint:"Your edge comes from preparation. If you do not have a plan before the open you are reacting to the market instead of executing your own plan." },
+      { id:"adv2", q:"The single most important thing to define BEFORE entering any trade is:", choices:["The price target — knowing where you are going keeps you focused","Your exact exit if wrong — where you get out if the trade fails and how much that costs you","The expected hold time so you know when to check the position","What other traders and analysts think about the setup"], answer:1, hint:"Risk before reward. Always. If you do not know your stop before you enter you have no risk management. You are guessing." },
+      { id:"adv3", q:"Your personal trading playbook should contain:", choices:["Every setup that exists so you are prepared for any market condition","Only the specific setups you have personally tested and proven have positive expectancy in your hands — nothing else","The setups your favorite traders use so you can follow their lead","General market rules from trading books and courses"], answer:1, hint:"Your playbook is YOUR edge. It only contains what YOU have proven works for YOU. Other people's setups are not your edge — they are their edge." },
+      { id:"adv4", q:"The difference between reading price action versus reading indicators is:", choices:["Indicators are always more reliable since they remove emotion from the analysis","Price action is raw supply and demand happening in real time — indicators just describe what has already happened with a built-in lag","They are equally reliable and skilled traders use both simultaneously","Indicators are only useful for long-term investing not active trading"], answer:1, hint:"Indicators look backward. Price action is the auction happening right now. Learning to read price directly is a higher skill than interpreting indicator signals." },
+      { id:"adv5", q:"A stock consolidates in a tight range for 3 weeks with declining volume then breaks out on 3x average volume. This means:", choices:["The low volume during consolidation was bearish and the breakout is likely a fake","Sellers dried up during consolidation and buyers stepped in aggressively on the break — this is high conviction momentum","Volume on consolidation does not matter — only breakout volume is relevant","The stock is being distributed and the breakout will fail"], answer:1, hint:"Volume tells you participation. Low volume consolidation = sellers not pushing. High volume breakout = buyers taking control. That sequence is one of the most reliable patterns in trading." },
+      { id:"adv6", q:"You have had 4 consecutive losing days. The advanced response is:", choices:["Take a larger position on your next trade since you are statistically due for a win","Cut your position size in half and only take setups that perfectly match your highest quality criteria until you find your rhythm","Stop trading entirely for two weeks to reset mentally","Switch strategies completely since your current approach is clearly not working"], answer:1, hint:"Drawdowns require smaller size not larger. Protect capital first. Rebuild slowly with only your best setups. The goal during a losing streak is to stop the bleeding." },
+      { id:"adv7", q:"A setup with 65% win rate and 1:1 R:R has an expected value of:", choices:["+0.65R per trade — a strong edge worth taking aggressively","+0.30R per trade — marginally positive but one slippage away from breakeven","−0.35R per trade — a losing edge that will drain the account","0R — exactly breakeven over time"], answer:1, hint:"EV = (0.65 × 1R) - (0.35 × 1R) = +0.30R. That is barely positive. You need better R:R or a higher win rate to build a robust edge." },
+      { id:"adv8", q:"Your biggest structural advantage over institutional traders as a retail trader is:", choices:["Access to better data feeds and faster execution technology","Size — you are small enough to enter and exit positions without moving the market and can trade setups too small for institutions to bother with","More trading experience and better emotional control","Higher leverage limits through retail margin accounts"], answer:1, hint:"Institutions cannot trade small caps. Their size makes them unable to enter and exit without moving the price against themselves. Your small size lets you fish in ponds they cannot access." },
+      { id:"adv9", q:"In a choppy, low-volume, trendless market the advanced approach is:", choices:["Trade more frequently to find what is working in the current environment","Dramatically reduce size or sit out entirely — choppy markets destroy P&L for active traders and the cost of trying to force trades is high","Switch to a contrarian approach and fade every move","Only trade the open and close and avoid the middle of the day"], answer:0, hint:"Not every day deserves trades. Recognizing that the market is not giving clean setups and protecting your capital is one of the most important advanced skills." },
+      { id:"adv10", q:"Kill candles in advanced small cap trading refer to:", choices:["Any red candle that appears in an uptrend","Massive bearish candles that appear suddenly at extension highs and signal aggressive seller intervention — often marking the end of a move","Candles that form during halts","Any candle with volume above 1 million shares"], answer:1, hint:"Kill candles are real. They appear when sellers slam the bid hard at extension. The candle body is huge and directional. When one appears at a high it often marks the end of that leg." },
+      { id:"adv11", q:"A fake second higher low in advanced price action analysis signals:", choices:["A strong continuation of the uptrend with buyers stepping in at a higher level","A trap — price makes what appears to be a higher low but the buying is weak and the move fails, leading to a reversal below the first low","A guaranteed short entry signal at the second low","A sign that volume is insufficient to support the trend"], answer:1, hint:"Fake second higher lows trap late longs. The move looks like continuation but the buying is exhausted. When it fails through the prior low the trapped longs create a sharp reversal." },
+      { id:"adv12", q:"Stop loss hunts occur when:", choices:["Brokers intentionally trigger retail stop orders to generate commissions","Large players push price to obvious levels where retail stop orders cluster, trigger the stops, then reverse — using retail orders as liquidity","Stop losses are placed too tight and get hit by normal volatility","Algorithms detect moving average crossovers and sell against them"], answer:1, hint:"Stop hunts are real. Obvious levels like round numbers or prior lows attract clustered stops. Large players push through those levels to fill their positions using the retail stop orders as liquidity." },
+      { id:"adv13", q:"The staircase up elevator down pattern means:", choices:["Stocks always go up slowly and come down quickly — this is always the pattern","Stocks often trend up slowly through multiple consolidation phases but can sell off very rapidly when momentum shifts — always have your exit ready","This is only relevant for small cap stocks not large caps","Uptrends are always followed by crashes not corrections"], answer:1, hint:"Stocks build value slowly through constructive bases. But selling happens fast. When momentum shifts the exits get crowded quickly. Know where your sell levels are before the move starts." },
+      { id:"adv14", q:"Accumulation versus distribution on a chart is identified primarily by:", choices:["The color of the candles — green days are accumulation, red days are distribution","Volume patterns relative to price — heavy volume on up days with light volume on down days signals accumulation. Heavy volume on down days with light volume on up days signals distribution","The relationship between price and the 50-day moving average","The number of consecutive up or down days"], answer:1, hint:"Volume tells the story of who is in control. Smart money accumulates on quiet down days. Distribution shows up as heavy volume on selling days while price struggles to advance." },
+      { id:"adv15", q:"Building your advanced playbook requires tracking which metric above all others per setup?", choices:["Win rate alone — what percentage of trades in each setup are profitable","Expected value — the combination of win rate and average R:R that tells you whether each setup actually makes money over a large sample","Number of trades taken to identify your most active setups","How the setup looks visually on the chart"], answer:1, hint:"Win rate alone means nothing. A 70% win rate with 0.5:1 R:R loses money. Expected value is the only honest measurement of whether your setup has real edge." },
+      { id:"adv16", q:"Gap hold strategy in advanced trading means:", choices:["Holding any position through a gap down in hopes of recovery","Identifying stocks that gap up on news and hold above their prior close through the first 15-30 minutes confirming strength before entering","Buying all gap ups in the first 5 minutes before the move fades","Avoiding any stock that has gapped up since the move is already done"], answer:1, hint:"Gap holds confirm strength. When a stock gaps up on news and refuses to fill the gap in the first 30 minutes it shows buyers are in control. That is your signal — the gap is holding." },
+      { id:"adv17", q:"V-shape recoveries as an advanced setup require:", choices:["Any sharp decline followed by any recovery — all V-shapes are tradeable","A sharp panic sell-off with clear climactic volume followed by an immediate aggressive reversal candle showing buyers stepped in decisively at the lows — the entry is on confirmation not anticipation","V-shapes only occur on small cap stocks and are not reliable on large caps","Waiting for a full retest of the low before entry to confirm the pattern"], answer:1, hint:"V-shape setups require climactic selling followed by decisive buying reversal. The key word is climactic — exhaustion of sellers. Random declines are not V-shapes." },
+      { id:"adv18", q:"Swing trading and day trading require different approaches to the same stock because:", choices:["They use completely different technical analysis tools","Timeframe changes everything — a swing trader ignores intraday noise that would stop out a day trader, while a day trader ignores weekly trends that would be obvious to a swing trader","Swing traders only trade large caps and day traders only trade small caps","They require different brokerage accounts with different margin rules"], answer:1, hint:"Same stock, different lenses. A day trader on the 1-minute chart sees a breakdown. A swing trader on the daily chart sees a normal pullback within an uptrend. Timeframe determines your reality." },
+      { id:"adv19", q:"The opening drive in advanced trading refers to:", choices:["The first trade you take every morning regardless of setup quality","The directional move that often occurs in the first 15-30 minutes of the session when overnight orders get absorbed and a trend begins to establish — reading it correctly sets up your bias for the morning","Any stock that moves more than 2% in the first hour","The pre-market movement that predicts intraday direction"], answer:1, hint:"The opening drive establishes morning bias. If the open is strong and holds — bullish. If the open is weak and fades — bearish. Reading the opening drive correctly frames your entire morning trading plan." },
+      { id:"adv20", q:"Weekly review of your trades primarily accomplishes:", choices:["Meeting your broker's reporting requirements","Identifying patterns in your behavior — both what works and what does not — so you can systematically improve your execution and decision-making over time","Calculating your taxes for the quarter","Updating your social media following on your performance"], answer:1, hint:"Weekly review is how you build edge over time. Without it you repeat mistakes indefinitely. With it every mistake becomes data that improves your future performance." }
     ]
   },
 
@@ -347,26 +350,24 @@ options: {
     section: "swingtrading",
     passingScore: 75,
     questions: [
-      { id:"sw1", variants:[
-        { q:"The primary chart timeframe for swing trading decisions is:", choices:["1-minute chart for precise entries","Daily chart for setup identification with weekly chart for broader trend context","15-minute chart","Monthly chart only"], answer:1, hint:"Swing trading is about capturing moves that play out over days to weeks. The daily chart is your primary tool." },
-        { q:"A swing trade breakout setup requires a candle close:", choices:["At any price above recent highs with any volume","Above a clearly defined resistance level with above-average volume on the daily chart","Above the 50-day moving average regardless of prior resistance","At a new 52-week high only"], answer:1, hint:"On the daily chart, a close above resistance with volume confirms real buying pressure not a false breakout." },
-        { q:"The ideal holding period for a swing trade is:", choices:["Less than one day","2 to 10 trading days depending on the setup and how price is behaving","Exactly 30 days","Until the stock hits a round number"], answer:1, hint:"Swing trades are not day trades and not long-term holds. They capture the medium-term move over days to a couple weeks." }
-      ]},
-      { id:"sw2", variants:[
-        { q:"Overnight risk in swing trading refers to:", choices:["The risk of your broker going bankrupt","The risk that news or events outside market hours gap the stock against your position","The risk of overtrading the next morning","The risk of missing a gap up on your position"], answer:1, hint:"When you hold overnight you cannot exit if bad news hits. The stock opens gapping against you. That is overnight risk." },
-        { q:"How do you manage overnight risk properly on a swing trade?", choices:["Never hold overnight under any circumstances","Size smaller than intraday trades and choose setups where the risk is defined and the thesis is clear before close","Set a very tight stop that will trigger at open","Only swing trade stocks above $100"], answer:1, hint:"You cannot eliminate overnight risk but you can manage it with appropriate sizing and setup quality." },
-        { q:"An earnings play as a swing trade means:", choices:["Only buying after earnings are reported","Buying a setup before the earnings announcement speculating on a positive surprise and moving up or out before the report drops","Holding all positions through earnings regardless of size","Buying puts as a hedge before every earnings report"], answer:1, hint:"Earnings plays are high-risk high-reward. Many traders take profits before the announcement to avoid IV crush and binary outcome risk." }
-      ]},
-      { id:"sw3", variants:[
-        { q:"A momentum swing trade is best entered when:", choices:["The stock is already up 50% and showing no signs of slowing","The stock has strong fundamentals, is trending on the daily chart, and is pulling back to a moving average or support in an orderly fashion","The stock just reported bad earnings but looks cheap","Volume is below average suggesting less selling pressure"], answer:1, hint:"The best momentum swings are found on pullbacks within strong uptrends. Not at the extension." },
-        { q:"When scanning for swing trades you should primarily look for:", choices:["Stocks at 52-week lows that might bounce","Stocks with strong relative strength versus the market, consolidating near highs with above-average volume on up days","Any stock that is trending on social media","Stocks with the highest short interest"], answer:1, hint:"Relative strength plus healthy consolidation equals a stock that wants to go higher. That is your swing trading target." },
-        { q:"The stop loss on a swing trade should be placed:", choices:["Exactly 5% below your entry regardless of chart structure","Below the key level that defines the setup — if that level breaks the reason you bought is no longer valid","At your average cost to guarantee no loss","Above the recent high so it cannot be triggered"], answer:1, hint:"Your stop is not about a fixed percentage. It is about the level that invalidates your thesis. Structure determines your stop." }
-      ]},
-      { id:"sw4", variants:[
-        { q:"Scaling out of a winning swing trade means:", choices:["Adding shares as price rises","Selling a portion of your position at different target levels to lock in gains while letting the remainder run","Selling the entire position at once at your target","Never selling until you hit your maximum target price"], answer:1, hint:"Scaling out is how you capture gains without giving everything back. Sell partial at first target, trail the rest." },
-        { q:"An IBS (Inside Bar Setup) in swing trading signals:", choices:["A stock with very high short interest preparing to squeeze","Volatility contraction and coiling energy — when price breaks the prior bar's range in either direction it can move fast","A failed breakout pattern to short","A pattern that only works on low float stocks"], answer:1, hint:"Inside bars are tight consolidation. Price compresses energy. The break of the mother bar high or low is your trigger." },
-        { q:"Position sizing for swing trades should be:", choices:["Larger than day trades since you have more time for the trade to work","Smaller than your average day trade to account for overnight gap risk and wider stops based on daily chart structure","The same dollar amount regardless of stop distance","Based purely on how confident you feel about the setup"], answer:1, hint:"Daily chart stops are wider than intraday stops. Wider stop = smaller size to keep your dollar risk consistent." }
-      ]}
+      { id:"sw1", q:"The primary chart timeframe for swing trading entries and exits is:", choices:["1-minute chart for the most precise entry timing","Daily chart for setup identification with the weekly chart providing trend context","15-minute chart since it balances intraday and multi-day views","Monthly chart to identify long-term support and resistance"], answer:1, hint:"Swing trading is about multi-day moves. The daily chart is your primary tool. The weekly chart tells you if you are trading with or against the larger trend." },
+      { id:"sw2", q:"A swing trade breakout setup requires:", choices:["Price touching resistance level intraday even if it does not close above it","A full daily candle CLOSE above a clearly defined resistance level with above-average volume — a wick does not count","Price above the 200-day moving average with any level of volume","Three consecutive green candles regardless of where price is relative to resistance"], answer:1, hint:"On the daily chart a close above resistance is acceptance. A wick is rejection. These are completely different outcomes that require different responses." },
+      { id:"sw3", q:"Overnight risk in swing trading refers to:", choices:["The risk that your broker's platform goes down after hours","The risk that news, earnings, or macro events move the stock significantly against you after market close with no ability to exit at your planned stop","The risk of overtrading the following morning after holding overnight","The risk that your stop order does not execute at the exact price you set"], answer:1, hint:"When you hold overnight you surrender control. Bad news means the stock opens below your stop and you get filled at the gap down price. That risk must be factored into your sizing." },
+      { id:"sw4", q:"Proper position sizing for swing trades compared to day trades should be:", choices:["Larger since you have more time for the trade to work in your favor","Smaller than day trades because daily chart stops are wider and overnight gap risk requires you to risk less per share to maintain the same total dollar risk","Identical since the same amount of capital should always be at risk","Based entirely on how convinced you are about the trade direction"], answer:1, hint:"Wider stops = fewer shares. Your dollar risk per trade should stay consistent but a daily chart stop might be $1.50 where an intraday stop is $0.15. Fewer shares, same risk." },
+      { id:"sw5", q:"An earnings play swing trade means:", choices:["Buying and holding a stock through the earnings announcement to capture the post-earnings move","Buying a setup that forms before earnings and planning to be out before the announcement to avoid the binary risk of the report itself","Only buying stocks after earnings have been reported","Shorting stocks that consistently miss earnings estimates"], answer:1, hint:"Most experienced swing traders are OUT before earnings. The binary outcome — miss or beat — creates unpredictable risk. The trade is in the setup leading into earnings not through the announcement." },
+      { id:"sw6", q:"The stop loss on a swing trade is placed:", choices:["Exactly 5% below entry since that is a standard risk management rule","At a level that technically invalidates the setup — if that support level breaks the reason you bought the trade is no longer valid","Above your entry price to guarantee no loss","At the 20-day moving average regardless of setup structure"], answer:1, hint:"Your stop is not a fixed percentage. It is the level that says your thesis is wrong. Where that level is depends entirely on the chart structure of the specific setup." },
+      { id:"sw7", q:"Scaling out of a winning swing trade means:", choices:["Adding shares as the stock moves in your direction","Selling a portion of your position at your first target to lock in gains while letting the remaining shares run toward a larger target","Selling the entire position at once when you hit your target price","Moving your stop to breakeven after the stock moves 1% in your direction"], answer:1, hint:"Scaling out locks in partial profits and removes pressure. You can run a partial position without emotion because the secured gains cushion any reversal." },
+      { id:"sw8", q:"An inside bar setup on the daily chart signals:", choices:["A stock that is about to break down since it cannot make new highs","Volatility contraction — price is coiling inside the prior day's range. When it breaks the prior high or low it often moves quickly with conviction","A failed breakout that should be sold immediately","A setup that only works when it forms above the 50-day moving average"], answer:1, hint:"Inside bars are compression. Energy is coiling. The break of the high or low of the mother candle is your trigger — the compressed energy releases in whichever direction wins." },
+      { id:"sw9", q:"When scanning for swing trade candidates you should prioritize stocks that:", choices:["Are down 30%+ since they have the most room to recover","Show relative strength versus the market — holding up when the broader market sells off or leading higher when the market rallies — and are near key technical levels","Have the highest short interest since squeezes create the biggest moves","Are trading below their 200-day moving average since they are more likely to mean-revert higher"], answer:1, hint:"Relative strength tells you where institutional money is flowing. Stocks that hold up during market weakness have real buying interest behind them." },
+      { id:"sw10", q:"A breakout swing setup fails when:", choices:["The stock moves up only 3% after your entry instead of the 10% you expected","Price closes back below the breakout level on above-average volume — the market has rejected the breakout and sellers are in control","The broader market sells off slightly on the breakout day","Your target is not hit within 3 trading days of entry"], answer:1, hint:"A failed breakout is defined by a close back below the breakout level on volume. That tells you sellers stepped in and overwhelmed the buyers. Your thesis is invalidated — exit." },
+      { id:"sw11", q:"Momentum swing trades differ from breakout swings because:", choices:["Momentum trades are always longer-term holds while breakout trades are short-term","Momentum trades are entered while the stock is already trending strongly using pullbacks to moving averages as entries while breakout trades enter at the moment of the initial level break","Momentum trades only work on stocks above $50","Breakout trades require fundamentals while momentum trades are purely technical"], answer:1, hint:"Breakout = entry at the level break. Momentum = entry on pullback within an established trend. Different timing, different risk profile, different management rules." },
+      { id:"sw12", q:"The ideal hold time for a swing trade is:", choices:["Always exactly 5 trading days","As long as the setup continues to work — 2 days or 3 weeks both are valid if price is trending in your favor and the thesis is intact","No more than 3 days since swing trades fade quickly","Determined solely by your profit target without regard to price action"], answer:1, hint:"There is no fixed hold time in swing trading. You hold as long as price supports the thesis. The chart tells you when to exit — not a calendar." },
+      { id:"sw13", q:"How does relative strength index (RSI) help swing traders?", choices:["It predicts exact reversal points with high accuracy","It identifies overbought and oversold conditions that can signal potential exhaustion — but context matters since RSI can stay extended for long periods in strong trends","It confirms whether volume is supporting a price move","RSI is irrelevant for swing traders and only matters for day traders"], answer:1, hint:"RSI is a tool not a signal. Overbought means extended not immediately bearish. In a strong trend RSI can stay above 70 for weeks. Use it for context not as a mechanical buy/sell trigger." },
+      { id:"sw14", q:"When a swing trade moves to 2x your initial risk in profit the best practice is:", choices:["Hold the entire position until the full target is hit since your thesis has not changed","Move your stop to breakeven on the full position and consider taking partial profits to lock in gains while letting the rest run","Exit the entire position since a 2:1 gain is always a good result","Add more shares since the trade is confirming your thesis"], answer:1, hint:"At 2:1 you have a free trade if you move to breakeven. Locking in partial profits while trailing the rest is how disciplined swing traders turn good trades into great ones." },
+      { id:"sw15", q:"News-driven swing trades are most viable when:", choices:["You can buy the stock the moment news hits regardless of chart structure","The news fundamentally changes the company's story and the stock has a clean technical setup that supports a sustained move — not just a one-day spike","Any positive news is sufficient to justify holding for a multi-day swing","The news drives the stock up more than 15% on the day of announcement"], answer:1, hint:"News is the catalyst. The technical setup is the trade. A great fundamental story with a terrible chart setup is still a bad swing trade. You need both." },
+      { id:"sw16", q:"IBS plays (inside bar setups) work best when:", choices:["They form on the 5-minute chart during the first hour of trading","They form on the daily chart after a strong directional move and are followed by tight consolidation with declining volume — the energy is coiling before the next move","They form during earnings season when volatility is highest","They form below the 50-day moving average with high relative volume"], answer:1, hint:"IBS after a strong move plus low volume consolidation is the ideal combination. The strong move shows direction. The tight consolidation shows sellers are not pushing back. The break confirms the next leg." },
+      { id:"sw17", q:"Position correlation risk in swing trading means:", choices:["Owning stocks in similar sectors that will move together if that sector sells off — appearing diversified while actually holding concentrated risk","The risk that your positions are all too small to matter","Owning positions in stocks with similar market capitalizations","The risk that your broker correlates your position to others and restricts your trading"], answer:1, hint:"If you own 5 semiconductor stocks they will all sell off together when semis get hit. That is correlated risk. You think you are diversified but you are not." },
+      { id:"sw18", q:"The primary difference between a swing trade and a long-term investment is:", choices:["The amount of capital used — swing trades use less capital than investments","The timeframe and intent — swing trades capture a technical move expected over days to weeks with defined entry and exit rules while investments are held for months to years based on fundamental thesis","Swing trades are always day trades just held a bit longer","Swing trades use leverage and investments do not"], answer:1, hint:"Timeframe and thesis define the difference. A swing trade has a specific technical catalyst and a clear exit plan. An investment is held for fundamental reasons over a longer horizon." }
     ]
   },
 
@@ -375,1005 +376,26 @@ options: {
     section: "psychology",
     passingScore: 75,
     questions: [
-      { id:"psy1", variants:[
-        { q:"Revenge trading is best described as:", choices:["A valid strategy for recovering from losses quickly","Taking the next trade immediately after a loss driven by emotion and the need to make money back rather than a quality setup","Trading in a competitive manner against other traders","A pattern used by professional traders to reset after losses"], answer:1, hint:"Revenge trading is driven by ego and loss aversion. Your next trade is not based on a setup — it is based on anger. That is dangerous." },
-        { q:"After a significant loss the most effective action is:", choices:["Immediately take a larger trade to recover the money and reset your P&L","Step away from the screen for at least 15-30 minutes before making any new trading decision","Call your broker to discuss what went wrong","Review your watchlist and take the next available setup immediately"], answer:1, hint:"Mandatory cooldown after a big loss is the single most effective behavioral tool in trading. It breaks the emotional reaction loop." },
-        { q:"You are on a 5-trade losing streak. The correct response is:", choices:["Double your size on the next trade since you are due for a win","Continue trading your normal size since losing streaks are random and will self-correct","Cut your size in half or stop entirely and only resume with your highest conviction setups","Switch to a completely different strategy immediately"], answer:2, hint:"Losing streaks are the time to go smaller not bigger. Protect your capital. Get back to green slowly with only A+ setups." }
-      ]},
-      { id:"psy2", variants:[
-        { q:"FOMO — fear of missing out — most commonly leads traders to:", choices:["Wait patiently for better setups to develop","Chase extended moves that have already happened — entering late with poor risk/reward","Take fewer trades with more selective criteria","Improve their watchlist building process"], answer:1, hint:"FOMO makes you enter after the move has already happened. You buy the top. The risk/reward is terrible every time." },
-        { q:"Base hits over home runs is a principle that means:", choices:["Only trade stocks under $10","Consistent smaller gains that compound over time beat infrequent home run attempts that usually fail","Never take large position sizes even on your best setups","Trade baseball stocks during the season"], answer:1, hint:"1% per day compounded over a year is life-changing. Chasing 50% gains on single trades leads to account blowups not wealth." },
-        { q:"Overtrading is most commonly driven by:", choices:["Having too many great setups on the watchlist","Boredom, the need to feel active, or trying to force trades when the market is not giving clean setups","Trading during highly liquid market conditions","Using a scanner that returns too many results"], answer:1, hint:"Overtrading is a psychological problem not a market problem. The market does not force you to take bad trades. You do." }
-      ]},
-      { id:"psy3", variants:[
-        { q:"Your win rate is 60% but you are losing money overall. The most likely cause is:", choices:["Your entries are consistently wrong and need to be refined","Your average loss is significantly larger than your average winner — you cut winners early and let losers run","The market is in a difficult phase and will improve","You need a better scanner to find higher quality setups"], answer:1, hint:"Positive win rate plus negative P&L means one thing: your average loss is bigger than your average win. Fix exits not entries." },
-        { q:"A trading plan is only useful if:", choices:["It is written by an experienced professional trader","You follow it consistently even when your emotions are pulling you in a different direction","It includes at least 10 different setups","It is updated after every single trading session"], answer:1, hint:"Everyone has a plan until the market moves. A plan only has value when you follow it under pressure. That is the whole point." },
-        { q:"How does journaling your trades primarily improve your trading?", choices:["It satisfies broker reporting requirements","It creates a data-driven record of your actual behavior versus your intended behavior — revealing patterns you cannot see in the moment","It helps you track your tax liability more accurately","It is required to participate in TST Academy mentorship"], answer:1, hint:"You cannot fix what you cannot see. Your journal is a mirror. It shows you what you are actually doing versus what you think you are doing." }
-      ]},
-      { id:"psy4", variants:[
-        { q:"The playbook mindset means:", choices:["Copying the exact trades from a successful trader's playbook","Only taking setups you have defined in advance with clear rules — if it is not in your playbook it is not your trade","Trading every setup you know whenever it appears","Being flexible and adapting your strategy to whatever the market is doing each day"], answer:1, hint:"Your playbook is your filter. If the setup is not in your playbook you have no edge in that trade. Walk away." },
-        { q:"Accepting a loss quickly and moving on without emotional attachment is called:", choices:["Being careless about risk","Emotional detachment — the ability to see a loss as a cost of doing business not a personal failure","Overconfidence in your remaining positions","A sign you do not care enough about your trading"], answer:1, hint:"Trading losses are business expenses. Every great trader loses regularly. The skill is in how you respond — or how quickly you do not." },
-        { q:"When your P&L is positive and you take one more trade that turns your day red, the root cause is almost always:", choices:["The market was unpredictable and there was nothing you could do","Not having a daily profit target rule — you did not know when to stop and greed or boredom kept you in","A setup that looked exactly like your best pattern","Position sizing that was too small on your winners"] , answer:1, hint:"Green-to-red days have a clear cause: no stop point. Define your daily profit target. When you hit it you are done." }
-      ]},
-      { id:"psy5", variants:[
-        { q:"The most destructive trading behavior during a losing streak is:", choices:["Taking a break from trading to reset mentally","Increasing position size to recover losses faster — turning a manageable drawdown into a potential account wipeout","Reviewing your recent trades to find the pattern in your mistakes","Reducing your watchlist to only your best setups"], answer:1, hint:"Sizing up during a losing streak is how accounts blow up. You are not thinking clearly during a streak. Smaller size protects you." },
-        { q:"Screen time in trading primarily builds:", choices:["The ability to predict exactly where price will go next","Pattern recognition — your brain learns what setups look like, how they behave, and what feels different about the ones that work","Faster reaction speed for scalping","Better technical indicator interpretation skills"], answer:1, hint:"Screen time builds intuition. You cannot shortcut it. After thousands of hours your reads become instinctive not mechanical." },
-        { q:"The difference between a trader who lasts five years and one who blows up in six months is most often:", choices:["Intelligence and natural talent","Risk management and emotional control — the ability to survive the inevitable losing streaks without destroying the account","Access to better trading tools and data","The size of their starting capital"], answer:1, hint:"Talent is common. Discipline is rare. The traders who survive long enough to get good are the ones who protect their capital first." }
-      ]}
+      { id:"psy1", q:"Revenge trading is defined as:", choices:["A legitimate strategy for recovering losses quickly by taking higher-probability setups immediately after a loss","Taking trades driven by the need to recover money after a loss — emotional decisions not based on setups that meet your criteria","A pattern of trading in the same direction as the market after being stopped out","Any trade taken within 30 minutes of a previous loss regardless of setup quality"], answer:1, hint:"Revenge trading is driven by ego and loss aversion not by market opportunity. Your next trade is based on anger not on a legitimate setup. That combination always loses over time." },
+      { id:"psy2", q:"After a significant unexpected loss the most effective immediate response is:", choices:["Immediately take a larger position in a high-conviction idea to offset the loss and reset your P&L quickly","Step away from the screen for a mandatory 15-30 minute break before making any new trading decision","Review your watchlist and find the next available setup to get back in the game","Call your trading partner to discuss what went wrong and get their advice"], answer:1, hint:"The mandatory break after a significant loss is the most important behavioral tool in trading. It breaks the emotional reaction loop before it can compound into a bigger loss." },
+      { id:"psy3", q:"You are on a 5-trade losing streak. The psychologically correct response is:", choices:["Take a larger position on the next trade since you are statistically due for a winning trade","Cut your size to half or less and only trade your absolute highest conviction setups until your confidence and rhythm return","Keep trading your normal size since losing streaks are random and statistically will self-correct","Switch to a completely different strategy since your current approach is clearly not working"], answer:1, hint:"Losing streaks are the most dangerous time to increase size. Your edge has not disappeared but your judgment may be impaired. Go smaller. Get back to green slowly. Then rebuild size." },
+      { id:"psy4", q:"FOMO in trading most commonly causes:", choices:["Waiting patiently for the setup to fully develop before entering","Entering moves that have already happened — buying at extension after missing the initial move, creating terrible risk/reward","Taking fewer trades with more selective criteria to avoid missing the best setups","Improving watchlist quality by focusing only on the strongest names"], answer:1, hint:"FOMO makes you buy tops. The fear of missing the move overrides the discipline of waiting for a proper entry. The result is a bad entry with poor risk/reward and usually a loss." },
+      { id:"psy5", q:"Base hits over home runs as a trading principle means:", choices:["Only trade stocks under $10 where moves are larger in percentage terms","Consistent smaller gains compound into significant wealth over time while chasing massive wins leads to account blowups and inconsistency","Never take large position sizes even on your highest conviction setups","Trade every day regardless of conditions to collect consistent small gains"], answer:1, hint:"1% per day compounded is extraordinary wealth over years. Swinging for 50% gains on single trades means taking massive risk. Most home run attempts strike out. Consistent base hits win championships." },
+      { id:"psy6", q:"Overtrading is primarily caused by:", choices:["Having too many high-quality setups in a target-rich market environment","Boredom, the need to feel active, or trying to force trades during slow markets when the market is not providing legitimate setups","Trading during periods of high market volatility when more setups appear","Using a scanner that generates too many results and tempts you to trade all of them"], answer:1, hint:"Overtrading is a psychological problem not a market problem. The market never forces you to take bad trades. You choose to take them. Identifying when you are trading out of boredom is a critical skill." },
+      { id:"psy7", q:"Your win rate is 58% but you are losing money consistently. The most likely cause is:", choices:["Your entry timing is systematically off and needs to be refined","Your average loss is significantly larger than your average winner — you cut winners short and hold losers too long, reversing the math that should be working in your favor","The market environment is unfavorable for your strategy and will improve","Your scanner is returning low-quality setups that look good visually but have no statistical edge"], answer:1, hint:"Positive win rate plus consistent losses means one thing: your average loss is bigger than your average win. You are cutting winners at $200 and holding losers to $500. Fix exits not entries." },
+      { id:"psy8", q:"A trading plan has value only when:", choices:["It is written by an experienced mentor or copied from a proven profitable trader","You follow it consistently under pressure — especially when your emotions are pulling you to deviate from it","It includes specific setups for every market condition you might encounter","It is updated after every single trading session based on what worked that day"], answer:1, hint:"A plan is worthless if you abandon it the moment the market moves against you. The entire value of a trading plan is in the discipline to follow it precisely when emotions are pushing you away from it." },
+      { id:"psy9", q:"Journaling your trades primarily improves performance by:", choices:["Meeting brokerage record-keeping requirements and tax documentation needs","Creating a data-driven record of your actual behavior versus intended behavior — revealing patterns in your mistakes and wins that are invisible in the moment but clear in the data","Helping you identify the best market conditions for your strategy by tracking which days were most profitable","Building a public track record that attracts investors to your trading fund"], answer:1, hint:"Your journal is a mirror. It shows you what you are actually doing versus what you think you are doing. Most traders are shocked by what their journal reveals about their real behavior." },
+      { id:"psy10", q:"The playbook mindset means:", choices:["Copying the exact trades from a successful trader's playbook until you develop your own style","Only taking setups that are explicitly defined in your personal playbook — if it is not in your playbook it is not your trade regardless of how good it looks","Being flexible and adapting your strategy to whatever the market is doing each day","Having a large playbook with many setups so you always have something to trade in any condition"], answer:1, hint:"If it is not in your playbook you have no edge in it. You have not tested it. You do not know the rules. Walking away from setups outside your playbook is discipline not weakness." },
+      { id:"psy11", q:"Accepting a loss and moving on without emotional attachment is:", choices:["Carelessness that leads to repeating the same mistakes without learning","Emotional detachment — the professional trader's ability to see a loss as a cost of doing business not a personal failure that must be immediately rectified","Overconfidence that prevents you from properly reviewing your mistakes","A sign that you need to care more about your trading to improve"], answer:1, hint:"Every professional loses. The best traders in the world lose on 40-50% of their trades. The skill is in the response — small loss, learn, move on. Not in avoiding all losses." },
+      { id:"psy12", q:"When you are profitable on the day and feel the urge to take one more trade, you should:", choices:["Always take it since being in a good mental state means you will execute better","Check whether the setup meets your normal criteria — if it does not meet your standard you are trading out of greed not opportunity","Take it with reduced size as a compromise between discipline and participation","Never take another trade after reaching your daily profit target regardless of setup quality"], answer:1, hint:"The dangerous word is ONE MORE. One more trade has turned thousands of profitable days into red days. The question is always: does this meet my criteria? Not: am I feeling good today?" },
+      { id:"psy13", q:"Loss aversion in trading causes traders to:", choices:["Take losses too quickly by stopping out at the first sign of movement against them","Hold losing positions far too long hoping they will recover while cutting winning positions too early to lock in guaranteed gains — the exact opposite of what produces profits","Avoid trading entirely which prevents both gains and losses","Focus exclusively on high win rate setups even when the R:R is poor"], answer:1, hint:"Loss aversion is the psychological tendency to feel losses more acutely than equivalent gains. In trading it manifests as holding losers and cutting winners — the exact behavior that destroys accounts." },
+      { id:"psy14", q:"The most destructive behavior during a losing streak is:", choices:["Taking a full day off to reset mentally before returning to trading","Increasing position size to recover losses faster — turning a manageable drawdown into a potential account-ending loss","Reviewing your losing trades to identify any patterns in your mistakes","Reducing your watchlist to only your highest quality setups to improve selectivity"], answer:1, hint:"Sizing up during a losing streak is how accounts blow up. You are not thinking clearly. Your judgment is impaired. Adding size at that exact moment amplifies the damage of every subsequent bad decision." },
+      { id:"psy15", q:"Screen time builds which most important trading skill?", choices:["The ability to predict exactly where price will move next based on pattern recognition","Pattern recognition and market intuition — your brain learns what setups look and feel like in real time through thousands of repetitions you cannot shortcut","Faster reaction speed for scalping small intraday moves","Better technical indicator interpretation since you see them applied in more market conditions"], answer:1, hint:"Screen time builds the intuitive recognition you cannot learn from books. After thousands of hours your brain patterns match instantly. That recognition feels like instinct but it is trained skill." },
+      { id:"psy16", q:"The difference between a trader who lasts 5 years and one who blows up in 6 months is most often:", choices:["Natural intelligence and the ability to learn new concepts faster than peers","Risk management and emotional control — the ability to survive inevitable losing streaks without destroying the account while waiting to develop real edge","Access to better trading tools, data feeds, and direct market access","The size of their starting capital which determines resilience during drawdowns"], answer:1, hint:"Talent is common. Discipline is rare. The traders who survive long enough to actually get good are the ones who refused to blow up their accounts during the learning phase." },
+      { id:"psy17", q:"Confirmation bias in trading causes you to:", choices:["Seek out diverse perspectives on your trade ideas before entering","Only see information that supports your existing position while unconsciously ignoring evidence that contradicts it — leading to holding losers past your stop","Trade more conservatively by requiring multiple confirmations before entry","Consistently underestimate the quality of your setups"], answer:1, hint:"Confirmation bias is invisible while it is happening. You are certain you are being objective. But you are only reading news that supports your position and ignoring everything that challenges it." },
+      { id:"psy18", q:"Process over outcome thinking in trading means:", choices:["Judging every trade solely by whether it made or lost money","Evaluating your trades by whether you followed your plan and executed correctly — a perfectly executed setup that loses money is a good trade, a sloppy setup that wins is still a bad trade","Ignoring P&L entirely and only focusing on chart pattern quality","Only caring about outcomes since that is the only real measure of trading success"], answer:1, hint:"You control process not outcome. A great entry with proper size and a defined stop that still loses is not a bad trade — it is variance. What you control is execution. Judge that." },
+      { id:"psy19", q:"End of day review serves what primary purpose for your trading?", choices:["Meeting compliance and record-keeping requirements from your broker","Converting each day's experiences into systematic improvements by identifying what worked, what did not, and specifically what you will do differently tomorrow","Building a following on social media by documenting your daily trades publicly","Calculating your daily P&L accurately for tax purposes"], answer:1, hint:"Daily review is the engine of improvement. Without it every day is isolated. With it each day's mistakes and wins inform tomorrow's execution. This compounds over time into real edge." },
+      { id:"psy20", q:"The trader's most important mental skill is:", choices:["The ability to predict market direction with high accuracy","The discipline to execute the same plan the same way every time regardless of recent wins or losses, emotions, or outside opinions — consistency of process is what separates professionals from amateurs","The ability to quickly adapt strategy when the current approach stops working","Maintaining high conviction in your analysis even when the market initially moves against you"], answer:1, hint:"Consistency is everything. Any edge in trading requires execution over hundreds of trades to realize. Changing your approach based on recent results or emotions destroys the statistical advantage of any real edge." }
     ]
   },
-};
-;
-
-// ============================================================
-// QUIZ ENGINE
-// ============================================================
-
-window.TST_QUIZ = {
-
-  getQuiz: function(sectionId) {
-    return QUIZ_DATA[sectionId] || null;
-  },
-
-  getAttempts: function(sectionId) {
-    if (!window.BEHAVIOR) return 0;
-    var rec = (window.BEHAVIOR.quizzes || []).find(function(q){ return q.section === sectionId; });
-    return rec ? (rec.attempts || 0) : 0;
-  },
-
-  isPassed: function(sectionId) {
-    if (!window.BEHAVIOR) return false;
-    var rec = (window.BEHAVIOR.quizzes || []).find(function(q){ return q.section === sectionId; });
-    return rec ? (rec.passed || false) : false;
-  },
-
-  getScore: function(sectionId) {
-    if (!window.BEHAVIOR) return 0;
-    var rec = (window.BEHAVIOR.quizzes || []).find(function(q){ return q.section === sectionId; });
-    return rec ? (rec.score || 0) : 0;
-  },
-
-  pickVariant: function(question, attempt) {
-    return question.variants[attempt % question.variants.length];
-  },
-
-  render: function(sectionId) {
-    var quiz = this.getQuiz(sectionId);
-    if (!quiz) return '';
-    var attempt = this.getAttempts(sectionId);
-    var passed = this.isPassed(sectionId);
-    var score = this.getScore(sectionId);
-    var self = this;
-
-    var qHtml = quiz.questions.map(function(q, i) {
-      var v = self.pickVariant(q, attempt);
-      var choicesHtml = v.choices.map(function(c, ci) {
-        return '<label class="quiz-choice" data-ci="' + ci + '">' +
-          '<input type="radio" name="tq_' + sectionId + '_' + i + '" value="' + ci + '">' +
-          '<span class="quiz-choice-letter">' + String.fromCharCode(65 + ci) + '</span>' +
-          '<span class="quiz-choice-text">' + c + '</span>' +
-        '</label>';
-      }).join('');
-      return '<div class="quiz-q" data-qi="' + i + '" data-qid="' + q.id + '">' +
-        '<div class="quiz-q-num">Question ' + (i+1) + ' of ' + quiz.questions.length + '</div>' +
-        '<div class="quiz-q-text">' + v.q + '</div>' +
-        '<div class="quiz-choices">' + choicesHtml + '</div>' +
-      '</div>';
-    }).join('');
-
-    var passedBadge = passed
-      ? '<div class="quiz-passed-badge">PASSED ' + score + '%</div>'
-      : '';
-
-    return '<div class="quiz-container" id="quizCont_' + sectionId + '" data-section="' + sectionId + '">' +
-      '<div class="quiz-header">' +
-        '<div class="quiz-title">' + quiz.title + '</div>' +
-        '<div class="quiz-meta">' + quiz.questions.length + ' questions &nbsp;·&nbsp; Pass score: ' + quiz.passingScore + '% &nbsp;·&nbsp; Answers revealed at end</div>' +
-        passedBadge +
-      '</div>' +
-      '<div class="quiz-progress"><div class="quiz-progress-bar" id="qpb_' + sectionId + '" style="width:0%"></div></div>' +
-      '<div class="quiz-questions" id="quizQs_' + sectionId + '">' + qHtml + '</div>' +
-      '<div class="quiz-actions">' +
-        '<button class="quiz-submit-btn" onclick="TST_QUIZ.submit(\'' + sectionId + '\')">Submit Answers</button>' +
-        '<div class="quiz-warning" id="qwarn_' + sectionId + '" style="display:none">Please answer all questions before submitting.</div>' +
-      '</div>' +
-      '<div class="quiz-results" id="qres_' + sectionId + '" style="display:none"></div>' +
-    '</div>';
-  },
-
-  submit: function(sectionId) {
-    var quiz = this.getQuiz(sectionId);
-    if (!quiz) return;
-    var attempt = this.getAttempts(sectionId);
-    var container = document.getElementById('quizCont_' + sectionId);
-    var self = this;
-
-    var answers = [];
-    var allAnswered = true;
-    var qDivs = container.querySelectorAll('.quiz-q');
-    qDivs.forEach(function(qDiv, i) {
-      var sel = qDiv.querySelector('input[type=radio]:checked');
-      if (!sel) { allAnswered = false; answers.push(null); }
-      else answers.push(parseInt(sel.value));
-    });
-
-    if (!allAnswered) {
-      document.getElementById('qwarn_' + sectionId).style.display = 'block';
-      return;
-    }
-    document.getElementById('qwarn_' + sectionId).style.display = 'none';
-
-    var correct = 0;
-    var results = [];
-    quiz.questions.forEach(function(q, i) {
-      var v = self.pickVariant(q, attempt);
-      var isCorrect = answers[i] === v.answer;
-      if (isCorrect) correct++;
-      results.push({ q: v.q, userAns: v.choices[answers[i]], correctAns: v.choices[v.answer], isCorrect: isCorrect, hint: v.hint });
-    });
-
-    var score = Math.round((correct / quiz.questions.length) * 100);
-    var passed = score >= quiz.passingScore;
-
-    if (!window.BEHAVIOR) window.BEHAVIOR = { quizzes: [] };
-    if (!window.BEHAVIOR.quizzes) window.BEHAVIOR.quizzes = [];
-    var existing = window.BEHAVIOR.quizzes.findIndex(function(q){ return q.section === sectionId; });
-    var record = { section: sectionId, score: score, passed: passed, attempts: attempt + 1, date: new Date().toISOString() };
-    if (existing >= 0) window.BEHAVIOR.quizzes[existing] = record;
-    else window.BEHAVIOR.quizzes.push(record);
-
-    this.saveResult(sectionId, score, passed, attempt + 1);
-
-    container.querySelectorAll('input[type=radio]').forEach(function(r){ r.disabled = true; });
-
-    qDivs.forEach(function(qDiv, i) {
-      var v = self.pickVariant(quiz.questions[i], attempt);
-      var choices = qDiv.querySelectorAll('.quiz-choice');
-      choices.forEach(function(c, ci) {
-        if (ci === v.answer) c.classList.add('quiz-choice-correct');
-        else if (ci === answers[i] && !results[i].isCorrect) c.classList.add('quiz-choice-wrong');
-      });
-    });
-
-    var wrong = results.filter(function(r){ return !r.isCorrect; });
-    var wrongHtml = wrong.length > 0
-      ? '<div class="quiz-review"><div class="quiz-review-title">Review These Questions</div>' +
-        wrong.map(function(r) {
-          return '<div class="quiz-wrong-item">' +
-            '<div class="quiz-wrong-q">&#x2717; ' + r.q + '</div>' +
-            '<div class="quiz-wrong-yours">Your answer: <span class="quiz-wrong-ans">' + r.userAns + '</span></div>' +
-            '<div class="quiz-wrong-correct">Correct answer: <span class="quiz-correct-ans">' + r.correctAns + '</span></div>' +
-            '<div class="quiz-hint-text">&#x1F4A1; ' + r.hint + '</div>' +
-          '</div>';
-        }).join('') + '</div>'
-      : '<div class="quiz-perfect">Perfect score. Outstanding work.</div>';
-
-    var retakeBtn = !passed
-      ? '<button class="quiz-retake-btn" onclick="TST_QUIZ.retake(\'' + sectionId + '\')">Retake Quiz</button>'
-      : '<div class="quiz-congrats">Section complete. Continue to the next section.</div>';
-
-    var resultsDiv = document.getElementById('qres_' + sectionId);
-    resultsDiv.innerHTML =
-      '<div class="quiz-score-card ' + (passed ? 'quiz-passed' : 'quiz-failed') + '">' +
-        '<div class="quiz-score-num">' + score + '%</div>' +
-        '<div class="quiz-score-label">' + (passed ? 'PASSED' : 'NOT PASSED YET') + '</div>' +
-        '<div class="quiz-score-sub">' + correct + ' of ' + quiz.questions.length + ' correct &nbsp;·&nbsp; Need ' + quiz.passingScore + '% to pass</div>' +
-      '</div>' +
-      wrongHtml + retakeBtn;
-
-    resultsDiv.style.display = 'block';
-    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    document.getElementById('qpb_' + sectionId).style.width = '100%';
-  },
-
-  retake: function(sectionId) {
-    var parent = document.getElementById('quizCont_' + sectionId);
-    if (!parent) return;
-    var container = parent.parentElement;
-    parent.outerHTML = this.render(sectionId);
-    var newCont = document.getElementById('quizCont_' + sectionId);
-    if (newCont) newCont.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  },
-
-  saveResult: async function(sectionId, score, passed, attempts) {
-    try {
-      if (!window.supabase) return;
-      var authResult = await window.supabase.auth.getUser();
-      var user = authResult.data ? authResult.data.user : null;
-      if (!user) return;
-      await window.supabase.from('quiz_results').upsert({
-        user_id: user.id,
-        section: sectionId,
-        score: score,
-        passed: passed,
-        attempts: attempts,
-        updated_at: new Date().toISOString()
-      });
-    } catch(e) { console.log('Quiz save error:', e); }
-  }
-};
-
-// Track progress bar as user selects answers
-document.addEventListener('change', function(e) {
-  if (!e.target || e.target.type !== 'radio') return;
-  var container = e.target.closest('.quiz-container');
-  if (!container) return;
-  var sectionId = container.dataset.section;
-  var total = container.querySelectorAll('.quiz-q').length;
-  var answered = container.querySelectorAll('input[type=radio]:checked').length;
-  var pbar = document.getElementById('qpb_' + sectionId);
-  if (pbar) pbar.style.width = Math.round((answered / total) * 100) + '%';
-});// BEGINNER QUESTIONS
-const beginnerQuestions = [
-  {
-    q: "What does a long lower wick on a candle tell you about buyer and seller behavior during that period?",
-    variants: [
-      "What does a long lower wick on a candle reveal about what happened during that time period?",
-      "If a candle has a very long lower wick, what does that tell you about the battle between buyers and sellers?",
-      "A candle closes near its high but has a very long lower wick. What happened during that period?"
-    ],
-    a: "Sellers pushed price down significantly during the period but buyers stepped in aggressively and rejected those lower prices, pushing price back up before the candle closed. The wick represents the range that was tested and rejected.",
-    hint: "Think about what the wick represents — it shows where price went but was not accepted.",
-    options: [
-      "Sellers pushed price down but buyers rejected the lower prices and pushed it back up before the close",
-      "Buyers were in control the entire period and price only moved upward",
-      "The stock had low volume and did not move much during that period",
-      "Sellers won the battle and price closed near the lows"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a Doji and what does it signal when it appears after an extended trend?",
-    variants: [
-      "A candle has an almost identical open and close with wicks on both sides. What type of candle is this and what does it mean after a long uptrend?",
-      "What does a Doji candlestick look like and why is its location on the chart important?",
-      "After a stock has been trending up for several days a Doji appears. What should you take from this?"
-    ],
-    a: "A Doji has nearly the same open and close price, creating a very small body with wicks on both sides. It signals indecision — neither buyers nor sellers won that period. When it appears after an extended trend it is a warning that momentum is slowing and a reversal may be coming.",
-    hint: "The body of a Doji is almost nonexistent. Think about what it means when neither side wins.",
-    options: [
-      "A candle with nearly the same open and close signaling indecision — potential reversal warning after an extended trend",
-      "A large green candle signaling that buyers are fully in control and the trend will continue",
-      "A candle that only forms at the bottom of downtrends as a reversal signal",
-      "A candle with no wicks showing total conviction from one side"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a bullish engulfing pattern and why is it more significant near a support level?",
-    variants: [
-      "Describe a bullish engulfing pattern and explain why location matters when evaluating it.",
-      "A large green candle completely covers the previous red candle's body. What is this pattern called and when is it most meaningful?",
-      "What makes a bullish engulfing pattern high probability versus low probability?"
-    ],
-    a: "A bullish engulfing pattern is two candles — a red candle followed by a green candle that completely engulfs the prior red candle's body. It shows a powerful shift from selling to buying pressure. Near a support level it is more significant because buyers are defending a known price level, making the reversal more likely to hold.",
-    hint: "Context matters. The same pattern means more at certain price levels than others.",
-    options: [
-      "Two candles where a green candle completely covers the prior red body — most significant near support where buyers are defending a known level",
-      "A single large green candle that appears at the top of an uptrend signaling continuation",
-      "Two green candles in a row — more significant the further from support they appear",
-      "A pattern that only works on daily charts and is not reliable on intraday timeframes"
-    ],
-    correct: 0
-  },
-  {
-    q: "Why is a candle CLOSE above resistance more significant than a wick through it?",
-    variants: [
-      "A stock wicks above a resistance level but closes back below it. Is this a breakout? Why or why not?",
-      "What is the difference between a wick through resistance and a candle close above resistance?",
-      "You are watching a key resistance level. Price pokes above it briefly then pulls back. What does this tell you?"
-    ],
-    a: "A wick through resistance means price briefly tested that level but was rejected — sellers won and pushed price back below. A close above resistance means the market accepted that price level, buyers overpowered sellers, and the level has been genuinely broken. Closing price is where the majority of participants agreed to end the period.",
-    hint: "Where price closes is where the market decided it belongs. A wick is just a test.",
-    options: [
-      "A close above resistance shows the market accepted the new price level — a wick just means it was tested and rejected",
-      "A wick above resistance is actually more significant because it shows buyers pushed price higher",
-      "Both are equally significant — any touch of resistance is a valid breakout signal",
-      "Neither matters — you should only trade breakouts on the daily chart"
-    ],
-    correct: 0
-  },
-  {
-    q: "A stock breaks above resistance on half its average volume. What does this tell you and what should you do?",
-    variants: [
-      "You see a breakout above a key level but notice volume is well below average. How do you evaluate this setup?",
-      "What does low volume on a breakout candle tell you about the move's reliability?",
-      "A stock clears resistance for the first time in weeks but volume is 0.5x the average. Do you take the trade?"
-    ],
-    a: "Low volume on a breakout is a major red flag. It means institutions are not participating — the move is being driven by retail traders or algorithms and lacks real conviction. These breakouts frequently fail and reverse back below resistance. You should wait for volume to confirm the move before entering or avoid the trade entirely.",
-    hint: "Volume tells you who is participating. No institutional volume means no conviction.",
-    options: [
-      "Low volume breakout lacks institutional conviction and is likely to fail — wait for volume confirmation or skip it",
-      "Low volume is actually better because it means less selling pressure and the move is cleaner",
-      "Volume does not matter on breakouts — price action alone is sufficient for entry",
-      "Take the trade immediately before volume picks up and the stock gets crowded"
-    ],
-    correct: 0
-  },
-  {
-    q: "What should volume look like during a flag consolidation for the setup to be valid?",
-    variants: [
-      "During the pullback phase of a bull flag, what should you observe happening to volume?",
-      "How does volume behavior during a flag consolidation confirm or invalidate the setup?",
-      "A stock pulls back after a big move. Volume during the pullback is spiking higher than the initial move. Is this a valid flag setup?"
-    ],
-    a: "Volume should dry up significantly during the flag consolidation — dropping well below average. This shows that sellers are not aggressively pushing price lower and the pullback is orderly profit-taking rather than genuine distribution. When volume contracts during the flag it sets up a high-probability breakout when buyers return with force.",
-    hint: "If sellers were truly in control during the pullback, volume would be high. Low volume means they are not.",
-    options: [
-      "Volume should dry up and contract during the flag — low volume confirms sellers are exhausted and buyers will return",
-      "Volume should increase during the flag to confirm that buyers are actively accumulating",
-      "Volume during the flag does not matter — only the breakout volume is relevant",
-      "Volume should match the initial move to show equal participation on both sides"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does a volume climax spike often signal at the end of a sharp move?",
-    variants: [
-      "A stock has been selling off hard for 3 days and on day 4 volume spikes to 10x the average on another sharp drop. What might this signal?",
-      "What is a volume climax and why does extreme volume often appear at turning points?",
-      "You see an enormous volume spike on a sharp move down. What should you be thinking about?"
-    ],
-    a: "A volume climax spike — extreme volume on a sharp move — often signals exhaustion of the dominant side. On a selloff it means panic sellers are all exiting at once, which frequently marks a short-term bottom because once all the sellers have sold there is no one left to push price lower. It does not guarantee a reversal but it is a significant warning that the move is mature.",
-    hint: "Extreme volume means a lot of participants acted at once. Think about what happens when everyone who wants to sell has already sold.",
-    options: [
-      "Exhaustion of the dominant side — on a selloff it signals panic selling may be climaxing and a reversal could be near",
-      "Confirmation that the trend is healthy and will continue strongly in the same direction",
-      "A signal to add to your position in the direction of the move",
-      "A meaningless event that happens randomly and should be ignored"
-    ],
-    correct: 0
-  },
-  {
-    q: "What happens to a resistance level once it is broken with conviction and strong volume?",
-    variants: [
-      "A stock has been rejected at $55 three times. It finally breaks above $55 on huge volume. What does $55 now represent?",
-      "Explain the concept of resistance flipping to support after a breakout.",
-      "After a clean breakout above a major resistance level, where would you look to buy a pullback?"
-    ],
-    a: "Former resistance becomes support. Once a level is broken with conviction, the traders who were selling there are now buyers on any pullback because they want to defend the price they already committed to. Institutions also frequently buy pullbacks to broken resistance levels. This is why the first pullback after a breakout is often a high-probability entry.",
-    hint: "Think about what the traders who were selling at that level do after it breaks above them.",
-    options: [
-      "Former resistance becomes support — traders who sold there now buy pullbacks to defend that level",
-      "The broken resistance level becomes meaningless and should be ignored going forward",
-      "Resistance remains resistance — a breakout above it is usually temporary and price will return below",
-      "The level becomes an area of uncertainty with no predictive value in either direction"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a higher low and what does a series of higher lows tell you about who is in control?",
-    variants: [
-      "A stock pulls back to $48 then rallies, then pulls back to $51, then rallies again. What pattern is forming and what does it mean?",
-      "Define a higher low and explain its significance in identifying trend strength.",
-      "You notice each pullback in a stock is finding support at a higher price than the last pullback. What does this tell you?"
-    ],
-    a: "A higher low occurs when a pullback finds support at a higher price than the previous pullback. A series of higher lows means buyers are stepping in earlier and earlier — they are not waiting for price to fall as far before buying. This shows accumulation and confirms that buyers are in control. It is one of the key characteristics of a healthy uptrend.",
-    hint: "If buyers keep stepping in at higher and higher prices, what does that tell you about demand?",
-    options: [
-      "Buyers are stepping in earlier each time — it signals accumulation and confirms buyers are in control of the trend",
-      "The stock is becoming increasingly risky because it is making higher highs and could reverse at any time",
-      "Higher lows are only significant on weekly charts — intraday higher lows have no predictive value",
-      "It means sellers are getting stronger because they are defending lower price levels each time"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a lower high and what does it tell you about the health of an uptrend?",
-    variants: [
-      "A stock rallies to $60, pulls back, rallies to $58, pulls back, rallies to $55. What pattern is forming and what does it mean?",
-      "You are long a stock and notice each rally is reaching a lower peak than the previous one. What should you be thinking?",
-      "Define a lower high and explain why it is a warning signal even if price has not broken a support level yet."
-    ],
-    a: "A lower high occurs when a bounce or rally fails at a lower price than the previous bounce. It means sellers are getting more aggressive — they are stepping in earlier to sell before price can reach the previous high. A series of lower highs in what was an uptrend is a significant warning that buyers are losing control, even before any support level breaks.",
-    hint: "If sellers keep stepping in at lower and lower prices, demand is weakening. What does that mean for the trend?",
-    options: [
-      "Sellers are stepping in earlier each time — warns that buyer momentum is fading even if support has not broken yet",
-      "Lower highs are a normal part of any healthy uptrend and should not cause concern",
-      "It signals that the stock is consolidating before a major breakout to new highs",
-      "Lower highs only matter if price is also making lower lows at the same time"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is the difference between a breakout and a fakeout and how do you avoid entering a fakeout?",
-    variants: [
-      "A stock breaks above a key resistance level and you enter long. Ten minutes later it reverses back below the level. What happened and how could you have avoided it?",
-      "How do you distinguish a genuine breakout from a fakeout before you enter the trade?",
-      "What are the two most important criteria that separate a real breakout from a false one?"
-    ],
-    a: "A breakout is a genuine move above resistance accepted by the market — confirmed by a candle close above the level and above-average volume. A fakeout is when price briefly pierces a level but quickly reverses back below it. You avoid fakeouts by waiting for a full candle close above the level rather than entering on a wick, and requiring volume to be above average on the breakout candle.",
-    hint: "Two things confirm a real breakout: where the candle closes and whether volume is showing up.",
-    options: [
-      "Wait for a candle close above the level with above-average volume — a wick through on low volume is usually a fakeout",
-      "Enter immediately when price touches resistance so you get the best possible entry before the breakout",
-      "Fakeouts only happen on low-quality stocks — blue chip stocks always have genuine breakouts",
-      "Use a stop loss above the resistance level to protect against fakeouts after you enter"
-    ],
-    correct: 0
-  },
-  {
-    q: "What are the two components of a bull flag and where is the entry point?",
-    variants: [
-      "Break down the structure of a bull flag pattern and identify where you would enter the trade.",
-      "A stock surges 15% in an hour then pulls back tightly for 20 minutes in a channel. What pattern is forming and where do you enter?",
-      "Describe a bull flag from start to finish including the exact entry trigger."
-    ],
-    a: "A bull flag has two components — the flag pole (the sharp initial move up driven by a catalyst and volume) and the flag (the tight orderly pullback that follows on lower volume). The entry point is a break above the highest candle in the flag consolidation, confirmed by a volume spike showing buyers are returning.",
-    hint: "One component shows the strength of the move, the other is the rest period before continuation.",
-    options: [
-      "Flag pole (sharp move up) and flag (tight pullback) — entry is on a break above the flag highs with volume",
-      "The breakout candle and the retest — entry is when price retests the original breakout level",
-      "The accumulation zone and the markup phase — entry is at the very start of the accumulation",
-      "Support and resistance — entry is when price bounces off the support level inside the flag"
-    ],
-    correct: 0
-  },
-  {
-    q: "Where does the stop loss go on a bull flag trade and why?",
-    variants: [
-      "You enter a bull flag breakout. Where exactly do you place your stop and what is the reasoning behind that level?",
-      "Why does the stop on a bull flag go below the flag lows and not somewhere else?",
-      "A bull flag breaks out and you enter. Price pulls back into the flag. At what point is the trade officially wrong?"
-    ],
-    a: "The stop goes below the lowest candle in the flag consolidation. If price returns below the flag low the pattern is invalidated — the pullback was not a healthy flag, buyers have lost control, and the breakout has failed. Placing the stop at the flag low is technically logical because that is the exact level where the trade thesis breaks down.",
-    hint: "Your stop should go at the level that PROVES your trade idea is wrong.",
-    options: [
-      "Below the lowest candle in the flag — if price returns there the pattern is invalidated and the thesis is wrong",
-      "Below the bottom of the flag pole — the entire move must be protected",
-      "A fixed dollar amount below your entry regardless of chart structure",
-      "At the prior day's low since that is the most significant support level"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does an ascending triangle tell you about the battle between buyers and sellers?",
-    variants: [
-      "A stock keeps hitting the same resistance level while making higher lows below it. What pattern is forming and what does it reveal?",
-      "Explain the psychology behind an ascending triangle — what are buyers doing and what are sellers doing?",
-      "Why does an ascending triangle typically resolve to the upside?"
-    ],
-    a: "An ascending triangle shows buyers getting more aggressive — making higher lows, meaning they are willing to pay more each time — while sellers are defending a fixed resistance level. Eventually buyers overwhelm the fixed supply at resistance. The pattern typically resolves bullishly because buyers are clearly gaining strength while sellers are holding a static line that is gradually being eroded.",
-    hint: "One side is getting stronger while the other is holding a fixed level. That imbalance has to resolve somehow.",
-    options: [
-      "Buyers are getting more aggressive with higher lows while sellers hold a fixed level — buyers eventually overwhelm resistance",
-      "Sellers are gaining strength as they successfully hold resistance and will eventually push price sharply lower",
-      "Both buyers and sellers are equally matched and the pattern resolves randomly in either direction",
-      "The pattern shows institutional distribution at resistance and almost always resolves to the downside"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does it mean when a large wall on the ask disappears as price approaches it?",
-    variants: [
-      "You see 50,000 shares offered at $25.00 on Level 2. As price gets close that wall suddenly vanishes. What does this tell you?",
-      "A massive ask wall disappears right before price reaches it. Is this bullish or bearish and why?",
-      "On Level 2 you notice a huge sell order at a key resistance level evaporates as price approaches. How do you interpret this?"
-    ],
-    a: "When a large ask wall disappears as price approaches it, it is typically a bullish signal. It means the seller who placed that order either pulled it because they no longer want to sell at that price or it was a fake wall designed to scare buyers — a tactic called spoofing. The disappearance of resistance often leads to a sharp move up because there is now less supply blocking the way.",
-    hint: "If the wall was real supply and it disappeared, what does that mean for the path of least resistance?",
-    options: [
-      "Typically bullish — the supply that was blocking price has been removed, clearing the path for a move higher",
-      "Bearish — it means a large seller has filled their entire position and price will now drop sharply",
-      "Neutral — walls appear and disappear constantly and have no predictive value",
-      "Bearish — it means a market maker is pulling liquidity ahead of a major sell program"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does aggressive tape — large prints hitting the ask repeatedly — tell you about direction?",
-    variants: [
-      "You are watching the time and sales and see large green prints hitting the ask over and over. What does this tell you about what is happening in the stock?",
-      "How do you read the tape to determine if a move is real versus fading?",
-      "Large blocks are printing at the ask price consistently. What does this signal about buyer conviction?"
-    ],
-    a: "Large prints hitting the ask means buyers are so eager to own the stock that they are paying the sellers asking price rather than waiting for a better price. This shows urgency and conviction from the buying side. Consistent aggressive buying at the ask is a bullish signal — it tells you institutions or motivated buyers are accumulating and not waiting around.",
-    hint: "When you hit the ask instead of bidding below it, you are saying you need to own this right now. What does that urgency signal?",
-    options: [
-      "Buyers are aggressively paying the ask — shows urgency and conviction, bullish signal of strong demand",
-      "Sellers are offloading large positions at the ask to get out quickly before price drops",
-      "The tape is showing equal buying and selling activity with no clear directional bias",
-      "Large prints at the ask mean price is about to reverse because sellers are meeting the demand"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is the 1% rule and why does it exist?",
-    variants: [
-      "Explain the 1% rule in trading and the mathematical reason it is essential for account survival.",
-      "Why do professional traders limit their risk to 1% per trade even when they are highly confident in a setup?",
-      "What is the purpose of the 1% rule and what problem does it solve?"
-    ],
-    a: "The 1% rule means never risking more than 1% of your total account on a single trade. It exists because it makes account survival mathematically near-impossible to violate — even 10 consecutive losses only cost you 10% of your account. At higher risk percentages a losing streak can end your trading career. It also removes emotional attachment to individual trades because no single trade can devastate your account.",
-    hint: "Think about what happens to your account after 10 losing trades in a row at different risk percentages.",
-    options: [
-      "Never risk more than 1% per trade — ensures 10 consecutive losses only cost 10% of your account, protecting you from career-ending drawdowns",
-      "Only trade stocks that have moved more than 1% from their opening price to ensure enough volatility",
-      "Limit your daily trading activity to 1 hour per day to avoid overtrading and emotional decisions",
-      "Never let a single trade account for more than 1% of your daily volume to avoid moving the market"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a daily max loss rule and what should you do the moment you hit it?",
-    variants: [
-      "You set a $300 daily max loss before the market opened. You hit it at 10:15 AM. What do you do?",
-      "Why is a daily max loss rule considered one of the most important risk management tools for a trader?",
-      "Explain the purpose of a daily max loss limit and what happens psychologically when traders ignore it."
-    ],
-    a: "A daily max loss rule is a hard dollar limit you set before the market opens — the maximum you are willing to lose in one day. The moment you hit it you close your platform and stop trading for the day, no exceptions. It exists because your worst trading decisions happen after you have already taken losses — revenge trading, oversizing, emotional entries. The daily max loss rule stops the bleeding before a bad day becomes a catastrophic one.",
-    hint: "Your best risk management decisions are made before the market opens, not after you are already down.",
-    options: [
-      "Close your platform and stop trading immediately — your judgment is impaired after losses and the rule exists to prevent catastrophic days",
-      "Take one more trade to try to recover the losses since you are already at your limit anyway",
-      "Reduce your position size by half and continue trading more carefully for the rest of the day",
-      "Switch to paper trading for the rest of the day to practice without risking more real money"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a 2:1 risk reward ratio and why does it matter even if your win rate is below 50%?",
-    variants: [
-      "Explain how a 2:1 risk reward ratio can make a trader profitable even when they lose more trades than they win.",
-      "You risk $100 on every trade and target $200. Your win rate is 40%. Are you profitable and why?",
-      "Why do professional traders refuse to take trades with less than 2:1 risk reward regardless of how confident they feel?"
-    ],
-    a: "A 2:1 risk reward ratio means your target profit is twice your potential loss on every trade. It matters at a below-50% win rate because the math still works in your favor — if you win 40% of trades risking $100 to make $200, you make $200 on 4 wins and lose $100 on 6 losses, netting +$200 over 10 trades. It builds a mathematical edge that does not require you to be right most of the time.",
-    hint: "Do the math on 10 trades at 40% win rate with 2:1 risk reward. Add up the wins and losses.",
-    options: [
-      "Your profit target is twice your stop loss — at 40% win rate you are still profitable because winners outweigh losers mathematically",
-      "A 2:1 ratio only works when your win rate is above 50% — below that the math does not work out",
-      "The ratio only matters on swing trades — for day trades you should target at least 5:1 risk reward",
-      "Risk reward ratios are personal preference — some traders prefer 1:1 ratios with higher win rates"
-    ],
-    correct: 0
-  },
-  {
-    q: "Why is the period between 11:30 AM and 2:00 PM considered the most dangerous time to trade and what should you do differently during that window?",
-    variants: [
-      "A new trader asks why experienced traders often stop trading around 11:30 AM. What do you tell them?",
-      "What happens to volume and volatility during midday and how should that change your behavior?",
-      "You are up $400 at 11:45 AM. What should you think about doing and why?"
-    ],
-    a: "Midday is the most dangerous trading period because institutional volume drops dramatically, spreads widen, and price moves become choppy and random rather than directional. Setups that work in the morning stop working at midday because there is not enough real participation to sustain moves. Most experienced traders either stop trading entirely from 11:30 to 2:00 PM or dramatically reduce their size. If you are profitable in the morning the best move is often to protect those gains and wait for the afternoon session.",
-    hint: "What happens when institutional volume leaves the market? Who is left trading and what does their behavior look like?",
-    options: [
-      "Volume drops, moves become choppy and random — most experienced traders stop or reduce size significantly during this window",
-      "Midday is actually the best time to trade because volatility is lower and setups are cleaner and more reliable",
-      "The only change needed is to use tighter stops since price moves are smaller during midday",
-      "Midday danger only applies to small cap stocks — large caps like SPY and QQQ trade normally all day"
-    ],
-    correct: 0
-  }
-];
-
-// INTERMEDIATE QUESTIONS
-const intermediateQuestions = [
-  {
-    q: "QQQ is down 1.5% and trending below VWAP all morning. You have a long setup forming on a tech stock. What should you do and why?",
-    variants: [
-      "The Nasdaq is selling off hard and below VWAP. A tech stock on your watchlist shows a long setup. Do you take it?",
-      "You have a strong long setup on an individual stock but the market is clearly in a downtrend this morning. How do you handle this?",
-      "Market is red across the board and QQQ is below VWAP. Your setup triggers on a tech name. What is your decision?"
-    ],
-    a: "Skip the trade or dramatically reduce size. When the index is trending below VWAP in a downtrend, the tide is going out — most individual stocks, especially tech, will struggle to move up against that pressure. Even a perfect setup has a much lower probability of working when the overall market is selling. You only take high-probability trades, and fighting the index is not one of them.",
-    hint: "Think about how hard it is for a single stock to swim upstream when the whole market is selling.",
-    options: [
-      "Skip or reduce size significantly — trading long against a downtrending index dramatically lowers your probability",
-      "Take the trade with full size since individual stock setups can work regardless of market direction",
-      "Take the trade but use a wider stop since the market selloff may cause more volatility",
-      "Wait exactly 30 minutes then take the trade since morning selloffs usually reverse by mid-morning"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does it mean when a stock is holding green while the overall market is selling off and why is this significant?",
-    variants: [
-      "The S&P 500 is down 1% but a stock on your watchlist is up 2%. What does this tell you about that stock?",
-      "Define relative strength in the context of day trading and explain why it matters when selecting trades.",
-      "You notice a stock refusing to sell off despite heavy market pressure. What does this signal?"
-    ],
-    a: "A stock holding green while the market sells off is showing exceptional relative strength — it means there is genuine institutional demand absorbing all the selling pressure. This is one of the most bullish signals you can see because if the stock is this strong when the market is weak, imagine how far it can run when the market turns around. Relative strength is one of the best filters for finding the strongest trade candidates each day.",
-    hint: "If a stock is green while everything else is red, something significant is happening beneath the surface.",
-    options: [
-      "Exceptional relative strength — institutional demand is absorbing selling pressure and the stock will likely lead when the market recovers",
-      "A temporary anomaly that will correct once the market stabilizes and selling pressure spreads to all stocks",
-      "A warning sign that the stock is about to reverse hard since it cannot sustain its gains against a down market",
-      "It means the stock is thinly traded and not correlated to the market — not useful for trading decisions"
-    ],
-    correct: 0
-  },
-  {
-    q: "The VIX spikes from 14 to 28 overnight. How should this change your trading behavior the next morning?",
-    variants: [
-      "You wake up and the VIX has doubled overnight. What adjustments do you make to your trading plan?",
-      "What does a VIX spike tell you about market conditions and how do you adapt?",
-      "Fear index doubles overnight. Walk through how this changes your approach to the next trading session."
-    ],
-    a: "A VIX spike means volatility has doubled — stocks will move much faster and further in both directions. You should reduce position size significantly because your stops need to be wider to avoid being shaken out by noise, and wider stops with normal size means much more dollar risk. You should also be more selective with setups, avoid chasing moves, and be prepared for whipsaw price action that invalidates setups quickly.",
-    hint: "If everything is moving twice as fast, what happens to your risk if you keep the same position size?",
-    options: [
-      "Reduce size significantly — wider moves mean wider stops and normal size would risk much more than 1% of your account",
-      "Increase size to take advantage of the larger moves and potentially make more money from the volatility",
-      "Trade exactly the same since volatility affects all traders equally and your edge remains the same",
-      "Stop trading entirely since high VIX days are always losing days for retail traders"
-    ],
-    correct: 0
-  },
-  {
-    q: "You notice a stock consistently respects its 9 EMA on the 5-minute chart every single day. How do you use this information?",
-    variants: [
-      "A stock has bounced off the 9 EMA on the 5-minute chart 15 times in the past two weeks. What do you do with this data?",
-      "What does it mean when a stock has a personality that respects a specific moving average?",
-      "You have studied a stock and noticed it treats the 9 EMA as perfect support in uptrends. How does this change your entries?"
-    ],
-    a: "You use the 9 EMA as your entry trigger — buying pullbacks to that level in an uptrend rather than chasing breakouts. Stocks develop personalities and when one consistently respects a specific level it creates a repeatable, high-probability entry. You wait for price to pull back and touch or come close to the 9 EMA, then enter on the first sign of a bounce with your stop just below it. This gives you a tighter stop and better risk reward than entering on a breakout.",
-    hint: "If you know exactly where a stock tends to find support, how can you use that to get a better entry?",
-    options: [
-      "Use the 9 EMA as your entry trigger — buy pullbacks to that level with a stop just below it for tighter risk",
-      "Avoid trading that stock since predictable patterns attract too many traders and stop runs are more common",
-      "Use the 9 EMA as a sell signal — when price returns to the EMA it means the uptrend is ending",
-      "Only use this information on daily charts since intraday EMA patterns are too inconsistent to trade"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is average daily range and how do you use it to set realistic price targets?",
-    variants: [
-      "How does knowing a stock's average daily range help you set price targets on your trades?",
-      "A stock has an average daily range of $3. It has already moved $2.80 today. How does this affect a new long entry?",
-      "Explain how average daily range prevents traders from setting unrealistic targets."
-    ],
-    a: "Average daily range is the typical dollar distance a stock travels from its daily low to daily high. If a stock averages $3 of movement per day and has already moved $2.80, it is unlikely to move another $3 — it is near its range limit. You use this to set realistic targets and to avoid entering trades late in the day when most of the range has already been consumed. Chasing a stock that has already used up its daily range is one of the most common beginner mistakes.",
-    hint: "Every stock has a daily energy budget. Once it is spent, the odds of another big move drop sharply.",
-    options: [
-      "It tells you how much movement is left in the day — avoid entering when most of the average range has already been used",
-      "Use it as a minimum price target — only take trades where your target exceeds the average daily range",
-      "Average daily range only matters for swing trades — day traders should ignore it entirely",
-      "Double the average daily range to set your target since strong catalyst days always exceed average ranges"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does it mean when a stock is extended and why is it dangerous to buy in that condition?",
-    variants: [
-      "A stock is up 25% from its opening price and still moving. What does extended mean in this context and what is the risk?",
-      "Why do experienced traders avoid buying stocks that are already significantly extended from their base?",
-      "Define extended in trading terms and explain the specific risk it creates for buyers."
-    ],
-    a: "Extended means a stock has moved far from its base or last consolidation point — it has already run significantly and is far above any logical support level. Buying extended means your stop has to be very wide to be below meaningful support, which means large dollar risk, or you place a tight stop that gets hit by normal fluctuations. Extended stocks also tend to attract profit-taking from early buyers which creates sharp reversals. The rule is let it consolidate and form a new base before entering.",
-    hint: "If a stock is far from support, where does your stop go? And what happens when early buyers decide to take profits?",
-    options: [
-      "Too far from support — stop must be very wide creating excessive risk, and profit-taking from early buyers causes sharp reversals",
-      "Extended stocks are the best entries because momentum is confirmed and the move has proven itself",
-      "Extended only applies to stocks above their 52-week high — stocks below that level are never considered extended",
-      "Buy extended stocks with a tighter than normal stop since the momentum will protect you from major reversals"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a catalyst and why does a gap with a catalyst behave differently than a gap without one?",
-    variants: [
-      "Two stocks gap up 8% at the open. One has earnings that beat expectations. The other has no news. How do you treat them differently?",
-      "Explain why the presence or absence of a catalyst dramatically changes how you trade a gap.",
-      "What is the difference between a catalyst gap and a sympathy or low-float gap with no news?"
-    ],
-    a: "A catalyst is a specific news event — earnings beat, FDA approval, major contract, analyst upgrade — that provides a fundamental reason for the move. A catalyst gap tends to hold and continue because institutional buyers validate the news and keep stepping in. A gap without a catalyst is often driven by thin pre-market conditions and tends to fade quickly once the market opens and real volume arrives. Always know the catalyst before trading a gap.",
-    hint: "Institutions react to real news. Without news, who is actually driving the pre-market move?",
-    options: [
-      "Catalyst gaps tend to hold and continue — institutions validate real news. No-catalyst gaps often fade once real volume arrives",
-      "Gaps without catalysts are more tradeable because they are purely technical without the unpredictability of news reactions",
-      "Both gaps behave identically — the percentage of the gap is what determines whether it holds or fades",
-      "Catalyst gaps are more dangerous because the news is already priced in and the stock immediately reverses"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a pre-market gapper and what four things should you know about it before the market opens?",
-    variants: [
-      "You find a stock gapping up 12% in pre-market. What four pieces of information do you research before the open?",
-      "Walk through your pre-market research process for a significant gapper on your watchlist.",
-      "What is the minimum information you need about a gapper before you are prepared to trade it at the open?"
-    ],
-    a: "A pre-market gapper is a stock moving significantly above or below the prior close before 9:30 AM. Before trading it you need to know: 1) The catalyst — what specific news is driving the move and is it real and significant? 2) The float — how many shares are available to trade and will this create volatility? 3) Key levels — where is the pre-market high, prior day close, and any major support or resistance? 4) Volume — is pre-market volume already elevated confirming institutional interest?",
-    hint: "Four things: why is it moving, how many shares exist, where are the key prices, and who is participating?",
-    options: [
-      "Catalyst, float, key levels (pre-market high, prior close), and pre-market volume — all four before the open",
-      "Just the catalyst and the percentage gap — the other information can be gathered after the market opens",
-      "The float, the short interest, the options chain, and the analyst ratings — fundamental data is most important",
-      "Pre-market high and the prior close — these two levels are sufficient to trade any gapper safely"
-    ],
-    correct: 0
-  },
-  {
-    q: "Why should you remove a stock from your active watchlist once it has already made its big move for the day?",
-    variants: [
-      "A stock on your watchlist ran 20% in the first 30 minutes. Should it stay on your active watchlist? Why or why not?",
-      "What is the danger of continuing to watch and trade a stock that has already made its major move?",
-      "Explain the concept of daily range in the context of removing stocks from your watchlist."
-    ],
-    a: "Once a stock has made its big move it has likely consumed most of its average daily range — the energy for the day is spent. Continuing to watch it pulls your attention away from fresh setups that have not moved yet. Traders who keep watching stocks that have already run tend to overtrade them, chasing every small bounce and breakdown and getting chopped up in the noise. Fresh setups are always higher probability than trying to squeeze more out of a stock that has already moved.",
-    hint: "A stock only has so much movement in a day. Once it has moved, where is a better place to focus your attention?",
-    options: [
-      "It has consumed its daily range and watching it pulls focus from fresh setups — higher probability trades exist elsewhere",
-      "Keep it on the watchlist since stocks that move big in the morning often have a second major move in the afternoon",
-      "Remove it only if it reverses — if it continues grinding higher it still has potential and deserves attention",
-      "Always keep movers on your watchlist regardless of how much they have moved since they attract the most volume"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is confluence and give an example of three things that would create confluence on a long setup?",
-    variants: [
-      "Define confluence in trading and explain why more confluence factors increase the probability of a trade working.",
-      "What does it mean when multiple factors align on the same trade and how does this affect your conviction?",
-      "Give a specific example of a high-confluence long setup using at least three confirming factors."
-    ],
-    a: "Confluence means multiple independent factors are all pointing to the same trade at the same time, stacking the odds in your favor. An example of a high-confluence long setup: price is at a bull flag breakout level AND that level is also a prior resistance turned support AND VWAP is below price confirming bullish bias AND the overall market QQQ is trending above VWAP. Each factor alone is decent — all four together create a significantly higher probability setup.",
-    hint: "Each factor alone gives you some edge. Multiple factors pointing the same direction multiply that edge.",
-    options: [
-      "Multiple independent factors aligning — e.g. bull flag breakout at key support with volume and QQQ above VWAP all at once",
-      "Two moving averages crossing on the same chart — this is the most reliable form of confluence available",
-      "Any setup where both the daily and weekly chart show the same candlestick pattern at the same time",
-      "Confluence means the setup has worked at least three times in the past — historical repetition confirms the pattern"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is the difference between a setup and a signal and why does entering on a setup instead of a signal cost most traders money?",
-    variants: [
-      "Explain the difference between identifying a setup and waiting for a signal — and why most traders jump in too early.",
-      "A bull flag is forming but has not broken out yet. Is this a setup or a signal? When do you enter?",
-      "Why do experienced traders wait for a signal rather than entering the moment they identify a setup?"
-    ],
-    a: "A setup is the conditions that make a trade possible — a stock forming a flag, approaching support, or consolidating near resistance. A signal is the trigger that tells you the move is actually happening — the breakout candle closing above the flag with volume. Entering on a setup means entering before the trade has proven itself, which means you are guessing at the outcome. Entering on a signal means the move has started and you are joining confirmed momentum with defined risk.",
-    hint: "A setup is the loaded gun. A signal is when it actually fires. When do you act?",
-    options: [
-      "Setup is the condition, signal is the trigger — entering on setup means guessing, entering on signal means confirmed momentum",
-      "They are the same thing — a setup is just another word for a signal in most trading contexts",
-      "Enter on the setup to get a better price since waiting for the signal means you always buy at the high",
-      "Setups are for swing traders and signals are for day traders — different timeframes use different terminology"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is the first 5 candles rule and why do many experienced traders avoid trading during that window?",
-    variants: [
-      "Why do some experienced traders refuse to take trades in the first 5 minutes of market open?",
-      "Explain what happens during the first 5 candles of the trading day and why it creates a dangerous environment.",
-      "What makes the first 5 minutes of the trading day uniquely risky compared to the rest of the session?"
-    ],
-    a: "The first 5 candles on a 1-minute chart — the first 5 minutes after the open — represent the most chaotic and unpredictable period of the day. Pre-market orders flood in, stop hunts occur, and price can move violently in both directions before finding its real direction. Many experienced traders watch the first 5 candles to understand the opening range and directional bias without committing capital during the most unpredictable window. Acting too fast in the first 5 minutes is one of the leading causes of unnecessary morning losses.",
-    hint: "Think about how many orders have been queued up overnight just waiting to hit the market at 9:30.",
-    options: [
-      "First 5 minutes are the most chaotic — pre-market orders flood in, stop hunts occur, and real direction is unclear until the dust settles",
-      "The first 5 candles represent the highest probability trades of the day since volume and volatility are at their peak",
-      "The rule only applies on earnings days — on normal days the first 5 minutes are fine to trade",
-      "Experienced traders avoid the first 5 candles because spreads are too wide to enter positions profitably"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is the opening range and how do traders use it as a reference point throughout the day?",
-    variants: [
-      "Define the opening range and explain how it is used to make trading decisions later in the session.",
-      "A stock establishes a high of $52.40 and a low of $51.20 in the first 30 minutes. How do you use these levels?",
-      "Why is the opening range considered one of the most important reference points for intraday traders?"
-    ],
-    a: "The opening range is the high and low established in the first 15 to 30 minutes of trading. It represents the initial battle between buyers and sellers after the open. Traders use it as a reference throughout the day — a break above the opening range high with volume is bullish and signals potential for continuation upward. A break below the opening range low is bearish. Price often rotates between these levels during midday and breaks out of the range in the afternoon.",
-    hint: "The opening range is where the first significant battle of the day was fought. That battlefield becomes reference for the rest of the day.",
-    options: [
-      "High and low of first 15-30 minutes — break above is bullish, break below is bearish, levels act as reference all day",
-      "The range between the prior day close and the opening price — used to determine gap fill targets",
-      "The distance between VWAP and the first candle close — used to set intraday profit targets",
-      "A fixed range of 50 cents above and below the opening price used as default stop placement"
-    ],
-    correct: 0
-  },
-  {
-    q: "Why do experienced traders reduce size or stop trading entirely during the 11:30 AM to 2:00 PM window?",
-    variants: [
-      "What specifically happens to market conditions between 11:30 AM and 2:00 PM that makes it the most dangerous trading window?",
-      "You are profitable at 11:45 AM. An experienced trader tells you to stop trading. Why?",
-      "Describe the characteristics of midday trading and why the strategies that work at the open stop working then."
-    ],
-    a: "During midday institutional volume drops significantly as large funds go to lunch and pause activity. Without institutional participation the bid-ask spreads widen, moves become smaller and more random, and the clean directional trends that create good setups disappear. Strategies that work at the open — momentum, breakouts, VWAP plays — stop working reliably because there is not enough real volume to sustain moves. Most experienced traders protect their morning profits by sitting out this window rather than giving them back on choppy trades.",
-    hint: "Remove the institutions from the market and what is left? Who is still trading and what does their behavior look like?",
-    options: [
-      "Institutional volume drops sharply — spreads widen, moves become random, and momentum strategies stop working reliably",
-      "Midday is dangerous because breaking news is most likely to hit during lunch hours creating unpredictable gaps",
-      "The algo programs that run at the open shut down at 11:30 making price action purely retail-driven and more predictable",
-      "Tax regulations require institutional funds to stop trading during midday to prevent market manipulation"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is power hour and what typically drives the increased volume and volatility in the final hour?",
-    variants: [
-      "Define power hour and explain the mechanics behind why the final hour of trading is often the most active.",
-      "Why does volume typically surge in the last hour of the trading day and what types of moves does this create?",
-      "What causes power hour and how should you adjust your trading approach during 3:00 to 4:00 PM?"
-    ],
-    a: "Power hour is the final hour of trading from 3:00 to 4:00 PM ET. Volume surges during this period because institutional funds are making final position adjustments before the close, index funds are rebalancing, and traders are closing or adjusting positions rather than holding overnight. This creates strong directional moves that tend to follow the direction the stock or market has been trending all day. Stocks that have been strong all day often make their strongest move in the final hour.",
-    hint: "Think about what large funds need to do before the close and how all those orders hitting the market at once creates movement.",
-    options: [
-      "Final hour volume surge from institutional rebalancing and position adjustments — tends to accelerate the day's existing trend",
-      "Power hour is random volatility caused by retail traders making impulsive end-of-day decisions",
-      "Increased volume from after-hours traders entering positions early before the market closes",
-      "Power hour only occurs on expiration Fridays when options traders are forced to cover positions"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does selling into strength mean and why is it better than waiting for your exact target?",
-    variants: [
-      "Explain the concept of selling into strength and why professional traders prefer it over holding for a fixed target.",
-      "A stock is running hard toward your target. Do you wait for the exact number or sell now? Why?",
-      "Why do experienced traders take profits while a stock is still moving rather than waiting for it to stop?"
-    ],
-    a: "Selling into strength means taking profits while price is still moving in your favor — while the bid is active and buyers are still aggressive — rather than waiting for price to hit your exact target and reverse. By the time price hits your target it may be losing momentum, spread is widening, and you may end up getting a worse fill than if you sold into the move. Selling into strength gets you out at strong prices with minimal slippage and removes the emotional greed of holding for more.",
-    hint: "It is easier to sell when there are aggressive buyers. What happens to liquidity once the move is over?",
-    options: [
-      "Taking profits while buyers are still aggressive gives better fills and avoids the reversal that often happens right at targets",
-      "Always wait for your exact target — selling early trains you to take less than you planned and hurts profitability",
-      "Selling into strength only applies to options — for stock positions always hold to the exact target price",
-      "Sell into strength only when the position is losing — for winning trades always hold until the target is reached"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a trailing stop and when should you switch from a fixed stop to a trailing stop?",
-    variants: [
-      "Define a trailing stop and explain the specific trigger that tells you to switch from your original stop to a trailing stop.",
-      "Your trade is working and price has moved significantly past your entry. How do you use a trailing stop to protect profits?",
-      "When does it make sense to move from a fixed stop at your original risk level to a trailing stop?"
-    ],
-    a: "A trailing stop is a stop that moves up with price as the trade goes in your favor — locking in more profit as the stock rises while still giving the trade room to breathe. You switch from a fixed stop to a trailing stop when the trade has moved enough to justify protecting profits — typically after hitting your first target or after price has moved at least 1.5 to 2 times your original risk in your favor. At that point you trail the stop below recent candle lows or key levels rather than holding your original entry stop.",
-    hint: "Once you have significant profit, the goal changes from managing risk to locking in gains. That is when the trailing stop takes over.",
-    options: [
-      "A stop that moves with price — switch to it after hitting first target or moving 1.5-2x your risk in your favor to lock in gains",
-      "A stop placed a fixed dollar amount below current price regardless of chart structure — used from the moment you enter",
-      "Switch to a trailing stop as soon as you are breakeven since protecting capital is always the priority",
-      "Trailing stops are only for swing trades — intraday traders should always use fixed stops at their original level"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does it mean when a stock fails to make a new high on a bounce after a strong move up and why is it a warning signal?",
-    variants: [
-      "A stock made a high of $55, pulled back, bounced back up to $54.20, then started pulling back again. What does this tell you?",
-      "Explain the significance of a failed new high attempt after a strong upward move.",
-      "Price cannot reclaim its previous high on the second attempt. What does this reveal about buying and selling pressure?"
-    ],
-    a: "When a stock cannot make a new high on a bounce it means buyers are losing strength — they could not push price back to where it was before. This is the first sign of a potential trend reversal. It creates a lower high which is the beginning of a downtrend structure. If you are long this is a signal to tighten your stop or begin taking profits. If you are watching it as a potential short, a failed new high followed by a break below the last pullback low is a solid short setup.",
-    hint: "If buyers could not push it back to the previous high, what does that tell you about who is gaining the upper hand?",
-    options: [
-      "Buying pressure is weakening — creates a lower high which is the first sign of potential trend reversal, time to tighten stops",
-      "A positive sign showing the stock is consolidating before a powerful breakout to new highs",
-      "Completely normal and expected — stocks never go straight up and failed new highs are part of every healthy uptrend",
-      "Only significant if it happens three times in a row — one failed new high attempt is not enough data to act on"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is the 9 EMA and how do day traders use it as a dynamic support level during an uptrend?",
-    variants: [
-      "Explain how the 9 EMA functions as dynamic support during an intraday uptrend.",
-      "A stock is in a strong uptrend on the 5-minute chart and keeps touching the 9 EMA before bouncing. How do you trade this?",
-      "What makes the 9 EMA more useful than a horizontal support level for intraday trading?"
-    ],
-    a: "The 9 EMA is the 9-period exponential moving average — one of the most watched short-term momentum indicators for day traders. In a strong uptrend on the 5-minute chart price repeatedly pulls back to touch the 9 EMA and bounces. Day traders use these touches as entry points — buying the dip to the 9 EMA with a stop just below it. Unlike horizontal support which is static, the 9 EMA is dynamic and rises with the trend, giving you progressively better entries as the stock moves higher.",
-    hint: "A moving average moves with the stock. How does that make it more useful than a fixed horizontal line?",
-    options: [
-      "9 EMA rises with the trend providing dynamic support — traders buy touches of it with tight stops just below for high-probability entries",
-      "The 9 EMA is a sell signal — when price touches it in an uptrend it means momentum is fading and you should exit",
-      "Use the 9 EMA only as a directional filter — never as an actual entry or exit trigger on intraday charts",
-      "The 9 EMA is only useful on daily charts — on intraday charts it moves too fast to be a reliable support level"
-    ],
-    correct: 0
-  },
-  {
-    q: "What does it mean when the 9 EMA crosses below the 20 EMA on a 5-minute chart mid-session?",
-    variants: [
-      "You are watching a stock and notice the 9 EMA has crossed below the 20 EMA on the 5-minute chart. What does this signal?",
-      "Explain the bearish significance of a 9 EMA crossing below the 20 EMA during the trading session.",
-      "The short-term moving average crosses below the medium-term moving average on your chart. What action do you consider?"
-    ],
-    a: "When the 9 EMA crosses below the 20 EMA it is a bearish momentum signal — the short-term average is now below the medium-term average meaning recent price action is weaker than the broader trend. On a 5-minute chart mid-session this warns that the stock is losing upside momentum and may be transitioning from uptrend to downtrend. If you are long it is a warning to tighten stops or exit. It does not guarantee a reversal but it tells you the momentum has shifted.",
-    hint: "When the faster moving average falls below the slower one, which direction is short-term momentum pointing?",
-    options: [
-      "Bearish momentum shift — short-term price action weakening below medium-term trend, tighten stops on longs or consider exit",
-      "A bullish signal showing the stock is compressing before a powerful breakout above both moving averages",
-      "Completely neutral — moving average crosses on 5-minute charts are too noisy to use as trading signals",
-      "A buy signal — when the 9 EMA dips below the 20 EMA it creates the best risk reward entry in an uptrend"
-    ],
-    correct: 0
-  },
-  {
-    q: "Why do the 50 SMA and 200 SMA matter to day traders even though they are long-term averages?",
-    variants: [
-      "As a day trader focused on intraday moves, why should you care about the 50-day and 200-day moving averages?",
-      "A stock approaches its 200-day moving average on the daily chart. How does this affect your intraday trading plan?",
-      "Explain why long-term moving averages create meaningful support and resistance for short-term traders."
-    ],
-    a: "The 50 SMA and 200 SMA matter because institutions use them as reference points for buying and selling decisions. When a stock approaches a major moving average on the daily chart it attracts a huge concentration of institutional orders — some buying at that level as support and some selling into it as resistance. This creates real price reactions that day traders can trade around. A day trader ignoring a major daily moving average may take a long position right into a massive institutional sell wall.",
-    hint: "These averages matter because of WHO watches them, not just what they show mathematically.",
-    options: [
-      "Institutions use them as buy and sell reference points — approaching these levels on the daily chart creates real institutional order flow day traders can trade around",
-      "They do not matter for day traders at all — only swing traders and investors need to watch long-term moving averages",
-      "They only matter on the last trading day of each month when funds rebalance based on these averages",
-      "Use them only as directional filters — buy above 200 SMA, sell below it, without using them as specific entry levels"
-    ],
-    correct: 0
-  },
-  {
-    q: "What are the three conditions that must be present for a valid Gap and Go setup?",
-    variants: [
-      "Walk through the three criteria you check before taking a Gap and Go trade at the open.",
-      "A stock gaps up 8% at the open. What three things do you confirm before entering a Gap and Go?",
-      "What separates a valid Gap and Go setup from a gap that will fade and reverse?"
-    ],
-    a: "Three conditions for a valid Gap and Go: 1) A real catalyst — the gap must have a specific fundamental reason behind it such as earnings beat, FDA approval, or major news. Random gaps without news tend to fade. 2) Above-average pre-market volume — institutional participation must be confirmed before the open. 3) Price holding above the pre-market high after the open — the stock must continue to show strength by not fading back below where it gapped from, confirming buyers remain in control after the open.",
-    hint: "Why did it gap, who is participating, and is it still holding strength after the open?",
-    options: [
-      "Real catalyst, above-average pre-market volume, and price holding above pre-market high after the open",
-      "Gap size above 5%, pre-market high above prior day high, and float below 50 million shares",
-      "Positive earnings, analyst upgrade, and sector confirmation from at least two other stocks in the same space",
-      "Gap above prior day close, VWAP reclaim within first 10 minutes, and RSI above 60 on the 5-minute chart"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a VWAP reclaim entry and what makes it a high-probability setup?",
-    variants: [
-      "Describe a VWAP reclaim setup and explain the specific conditions that make it worth trading.",
-      "A stock drops below VWAP early in the session then claws its way back above it with strong volume. What setup is forming and why is it significant?",
-      "What is the logic behind a VWAP reclaim trade and where do you enter and stop?"
-    ],
-    a: "A VWAP reclaim entry occurs when a stock drops below VWAP, then recovers and closes a candle back above it with strong volume. It is high probability because VWAP is where institutions benchmark their orders — when a stock reclaims VWAP it means institutional buyers are stepping back in and defending that level. The entry is on the first candle that closes above VWAP, the stop goes below VWAP, and the target is the next significant resistance level. It is one of the cleanest intraday entries because the risk is clearly defined.",
-    hint: "VWAP is the institutional benchmark. What happens when institutions decide to start buying again after a dip?",
-    options: [
-      "Stock drops below VWAP then closes back above it with volume — institutional buyers re-entering gives it high probability with clear defined risk",
-      "Stock touches VWAP for the first time all day — the first touch of VWAP is always the strongest entry signal",
-      "Stock stays above VWAP all day without ever testing it — entering on the first pullback toward VWAP",
-      "VWAP reclaim only works in the first 30 minutes — after that institutions have already completed their orders"
-    ],
-    correct: 0
-  },
-  {
-    q: "What is a dip buy and what conditions must be present for it to be valid rather than catching a falling knife?",
-    variants: [
-      "Explain the difference between a valid dip buy and catching a falling knife.",
-      "A stock you like has pulled back 8% from its high. What conditions do you need to see before buying the dip?",
-      "What separates a high-probability dip buy from an emotional entry into a stock that is still in freefall?"
-    ],
-    a: "A valid dip buy requires three things: 1) The overall trend must still be intact — you are buying a pullback within an uptrend, not a broken downtrend. 2) Price must show stabilization — the selling must slow down and ideally show a base or consolidation before you enter, not still actively selling off. 3) There should be a defined support level to buy near — a prior high, moving average, or VWAP — so you have a logical stop. Catching a falling knife is entering while price is still in freefall with no sign of stabilization and no nearby support.",
-    hint: "A dip buy needs a floor to stand on. Without stabilization and a support level you are guessing at the bottom.",
-    options: [
-      "Trend intact, price stabilizing at a defined support level — without all three you are catching a falling knife not buying a dip",
-      "Any pullback of more than 5% from the day's high qualifies as a valid dip buy in a strong uptrending stock",
-      "Buy the dip immediately when price drops to VWAP regardless of how fast it fell or whether it is still falling",
-      "Dip buys are only valid after the first hour of trading — pre-10 AM dips are always falling knives"
-    ],
-    correct: 0
-  },
-  {
-    q: "You see that the FOMC announcement is at 2:00 PM today. How does this change your trading plan for that day?",
-    variants: [
-      "The Fed is announcing its rate decision at 2:00 PM. Walk through how this affects your trading for the entire day.",
-      "What specific adjustments do you make to your trading plan on FOMC announcement days?",
-      "How does a major scheduled news event like the Fed announcement change your risk management and timing?"
-    ],
-    a: "On FOMC days you make several adjustments: trade lighter size in the morning knowing that any gains can be wiped out by the 2:00 PM announcement, take profits earlier rather than holding into the announcement, stop trading or go flat by 1:30 PM before the release, and avoid holding any position through the announcement since the market can move violently in either direction regardless of the actual news. After the announcement you wait for the initial volatility to settle — usually 15 to 30 minutes — before looking for new setups in the new direction.",
-    hint: "Binary events create binary outcomes. How do you protect yourself when you cannot predict which way it will go?",
-    options: [
-      "Trade smaller morning, take profits early, go flat by 1:30 PM, wait 15-30 minutes after announcement for volatility to settle before re-entering",
-      "Trade normally until 2:00 PM then double your size to take advantage of the increased post-announcement volatility",
-      "Avoid trading entirely for the full day since FOMC days are always unpredictable and no setups are tradeable",
-      "Only trade after the announcement — morning trading on FOMC days is fine since the news has not hit yet"
-    ],
-    correct: 0
-  }
-];
-
 
