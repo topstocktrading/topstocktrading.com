@@ -410,8 +410,7 @@ smallcaps: {
     if(q.variants&&q.variants.length){
       return q.variants[Math.floor(Math.random()*q.variants.length)];
     }
-    // New flat format: q, choices, answer, hint
-    return { q: q.q, choices: q.choices, answer: q.answer, hint: q.hint };
+    return{q:q.q,choices:q.choices,answer:q.answer,hint:q.hint||''};
   }
 
   function getQuiz(sectionId){
@@ -421,66 +420,93 @@ smallcaps: {
   function render(sectionId){
     const quiz=QUIZ_DATA[sectionId];
     if(!quiz)return '<p>Quiz not found.</p>';
-    const state={answers:{},submitted:false};
     const questions=quiz.questions.map(function(q,i){
       const v=pickVariant(q);
       return{id:q.id,q:v.q,choices:v.choices,answer:(v.answer!==undefined?v.answer:q.answer),hint:(v.hint||q.hint||'')};
     });
-    window['__quiz_state_'+sectionId]=state;
+    window['__quiz_state_'+sectionId]={answers:{},submitted:false};
     window['__quiz_questions_'+sectionId]=questions;
-    let html='';
+    let html='<div class="quiz-progress-wrap"><div class="quiz-progress-bar" id="quiz-pbar-'+sectionId+'" style="width:0%"></div></div>';
     questions.forEach(function(q,i){
       html+='<div class="quiz-q" id="qq-'+sectionId+'-'+i+'">';
       html+='<div class="quiz-q-num">Question '+(i+1)+' of '+questions.length+'</div>';
       html+='<div class="quiz-q-text">'+q.q+'</div>';
       html+='<div class="quiz-choices">';
       q.choices.forEach(function(c,ci){
-        html+='<label class="quiz-choice" id="qc-'+sectionId+'-'+i+'-'+ci+'" onclick="selectAnswer(''+sectionId+'','+i+','+ci+')">';
+        html+='<div class="quiz-choice" data-section="'+sectionId+'" data-q="'+i+'" data-c="'+ci+'" id="qc-'+sectionId+'-'+i+'-'+ci+'">';
         html+='<span class="choice-letter">'+String.fromCharCode(65+ci)+'</span>';
         html+='<span class="choice-text">'+c+'</span>';
-        html+='</label>';
+        html+='</div>';
       });
       html+='</div>';
       html+='<div class="quiz-hint" id="qh-'+sectionId+'-'+i+'" style="display:none">'+q.hint+'</div>';
       html+='</div>';
     });
-    html+='<div class="quiz-footer"><button class="quiz-submit-btn" onclick="submitQuiz(''+sectionId+'')" id="submit-'+sectionId+'">Submit Quiz</button></div>';
+    html+='<div class="quiz-footer"><button class="quiz-submit-btn" data-section="'+sectionId+'" id="submit-'+sectionId+'">Submit Quiz</button></div>';
     html+='<div class="quiz-result" id="qr-'+sectionId+'" style="display:none"></div>';
     return html;
   }
 
-  window.selectAnswer=function(sectionId,qIdx,choiceIdx){
-    const state=window['__quiz_state_'+sectionId];
-    if(state.submitted)return;
-    state.answers[qIdx]=choiceIdx;
-    const questions=window['__quiz_questions_'+sectionId];
-    const quiz=QUIZ_DATA[sectionId];
-    const allChoices=document.querySelectorAll('[id^="qc-'+sectionId+'-'+qIdx+'-"]');
-    allChoices.forEach(function(el){el.classList.remove('selected');});
-    const selected=document.getElementById('qc-'+sectionId+'-'+qIdx+'-'+choiceIdx);
-    if(selected)selected.classList.add('selected');
-    // Update progress
-    const answered=Object.keys(state.answers).length;
-    const total=questions.length;
-    const pct=Math.round((answered/total)*100);
-    const pbar=document.getElementById('quiz-pbar-'+sectionId);
-    if(pbar)pbar.style.width=pct+'%';
-  };
+  // Use event delegation to avoid inline onclick quoting issues
+  document.addEventListener('click',function(e){
+    // Choice selection
+    const choice=e.target.closest('.quiz-choice');
+    if(choice){
+      const sec=choice.dataset.section;
+      const qi=parseInt(choice.dataset.q);
+      const ci=parseInt(choice.dataset.c);
+      if(!sec)return;
+      const state=window['__quiz_state_'+sec];
+      if(!state||state.submitted)return;
+      state.answers[qi]=ci;
+      // Update UI
+      const allChoices=document.querySelectorAll('[data-section="'+sec+'"][data-q="'+qi+'"]');
+      allChoices.forEach(function(el){el.classList.remove('selected');});
+      choice.classList.add('selected');
+      // Update progress bar
+      const questions=window['__quiz_questions_'+sec];
+      const answered=Object.keys(state.answers).length;
+      const pbar=document.getElementById('quiz-pbar-'+sec);
+      if(pbar)pbar.style.width=Math.round((answered/questions.length)*100)+'%';
+      return;
+    }
+    // Submit button
+    const submitBtn=e.target.closest('.quiz-submit-btn');
+    if(submitBtn){
+      const sec=submitBtn.dataset.section;
+      if(sec)submitQuizInternal(sec);
+      return;
+    }
+    // Retry button
+    const retryBtn=e.target.closest('.quiz-retry-btn');
+    if(retryBtn){
+      const sec=retryBtn.dataset.section;
+      if(sec){
+        const wrap=document.querySelector('.quiz-page-wrap');
+        if(wrap){
+          const qSec=window.__COURSE&&window.__COURSE.find(function(s){return s.id===sec;});
+          const label=qSec?qSec.label:sec;
+          wrap.innerHTML='<div class="quiz-page-header"><span class="quiz-page-label">'+label+'</span><h2>Section Quiz</h2><p>Test your knowledge before moving on. You need 75% or higher to pass.</p></div>'+render(sec);
+        }
+      }
+      return;
+    }
+  });
 
-  window.submitQuiz=function(sectionId){
+  function submitQuizInternal(sectionId){
     const state=window['__quiz_state_'+sectionId];
     const questions=window['__quiz_questions_'+sectionId];
     const quiz=QUIZ_DATA[sectionId];
+    if(!state||!questions)return;
     if(Object.keys(state.answers).length<questions.length){
-      alert('Please answer all questions before submitting.');return;
+      alert('Please answer all '+questions.length+' questions before submitting.');return;
     }
     state.submitted=true;
     let correct=0;
     questions.forEach(function(q,i){
       const userAns=state.answers[i];
       const correctAns=q.answer;
-      const qEl=document.getElementById('qq-'+sectionId+'-'+i);
-      const choiceEls=document.querySelectorAll('[id^="qc-'+sectionId+'-'+i+'-"]');
+      const choiceEls=document.querySelectorAll('[data-section="'+sectionId+'"][data-q="'+i+'"]');
       choiceEls.forEach(function(el,ci){
         el.classList.remove('selected');
         if(ci===correctAns)el.classList.add('correct');
@@ -497,32 +523,25 @@ smallcaps: {
       resultEl.style.display='block';
       resultEl.innerHTML='<div class="quiz-score '+(passed?'quiz-passed':'quiz-failed')+'">'
         +'<div class="quiz-score-num">'+score+'%</div>'
-        +'<div class="quiz-score-label">'+(passed?'PASSED — Well done!':'Not quite — review and retry')+'</div>'
+        +'<div class="quiz-score-label">'+(passed?'PASSED — Well done!':'Not quite — review the material and retry')+'</div>'
         +'<div class="quiz-score-detail">'+correct+' of '+questions.length+' correct</div>'
-        +(passed?'':'<button class="quiz-retry-btn" onclick="retryQuiz(''+sectionId+'')">Retry Quiz</button>')
+        +(passed?'':'<button class="quiz-retry-btn" data-section="'+sectionId+'">Retry Quiz</button>')
         +'</div>';
     }
     const submitBtn=document.getElementById('submit-'+sectionId);
     if(submitBtn)submitBtn.style.display='none';
-    // Save result
     saveResult(sectionId,score,passed);
-  };
-
-  window.retryQuiz=function(sectionId){
-    const container=document.querySelector('.quiz-page-wrap');
-    if(container){
-      const html=window.TST_QUIZ.render(sectionId);
-      container.innerHTML='<div class="quiz-page-header"><span class="quiz-page-label">'+sectionId+'</span><h2>Section Quiz</h2><p>Test your knowledge before moving on. You need 75% or higher to pass.</p></div>'+html;
-    }
-  };
+  }
 
   async function saveResult(sectionId,score,passed){
     try{
-      const {data:{user}}=await window.supabase.auth.getUser();
+      const sb=window.supabase;
+      if(!sb)return;
+      const {data:{user}}=await sb.auth.getUser();
       if(!user)return;
       const attempts=(window['__quiz_attempts_'+sectionId]||0)+1;
       window['__quiz_attempts_'+sectionId]=attempts;
-      await window.supabase.from('quiz_results').upsert({
+      await sb.from('quiz_results').upsert({
         user_id:user.id,
         section:sectionId,
         score:score,
