@@ -77,6 +77,10 @@ var TST_PROFILE = {
 
     var tier = await this.getTier();
 
+    var tenKTabHtml = tier === '10k'
+      ? '<button class="tst-tab" style="color:#d4af37;" onclick="TST_PROFILE.switchTab(\'tenk\', this)">⭐ 10K Members</button>'
+      : '';
+
     mc.innerHTML =
       '<div style="max-width:880px;">' +
         '<div style="display:flex;gap:0;border-bottom:1px solid #1e2820;margin-bottom:28px;flex-wrap:wrap;" id="tstProfileTabs">' +
@@ -85,6 +89,7 @@ var TST_PROFILE = {
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'messages\', this)">Messages</button>' +
+          tenKTabHtml +
         '</div>' +
         '<div id="tstTabBody">' +
           '<div style="text-align:center;padding:48px;color:#6b7c6e;">Loading dashboard...</div>' +
@@ -108,6 +113,7 @@ var TST_PROFILE = {
     if (tab === 'trading')   await this.renderTrading(body, tier);
     if (tab === 'notes')     await this.renderNotes(body, tier);
     if (tab === 'messages')  await this.renderMessages(body, tier);
+    if (tab === 'tenk')      await this.renderTenK(body, tier);
   },
 
   // ============================================================
