@@ -881,6 +881,7 @@ const COURSE=[
     {id:'b-wash',name:'The Wash Sale Rule'},
     {id:'b-rm',name:'Risk Management',subs:['Position Sizing Formula','Max Loss Per Trade','Max Loss Per Day','Paper Trading Protocol']},
     {id:'quiz-beginner',name:'Section Quiz'},
+    {id:'interactive-quiz',name:'📊 Interactive Trade Quiz'},
   ]},
   {id:'intermediate',label:'Intermediate',badge:'intermediate',modules:[
     {id:'n1',name:'Stock Personalities & Behavior'},
@@ -1215,7 +1216,10 @@ function loadLesson(id){
   const lesson=al[idx],prev=al[idx-1],next=al[idx+1];
   let html='';
 
-  if(id&&id.startsWith('quiz-')){
+  if(id==='interactive-quiz'){
+    html='<div class="lesson-content"><div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:6px;">Interactive Trade Quiz</div><div style="font-size:13px;color:#6b7c6e;margin-bottom:24px;line-height:1.6;">Real historical charts. Identify the setup, choose your answer, get instant feedback with real data behind it.</div><div id="interactiveQuizContainer"></div></div>';
+    if(!lesson) { var al2 = allLessons(); lesson = al2.find(function(l){return l.id===id}); }
+  } else if(id&&id.startsWith('quiz-')){
     const qSectionId=id.replace('quiz-','');
     const qSec=COURSE.find(function(s){return s.id===qSectionId;});
     const qLabel=qSec?qSec.label:qSectionId;
