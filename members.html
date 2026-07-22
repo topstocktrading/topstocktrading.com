@@ -406,7 +406,33 @@
   .msg-bubble-content{font-size:14px;color:var(--text);line-height:1.6;}
   .msg-bubble-time{font-size:11px;color:var(--muted);margin-top:6px;}
   .msg-compose{margin-top:16px;}
-  </style>
+  
+.iq-question-wrap{max-width:760px;}
+.iq-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;}
+.iq-ticker{font-family:Rajdhani,sans-serif;font-size:22px;font-weight:700;color:#f0f4f1;}
+.iq-meta{font-size:12px;color:#6b7c6e;}
+.iq-chart-container{background:#111712;border:1px solid #1e2820;border-radius:12px;margin-bottom:20px;overflow:hidden;min-height:380px;display:flex;align-items:center;justify-content:center;}
+.iq-loading, .iq-error{color:#6b7c6e;font-size:13px;}
+.iq-error{color:#ef4444;}
+.iq-question-text{font-size:16px;color:#f0f4f1;font-weight:600;margin-bottom:16px;line-height:1.5;}
+.iq-choices{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.iq-choice{display:flex;align-items:flex-start;gap:10px;background:#111712;border:1.5px solid #1e2820;border-radius:10px;padding:14px 16px;cursor:pointer;transition:all 0.15s;font-size:13px;color:#c8d4ca;line-height:1.5;}
+.iq-choice:hover{border-color:#22c55e;background:#141a15;}
+.iq-choice.correct{border-color:#22c55e;background:rgba(34,197,94,0.1);color:#f0f4f1;}
+.iq-choice.incorrect{border-color:#ef4444;background:rgba(239,68,68,0.1);color:#f0f4f1;}
+.iq-choice-letter{flex-shrink:0;width:22px;height:22px;border-radius:6px;background:#1e2820;color:#8a9a8c;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.iq-explanation{border-radius:12px;padding:16px 18px;}
+.iq-explanation.iq-correct{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.3);}
+.iq-explanation.iq-incorrect{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);}
+.iq-result-label{font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;margin-bottom:6px;}
+.iq-correct .iq-result-label{color:#22c55e;}
+.iq-incorrect .iq-result-label{color:#ef4444;}
+.iq-explanation-text{font-size:13px;color:#c8d4ca;line-height:1.6;}
+.iq-complete{text-align:center;padding:60px 20px;}
+.iq-complete-emoji{font-size:48px;margin-bottom:16px;}
+.iq-complete-title{font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#f0f4f1;margin-bottom:8px;}
+.iq-complete-score{font-size:15px;color:#6b7c6e;}
+</style>
 
 </head>
 <body>
@@ -1255,5 +1281,6 @@ function addMsg(text,type,id){
 <script src="auth.js"></script>
 <script src="profile.js?v=5"></script>
 <script src="quiz.js"></script>
+<script src="interactive-quiz.js"></script>
 </body>
 </html>
