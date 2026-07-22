@@ -106,11 +106,11 @@ window.TST_INTERACTIVE_QUIZ = (function() {
 
     var chart = LightweightCharts.createChart(container, {
       width: container.clientWidth,
-      height: 380,
+      height: 420,
       layout: { background: { color: '#111712' }, textColor: '#8a9a8c' },
       grid: { vertLines: { color: '#1a2018' }, horzLines: { color: '#1a2018' } },
       timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#1e2820' },
-      rightPriceScale: { borderColor: '#1e2820' },
+      rightPriceScale: { borderColor: '#1e2820', scaleMargins: { top: 0.1, bottom: 0.28 } },
       crosshair: { mode: 0 },
     })
 
@@ -120,6 +120,25 @@ window.TST_INTERACTIVE_QUIZ = (function() {
       wickUpColor: '#22c55e', wickDownColor: '#ef4444',
     })
     series.setData(candles)
+
+    // Volume panel — critical for setups defined by volume behavior (e.g. flag consolidation)
+    var volumeSeries = chart.addHistogramSeries({
+      priceFormat: { type: 'volume' },
+      priceScaleId: 'volume',
+      color: '#3a4a3c',
+    })
+    chart.priceScale('volume').applyOptions({
+      scaleMargins: { top: 0.78, bottom: 0 },
+    })
+    var volumeData = candles.map(function(c) {
+      return {
+        time: c.time,
+        value: c.volume || 0,
+        color: c.close >= c.open ? 'rgba(34,197,94,0.5)' : 'rgba(239,68,68,0.5)'
+      }
+    })
+    volumeSeries.setData(volumeData)
+
     chart.timeScale().fitContent()
 
     window.addEventListener('resize', function() {
