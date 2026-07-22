@@ -241,7 +241,7 @@ var TST_PROFILE = {
             '<div style="font-size:36px;margin-bottom:12px;">📊</div>' +
             '<div style="font-family:Rajdhani,sans-serif;font-size:18px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">No trades logged yet</div>' +
             '<div style="font-size:13px;color:#6b7c6e;margin-bottom:20px;">Import your Webull CSV in the Journal tab to start tracking performance.</div>' +
-            '<button onclick="TST_PROFILE.switchTab('journal', document.querySelectorAll('.tst-tab')[1])" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:10px 24px;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Go to Journal →</button>' +
+            '<button onclick=\'TST_PROFILE.switchTab("journal", document.querySelectorAll(".tst-tab")[1])\' style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:10px 24px;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Go to Journal →</button>' +
           '</div>'
         ) +
 
@@ -261,9 +261,7 @@ var TST_PROFILE = {
     } catch(e) {
       body.innerHTML = '<div style="text-align:center;padding:48px;color:#ef4444;">Error loading dashboard: '+(e.message||'Unknown')+'</div>';
     }
-  }
-
-    },
+  },
 
   // ============================================================
   // TAB 2 — JOURNAL
@@ -681,7 +679,7 @@ var TST_PROFILE = {
         '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;">' +
           '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:12px;">Direct Access</div>' +
           '<div style="font-size:13px;color:#6b7c6e;line-height:1.6;margin-bottom:14px;">As a 10K member you have direct messaging access. Use the Messages tab for questions, trade reviews, or anything else — you get priority response.</div>' +
-          '<button onclick="TST_PROFILE.switchTab(\\'messages\\', document.querySelector(\\'.tst-tab:nth-child(4)\\'))" style="background:#d4af37;color:#000;border:none;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Go to Messages →</button>' +
+          '<button onclick=\'TST_PROFILE.switchTab("messages", document.querySelector(".tst-tab:nth-child(4)"))\' style="background:#d4af37;color:#000;border:none;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Go to Messages →</button>' +
         '</div>' +
 
       '</div>';
@@ -697,7 +695,7 @@ var TST_PROFILE = {
         '<input id="reviewTicker" placeholder="Ticker (e.g. AAPL)" style="width:100%;background:#111712;border:1.5px solid #1e2820;border-radius:8px;padding:12px 16px;color:#f0f4f1;font-size:14px;margin-bottom:12px;box-sizing:border-box;outline:none;"/>' +
         '<textarea id="reviewNotes" placeholder="Describe the trade, your thinking, and what you want feedback on..." style="width:100%;min-height:200px;background:#111712;border:1.5px solid #1e2820;border-radius:8px;padding:12px 16px;color:#f0f4f1;font-size:14px;margin-bottom:16px;resize:vertical;box-sizing:border-box;outline:none;font-family:inherit;"></textarea>' +
         '<div style="display:flex;gap:12px;">' +
-          '<button onclick="TST_PROFILE.getTier().then(function(t){TST_PROFILE.loadTab(\\'tenk\\', t)})" style="background:transparent;border:1.5px solid #1e2820;color:#6b7c6e;border-radius:8px;padding:12px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Cancel</button>' +
+          '<button onclick=\'TST_PROFILE.getTier().then(function(t){TST_PROFILE.loadTab("tenk", t)})\' style="background:transparent;border:1.5px solid #1e2820;color:#6b7c6e;border-radius:8px;padding:12px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Cancel</button>' +
           '<button onclick="TST_PROFILE.submitReview()" style="background:#d4af37;color:#000;border:none;border-radius:8px;padding:12px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Submit for Review</button>' +
         '</div>' +
       '</div>';
