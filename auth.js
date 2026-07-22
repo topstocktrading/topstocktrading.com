@@ -69,17 +69,6 @@
 
     var client = getClient();
 
-    // Always check hardcoded demo account first
-    if (e === 'student@topstocktrading.com' && p === 'tst2024') {
-      var loginScreen = document.getElementById('login-screen');
-      var sname = document.getElementById('sname');
-      if (loginScreen) loginScreen.style.display = 'none';
-      if (sname) sname.textContent = 'Trader';
-      if (window.buildSidebar) window.buildSidebar();
-      if (window.loadLesson) window.loadLesson('beginner');
-      return;
-    }
-
     // Fallback to hardcoded if Supabase not loaded
     if (!client) {
       if (false) {
