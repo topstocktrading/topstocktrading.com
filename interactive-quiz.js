@@ -19,121 +19,110 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     }
   }
 
+  // Box-Muller transform for normally-distributed randomness — real price moves
+  // cluster around small values with occasional larger ones, not uniform random
+  function gaussianRandom(rand) {
+    var u = 0, v = 0
+    while (u === 0) u = rand()
+    while (v === 0) v = rand()
+    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)
+  }
+
+  // Generates one realistic candle given a starting price, a drift (trend bias),
+  // and a volatility scale. Occasionally produces counter-trend candles naturally —
+  // this is what makes real charts look organic instead of a robotic staircase.
+  function generateOneCandle(rand, openPrice, drift, volatility) {
+    var noise = gaussianRandom(rand) * volatility
+    var close = openPrice + drift + noise
+    var bodyHigh = Math.max(openPrice, close)
+    var bodyLow = Math.min(openPrice, close)
+    var wickUp = Math.abs(gaussianRandom(rand)) * volatility * 0.6
+    var wickDown = Math.abs(gaussianRandom(rand)) * volatility * 0.6
+    return {
+      open: openPrice,
+      close: close,
+      high: bodyHigh + wickUp,
+      low: bodyLow - wickDown,
+    }
+  }
+
+  function buildPhase(rand, startPrice, startTime, interval, count, avgDrift, volatility, volBase, volTrendPct) {
+    var candles = []
+    var price = startPrice
+    var t = startTime
+    for (var i = 0; i < count; i++) {
+      // Vary drift candle-to-candle so it's not a perfectly straight staircase —
+      // some candles push harder, some pull back slightly, matching real price noise
+      var driftThisCandle = avgDrift * (0.4 + rand() * 1.2) * (rand() > 0.15 ? 1 : -0.6)
+      var c = generateOneCandle(rand, price, driftThisCandle, volatility)
+      // Volume trends smoothly across the phase (up or down) with natural noise, not a hard cliff
+      var progress = count > 1 ? i / (count - 1) : 0
+      var volTrendMultiplier = 1 + (volTrendPct * progress)
+      var volNoise = 0.75 + rand() * 0.5
+      var volume = Math.max(5000, Math.round(volBase * volTrendMultiplier * volNoise))
+      candles.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: volume })
+      price = c.close
+      t += interval
+    }
+    return { candles: candles, endPrice: price, endTime: t }
+  }
+
   // Generates a clean bull flag: uptrend leg -> tight consolidation on declining volume -> breakout on volume spike
   function generateBullFlag(opts) {
     var rand = seededRandom(opts.seed || 42)
-    var candles = []
     var startPrice = opts.startPrice || 100
     var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
     var interval = (opts.timeframeMinutes || 2) * 60
-    var price = startPrice
     var t = startTime
-    var i = 0
+    var price = startPrice
+    var all = []
 
-    // Phase 1: uptrend leg (15 candles, strong up move)
-    var legCandles = opts.legCandles || 15
-    for (var p1 = 0; p1 < legCandles; p1++) {
-      var move = (0.15 + rand() * 0.35) // strong upward bias
-      var open = price
-      var close = price + move
-      var high = close + rand() * 0.15
-      var low = open - rand() * 0.08
-      var vol = 180000 + rand() * 120000 // high volume on the move
-      candles.push({ time: t, open: open, high: high, low: low, close: close, volume: Math.round(vol) })
-      price = close
-      t += interval
-      i++
-    }
+    // Phase 1: uptrend leg — moderate drift, moderate volatility, volume elevated and steady
+    var leg = buildPhase(rand, price, t, interval, opts.legCandles || 16, 0.22, 0.14, 210000, 0.15)
+    all = all.concat(leg.candles)
+    price = leg.endPrice; t = leg.endTime
 
-    var flagHigh = price
-    var flagLow = price - (price * 0.02) // tight 2% range
+    // Phase 2: consolidation — near-zero drift (sideways), tight volatility, volume DECLINES steadily
+    var flag = buildPhase(rand, price, t, interval, opts.flagCandles || 13, 0.01, 0.05, 95000, -0.60)
+    all = all.concat(flag.candles)
+    price = flag.endPrice; t = flag.endTime
 
-    // Phase 2: consolidation (12 candles, tight range, DECLINING volume — the key signal)
-    var flagCandles = opts.flagCandles || 12
-    for (var p2 = 0; p2 < flagCandles; p2++) {
-      var range = (flagHigh - flagLow)
-      var open2 = flagLow + rand() * range
-      var close2 = flagLow + rand() * range
-      var high2 = Math.max(open2, close2) + rand() * (range * 0.15)
-      var low2 = Math.min(open2, close2) - rand() * (range * 0.15)
-      // Volume declines steadily through consolidation — this is the pattern signal
-      var volDeclineFactor = 1 - (p2 / flagCandles) * 0.65
-      var vol2 = (90000 * volDeclineFactor) + rand() * 20000
-      candles.push({ time: t, open: open2, high: high2, low: low2, close: close2, volume: Math.round(vol2) })
-      t += interval
-      i++
-    }
+    // Phase 3: breakout — strong drift, moderate-high volatility, volume spikes hard
+    var breakout = buildPhase(rand, price, t, interval, opts.breakoutCandles || 9, 0.20, 0.16, 260000, 0.35)
+    all = all.concat(breakout.candles)
 
-    // Phase 3: breakout (8 candles, volume spike, price pushes above flag high)
-    var breakoutCandles = opts.breakoutCandles || 8
-    var breakoutPrice = flagHigh
-    for (var p3 = 0; p3 < breakoutCandles; p3++) {
-      var move3 = (0.10 + rand() * 0.30)
-      var open3 = breakoutPrice
-      var close3 = breakoutPrice + move3
-      var high3 = close3 + rand() * 0.12
-      var low3 = open3 - rand() * 0.05
-      // Volume spikes hard on breakout — confirms the move
-      var volSpike = 220000 + rand() * 180000
-      candles.push({ time: t, open: open3, high: high3, low: low3, close: close3, volume: Math.round(volSpike) })
-      breakoutPrice = close3
-      t += interval
-      i++
-    }
-
-    return candles
+    return all
   }
 
   function generateFailedBreakout(opts) {
     var rand = seededRandom(opts.seed || 77)
-    var candles = []
     var startPrice = opts.startPrice || 100
     var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
     var interval = (opts.timeframeMinutes || 2) * 60
-    var price = startPrice
     var t = startTime
+    var price = startPrice
+    var all = []
 
-    // Uptrend leg
-    for (var p1 = 0; p1 < 12; p1++) {
-      var move = (0.12 + rand() * 0.25)
-      var open = price, close = price + move
-      var high = close + rand() * 0.12, low = open - rand() * 0.06
-      var vol = 150000 + rand() * 80000
-      candles.push({ time: t, open: open, high: high, low: low, close: close, volume: Math.round(vol) })
-      price = close; t += interval
-    }
+    // Uptrend leg — same as good example
+    var leg = buildPhase(rand, price, t, interval, 13, 0.20, 0.14, 190000, 0.10)
+    all = all.concat(leg.candles)
+    price = leg.endPrice; t = leg.endTime
 
-    var flagHigh = price, flagLow = price - (price * 0.025)
+    // Consolidation — volume stays FLAT/elevated instead of declining — the key tell
+    var flag = buildPhase(rand, price, t, interval, 11, 0.00, 0.06, 115000, 0.10)
+    all = all.concat(flag.candles)
+    price = flag.endPrice; t = flag.endTime
 
-    // Consolidation with FLAT/RISING volume — no real pause, this is the tell
-    for (var p2 = 0; p2 < 10; p2++) {
-      var range = flagHigh - flagLow
-      var open2 = flagLow + rand() * range, close2 = flagLow + rand() * range
-      var high2 = Math.max(open2,close2) + rand()*(range*0.2), low2 = Math.min(open2,close2) - rand()*(range*0.2)
-      var vol2 = 100000 + rand() * 40000 // volume stays elevated, does not decline
-      candles.push({ time: t, open: open2, high: high2, low: low2, close: close2, volume: Math.round(vol2) })
-      t += interval
-    }
+    // Weak breakout attempt — small drift, low volume (no conviction)
+    var fakeBreak = buildPhase(rand, price, t, interval, 5, 0.10, 0.10, 85000, -0.10)
+    all = all.concat(fakeBreak.candles)
+    price = fakeBreak.endPrice; t = fakeBreak.endTime
 
-    // Fake breakout then reversal on LOW volume (no real buying behind it)
-    var bp = flagHigh
-    for (var p3 = 0; p3 < 4; p3++) {
-      var move3 = (0.08 + rand()*0.15)
-      var open3 = bp, close3 = bp + move3
-      var vol3 = 70000 + rand()*20000 // weak volume on the breakout attempt
-      candles.push({ time: t, open: open3, high: close3+rand()*0.08, low: open3-rand()*0.04, close: close3, volume: Math.round(vol3) })
-      bp = close3; t += interval
-    }
-    // Reversal — dumps back through the flag on heavy volume
-    for (var p4 = 0; p4 < 6; p4++) {
-      var moveDown = (0.20 + rand()*0.35)
-      var open4 = bp, close4 = bp - moveDown
-      var vol4 = 200000 + rand()*100000
-      candles.push({ time: t, open: open4, high: open4+rand()*0.05, low: close4-rand()*0.1, close: close4, volume: Math.round(vol4) })
-      bp = close4; t += interval
-    }
+    // Reversal — strong negative drift, volume spikes on the way down
+    var reversal = buildPhase(rand, price, t, interval, 7, -0.30, 0.18, 240000, 0.30)
+    all = all.concat(reversal.candles)
 
-    return candles
+    return all
   }
 
   // ─────────────────────────────────────────
