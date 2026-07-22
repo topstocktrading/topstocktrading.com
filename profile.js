@@ -588,6 +588,143 @@ var TST_PROFILE = {
       if (status) { status.style.color = '#ef4444'; status.textContent = 'Error saving.'; }
     }
   },
+  // ==============================================
+  // TAB 6 — 10K MEMBERS ONLY
+  // ==============================================
+  renderTenK: async function(body, tier) {
+    body.innerHTML = '<div class="tst-loading">Loading your 10K dashboard...</div>';
+    var user = await getUser();
+    if (!user) { body.innerHTML = '<div class="tst-empty">Please log in.</div>'; return; }
+    if (tier !== '10k') { body.innerHTML = '<div class="tst-empty">This section is only available to 10K Mentorship members.</div>'; return; }
+
+    var client = getSupabase();
+    var sessionData = null;
+    var reviewQueue = [];
+    var messages = [];
+
+    try {
+      var sessionRes = await client.from('tenk_sessions').select('*').eq('user_id', user.id).order('scheduled_date', { ascending: true }).limit(1).maybeSingle();
+      if (sessionRes.data) sessionData = sessionRes.data;
+    } catch(e) {}
+
+    try {
+      var reviewRes = await client.from('tenk_trade_reviews').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10);
+      if (reviewRes.data) reviewQueue = reviewRes.data;
+    } catch(e) {}
+
+    var pendingReviews = reviewQueue.filter(function(r){ return !r.reviewed; });
+    var completedReviews = reviewQueue.filter(function(r){ return r.reviewed; });
+
+    var nextSessionHtml = sessionData
+      ? '<div style="font-size:20px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">' + new Date(sessionData.scheduled_date).toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'}) + '</div>' +
+        '<div style="font-size:13px;color:#6b7c6e;">' + (sessionData.scheduled_time || 'Time TBD') + ' · ' + (sessionData.session_type || 'Quarterly 1:1 Session') + '</div>' +
+        (sessionData.meeting_link ? '<a href="' + sessionData.meeting_link + '" target="_blank" style="display:inline-block;margin-top:12px;background:#d4af37;color:#000;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;text-decoration:none;font-size:13px;">Join Meeting →</a>' : '')
+      : '<div style="font-size:15px;color:#6b7c6e;">No session scheduled yet. Reach out to book your next quarterly 1:1.</div>';
+
+    body.innerHTML =
+      '<div style="max-width:840px;">' +
+
+        // Header
+        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">' +
+          '<span style="font-size:22px;">⭐</span>' +
+          '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#d4af37;letter-spacing:0.5px;">10K Member Dashboard</div>' +
+        '</div>' +
+        '<div style="font-size:13px;color:#6b7c6e;margin-bottom:28px;line-height:1.6;">Your exclusive benefits as a 10K Mentorship member — personal trade reviews, quarterly 1:1 sessions, and included tool access.</div>' +
+
+        // Next Session Card
+        '<div style="background:linear-gradient(135deg,#1a1610,#111712);border:1.5px solid #d4af37;border-radius:14px;padding:24px;margin-bottom:20px;">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#d4af37;margin-bottom:10px;">Your Next 1:1 Session</div>' +
+          nextSessionHtml +
+        '</div>' +
+
+        // Trade Review Queue
+        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
+            '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;">Personal Trade Review Queue</div>' +
+            '<div style="font-size:11px;color:#d4af37;font-weight:700;">' + pendingReviews.length + ' pending</div>' +
+          '</div>' +
+          (reviewQueue.length === 0
+            ? '<div style="font-size:13px;color:#6b7c6e;">No trades submitted for review yet. Submit your best or most confusing trades from your journal for a personal review.</div>'
+            : reviewQueue.map(function(r){
+                var statusColor = r.reviewed ? '#22c55e' : '#d4af37';
+                var statusText = r.reviewed ? '✓ Reviewed' : '⏳ Pending Review';
+                return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #1e2820;">' +
+                  '<div>' +
+                    '<div style="font-size:14px;font-weight:700;color:#f0f4f1;">' + (r.ticker || 'Trade') + '</div>' +
+                    '<div style="font-size:11px;color:#6b7c6e;">Submitted ' + new Date(r.created_at).toLocaleDateString() + '</div>' +
+                  '</div>' +
+                  '<div style="font-size:12px;font-weight:700;color:' + statusColor + ';">' + statusText + '</div>' +
+                '</div>';
+              }).join('')
+          ) +
+          '<button onclick="TST_PROFILE.showSubmitReview()" style="margin-top:16px;background:transparent;border:1.5px solid #d4af37;color:#d4af37;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">+ Submit a Trade for Review</button>' +
+        '</div>' +
+
+        // Included Tools
+        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Included Tools & Subscriptions</div>' +
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+            '<div style="background:#0c100d;border:1px solid #1e2820;border-radius:10px;padding:14px;">' +
+              '<div style="font-size:14px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">TradeGrader Pro</div>' +
+              '<div style="font-size:11px;color:#6b7c6e;margin-bottom:8px;">AI-powered trade grading & behavioral analysis — full year included</div>' +
+              '<a href="https://trade-grader.vercel.app" target="_blank" style="font-size:11px;color:#22c55e;font-weight:700;text-decoration:none;">Access TradeGrader →</a>' +
+            '</div>' +
+            '<div style="background:#0c100d;border:1px solid #1e2820;border-radius:10px;padding:14px;">' +
+              '<div style="font-size:14px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">Trade Ideas Scanner</div>' +
+              '<div style="font-size:11px;color:#6b7c6e;margin-bottom:8px;">Custom TST scanner presets — annual subscription included</div>' +
+              '<span style="font-size:11px;color:#d4af37;">Setup instructions coming soon</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+
+        // Direct Messaging
+        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:12px;">Direct Access</div>' +
+          '<div style="font-size:13px;color:#6b7c6e;line-height:1.6;margin-bottom:14px;">As a 10K member you have direct messaging access. Use the Messages tab for questions, trade reviews, or anything else — you get priority response.</div>' +
+          '<button onclick="TST_PROFILE.switchTab(\\'messages\\', document.querySelector(\\'.tst-tab:nth-child(4)\\'))" style="background:#d4af37;color:#000;border:none;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Go to Messages →</button>' +
+        '</div>' +
+
+      '</div>';
+  },
+
+  showSubmitReview: function() {
+    var body = document.getElementById('tstTabBody');
+    if (!body) return;
+    body.innerHTML =
+      '<div style="max-width:600px;">' +
+        '<div style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#f0f4f1;margin-bottom:6px;">Submit a Trade for Review</div>' +
+        '<div style="font-size:13px;color:#6b7c6e;margin-bottom:24px;line-height:1.6;">Submit any trade — winner, loser, or one you are unsure about — for a personal review.</div>' +
+        '<input id="reviewTicker" placeholder="Ticker (e.g. AAPL)" style="width:100%;background:#111712;border:1.5px solid #1e2820;border-radius:8px;padding:12px 16px;color:#f0f4f1;font-size:14px;margin-bottom:12px;box-sizing:border-box;outline:none;"/>' +
+        '<textarea id="reviewNotes" placeholder="Describe the trade, your thinking, and what you want feedback on..." style="width:100%;min-height:200px;background:#111712;border:1.5px solid #1e2820;border-radius:8px;padding:12px 16px;color:#f0f4f1;font-size:14px;margin-bottom:16px;resize:vertical;box-sizing:border-box;outline:none;font-family:inherit;"></textarea>' +
+        '<div style="display:flex;gap:12px;">' +
+          '<button onclick="TST_PROFILE.getTier().then(function(t){TST_PROFILE.loadTab(\\'tenk\\', t)})" style="background:transparent;border:1.5px solid #1e2820;color:#6b7c6e;border-radius:8px;padding:12px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Cancel</button>' +
+          '<button onclick="TST_PROFILE.submitReview()" style="background:#d4af37;color:#000;border:none;border-radius:8px;padding:12px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Submit for Review</button>' +
+        '</div>' +
+      '</div>';
+  },
+
+  submitReview: async function() {
+    var ticker = document.getElementById('reviewTicker');
+    var notes = document.getElementById('reviewNotes');
+    if (!ticker || !ticker.value) { alert('Please enter a ticker.'); return; }
+    var user = await getUser();
+    if (!user) return;
+    try {
+      var client = getSupabase();
+      await client.from('tenk_trade_reviews').insert({
+        user_id: user.id,
+        ticker: ticker.value,
+        notes: notes ? notes.value : '',
+        reviewed: false,
+        created_at: new Date().toISOString()
+      });
+      TST_PROFILE.getTier().then(function(t){ TST_PROFILE.loadTab('tenk', t); });
+    } catch(e) {
+      alert('Error submitting review. Please try again.');
+    }
+  },
+
+
 
   // ============================================================
   // TAB 5 — MESSAGE CENTER
