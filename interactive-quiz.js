@@ -25,7 +25,10 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     var u = 0, v = 0
     while (u === 0) u = rand()
     while (v === 0) v = rand()
-    return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)
+    var val = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)
+    // Clamp to +/-2 standard deviations — prevents rare extreme draws from
+    // producing an out-of-proportion candle that visually "gaps" from its neighbors
+    return Math.max(-2, Math.min(2, val))
   }
 
   // Generates one realistic candle given a starting price, a drift (trend bias),
@@ -36,8 +39,8 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     var close = openPrice + drift + noise
     var bodyHigh = Math.max(openPrice, close)
     var bodyLow = Math.min(openPrice, close)
-    var wickUp = Math.abs(gaussianRandom(rand)) * volatility * 0.6
-    var wickDown = Math.abs(gaussianRandom(rand)) * volatility * 0.6
+    var wickUp = Math.abs(gaussianRandom(rand)) * volatility * 0.35
+    var wickDown = Math.abs(gaussianRandom(rand)) * volatility * 0.35
     return {
       open: openPrice,
       close: close,
@@ -83,7 +86,7 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     price = leg.endPrice; t = leg.endTime
 
     // Phase 2: consolidation — near-zero drift (sideways), tight volatility, volume DECLINES steadily
-    var flag = buildPhase(rand, price, t, interval, opts.flagCandles || 13, 0.01, 0.05, 95000, -0.60)
+    var flag = buildPhase(rand, price, t, interval, opts.flagCandles || 13, 0.005, 0.035, 95000, -0.60)
     all = all.concat(flag.candles)
     price = flag.endPrice; t = flag.endTime
 
@@ -109,7 +112,7 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     price = leg.endPrice; t = leg.endTime
 
     // Consolidation — volume stays FLAT/elevated instead of declining — the key tell
-    var flag = buildPhase(rand, price, t, interval, 11, 0.00, 0.06, 115000, 0.10)
+    var flag = buildPhase(rand, price, t, interval, 11, 0.00, 0.04, 115000, 0.10)
     all = all.concat(flag.candles)
     price = flag.endPrice; t = flag.endTime
 
