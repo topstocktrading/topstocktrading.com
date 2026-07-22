@@ -70,7 +70,43 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     return { candles: candles, endPrice: price, endTime: t }
   }
 
-  // Generates a clean bull flag: uptrend leg -> tight consolidation on declining volume -> breakout on volume spike
+  // Like buildPhase but volatility narrows linearly over the phase — used for
+  // triangles and pennants where the range visibly converges toward a point
+  function buildConvergingPhase(rand, startPrice, startTime, interval, count, avgDrift, volStart, volEnd, volBase, volTrendPct) {
+    var candles = []
+    var price = startPrice
+    var t = startTime
+    for (var i = 0; i < count; i++) {
+      var progress = count > 1 ? i / (count - 1) : 0
+      var volatility = volStart + (volEnd - volStart) * progress
+      var driftThisCandle = avgDrift * (0.4 + rand() * 1.2) * (rand() > 0.15 ? 1 : -0.6)
+      var c = generateOneCandle(rand, price, driftThisCandle, volatility)
+      var volNoise = 0.75 + rand() * 0.5
+      var volume = Math.max(5000, Math.round(volBase * (1 + volTrendPct * progress) * volNoise))
+      candles.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: volume })
+      price = c.close; t += interval
+    }
+    return { candles: candles, endPrice: price, endTime: t }
+  }
+
+  // Builds one directional leg toward a target price over a candle count —
+  // used to construct head-and-shoulders peaks/troughs with controlled shape
+  function buildLegToTarget(rand, startPrice, targetPrice, startTime, interval, count, volatility, volBase) {
+    var candles = []
+    var price = startPrice
+    var t = startTime
+    var totalMove = targetPrice - startPrice
+    for (var i = 0; i < count; i++) {
+      var stepDrift = (totalMove / count) * (0.6 + rand() * 0.8)
+      var c = generateOneCandle(rand, price, stepDrift, volatility)
+      var volNoise = 0.8 + rand() * 0.4
+      candles.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: Math.max(5000, Math.round(volBase * volNoise)) })
+      price = c.close; t += interval
+    }
+    return { candles: candles, endPrice: price, endTime: t }
+  }
+
+    // Generates a clean bull flag: uptrend leg -> tight consolidation on declining volume -> breakout on volume spike
   function generateBullFlag(opts) {
     var rand = seededRandom(opts.seed || 42)
     var startPrice = opts.startPrice || 100
@@ -135,53 +171,447 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     return all
   }
 
-  // ─────────────────────────────────────────
+  // TRENDLINE BREAK — uptrend respecting a rising trendline, then a break below it.
+  // This is a bearish/short-entry pattern: ideal entry is right as price closes below
+  // the established trendline with momentum, confirming the break is real.
+  function generateTrendlineBreak(opts) {
+    var rand = seededRandom(opts.seed || 101)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+
+    // Uptrend respecting a rising trendline — steady higher lows
+    var up = buildPhase(rand, price, t, interval, 18, 0.16, 0.10, 170000, 0.05)
+    all = all.concat(up.candles); price = up.endPrice; t = up.endTime
+
+    // Late-stage uptrend loses momentum — smaller candles, still slightly up (trendline getting tested)
+    var fade = buildPhase(rand, price, t, interval, 6, 0.04, 0.08, 130000, -0.15)
+    all = all.concat(fade.candles); price = fade.endPrice; t = fade.endTime
+
+    var breakZoneStart = all.length
+
+    // The break — sharp move down through the trendline, volume picks up (real break)
+    var breakDown = buildPhase(rand, price, t, interval, 5, -0.22, 0.16, 210000, 0.40)
+    all = all.concat(breakDown.candles); price = breakDown.endPrice; t = breakDown.endTime
+
+    var breakZoneEnd = all.length - 1
+
+    // Continuation down — confirms it wasn't a fakeout
+    var cont = buildPhase(rand, price, t, interval, 8, -0.18, 0.14, 190000, 0.10)
+    all = all.concat(cont.candles)
+
+    return {
+      candles: all,
+      zones: {
+        tooEarly: { start: 0, end: breakZoneStart - 1 },
+        ideal: { start: breakZoneStart, end: breakZoneStart + 2 },
+        tooLate: { start: breakZoneEnd + 4, end: all.length - 1 },
+      }
+    }
+  }
+
+  // HEAD AND SHOULDERS — left shoulder, higher head, right shoulder, then neckline break down.
+  // Ideal entry is on the neckline break confirming the reversal — not during shoulder formation.
+  function generateHeadShoulders(opts) {
+    var rand = seededRandom(opts.seed || 202)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+    var neckline = startPrice
+
+    // Left shoulder — up then back down to neckline
+    var ls_up = buildLegToTarget(rand, price, price + 2.2, t, interval, 6, 0.10, 160000)
+    all = all.concat(ls_up.candles); price = ls_up.endPrice; t = ls_up.endTime
+    var ls_down = buildLegToTarget(rand, price, neckline + 0.2, t, interval, 6, 0.10, 130000)
+    all = all.concat(ls_down.candles); price = ls_down.endPrice; t = ls_down.endTime
+
+    // Head — up higher than left shoulder, then back down to neckline
+    var h_up = buildLegToTarget(rand, price, price + 3.8, t, interval, 7, 0.12, 200000)
+    all = all.concat(h_up.candles); price = h_up.endPrice; t = h_up.endTime
+    var h_down = buildLegToTarget(rand, price, neckline + 0.1, t, interval, 7, 0.12, 150000)
+    all = all.concat(h_down.candles); price = h_down.endPrice; t = h_down.endTime
+
+    // Right shoulder — up similar to left shoulder (weaker than head), then down toward neckline
+    var rs_up = buildLegToTarget(rand, price, price + 2.0, t, interval, 6, 0.10, 140000)
+    all = all.concat(rs_up.candles); price = rs_up.endPrice; t = rs_up.endTime
+    var rs_down = buildLegToTarget(rand, price, neckline, t, interval, 6, 0.10, 130000)
+    all = all.concat(rs_down.candles); price = rs_down.endPrice; t = rs_down.endTime
+
+    var neckZoneStart = all.length
+
+    // Neckline break — decisive move below, volume spikes (real confirmation)
+    var breakDown = buildPhase(rand, price, t, interval, 5, -0.24, 0.15, 220000, 0.45)
+    all = all.concat(breakDown.candles); price = breakDown.endPrice; t = breakDown.endTime
+
+    var neckZoneEnd = all.length - 1
+
+    // Continuation down
+    var cont = buildPhase(rand, price, t, interval, 7, -0.16, 0.13, 180000, 0.10)
+    all = all.concat(cont.candles)
+
+    return {
+      candles: all,
+      zones: {
+        tooEarly: { start: 0, end: neckZoneStart - 1 },
+        ideal: { start: neckZoneStart, end: neckZoneStart + 2 },
+        tooLate: { start: neckZoneEnd + 4, end: all.length - 1 },
+      }
+    }
+  }
+
+  // ASCENDING TRIANGLE — rising lows against a flat resistance ceiling, then breakout above it.
+  // Ideal entry is the breakout above the flat resistance with volume confirmation.
+  function generateAscendingTriangle(opts) {
+    var rand = seededRandom(opts.seed || 303)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+    var resistance = startPrice + 3
+
+    // Three rising-low touches against flat resistance
+    for (var wave = 0; wave < 3; wave++) {
+      var toResistance = buildLegToTarget(rand, price, resistance - (0.15 * rand()), t, interval, 5, 0.08, 130000)
+      all = all.concat(toResistance.candles); price = toResistance.endPrice; t = toResistance.endTime
+      var lowTarget = resistance - 2.4 + (wave * 0.6) // each low is higher than the last
+      var toLow = buildLegToTarget(rand, price, lowTarget, t, interval, 5, 0.08, 110000)
+      all = all.concat(toLow.candles); price = toLow.endPrice; t = toLow.endTime
+    }
+
+    var breakZoneStart = all.length
+
+    // Breakout above resistance on volume
+    var breakout = buildPhase(rand, price, t, interval, 6, 0.22, 0.15, 230000, 0.45)
+    all = all.concat(breakout.candles); price = breakout.endPrice; t = breakout.endTime
+
+    var breakZoneEnd = all.length - 1
+
+    var cont = buildPhase(rand, price, t, interval, 7, 0.16, 0.14, 190000, 0.10)
+    all = all.concat(cont.candles)
+
+    return {
+      candles: all,
+      zones: {
+        tooEarly: { start: 0, end: breakZoneStart - 1 },
+        ideal: { start: breakZoneStart, end: breakZoneStart + 2 },
+        tooLate: { start: breakZoneEnd + 4, end: all.length - 1 },
+      }
+    }
+  }
+
+  // PENNANT — strong move (flagpole), then a symmetrically NARROWING consolidation
+  // (converging highs and lows, unlike a flag's parallel channel), then breakout continuation.
+  function generatePennant(opts) {
+    var rand = seededRandom(opts.seed || 404)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+
+    // Flagpole — sharp strong move up
+    var pole = buildPhase(rand, price, t, interval, 10, 0.30, 0.16, 230000, 0.10)
+    all = all.concat(pole.candles); price = pole.endPrice; t = pole.endTime
+
+    // Pennant — volatility narrows steadily (converging triangle), volume declines
+    var pennant = buildConvergingPhase(rand, price, t, interval, 12, 0.01, 0.09, 0.02, 90000, -0.55)
+    all = all.concat(pennant.candles); price = pennant.endPrice; t = pennant.endTime
+
+    var breakZoneStart = all.length
+
+    // Breakout continuation in the same direction as the flagpole, volume returns
+    var breakout = buildPhase(rand, price, t, interval, 8, 0.20, 0.15, 250000, 0.40)
+    all = all.concat(breakout.candles)
+
+    var breakZoneEnd = all.length - 1
+
+    return {
+      candles: all,
+      zones: {
+        tooEarly: { start: 0, end: pole.candles.length + Math.floor(pennant.candles.length * 0.7) - 1 },
+        ideal: { start: breakZoneStart, end: breakZoneStart + 2 },
+        tooLate: { start: breakZoneEnd + 4, end: all.length - 1 },
+      }
+    }
+  }
+
+    // PANIC REVERSAL — sharp climactic selloff, exhaustion (huge volume, long lower wicks),
+  // then sharp reversal. Tests recognizing seller exhaustion vs a panic that keeps going.
+  function generatePanicReversal(opts) {
+    var rand = seededRandom(opts.seed || 505)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+
+    var stable = buildPhase(rand, price, t, interval, 6, 0.01, 0.05, 90000, 0)
+    all = all.concat(stable.candles); price = stable.endPrice; t = stable.endTime
+
+    // Climactic selloff — big drops, volume explodes (exhaustion signature)
+    var panic = buildPhase(rand, price, t, interval, 8, -0.35, 0.22, 280000, 0.60)
+    all = all.concat(panic.candles); price = panic.endPrice; t = panic.endTime
+
+    // Sharp reversal — sellers exhausted, buyers step in on continued high volume
+    var reversal = buildPhase(rand, price, t, interval, 8, 0.28, 0.16, 240000, 0.10)
+    all = all.concat(reversal.candles)
+
+    return { candles: all, zones: null }
+  }
+
+  // PULLBACK VS BREAKDOWN — healthy pullback to support within an uptrend that HOLDS,
+  // vs one that breaks down. This version shows the HOLDING (bullish) version.
+  function generateHealthyPullback(opts) {
+    var rand = seededRandom(opts.seed || 606)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+
+    var up = buildPhase(rand, price, t, interval, 14, 0.20, 0.13, 180000, 0.05)
+    all = all.concat(up.candles); price = up.endPrice; t = up.endTime
+
+    // Pullback — controlled, low volume decline, then holds and bounces
+    var pullback = buildPhase(rand, price, t, interval, 8, -0.10, 0.08, 100000, -0.30)
+    all = all.concat(pullback.candles); price = pullback.endPrice; t = pullback.endTime
+
+    var bounce = buildPhase(rand, price, t, interval, 9, 0.22, 0.14, 200000, 0.35)
+    all = all.concat(bounce.candles)
+
+    return { candles: all, zones: null }
+  }
+
+  // ACCUMULATION — quiet base building with volume upticks on green days,
+  // light volume on red days (smart money buying quietly beneath the surface)
+  function generateAccumulation(opts) {
+    var rand = seededRandom(opts.seed || 707)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+
+    // Sideways base with asymmetric volume — heavier on up candles, light on down candles
+    var rand2 = rand
+    for (var i = 0; i < 22; i++) {
+      var drift = (rand2() > 0.5 ? 1 : -0.8) * (0.02 + rand2() * 0.06)
+      var c = generateOneCandle(rand2, price, drift, 0.06)
+      var isUp = c.close >= c.open
+      var vol = isUp ? (140000 + rand2() * 60000) : (60000 + rand2() * 30000)
+      all.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: Math.round(vol) })
+      price = c.close; t += interval
+    }
+    var breakout = buildPhase(rand2, price, t, interval, 6, 0.18, 0.13, 220000, 0.40)
+    all = all.concat(breakout.candles)
+
+    return { candles: all, zones: null }
+  }
+
+  // STOP HUNT — price wicks below an obvious support level then immediately reclaims it,
+  // vs a real breakdown that continues. This version is the STOP HUNT (fakeout) version.
+  function generateStopHunt(opts) {
+    var rand = seededRandom(opts.seed || 808)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+
+    var range = buildPhase(rand, price, t, interval, 14, 0.01, 0.06, 100000, 0)
+    all = all.concat(range.candles); price = range.endPrice; t = range.endTime
+
+    // Sharp wick below support on a volume spike (stop hunt), single candle mostly
+    var wickDown = generateOneCandle(rand, price, -0.35, 0.10)
+    var huntVol = 180000 + rand() * 60000
+    all.push({ time: t, open: wickDown.open, high: wickDown.high, low: wickDown.low - 0.4, close: price - 0.05, volume: Math.round(huntVol) })
+    t += interval
+
+    // Immediate reclaim — sharp move back above the level
+    var reclaim = buildPhase(rand, price - 0.05, t, interval, 9, 0.24, 0.13, 210000, 0.25)
+    all = all.concat(reclaim.candles)
+
+    return { candles: all, zones: null }
+  }
+
+  // FOMO ENTRY — shows a stock that has already extended significantly, to test
+  // whether the student recognizes a chase versus a valid entry
+  function generateExtendedChase(opts) {
+    var rand = seededRandom(opts.seed || 909)
+    var startPrice = opts.startPrice || 100
+    var startTime = opts.startTime || Math.floor(Date.now()/1000) - 3600
+    var interval = (opts.timeframeMinutes || 2) * 60
+    var t = startTime, price = startPrice, all = []
+
+    var leg1 = buildPhase(rand, price, t, interval, 12, 0.22, 0.14, 180000, 0.15)
+    all = all.concat(leg1.candles); price = leg1.endPrice; t = leg1.endTime
+    var leg2 = buildPhase(rand, price, t, interval, 10, 0.26, 0.15, 210000, 0.10)
+    all = all.concat(leg2.candles); price = leg2.endPrice; t = leg2.endTime
+    var leg3 = buildPhase(rand, price, t, interval, 8, 0.30, 0.17, 190000, -0.10)
+    all = all.concat(leg3.candles)
+
+    return { candles: all, zones: null }
+  }
+
+    // ─────────────────────────────────────────
   // QUESTION BANK
   // ─────────────────────────────────────────
   var QUESTIONS = [
+    // ─── ZONE-CLICK QUESTIONS (click the chart to enter) ───
     {
-      id: 'iq_zone_1',
-      title: 'Click Your Entry',
+      id: 'iq_zone_flag',
+      title: 'Click Your Entry — Bull Flag',
       type: 'zone',
       generator: 'bullFlag',
       seed: 42,
-      question: 'Click directly on the chart where YOU would enter this trade. There is no text answer — your click is your entry.',
+      question: 'This stock is showing a flag pattern. Click directly on the chart where YOU would enter this trade.',
       zoneFeedback: {
-        tooEarly: 'Too early — you entered during the initial move before any consolidation formed. There was no confirmed setup yet, just a strong candle. Entering here means you have no defined risk level and no confirmation the move will continue.',
-        ideal: 'Strong entry — you caught the breakout right as it confirmed, just as price cleared the consolidation with volume behind it. This is the highest probability entry: confirmed structure, defined risk below the flag low, and volume confirming real buyers stepped in.',
+        tooEarly: 'Too early — you entered during the initial move before any consolidation formed. There was no confirmed setup yet, just a strong candle. Entering here means no defined risk level and no confirmation the move continues.',
+        ideal: 'Strong entry — you caught the breakout right as it confirmed, just as price cleared the consolidation with volume behind it. Confirmed structure, defined risk below the flag low, volume confirming real buyers stepped in.',
         tooLate: 'Too late — the move already extended significantly before you clicked. Chasing here means poor risk/reward: your stop has to be far away to make sense, and most of the move is already behind you.'
       }
     },
     {
-      id: 'iq_1',
-      title: 'Setup Identification',
-      generator: 'bullFlag',
-      seed: 42,
-      question: 'This stock is showing this pattern. Based on the price action and volume, what would you do?',
-      choices: [
-        'Big move up, healthy consolidation on declining volume, then breakout — this is a buyable flag breakout',
-        'This is already too extended — the move already happened, do not chase',
-        'The consolidation is too tight — this looks like a dead stock, skip it',
-        'Volume is declining which means buyers are losing interest — avoid'
-      ],
-      correct: 0,
-      explanation: 'This is a clean flag breakout. The initial move establishes the trend, price consolidates on declining volume (sellers are not stepping in — buyers are just pausing, which is healthy not bearish), and the breakout on renewed volume confirms continuation. Declining volume during consolidation is normal and bullish — it shows an absence of selling pressure, not a loss of interest.'
+      id: 'iq_zone_trendline',
+      title: 'Click Your Entry — Trendline Break',
+      type: 'zone',
+      generator: 'trendlineBreak',
+      seed: 101,
+      question: 'This stock was respecting a rising trendline and just broke below it. Click where you would enter a SHORT.',
+      zoneFeedback: {
+        tooEarly: 'Too early — the trendline was still intact when you clicked. Shorting an uptrend before it actually breaks means fighting the trend with no confirmation.',
+        ideal: 'Strong entry — you shorted right as price closed below the trendline with volume picking up, confirming real sellers stepped in rather than a temporary dip.',
+        tooLate: 'Too late — the breakdown already extended significantly. Your risk/reward is poor here since the easy move down already happened.'
+      }
     },
     {
-      id: 'iq_2',
+      id: 'iq_zone_hs',
+      title: 'Click Your Entry — Head & Shoulders',
+      type: 'zone',
+      generator: 'headShoulders',
+      seed: 202,
+      question: 'This is a classic head and shoulders top. Click where you would enter a SHORT on the neckline break.',
+      zoneFeedback: {
+        tooEarly: 'Too early — this was still during shoulder formation. The pattern was not confirmed yet, and price could have simply continued higher instead of reversing.',
+        ideal: 'Strong entry — this is the neckline break, the moment the pattern actually confirms. Volume picked up here, confirming the reversal rather than another bounce.',
+        tooLate: 'Too late — the breakdown already ran. Entering here means chasing a move that mostly already happened, with a stop that no longer makes sense relative to the reward.'
+      }
+    },
+    {
+      id: 'iq_zone_triangle',
+      title: 'Click Your Entry — Ascending Triangle',
+      type: 'zone',
+      generator: 'ascendingTriangle',
+      seed: 303,
+      question: 'This stock is making higher lows against flat resistance. Click where you would enter LONG.',
+      zoneFeedback: {
+        tooEarly: 'Too early — price was still below resistance, inside the triangle. There was no breakout confirmation yet, just another touch of the same ceiling that had already rejected price multiple times.',
+        ideal: 'Strong entry — this is the breakout above resistance with volume. The higher lows show buyers stepping in earlier each time, and the volume confirms real conviction on the break.',
+        tooLate: 'Too late — you clicked well after the breakout already ran. Risk/reward is poor chasing here.'
+      }
+    },
+    {
+      id: 'iq_zone_pennant',
+      title: 'Click Your Entry — Pennant',
+      type: 'zone',
+      generator: 'pennant',
+      seed: 404,
+      question: 'This stock just made a strong move, then formed a tightening pennant. Click where you would enter the continuation.',
+      zoneFeedback: {
+        tooEarly: 'Too early — the pennant was still narrowing and had not broken out yet. Entering mid-consolidation means no confirmation the continuation is actually starting.',
+        ideal: 'Strong entry — this is the breakout from the pennant, continuing the same direction as the initial move with volume returning. This is the highest-probability moment: the pattern confirmed and volume backs it.',
+        tooLate: 'Too late — the continuation move already ran by the time you clicked. The best risk/reward window already passed.'
+      }
+    },
+
+    // ─── MULTIPLE CHOICE QUESTIONS ───
+    {
+      id: 'iq_mc_failedbreakout',
       title: 'Setup Identification',
       generator: 'failedBreakout',
       seed: 77,
-      question: 'This stock also shows an uptrend into a consolidation, followed by a breakout attempt. What is different here, and what should you do?',
+      question: 'This stock shows an uptrend into a consolidation, followed by a breakout attempt. What is happening here, and what should you do?',
       choices: [
-        'This is the same clean flag setup as before — buy the breakout',
+        'This is a clean flag setup — buy the breakout',
         'Volume stayed flat or rose during consolidation instead of declining, and the breakout has weak volume — this is a low-conviction move likely to fail',
-        'The pattern is identical to a good flag, the only difference is the ticker',
+        'The pattern is identical to a healthy flag, the ticker is the only difference',
         'Volume does not matter for this decision — only price structure matters'
       ],
       correct: 1,
-      explanation: 'This is a failed breakout. Notice the volume during consolidation did NOT decline the way it should in a healthy flag — it stayed elevated, meaning real selling pressure was present the whole time, not just quiet pausing. The breakout itself also came on weak volume, meaning there was no real conviction behind the move. Both signals together predicted the reversal that followed. This is exactly why volume during consolidation is one of the most important things to check before trusting a breakout.'
+      explanation: 'This is a failed breakout. Volume during consolidation did NOT decline the way it should in a healthy flag — it stayed elevated, meaning real selling pressure was present, not just quiet pausing. The breakout also came on weak volume, meaning no real conviction was behind the move. Both signals together predicted the reversal that followed.'
     },
+    {
+      id: 'iq_mc_panic',
+      title: 'Panic Selloff Recognition',
+      generator: 'panicReversal',
+      seed: 505,
+      question: 'This stock just had a sharp selloff. Based on the volume and price action at the bottom, what would you expect next?',
+      choices: [
+        'The selloff will continue indefinitely — there is no reason to expect a bounce',
+        'This shows signs of climactic selling exhaustion — the sharp volume spike into the low, followed by an equally sharp reversal, suggests sellers ran out and buyers stepped in aggressively',
+        'Volume is irrelevant here — only the number of red candles matters',
+        'You should short this stock immediately since it just went down'
+      ],
+      correct: 1,
+      explanation: 'This is a climactic exhaustion pattern. The selloff accelerated into a volume spike — a sign of panic selling reaching its peak — and was immediately followed by an equally strong reversal on continued high volume. That combination (climax + immediate strong reversal) is the signature of sellers being exhausted, not the start of a continued crash.'
+    },
+    {
+      id: 'iq_mc_pullback',
+      title: 'Pullback vs Breakdown',
+      generator: 'healthyPullback',
+      seed: 606,
+      question: 'This stock pulled back after an uptrend. Based on the volume during the pullback and what followed, how would you classify this?',
+      choices: [
+        'This is a trend reversal — the uptrend is over, avoid this stock',
+        'This is a healthy pullback within an uptrend — volume declined during the pullback (no real selling pressure) and price held before resuming higher',
+        'The pullback proves the stock is now bearish long-term',
+        'Pullback depth alone tells you everything you need — the percentage decline is all that matters'
+      ],
+      correct: 1,
+      explanation: 'This is a healthy pullback, not a reversal. Volume declined during the pullback, meaning there was no real selling pressure driving it down — it was simply a pause. Price held at a logical level and resumed the uptrend on renewed volume. Low volume pullbacks within an uptrend are normal and often buyable, not warning signs.'
+    },
+    {
+      id: 'iq_mc_accumulation',
+      title: 'Accumulation vs Distribution',
+      generator: 'accumulation',
+      seed: 707,
+      question: 'This stock has been trading sideways for a while. Looking at the volume pattern on up days versus down days, what is likely happening?',
+      choices: [
+        'Nothing meaningful — sideways price action with no volume pattern is always meaningless',
+        'This shows signs of accumulation — volume is heavier on up days and lighter on down days, suggesting smart money is buying quietly while retail sells into weakness',
+        'This is clearly distribution and the stock is about to collapse',
+        'Only the price range matters here, not the volume distribution'
+      ],
+      correct: 1,
+      explanation: 'This is accumulation. Even though price looks range-bound, the volume tells the real story — heavier volume on green days and lighter volume on red days means buyers are stepping in with size while sellers are thin. That asymmetry is a classic sign of quiet accumulation before a move higher, which is exactly what followed with the breakout on volume.'
+    },
+    {
+      id: 'iq_mc_stophunt',
+      title: 'Stop Hunt vs Real Breakdown',
+      generator: 'stopHunt',
+      seed: 808,
+      question: 'Price briefly wicked below an obvious support level on a volume spike, then immediately reclaimed it. What does this tell you?',
+      choices: [
+        'This confirms a real breakdown — the level is broken, you should be short',
+        'This is likely a stop hunt — a sharp wick through an obvious level followed by an immediate reclaim often means stops were run before the real move higher',
+        'Volume spikes always mean the breakdown is real and will continue',
+        'The wick means nothing — only the closing price of the day matters'
+      ],
+      correct: 1,
+      explanation: 'This is a textbook stop hunt. Obvious support levels attract clustered stop orders. A sharp wick through the level on a volume spike, immediately followed by a strong reclaim, is the signature of stops being run as liquidity before the real move — not a genuine breakdown. If it were a real breakdown, price would have continued lower instead of sharply reversing back above the level.'
+    },
+    {
+      id: 'iq_mc_fomo',
+      title: 'Recognizing an Extended Chase',
+      generator: 'extendedChase',
+      seed: 909,
+      question: 'This stock has been running for a while and just posted another strong green candle. What is the disciplined move here?',
+      choices: [
+        'Buy immediately — strong momentum means it will keep going forever',
+        'This move is already significantly extended across multiple legs up with no real pullback or consolidation — chasing here is exactly the FOMO entry that produces poor risk/reward. Wait for a pullback or pass entirely',
+        'The number of green candles in a row guarantees continuation',
+        'Extended moves are always safe to buy since the trend is your friend no matter what'
+      ],
+      correct: 1,
+      explanation: 'This is a textbook FOMO setup, not a valid entry. The stock has already run through multiple legs with no real consolidation or pullback along the way — meaning there is no defined risk level and the easy money has already been made by whoever got in early. Chasing extended moves like this is one of the most common mistakes driven by fear of missing out rather than an actual edge.'
+    }
   ]
 
   function loadLightweightCharts(callback) {
@@ -195,7 +625,16 @@ window.TST_INTERACTIVE_QUIZ = (function() {
   function generateCandles(q) {
     var opts = { seed: q.seed, startPrice: 100 + (q.seed % 50), startTime: Math.floor(Date.now()/1000) - 7200, timeframeMinutes: 2 }
     if (q.generator === 'bullFlag') return generateBullFlag(opts)
+    if (q.generator === 'trendlineBreak') return generateTrendlineBreak(opts)
+    if (q.generator === 'headShoulders') return generateHeadShoulders(opts)
+    if (q.generator === 'ascendingTriangle') return generateAscendingTriangle(opts)
+    if (q.generator === 'pennant') return generatePennant(opts)
     if (q.generator === 'failedBreakout') return { candles: generateFailedBreakout(opts), zones: null }
+    if (q.generator === 'panicReversal') return generatePanicReversal(opts)
+    if (q.generator === 'healthyPullback') return generateHealthyPullback(opts)
+    if (q.generator === 'accumulation') return generateAccumulation(opts)
+    if (q.generator === 'stopHunt') return generateStopHunt(opts)
+    if (q.generator === 'extendedChase') return generateExtendedChase(opts)
     return generateBullFlag(opts)
   }
 
