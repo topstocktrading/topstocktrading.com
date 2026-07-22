@@ -94,7 +94,14 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     var breakout = buildPhase(rand, price, t, interval, opts.breakoutCandles || 9, 0.20, 0.16, 260000, 0.35)
     all = all.concat(breakout.candles)
 
-    return all
+    return {
+      candles: all,
+      zones: {
+        tooEarly: { start: 0, end: leg.candles.length - 1 },
+        ideal: { start: leg.candles.length + flag.candles.length - 2, end: leg.candles.length + flag.candles.length + 2 },
+        tooLate: { start: leg.candles.length + flag.candles.length + 5, end: all.length - 1 },
+      }
+    }
   }
 
   function generateFailedBreakout(opts) {
@@ -132,6 +139,19 @@ window.TST_INTERACTIVE_QUIZ = (function() {
   // QUESTION BANK
   // ─────────────────────────────────────────
   var QUESTIONS = [
+    {
+      id: 'iq_zone_1',
+      title: 'Click Your Entry',
+      type: 'zone',
+      generator: 'bullFlag',
+      seed: 42,
+      question: 'Click directly on the chart where YOU would enter this trade. There is no text answer — your click is your entry.',
+      zoneFeedback: {
+        tooEarly: 'Too early — you entered during the initial move before any consolidation formed. There was no confirmed setup yet, just a strong candle. Entering here means you have no defined risk level and no confirmation the move will continue.',
+        ideal: 'Strong entry — you caught the breakout right as it confirmed, just as price cleared the consolidation with volume behind it. This is the highest probability entry: confirmed structure, defined risk below the flag low, and volume confirming real buyers stepped in.',
+        tooLate: 'Too late — the move already extended significantly before you clicked. Chasing here means poor risk/reward: your stop has to be far away to make sense, and most of the move is already behind you.'
+      }
+    },
     {
       id: 'iq_1',
       title: 'Setup Identification',
@@ -175,13 +195,21 @@ window.TST_INTERACTIVE_QUIZ = (function() {
   function generateCandles(q) {
     var opts = { seed: q.seed, startPrice: 100 + (q.seed % 50), startTime: Math.floor(Date.now()/1000) - 7200, timeframeMinutes: 2 }
     if (q.generator === 'bullFlag') return generateBullFlag(opts)
-    if (q.generator === 'failedBreakout') return generateFailedBreakout(opts)
+    if (q.generator === 'failedBreakout') return { candles: generateFailedBreakout(opts), zones: null }
     return generateBullFlag(opts)
   }
 
-  function renderChart(containerId, candles) {
+  function getZoneForIndex(zones, idx) {
+    if (!zones) return null
+    if (idx >= zones.ideal.start && idx <= zones.ideal.end) return 'ideal'
+    if (idx >= zones.tooEarly.start && idx <= zones.tooEarly.end) return 'tooEarly'
+    if (idx >= zones.tooLate.start && idx <= zones.tooLate.end) return 'tooLate'
+    return 'tooEarly' // anything between defined zones defaults to too early (mid-consolidation, no confirmation yet)
+  }
+
+  function renderChart(containerId, candles, onCandleClick) {
     var container = document.getElementById(containerId)
-    if (!container) return
+    if (!container) return null
     container.innerHTML = ''
 
     var chart = LightweightCharts.createChart(container, {
@@ -214,37 +242,103 @@ window.TST_INTERACTIVE_QUIZ = (function() {
 
     chart.timeScale().fitContent()
 
+    if (onCandleClick) {
+      chart.subscribeClick(function(param) {
+        if (!param.time) return
+        var idx = candles.findIndex(function(c) { return c.time === param.time })
+        if (idx === -1) return
+        onCandleClick(idx, series, candles)
+      })
+      container.style.cursor = 'crosshair'
+    }
+
     window.addEventListener('resize', function() {
       chart.applyOptions({ width: container.clientWidth })
     })
+
+    return series
   }
 
   function renderQuestion(sectionEl, q, onAnswered) {
+    var isZone = q.type === 'zone'
+
     sectionEl.innerHTML =
       '<div class="iq-question-wrap">' +
         '<div class="iq-header">' +
           '<div class="iq-ticker">' + q.title + '</div>' +
-          '<div class="iq-meta">Illustrative pattern · 2-min chart</div>' +
+          '<div class="iq-meta">Illustrative pattern · 2-min chart' + (isZone ? ' · Click the chart to answer' : '') + '</div>' +
         '</div>' +
         '<div class="iq-chart-container" id="chart-' + q.id + '"><div class="iq-loading">Rendering chart...</div></div>' +
         '<div class="iq-question-text">' + q.question + '</div>' +
-        '<div class="iq-choices" id="choices-' + q.id + '"></div>' +
+        (isZone ? '' : '<div class="iq-choices" id="choices-' + q.id + '"></div>') +
         '<div class="iq-explanation" id="explain-' + q.id + '" style="display:none;"></div>' +
       '</div>'
 
-    var choicesEl = document.getElementById('choices-' + q.id)
-    q.choices.forEach(function(choice, i) {
-      var btn = document.createElement('div')
-      btn.className = 'iq-choice'
-      btn.innerHTML = '<span class="iq-choice-letter">' + String.fromCharCode(65+i) + '</span><span>' + choice + '</span>'
-      btn.onclick = function() { handleAnswer(q, i, choicesEl, onAnswered) }
-      choicesEl.appendChild(btn)
-    })
+    if (!isZone) {
+      var choicesEl = document.getElementById('choices-' + q.id)
+      q.choices.forEach(function(choice, i) {
+        var btn = document.createElement('div')
+        btn.className = 'iq-choice'
+        btn.innerHTML = '<span class="iq-choice-letter">' + String.fromCharCode(65+i) + '</span><span>' + choice + '</span>'
+        btn.onclick = function() { handleAnswer(q, i, choicesEl, onAnswered) }
+        choicesEl.appendChild(btn)
+      })
+    }
 
     loadLightweightCharts(function() {
-      var candles = generateCandles(q)
-      renderChart('chart-' + q.id, candles)
+      var result = generateCandles(q)
+      var candles = result.candles
+      var zones = result.zones
+
+      if (isZone) {
+        var answered = false
+        renderChart('chart-' + q.id, candles, function(clickedIdx, series) {
+          if (answered) return
+          answered = true
+          handleZoneAnswer(q, clickedIdx, candles, zones, series, onAnswered)
+        })
+      } else {
+        renderChart('chart-' + q.id, candles)
+      }
     })
+  }
+
+  function handleZoneAnswer(q, clickedIdx, candles, zones, series, onAnswered) {
+    var zoneHit = getZoneForIndex(zones, clickedIdx)
+    var isCorrect = zoneHit === 'ideal'
+
+    // Mark the user's click and the ideal zone on the chart so they can visually compare
+    var markers = []
+    markers.push({
+      time: candles[clickedIdx].time,
+      position: 'belowBar',
+      color: isCorrect ? '#22c55e' : '#ef4444',
+      shape: 'arrowUp',
+      text: 'Your entry',
+    })
+    if (!isCorrect && zones) {
+      var idealMid = Math.floor((zones.ideal.start + zones.ideal.end) / 2)
+      if (candles[idealMid]) {
+        markers.push({
+          time: candles[idealMid].time,
+          position: 'aboveBar',
+          color: '#22c55e',
+          shape: 'arrowDown',
+          text: 'Ideal entry',
+        })
+      }
+    }
+    series.setMarkers(markers)
+
+    var explainEl = document.getElementById('explain-' + q.id)
+    explainEl.style.display = 'block'
+    explainEl.className = 'iq-explanation ' + (isCorrect ? 'iq-correct' : 'iq-incorrect')
+    var feedbackText = q.zoneFeedback[zoneHit] || q.zoneFeedback.tooEarly
+    explainEl.innerHTML =
+      '<div class="iq-result-label">' + (isCorrect ? '✓ Strong Entry' : '✗ Not the ideal spot') + '</div>' +
+      '<div class="iq-explanation-text">' + feedbackText + '</div>'
+
+    if (onAnswered) onAnswered(isCorrect)
   }
 
   function handleAnswer(q, chosenIdx, choicesEl, onAnswered) {
