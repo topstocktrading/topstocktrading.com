@@ -18,8 +18,8 @@ window.TST_INTERACTIVE_QUIZ = (function() {
       date: '2026-07-08',
       focusTime: '13:20', // 1:20 PM ET
       timeframe: 2, // 2-minute candles
-      windowMinutesBefore: 40,
-      windowMinutesAfter: 20,
+      windowMinutesBefore: 90,
+      windowMinutesAfter: 25,
       question: 'NVDA is showing this pattern into 1:20 PM. Based on the price action, what would you do?',
       choices: [
         'Big move up, healthy consolidation on lower volume, then breakout — this is a buyable flag breakout',
@@ -70,13 +70,33 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     return candles
   }
 
-  function filterToWindow(candles, dateStr, focusTime, minsBefore, minsAfter) {
+  function filterToWindow(candles, dateStr, focusTime, minsBefore, minsAfter, timeframeMinutes) {
+    // Convert focusTime (ET wall clock, e.g. "13:20") to UTC minutes-of-day.
+    // EDT = UTC-4, so 13:20 ET = 17:20 UTC = 1040 minutes. This matches the same
+    // UTC-based approach already proven correct in the market-hours filter.
     var parts = focusTime.split(':')
-    var focusDate = new Date(dateStr + 'T' + focusTime + ':00-04:00') // assume EDT, close enough for display window
-    var focusSec = Math.floor(focusDate.getTime() / 1000)
-    var startSec = focusSec - (minsBefore * 60)
-    var endSec = focusSec + (minsAfter * 60)
-    return candles.filter(function(c) { return c.time >= startSec && c.time <= endSec })
+    var focusHourET = parseInt(parts[0], 10)
+    var focusMinET = parseInt(parts[1], 10)
+    var focusUtcMins = ((focusHourET + 4) * 60) + focusMinET // EDT offset
+
+    // Find the candle index closest to the focus time by comparing UTC minute-of-day
+    var closestIdx = -1
+    var closestDiff = Infinity
+    candles.forEach(function(c, i) {
+      var d = new Date(c.time * 1000)
+      var cUtcMins = d.getUTCHours() * 60 + d.getUTCMinutes()
+      var diff = Math.abs(cUtcMins - focusUtcMins)
+      if (diff < closestDiff) { closestDiff = diff; closestIdx = i }
+    })
+
+    if (closestIdx === -1) return candles // fallback: show everything rather than nothing
+
+    // Take candles by INDEX COUNT (not clock math) — reliable regardless of timezone edge cases
+    var candlesPerMinBefore = Math.max(1, Math.round(minsBefore / timeframeMinutes))
+    var candlesPerMinAfter = Math.max(1, Math.round(minsAfter / timeframeMinutes))
+    var startIdx = Math.max(0, closestIdx - candlesPerMinBefore)
+    var endIdx = Math.min(candles.length, closestIdx + candlesPerMinAfter)
+    return candles.slice(startIdx, endIdx)
   }
 
   function renderChart(containerId, candles) {
@@ -134,7 +154,7 @@ window.TST_INTERACTIVE_QUIZ = (function() {
       loadLightweightCharts(async function() {
         try {
           var allCandles = await fetchCandles(q.ticker, q.date, q.timeframe)
-          var windowed = filterToWindow(allCandles, q.date, q.focusTime, q.windowMinutesBefore, q.windowMinutesAfter)
+          var windowed = filterToWindow(allCandles, q.date, q.focusTime, q.windowMinutesBefore, q.windowMinutesAfter, q.timeframe)
           if (windowed.length === 0) windowed = allCandles // fallback to full day if window filter too narrow
           renderChart('chart-' + q.id, windowed)
         } catch(err) {
