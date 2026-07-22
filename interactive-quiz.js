@@ -364,26 +364,41 @@ window.TST_INTERACTIVE_QUIZ = (function() {
     var container = document.getElementById(containerId)
     if (!container) return
 
-    var currentIdx = 0
     var correctCount = 0
+    var answeredCount = 0
 
-    function showQuestion(idx) {
-      if (idx >= QUESTIONS.length) {
-        container.innerHTML =
-          '<div class="iq-complete">' +
-            '<div class="iq-complete-emoji">🎯</div>' +
-            '<div class="iq-complete-title">Quiz Complete</div>' +
-            '<div class="iq-complete-score">' + correctCount + ' of ' + QUESTIONS.length + ' correct</div>' +
-          '</div>'
-        return
-      }
-      renderQuestion(container, QUESTIONS[idx], function(correct) {
-        if (correct) correctCount++
-        setTimeout(function() { currentIdx++; showQuestion(currentIdx) }, 4000)
-      })
+    container.innerHTML = '<div id="iq-progress-bar" class="iq-progress-bar"></div><div id="iq-questions-stack" class="iq-questions-stack"></div>'
+    var stack = document.getElementById('iq-questions-stack')
+
+    function updateProgress() {
+      var bar = document.getElementById('iq-progress-bar')
+      if (!bar) return
+      bar.innerHTML = '<div class="iq-progress-text">' + answeredCount + ' of ' + QUESTIONS.length + ' answered' +
+        (answeredCount === QUESTIONS.length ? ' · Score: ' + correctCount + '/' + QUESTIONS.length : '') + '</div>'
     }
 
-    showQuestion(currentIdx)
+    QUESTIONS.forEach(function(q, i) {
+      var qEl = document.createElement('div')
+      qEl.className = 'iq-stack-item'
+      qEl.id = 'iq-stack-item-' + q.id
+      stack.appendChild(qEl)
+
+      var numberBadge = document.createElement('div')
+      numberBadge.className = 'iq-question-number'
+      numberBadge.textContent = 'Question ' + (i + 1) + ' of ' + QUESTIONS.length
+      qEl.appendChild(numberBadge)
+
+      var qBody = document.createElement('div')
+      qEl.appendChild(qBody)
+
+      renderQuestion(qBody, q, function(correct) {
+        if (correct) correctCount++
+        answeredCount++
+        updateProgress()
+      })
+    })
+
+    updateProgress()
   }
 
   return { render: render, QUESTIONS: QUESTIONS }
