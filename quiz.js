@@ -434,8 +434,9 @@ smallcaps: {
       html+='<div class="quiz-choices">';
       q.choices.forEach(function(c,ci){
         html+='<div class="quiz-choice" data-section="'+sectionId+'" data-q="'+i+'" data-c="'+ci+'" id="qc-'+sectionId+'-'+i+'-'+ci+'">';
-        html+='<span class="choice-letter">'+String.fromCharCode(65+ci)+'</span>';
-        html+='<span class="choice-text">'+c+'</span>';
+        html+='<input type="radio" name="q-'+sectionId+'-'+i+'" data-section="'+sectionId+'" data-q="'+i+'" data-c="'+ci+'">';
+        html+='<span class="quiz-choice-letter">'+String.fromCharCode(65+ci)+'</span>';
+        html+='<span class="quiz-choice-text">'+c+'</span>';
         html+='</div>';
       });
       html+='</div>';
@@ -459,15 +460,19 @@ smallcaps: {
       const state=window['__quiz_state_'+sec];
       if(!state||state.submitted)return;
       state.answers[qi]=ci;
-      // Update UI
-      const allChoices=document.querySelectorAll('[data-section="'+sec+'"][data-q="'+qi+'"]');
-      allChoices.forEach(function(el){el.classList.remove('selected');});
-      choice.classList.add('selected');
+      // Update UI — check the radio input for :has(input:checked) CSS
+      const allChoices=document.querySelectorAll('.quiz-choice[data-section="'+sec+'"][data-q="'+qi+'"]');
+      allChoices.forEach(function(el){
+        var inp=el.querySelector('input');
+        if(inp)inp.checked=false;
+      });
+      var inp=choice.querySelector('input');
+      if(inp)inp.checked=true;
       // Update progress bar
       const questions=window['__quiz_questions_'+sec];
       const answered=Object.keys(state.answers).length;
       const pbar=document.getElementById('quiz-pbar-'+sec);
-      if(pbar)pbar.style.width=Math.round((answered/questions.length)*100)+'%';
+      if(pbar&&questions)pbar.style.width=Math.round((answered/questions.length)*100)+'%';
       return;
     }
     // Submit button
@@ -509,8 +514,8 @@ smallcaps: {
       const choiceEls=document.querySelectorAll('[data-section="'+sectionId+'"][data-q="'+i+'"]');
       choiceEls.forEach(function(el,ci){
         el.classList.remove('selected');
-        if(ci===correctAns)el.classList.add('correct');
-        else if(ci===userAns&&userAns!==correctAns)el.classList.add('incorrect');
+        if(ci===correctAns)el.classList.add('quiz-choice-correct');
+        else if(ci===userAns&&userAns!==correctAns)el.classList.add('quiz-choice-wrong');
       });
       const hint=document.getElementById('qh-'+sectionId+'-'+i);
       if(hint)hint.style.display='block';
