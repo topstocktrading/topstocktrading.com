@@ -1461,3 +1461,4 @@ var TST_CHART = {
   }
 };
 
+window.TST_PROFILE = TST_PROFILE;
