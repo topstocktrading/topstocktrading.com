@@ -7,19 +7,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --green: #00d27a;
-    --green-dark: #00a85f;
-    --dark: #0a0c10;
-    --card: #12151c;
-    --border: #1e2330;
-    --text: #e8eaf0;
-    --muted: #6b7280;
+    --green: #4ab44a;
+    --green-dark: #419e41;
+    --dark: #131e19;
+    --card: #163016;
+    --border: #1e3020;
+    --text: #c8d4c8;
+    --muted: #5a7a5a;
   }
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { background:var(--dark); color:var(--text); font-family:'DM Sans',sans-serif; line-height:1.6; overflow-x:hidden; }
+  body { background:#131e19; color:var(--text); font-family:'DM Sans',sans-serif; line-height:1.6; overflow-x:hidden; }
 
   /* NAV */
-  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:18px 48px; background:rgba(10,12,16,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
+  nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:18px 48px; background:rgba(13,22,16,0.95); backdrop-filter:blur(12px); border-bottom:1px solid var(--border); }
   .nav-logo { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:#fff; text-decoration:none; }
   .nav-logo span { color:var(--green); }
   .nav-links { display:flex; gap:28px; }
@@ -37,11 +37,11 @@
 
   /* PRODUCT SECTIONS */
   .product-section { padding:100px 24px; border-top:1px solid var(--border); }
-  .product-section:nth-child(even) { background:#0d0f15; }
+  .product-section:nth-child(even) { background:#0f1c14; }
   .product-inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
   .product-inner.reverse { direction:rtl; }
   .product-inner.reverse > * { direction:ltr; }
-  .product-tag { display:inline-block; background:rgba(0,210,122,0.1); border:1px solid rgba(0,210,122,0.3); color:var(--green); font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; padding:6px 14px; border-radius:20px; margin-bottom:20px; }
+  .product-tag { display:inline-block; background:rgba(74,180,74,0.1); border:1px solid rgba(74,180,74,0.25); color:#6abf6a; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; padding:6px 14px; border-radius:20px; margin-bottom:20px; }
   .product-title { font-family:'Bebas Neue',sans-serif; font-size:48px; letter-spacing:1px; color:#fff; line-height:1.05; margin-bottom:16px; }
   .product-desc { font-size:16px; color:var(--muted); line-height:1.8; margin-bottom:32px; }
   .feature-list { list-style:none; margin-bottom:36px; }
@@ -50,16 +50,16 @@
   .price-tag { display:flex; align-items:baseline; gap:8px; margin-bottom:28px; }
   .price-num { font-family:'Bebas Neue',sans-serif; font-size:52px; color:var(--green); letter-spacing:1px; }
   .price-per { font-size:15px; color:var(--muted); }
-  .btn-primary { display:inline-block; background:var(--green); color:#0a0c10; font-weight:700; font-size:15px; padding:16px 36px; border-radius:10px; text-decoration:none; transition:all 0.2s; }
-  .btn-primary:hover { background:#00e888; transform:translateY(-1px); }
+  .btn-primary { display:inline-block; background:#419e41; color:#ffffff; font-weight:700; font-size:15px; padding:16px 36px; border-radius:10px; text-decoration:none; transition:all 0.2s; }
+  .btn-primary:hover { background:#4ab44a; transform:translateY(-1px); }
   .btn-outline { display:inline-block; background:transparent; color:var(--green); font-weight:700; font-size:15px; padding:15px 36px; border-radius:10px; text-decoration:none; border:1.5px solid var(--green); transition:all 0.2s; margin-left:12px; }
   .btn-outline:hover { background:rgba(0,210,122,0.08); }
   .note-text { font-size:13px; color:#4b5563; font-style:italic; margin-top:16px; line-height:1.6; }
 
   /* MOCKUP SCREENS */
   .mockup-wrap { position:relative; }
-  .mockup-screen { background:#12151c; border:1px solid var(--border); border-radius:16px; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,0.5); }
-  .mockup-bar { background:#0d0f15; padding:10px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); }
+  .mockup-screen { background:#163016; border:1px solid #1e3020; border-radius:16px; overflow:hidden; box-shadow:0 24px 80px rgba(0,0,0,0.5); }
+  .mockup-bar { background:#0d1a0d; padding:10px 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid var(--border); }
   .mockup-dot { width:10px; height:10px; border-radius:50%; }
   .mockup-dot.r { background:#ff5f57; }
   .mockup-dot.y { background:#febc2e; }
@@ -127,7 +127,7 @@
   .divider-section p { font-size:16px; color:var(--muted); max-width:520px; margin:0 auto 32px; }
 
   /* FOOTER */
-  footer { background:#070810; border-top:1px solid var(--border); padding:40px 24px; text-align:center; }
+  footer { background:#0b1610; border-top:1px solid var(--border); padding:40px 24px; text-align:center; }
   .footer-logo { font-family:'Bebas Neue',sans-serif; font-size:24px; letter-spacing:2px; color:#fff; margin-bottom:16px; }
   .footer-logo span { color:var(--green); }
   .footer-links { display:flex; justify-content:center; gap:28px; flex-wrap:wrap; margin-bottom:20px; }
