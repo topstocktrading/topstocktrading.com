@@ -259,7 +259,16 @@ var TST_PROFILE = {
         '</div>';
 
     } catch(e) {
-      body.innerHTML = '<div style="text-align:center;padding:48px;color:#ef4444;">Error loading dashboard: '+(e.message||'Unknown')+'</div>';
+      
+    html += '<div style="margin-top:32px;background:#12141e;border:1px solid #1e2130;border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;">' +
+      '<div>' +
+      '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#7c6fde;text-transform:uppercase;margin-bottom:6px;">From the TST team</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#e8eaf0;margin-bottom:4px;">Want feedback on your trades?</div>' +
+      '<div style="font-size:13px;color:#6b7280;">TradeGrader grades every trade on 6 dimensions and shows you exactly what to fix.</div>' +
+      '</div>' +
+      '<a href="https://trade-grader.vercel.app" target="_blank" style="flex-shrink:0;background:#7c6fde;color:#fff;font-weight:700;font-size:13px;padding:12px 22px;border-radius:8px;text-decoration:none;white-space:nowrap;">Try it free →</a>' +
+      '</div>';
+    body.innerHTML = '<div style="text-align:center;padding:48px;color:#ef4444;">Error loading dashboard: '+(e.message||'Unknown')+'</div>';
     }
   },
 
@@ -554,6 +563,15 @@ var TST_PROFILE = {
       if (result.data) noteContent = result.data.content || '';
     } catch(e) {}
 
+    
+    html += '<div style="margin-top:32px;background:#12141e;border:1px solid #1e2130;border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;">' +
+      '<div>' +
+      '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#7c6fde;text-transform:uppercase;margin-bottom:6px;">From the TST team</div>' +
+      '<div style="font-size:15px;font-weight:700;color:#e8eaf0;margin-bottom:4px;">Want feedback on your trades?</div>' +
+      '<div style="font-size:13px;color:#6b7280;">TradeGrader grades every trade on 6 dimensions and shows you exactly what to fix.</div>' +
+      '</div>' +
+      '<a href="https://trade-grader.vercel.app" target="_blank" style="flex-shrink:0;background:#7c6fde;color:#fff;font-weight:700;font-size:13px;padding:12px 22px;border-radius:8px;text-decoration:none;white-space:nowrap;">Try it free →</a>' +
+      '</div>';
     body.innerHTML =
       '<div style="max-width:800px;">' +
         '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:6px;letter-spacing:0.5px;">My Trading Notes</div>' +
