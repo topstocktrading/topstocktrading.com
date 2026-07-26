@@ -1226,7 +1226,7 @@ function loadLesson(id){
     html='<div class="lesson-content"><div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:6px;">Interactive Trade Quiz</div><div style="font-size:13px;color:#6b7c6e;margin-bottom:24px;line-height:1.6;">Real historical charts. Identify the setup, choose your answer, get instant feedback with real data behind it.</div><div id="interactiveQuizContainer"></div></div>';
     if(!lesson) { var al2 = allLessons(); lesson = al2.find(function(l){return l.id===id}); }
   } else if(id&&id.startsWith('quiz-')){
-    const qSectionId=id.replace('quiz-');
+    const qSectionId=id.replace('quiz-','');
     const qSec=COURSE.find(function(s){return s.id===qSectionId;});
     const qLabel=qSec?qSec.label:qSectionId;
     if(window.TST_QUIZ&&window.TST_QUIZ.getQuiz(qSectionId)){
