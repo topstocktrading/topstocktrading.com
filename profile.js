@@ -284,6 +284,11 @@ var TST_PROFILE = {
     setTimeout(function(){ if(window.TST_CSV) TST_CSV.setupDragDrop(); TST_PROFILE.loadTrades(); }, 200);
 
     body.innerHTML =
+    // TradeGrader CTA
+    var tgBanner = document.createElement('div');
+    tgBanner.style.cssText = 'margin-top:32px;background:#12141e;border:1px solid #1e2130;border-radius:12px;padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:24px;';
+    tgBanner.innerHTML = '<div><div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#7c6fde;text-transform:uppercase;margin-bottom:6px;">From the TST team</div><div style="font-size:15px;font-weight:700;color:#e8eaf0;margin-bottom:4px;">Want feedback on your trades?</div><div style="font-size:13px;color:#6b7280;">TradeGrader grades every trade on 6 dimensions and shows you exactly what to fix.</div></div><a href="https://trade-grader.vercel.app" target="_blank" style="flex-shrink:0;background:#7c6fde;color:#fff;font-weight:700;font-size:13px;padding:12px 22px;border-radius:8px;text-decoration:none;white-space:nowrap;">Try it free →</a>';
+    body.appendChild(tgBanner);
       TST_CSV.renderImportUI() +
       '<div class="journal-form-wrap">' +
         '<div class="journal-form-title">Log a Trade Manually</div>' +
