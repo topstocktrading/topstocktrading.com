@@ -1046,7 +1046,7 @@ function renderNotes(lessonId){
   const list=document.getElementById('notes-list-'+lessonId);if(!list)return;
   const notes=NOTES[lessonId]||[];
   if(!notes.length){list.innerHTML=`<div class="notes-empty">No notes yet. Add one above while watching the video.</div>`;return;}
-  list.innerHTML=notes.map(n=>`<div class="note-item"><span class="note-ts" title="Video timestamp">${formatVideoTime(n.videoTime)}</span><span class="note-text">${n.text}<br><span style="font-size:11px;color:var(--muted);">${n.created}</span></span><button class="note-delete" onclick="deleteNote('${lessonId}',${n.id})">✕</button></div>`).join('');
+  list.innerHTML=notes.map(n=>`<div class="note-item"><span class="note-text">${n.text}<br><span style="font-size:11px;color:var(--muted);">${n.created}</span></span><button class="note-delete" onclick="deleteNote('${lessonId}',${n.id})">✕</button></div>`).join('');
 }
 function notesPanel(lessonId){
   const count=(NOTES[lessonId]||[]).length;
