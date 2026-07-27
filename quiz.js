@@ -538,7 +538,7 @@ smallcaps: {
     saveResult(sectionId,score,passed);
   }
 
-  async async function saveResult(sectionId,score,passed){
+  async function saveResult(sectionId,score,passed){
     try{
       const sb=window.supabase;
       if(!sb)return;
