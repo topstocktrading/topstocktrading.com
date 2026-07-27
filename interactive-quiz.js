@@ -946,6 +946,8 @@ window.TST_INTERACTIVE_QUIZ = {
   },
 
   render: function(container) {
+    if (typeof container === 'string') container = document.getElementById(container);
+    if (!container) return;
     container.innerHTML = `
       <div style="background:#111712;border-radius:12px;padding:24px;max-width:680px;margin:0 auto;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
