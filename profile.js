@@ -732,8 +732,6 @@ var TST_PROFILE = {
       '</div>';
   },
 
-,
-
   sendTenkMessage: async function() {
     var input = document.getElementById('tenk-msg-input');
     var content = input ? input.value.trim() : '';
