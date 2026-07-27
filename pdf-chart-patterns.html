@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>TST Chart Patterns</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Courier+Prime&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0c10;display:flex;justify-content:center;padding:40px 20px;font-family:'DM Sans',sans-serif;}
+.page{width:680px;background:#fff;border-radius:4px;overflow:hidden;}
+.header{background:#0a0c10;padding:32px 48px 28px;position:relative;}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#fff;}
+.logo span{color:#00d27a;}
+.doc-type{font-size:10px;font-weight:700;letter-spacing:3px;color:#4b5563;text-transform:uppercase;}
+.title-block{border-left:4px solid #00d27a;padding-left:16px;}
+.doc-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:1px;color:#fff;line-height:1;margin-bottom:6px;}
+.doc-sub{font-size:12px;color:#6b7280;}
+.header-bar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00d27a,#00a8ff);}
+.body{padding:36px 48px 24px;}
+.intro{font-size:13px;color:#374151;line-height:1.8;margin-bottom:24px;padding-bottom:18px;border-bottom:1px solid #e5e7eb;}
+.intro strong{color:#111827;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;color:#111827;margin-bottom:8px;padding-bottom:5px;border-bottom:2px solid #00d27a;display:flex;align-items:center;gap:8px;margin-top:20px;}
+.sec-num{background:#00d27a;color:#0a0c10;font-size:10px;font-weight:700;width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rule{background:#f9fafb;border-left:3px solid #00d27a;border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:8px;}
+.rule-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#00d27a;text-transform:uppercase;margin-bottom:3px;}
+.rule-text{font-size:12px;color:#374151;line-height:1.6;}
+.formula{background:#0a0c10;border-radius:8px;padding:14px 18px;margin-bottom:14px;text-align:center;}
+.formula-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#6b7280;text-transform:uppercase;margin-bottom:6px;}
+.formula-text{font-family:'Courier Prime',monospace;font-size:14px;color:#00d27a;font-weight:700;}
+.formula-sub{font-size:10px;color:#4b5563;margin-top:4px;}
+.warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:10px 14px;margin-bottom:14px;}
+.warn-label{font-size:10px;font-weight:700;letter-spacing:2px;color:#ea580c;text-transform:uppercase;margin-bottom:3px;}
+.warn-text{font-size:12px;color:#7c2d12;line-height:1.6;}
+table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:12px;}
+th{background:#0a0c10;color:#00d27a;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:8px 10px;text-align:left;}
+td{padding:7px 10px;border-bottom:1px solid #f3f4f6;color:#374151;}
+tr:nth-child(even) td{background:#f9fafb;}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.bg{background:#dcfce7;color:#166534;}
+.by{background:#fef9c3;color:#854d0e;}
+.br{background:#fee2e2;color:#991b1b;}
+.footer{background:#0a0c10;padding:10px 48px;display:flex;justify-content:space-between;align-items:center;}
+.footer-text{font-size:9px;color:#4b5563;letter-spacing:0.5px;}
+.footer-brand{font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;color:#00d27a;}
+.disc{font-size:9px;color:#6b7280;line-height:1.5;padding:10px 48px 20px;font-style:italic;border-top:1px solid #e5e7eb;}
+.checklist{list-style:none;padding:0;margin-bottom:14px;}
+.checklist li{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#374151;padding:6px 0;border-bottom:1px solid #f3f4f6;line-height:1.5;}
+.checklist li::before{content:'☐';font-size:14px;color:#00d27a;flex-shrink:0;}
+</style></head><body><div class="page">
+<div class="header">
+<div class="header-top">
+<div class="logo">TOP <span>STOCK</span> TRADING</div>
+<span class="doc-type">Free Resource</span>
+</div>
+<div class="title-block">
+<div class="doc-title">Chart Patterns Cheat Sheet</div>
+<div class="doc-sub">The most important patterns every active trader must recognize</div>
+</div>
+<div class="header-bar"></div>
+</div>
+<div class="body">
+<div class="intro">Chart patterns are visual formations created by price action that signal a likely continuation or reversal of the current trend. Knowing these patterns before they complete — not after — is what separates prepared traders from reactive ones.</div>
+<div class="sec-title"><span class="sec-num">1</span>Continuation Patterns</div>
+<table><tr><th>Pattern</th><th>What it looks like</th><th>Signal</th><th>Trade</th></tr>
+<tr><td><strong>Bull Flag</strong></td><td>Strong up move, then tight downward drift on low volume</td><td>Continuation up</td><td><span class="badge bg">Long on breakout</span></td></tr>
+<tr><td><strong>Bear Flag</strong></td><td>Strong down move, then tight upward drift on low volume</td><td>Continuation down</td><td><span class="badge br">Short on breakdown</span></td></tr>
+<tr><td><strong>Pennant</strong></td><td>Strong move, then converging trendlines forming a triangle</td><td>Continuation</td><td><span class="badge by">Direction of flagpole</span></td></tr>
+<tr><td><strong>Cup & Handle</strong></td><td>Rounded bottom, small pullback, then breakout</td><td>Bullish continuation</td><td><span class="badge bg">Long on handle breakout</span></td></tr>
+<tr><td><strong>Ascending Triangle</strong></td><td>Flat top resistance, higher lows</td><td>Bullish breakout likely</td><td><span class="badge bg">Long on break of flat top</span></td></tr></table>
+<div class="sec-title"><span class="sec-num">2</span>Reversal Patterns</div>
+<table><tr><th>Pattern</th><th>What it looks like</th><th>Signal</th><th>Trade</th></tr>
+<tr><td><strong>Head & Shoulders</strong></td><td>Left shoulder, higher head, right shoulder — neckline support</td><td>Bearish reversal</td><td><span class="badge br">Short on neckline break</span></td></tr>
+<tr><td><strong>Double Top</strong></td><td>Two peaks at same resistance level</td><td>Bearish reversal</td><td><span class="badge br">Short on break of valley</span></td></tr>
+<tr><td><strong>Double Bottom</strong></td><td>Two lows at same support level</td><td>Bullish reversal</td><td><span class="badge bg">Long on break of peak</span></td></tr>
+<tr><td><strong>Doji</strong></td><td>Open and close nearly equal — long wicks both sides</td><td>Indecision / reversal warning</td><td><span class="badge by">Wait for confirmation</span></td></tr>
+<tr><td><strong>Hammer</strong></td><td>Small body at top, long lower wick — at support</td><td>Bullish reversal</td><td><span class="badge bg">Long on next candle confirm</span></td></tr></table>
+<div class="sec-title"><span class="sec-num">3</span>Key Rules</div>
+<div class="rule"><div class="rule-label">Volume confirms the pattern</div><div class="rule-text">A breakout on low volume is suspect. A breakout on high volume (relative to average) is a real signal. Always check volume before entering a pattern trade.</div></div>
+<div class="rule"><div class="rule-label">Wait for the break, not the anticipation</div><div class="rule-text">Many beginners enter before the pattern completes. The pattern is only valid once price breaks the key level. Anticipating costs you money in failed patterns.</div></div>
+<div class="warn"><div class="warn-label">⚠ Fake breakouts are common</div><div class="warn-text">Price breaks a key level, triggers entries, then reverses. Use a small buffer above/below the breakout level for entry and always have a defined stop.</div></div>
+</div>
+<div class="disc">This document is for educational purposes only. Trading involves substantial risk of loss. Past performance is not indicative of future results. Top Stock Trading is not a registered investment advisor.</div>
+<div class="footer"><span class="footer-text">topstocktrading.com · Free Resource · Share freely</span><span class="footer-brand">TST</span></div></div></body></html>
