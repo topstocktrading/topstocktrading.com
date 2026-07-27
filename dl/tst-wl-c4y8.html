@@ -1,0 +1,65 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Daily Watchlist Builder — TST</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Courier+Prime&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#111;display:flex;justify-content:center;padding:40px 20px;font-family:'DM Sans',sans-serif;}
+.page{width:680px;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.hd{background:#0a0c10;padding:28px 44px 24px;position:relative;}
+.hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:#fff;}
+.logo span{color:#00d27a;}
+.dt{font-size:9px;font-weight:700;letter-spacing:3px;color:#4b5563;text-transform:uppercase;}
+.tb{border-left:4px solid #00d27a;padding-left:14px;}
+.ti{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;color:#fff;line-height:1;margin-bottom:4px;}
+.su{font-size:11px;color:#6b7280;}
+.hbar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00d27a,#00a8ff);}
+.body{padding:28px 44px 20px;}
+.intro{font-size:12px;color:#374151;line-height:1.75;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #e5e7eb;}
+.intro strong{color:#111827;}
+.sec{margin-top:14px;}
+.st{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:#111827;margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid #00d27a;display:flex;align-items:center;gap:8px;}
+.sn{background:#00d27a;color:#0a0c10;font-size:9px;font-weight:700;min-width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 4px;}
+.rule{background:#f9fafb;border-left:3px solid #00d27a;border-radius:0 5px 5px 0;padding:8px 12px;margin-bottom:6px;}
+.rl{font-size:9px;font-weight:700;letter-spacing:2px;color:#00d27a;text-transform:uppercase;margin-bottom:2px;}
+.rt{font-size:11px;color:#374151;line-height:1.6;}
+.fm{background:#0a0c10;border-radius:6px;padding:12px 16px;margin-bottom:10px;text-align:center;}
+.fl{font-size:9px;font-weight:700;letter-spacing:2px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;}
+.ft{font-family:'Courier Prime',monospace;font-size:13px;color:#00d27a;font-weight:700;}
+.fs{font-size:9px;color:#4b5563;margin-top:3px;}
+.warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;padding:8px 12px;margin-bottom:10px;}
+.wl{font-size:9px;font-weight:700;letter-spacing:2px;color:#ea580c;text-transform:uppercase;margin-bottom:2px;}
+.wt{font-size:11px;color:#7c2d12;line-height:1.6;}
+table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11px;}
+th{background:#0a0c10;color:#00d27a;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;text-align:left;}
+td{padding:6px 8px;border-bottom:1px solid #f3f4f6;color:#374151;}
+tr:nth-child(even) td{background:#f9fafb;}
+.bg{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#dcfce7;color:#166534;}
+.by{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#fef9c3;color:#854d0e;}
+.br{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#fee2e2;color:#991b1b;}
+.ft2{background:#0a0c10;padding:8px 44px;display:flex;justify-content:space-between;align-items:center;}
+.ftx{font-size:8px;color:#4b5563;}
+.fbn{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:#00d27a;}
+.disc{font-size:8px;color:#6b7280;line-height:1.5;padding:8px 44px 14px;font-style:italic;border-top:1px solid #e5e7eb;}
+.cl{list-style:none;padding:0;margin-bottom:10px;}
+.cl li{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#374151;padding:5px 0;border-bottom:1px solid #f3f4f6;line-height:1.5;}
+.cl li::before{content:'☐';font-size:12px;color:#00d27a;flex-shrink:0;}
+.svg-wrap{display:flex;justify-content:center;margin:10px 0;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.cr{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:10px 0;}
+</style></head><body><div class="page"><div class="hd"><div class="hd-top"><div class="logo">TOP <span>STOCK</span> TRADING</div><span class="dt">Free Resource</span></div><div class="tb"><div class="ti">Daily Watchlist Builder</div><div class="su">Step-by-step guide to building your trading watchlist every morning</div></div><div class="hbar"></div></div><div class="body"><div class="intro">A quality watchlist is built the night before or early morning. <strong>The goal is not to find every moving stock — it is to find 3–5 high-probability setups with a clear plan.</strong></div>
+<div class="sec"><div class="st"><span class="sn">1</span>Start With the Market</div>
+<div class="rule"><div class="rl">Index bias first</div><div class="rt">Check S&P 500 and Nasdaq direction before scanning. Trading longs in a down market is fighting the tape. Know your macro context first.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">2</span>Scanner Criteria</div>
+<table><tr><th>Filter</th><th>Setting</th><th>Why</th></tr>
+<tr><td>Price</td><td>$2 – $500</td><td>Avoids penny stocks and no-liquidity names</td></tr>
+<tr><td>Volume</td><td>500k+ avg/day</td><td>You need to enter and exit easily</td></tr>
+<tr><td>Relative Volume</td><td>1.5x or higher</td><td>Increased interest — something is happening</td></tr>
+<tr><td>Float</td><td>Under 50M (momentum)</td><td>Low float moves faster on volume spikes</td></tr>
+<tr><td>Catalyst</td><td>Filter by news</td><td>Volume without a reason is noise</td></tr></table></div>
+<div class="sec"><div class="st"><span class="sn">3</span>Rate Each Stock (1–5)</div>
+<ul class="cl"><li>Is there a clear catalyst driving the move?</li><li>Is the chart at a logical technical level (not extended)?</li><li>Is volume significantly above average?</li><li>Is the R:R at least 2:1?</li><li>Does this fit one of my defined setup types?</li></ul>
+<div class="rule"><div class="rl">Only trade 4s and 5s</div><div class="rt">Stocks scoring 3 or below stay on the bench. Most losing trades come from forcing mediocre setups.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">4</span>Watchlist Template</div>
+<table><tr><th>Ticker</th><th>Catalyst</th><th>Setup</th><th>Entry</th><th>Stop</th><th>Target</th></tr>
+<tr><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr>
+<tr><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr>
+<tr><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td><td>____</td></tr></table></div></div><div class="disc">For educational purposes only. Trading involves substantial risk of loss. Not financial advice.</div><div class="ft2"><span class="ftx">topstocktrading.com · Free Resource</span><span class="fbn">TST</span></div></div></body></html>
