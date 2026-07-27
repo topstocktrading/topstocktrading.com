@@ -462,6 +462,14 @@
     <div class="nav-welcome">Welcome back, <span id="sname">Trader</span></div>
     <button class="nav-btn" style="font-size:12px;padding:6px 14px;border-radius:6px;" onclick="showNotesPage()">My Notes</button>
     <button class="nav-btn" style="font-size:12px;padding:6px 14px;border-radius:6px;" onclick="showProfileDashboard()">My Profile</button>
+    <div class="notif-wrap" id="notifWrap">
+      <button class="notif-bell" onclick="toggleNotifDropdown()" title="Notifications">🔔</button>
+      <div class="notif-dot" id="notifDot"></div>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">Notifications</div>
+        <div class="notif-list" id="notifList"><div class="notif-empty">No notifications yet</div></div>
+      </div>
+    </div>
     <button class="logout-btn" onclick="doLogout()">Log Out</button>
   </div>
 </nav>
@@ -1253,6 +1261,7 @@ const SVG_DONE=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmln
 
 function buildSidebar(){
   const nav=document.getElementById('snav');nav.innerHTML='';
+  if(window._currentUser && typeof loadNotifications === 'function') loadNotifications();
   updateProgress();
   COURSE.forEach(sec=>{
     const isOpen=openSecs.has(sec.id);
@@ -1360,6 +1369,91 @@ function addMsg(text,type,id){
   div.className=`ai-msg ${type}`;if(id)div.id=id;div.textContent=text;
   msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
 }
+// ── NOTIFICATIONS ────────────────────────────────────────────────────────
+
+var _notifData = [];
+var _notifOpen = false;
+
+async function loadNotifications() {
+  try {
+    const sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+    if (!sb) return;
+    const user = window._currentUser;
+    if (!user) return;
+
+    // Fetch all notifications (global to all course members)
+    const { data: notifs } = await sb
+      .from('notifications')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(20);
+
+    if (!notifs || !notifs.length) return;
+
+    // Fetch which ones this user has read
+    const { data: readRows } = await sb
+      .from('notification_reads')
+      .select('notification_id')
+      .eq('user_id', user.id);
+
+    const readIds = new Set((readRows || []).map(r => r.notification_id));
+    _notifData = notifs.map(n => ({ ...n, read: readIds.has(n.id) }));
+
+    const unread = _notifData.filter(n => !n.read).length;
+    const dot = document.getElementById('notifDot');
+    if (dot) { dot.className = unread > 0 ? 'notif-dot show' : 'notif-dot'; }
+
+    renderNotifList();
+  } catch(e) { console.log('Notif error:', e); }
+}
+
+function renderNotifList() {
+  const list = document.getElementById('notifList');
+  if (!list) return;
+  if (!_notifData.length) {
+    list.innerHTML = '<div class="notif-empty">No notifications yet</div>';
+    return;
+  }
+  list.innerHTML = _notifData.map(n => {
+    const date = new Date(n.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric' });
+    return '<div class="notif-item ' + (n.read ? '' : 'unread') + '" onclick="markNotifRead('' + n.id + '')">' +
+      '<div class="notif-item-title">' + (n.read ? '' : '🟢 ') + n.title + '</div>' +
+      '<div class="notif-item-date">' + date + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function markNotifRead(notifId) {
+  try {
+    const sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+    const user = window._currentUser;
+    if (!sb || !user) return;
+    // Upsert read record
+    await sb.from('notification_reads').upsert({ user_id: user.id, notification_id: notifId }, { onConflict: 'user_id,notification_id' });
+    // Update local state
+    _notifData = _notifData.map(n => n.id === notifId ? { ...n, read: true } : n);
+    const unread = _notifData.filter(n => !n.read).length;
+    const dot = document.getElementById('notifDot');
+    if (dot) { dot.className = unread > 0 ? 'notif-dot show' : 'notif-dot'; }
+    renderNotifList();
+  } catch(e) {}
+}
+
+function toggleNotifDropdown() {
+  _notifOpen = !_notifOpen;
+  const dd = document.getElementById('notifDropdown');
+  if (dd) { dd.className = _notifOpen ? 'notif-dropdown open' : 'notif-dropdown'; }
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('notifWrap')?.contains(e.target)) {
+    _notifOpen = false;
+    const dd = document.getElementById('notifDropdown');
+    if (dd) dd.className = 'notif-dropdown';
+  }
+});
+
 </script>
 
 <script src="auth.js"></script>
