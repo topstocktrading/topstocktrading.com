@@ -108,18 +108,17 @@
       var session = result.data ? result.data.session : null;
       if (session && session.user) {
         window._currentUser = session.user;
-        // Admin goes to dedicated admin panel
-        if (session.user.email === 'h@topstocktrading.com') {
-          window.location.href = '/admin.html';
-          return;
-        }
         var displayName = session.user.email.split('@')[0];
         var loginScreen = document.getElementById('login-screen');
         var sname = document.getElementById('sname');
         if (loginScreen) loginScreen.style.display = 'none';
         if (sname) sname.textContent = displayName;
-        if (window.buildSidebar) window.buildSidebar();
-        if (window.loadLesson) window.loadLesson('beginner');
+        if (session.user.email === 'h@topstocktrading.com') {
+          if (window.showAdminPanel) window.showAdminPanel();
+        } else {
+          if (window.buildSidebar) window.buildSidebar();
+          if (window.loadLesson) window.loadLesson('beginner');
+        }
       }
     }).catch(function(e) {
       console.log('Session check failed:', e);
@@ -152,8 +151,12 @@
         var sname = document.getElementById('sname');
         if (loginScreen) loginScreen.style.display = 'none';
         if (sname) sname.textContent = 'Trader';
-        if (window.buildSidebar) window.buildSidebar();
-        if (window.loadLesson) window.loadLesson('beginner');
+        if (session.user.email === 'h@topstocktrading.com') {
+          if (window.showAdminPanel) window.showAdminPanel();
+        } else {
+          if (window.buildSidebar) window.buildSidebar();
+          if (window.loadLesson) window.loadLesson('beginner');
+        }
       } else {
         if (errEl) { errEl.textContent = 'Incorrect email or password.'; errEl.style.display = 'block'; }
       }
@@ -171,18 +174,21 @@
       }
       var user = result.data.user;
       window._currentUser = user;
-      // Admin goes to dedicated admin panel
-      if (user.email === 'h@topstocktrading.com') {
-        window.location.href = '/admin.html';
-        return;
-      }
       var displayName = user.email.split('@')[0];
       var loginScreen = document.getElementById('login-screen');
       var sname = document.getElementById('sname');
       if (loginScreen) loginScreen.style.display = 'none';
       if (sname) sname.textContent = displayName;
-      if (window.buildSidebar) window.buildSidebar();
-      if (window.loadLesson) window.loadLesson('beginner');
+      if (user.email === 'h@topstocktrading.com') {
+        if (window.showAdminPanel) window.showAdminPanel();
+      } else {
+        if (session.user.email === 'h@topstocktrading.com') {
+          if (window.showAdminPanel) window.showAdminPanel();
+        } else {
+          if (window.buildSidebar) window.buildSidebar();
+          if (window.loadLesson) window.loadLesson('beginner');
+        }
+      }
     }).catch(function(err) {
       if (errEl) { errEl.textContent = 'Login error. Please try again.'; errEl.style.display = 'block'; }
       if (btn) { btn.textContent = 'Access My Course'; btn.disabled = false; }
