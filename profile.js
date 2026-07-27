@@ -126,6 +126,8 @@ var TST_PROFILE = {
     try {
       var client = getSupabase();
       var tradesRes = await client.from('trades').select('*').eq('user_id', user.id);
+      var quizRes = await client.from('quiz_results').select('*').eq('user_id', user.id).order('updated_at', {ascending: false});
+      var quizzes = quizRes.data || [];
       var trades = tradesRes.data || [];
       var quizRes = await client.from('quiz_results').select('*').eq('user_id', user.id);
       var quizzes = quizRes.data || [];
