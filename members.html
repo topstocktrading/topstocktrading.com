@@ -1424,18 +1424,20 @@ async function loadNotifications(){
 function renderNotifList(){
   var list=document.getElementById('notifList');
   if(!list) return;
-  if(!_notifData.length){list.innerHTML='<div class="notif-empty">No notifications</div>';return;}
-  var html='';
+  if(!_notifData.length){
+    list.innerHTML='<div class="notif-empty">No notifications</div>';
+    return;
+  }
+  list.innerHTML='';
   _notifData.forEach(function(n){
     var dt=new Date(n.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    var cls=n.read?'notif-item':'notif-item unread';
+    var div=document.createElement('div');
+    div.className=n.read?'notif-item':'notif-item unread';
     var dot2=n.read?'':'<span style="color:#22c55e;margin-right:4px;">&#9679;</span>';
-    html+='<div class="'+cls+'" data-nid="'+n.id+'" onclick="markNotifRead(this.getAttribute('data-nid'))">';
-    html+='<div class="notif-item-title">'+dot2+n.title+'</div>';
-    html+='<div class="notif-item-date">'+dt+'</div>';
-    html+='</div>';
+    div.innerHTML=dot2+'<div class="notif-item-title">'+n.title+'</div><div class="notif-item-date">'+dt+'</div>';
+    (function(id){div.onclick=function(){markNotifRead(id);};})(n.id);
+    list.appendChild(div);
   });
-  list.innerHTML=html;
 }
 
 async function markNotifRead(nid){
