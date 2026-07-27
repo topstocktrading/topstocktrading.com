@@ -435,7 +435,7 @@ function renderUpload(body) {
   h += '<div class="panel">';
   h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:14px;">Images are named automatically: <code style="color:#4ab44a;">lessonID-N.jpg</code>. Pick the lesson, set the image number, then drop.</div>';
   h += '<div class="upload-row">';
-  h += '<select class="upload-select" id="upLesson">';
+  h += '<select class="upload-select" id="upLesson" onchange="document.getElementById('upNum').value=1;">';
   h += LESSON_IDS.map(l=>'<option value="'+l.id+'">'+l.name+'</option>').join('');
   h += '</select>';
   h += '<input class="upload-num" type="number" id="upNum" value="1" min="1" max="20">';
@@ -474,6 +474,9 @@ async function doUpload(file) {
     const {error} = await sb.storage.from('lesson-charts').upload(filename, file, {upsert:true});
     if(error) throw error;
     status.style.color='#22c55e'; status.textContent='✓ Uploaded: '+filename;
+    // Auto-increment image number for next upload
+    var numEl = document.getElementById('upNum');
+    if (numEl) numEl.value = parseInt(numEl.value) + 1;
   } catch(e) { status.style.color='#ef4444'; status.textContent='Error: '+e.message; }
 }
 
