@@ -1355,7 +1355,7 @@ function loadLesson(id){
   html+=`<div class="lesson-nav"><button class="nav-btn" onclick="loadLesson('${prev?prev.id:''}')" ${!prev?'disabled':''}>← Previous</button><button class="nav-btn primary" onclick="completeNext('${id}','${next?next.id:''}',${ isIntro})">${next?(isIntro?'Start Section →':'Mark Complete & Next →'):'Complete Course ✓'}</button></div>`;
 
   document.getElementById('mc').innerHTML=html;
-  if(id==='interactive-quiz' && window.TST_INTERACTIVE_QUIZ){ window.TST_INTERACTIVE_QUIZ.render('interactiveQuizContainer'); }
+  if(id==='interactive-quiz' && window.TST_INTERACTIVE_QUIZ){ window.TST_INTERACTIVE_QUIZ.current=0;window.TST_INTERACTIVE_QUIZ.score=0;window.TST_INTERACTIVE_QUIZ.answered=[];window.TST_INTERACTIVE_QUIZ.render('interactiveQuizContainer'); }
   loadLessonCharts(id).then(function(c){if(c){var lc=document.querySelector('.lc');if(lc)lc.insertAdjacentHTML('beforeend',c);}});
   window.scrollTo(0,0);
   buildSidebar();
