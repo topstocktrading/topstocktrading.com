@@ -88,7 +88,6 @@ var TST_PROFILE = {
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'journal\', this)">Journal</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
-          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'messages\', this)">Messages</button>' +
           tenKTabHtml +
         '</div>' +
         '<div id="tstTabBody">' +
