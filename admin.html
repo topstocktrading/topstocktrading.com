@@ -496,9 +496,7 @@ async function uploadCaption() {
 // ── LOGOUT ───────────────────────────────────────────────────────────────
 async function doLogout() {
   try { await sb.auth.signOut(); } catch(e) {}
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('loginScreen').style.display = 'flex';
-  document.getElementById('loginPass').value = '';
+  window.location.href = '/members.html';
 }
 
 // ── HELPERS ──────────────────────────────────────────────────────────────
