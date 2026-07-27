@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Beginner's Guide to Reading Charts — TST</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Courier+Prime&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#111;display:flex;justify-content:center;padding:40px 20px;font-family:'DM Sans',sans-serif;}
+.page{width:680px;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.hd{background:#0a0c10;padding:28px 44px 24px;position:relative;}
+.hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:#fff;}
+.logo span{color:#00d27a;}
+.dt{font-size:9px;font-weight:700;letter-spacing:3px;color:#4b5563;text-transform:uppercase;}
+.tb{border-left:4px solid #00d27a;padding-left:14px;}
+.ti{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;color:#fff;line-height:1;margin-bottom:4px;}
+.su{font-size:11px;color:#6b7280;}
+.hbar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00d27a,#00a8ff);}
+.body{padding:28px 44px 20px;}
+.intro{font-size:12px;color:#374151;line-height:1.75;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #e5e7eb;}
+.intro strong{color:#111827;}
+.sec{margin-top:14px;}
+.st{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:#111827;margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid #00d27a;display:flex;align-items:center;gap:8px;}
+.sn{background:#00d27a;color:#0a0c10;font-size:9px;font-weight:700;min-width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 4px;}
+.rule{background:#f9fafb;border-left:3px solid #00d27a;border-radius:0 5px 5px 0;padding:8px 12px;margin-bottom:6px;}
+.rl{font-size:9px;font-weight:700;letter-spacing:2px;color:#00d27a;text-transform:uppercase;margin-bottom:2px;}
+.rt{font-size:11px;color:#374151;line-height:1.6;}
+.fm{background:#0a0c10;border-radius:6px;padding:12px 16px;margin-bottom:10px;text-align:center;}
+.fl{font-size:9px;font-weight:700;letter-spacing:2px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;}
+.ft{font-family:'Courier Prime',monospace;font-size:13px;color:#00d27a;font-weight:700;}
+.fs{font-size:9px;color:#4b5563;margin-top:3px;}
+.warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;padding:8px 12px;margin-bottom:10px;}
+.wl{font-size:9px;font-weight:700;letter-spacing:2px;color:#ea580c;text-transform:uppercase;margin-bottom:2px;}
+.wt{font-size:11px;color:#7c2d12;line-height:1.6;}
+table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11px;}
+th{background:#0a0c10;color:#00d27a;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;text-align:left;}
+td{padding:6px 8px;border-bottom:1px solid #f3f4f6;color:#374151;}
+tr:nth-child(even) td{background:#f9fafb;}
+.bg{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#dcfce7;color:#166534;}
+.by{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#fef9c3;color:#854d0e;}
+.br{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#fee2e2;color:#991b1b;}
+.ft2{background:#0a0c10;padding:8px 44px;display:flex;justify-content:space-between;align-items:center;}
+.ftx{font-size:8px;color:#4b5563;}
+.fbn{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:#00d27a;}
+.disc{font-size:8px;color:#6b7280;line-height:1.5;padding:8px 44px 14px;font-style:italic;border-top:1px solid #e5e7eb;}
+.cl{list-style:none;padding:0;margin-bottom:10px;}
+.cl li{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#374151;padding:5px 0;border-bottom:1px solid #f3f4f6;line-height:1.5;}
+.cl li::before{content:'☐';font-size:12px;color:#00d27a;flex-shrink:0;}
+.svg-wrap{display:flex;justify-content:center;margin:10px 0;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.cr{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:10px 0;}
+</style></head><body><div class="page"><div class="hd"><div class="hd-top"><div class="logo">TOP <span>STOCK</span> TRADING</div><span class="dt">Free Resource</span></div><div class="tb"><div class="ti">Beginner's Guide to Reading Charts</div><div class="su">Candlesticks, support, resistance, volume, and trend — explained without jargon</div></div><div class="hbar"></div></div><div class="body"><div class="intro">Before you can trade you must be able to read a chart. <strong>A chart is a visual record of every price and volume transaction over time.</strong> Everything else builds on this foundation.</div>
+<div class="sec"><div class="st"><span class="sn">1</span>The Axes</div>
+<div class="rule"><div class="rl">Y-axis = Price</div><div class="rt">Higher on the chart = higher price. The scale on the right shows exact dollar values.</div></div>
+<div class="rule"><div class="rl">X-axis = Time</div><div class="rt">Moving left to right = moving forward in time. Each candle = one time period (1 min, 5 min, 1 day, etc.).</div></div></div>
+<div class="sec"><div class="st"><span class="sn">2</span>Candlestick Types</div>
+<div class="cr"><svg width="58" height="98" viewBox="0 0 58 98" xmlns="http://www.w3.org/2000/svg"><rect width="58" height="98" fill="#0a0c10" rx="4"/><line x1="29" y1="17" x2="29" y2="22" stroke="#22c55e" stroke-width="1.5"/><rect x="21" y="22" width="16" height="30" fill="#22c55e" rx="2"/><line x1="29" y1="52" x2="29" y2="60" stroke="#22c55e" stroke-width="1.5"/><text x="29" y="94" font-size="7" fill="#6b8f6b" text-anchor="middle" font-family="sans-serif">Bullish</text></svg> <svg width="58" height="98" viewBox="0 0 58 98" xmlns="http://www.w3.org/2000/svg"><rect width="58" height="98" fill="#0a0c10" rx="4"/><line x1="29" y1="6" x2="29" y2="14" stroke="#ef4444" stroke-width="1.5"/><rect x="21" y="14" width="16" height="35" fill="#ef4444" rx="2"/><line x1="29" y1="49" x2="29" y2="54" stroke="#ef4444" stroke-width="1.5"/><text x="29" y="94" font-size="7" fill="#6b8f6b" text-anchor="middle" font-family="sans-serif">Bearish</text></svg> <svg width="58" height="98" viewBox="0 0 58 98" xmlns="http://www.w3.org/2000/svg"><rect width="58" height="98" fill="#0a0c10" rx="4"/><line x1="29" y1="16" x2="29" y2="20" stroke="#22c55e" stroke-width="1.5"/><rect x="21" y="20" width="16" height="8" fill="#22c55e" rx="2"/><line x1="29" y1="28" x2="29" y2="76" stroke="#22c55e" stroke-width="1.5"/><text x="29" y="92" font-size="7" fill="#6b8f6b" text-anchor="middle" font-family="sans-serif">Hammer</text></svg> <svg width="58" height="98" viewBox="0 0 58 98" xmlns="http://www.w3.org/2000/svg"><rect width="58" height="98" fill="#0a0c10" rx="4"/><line x1="29" y1="16" x2="29" y2="60" stroke="#ef4444" stroke-width="1.5"/><rect x="21" y="60" width="16" height="8" fill="#ef4444" rx="2"/><line x1="29" y1="68" x2="29" y2="73" stroke="#ef4444" stroke-width="1.5"/><text x="29" y="92" font-size="7" fill="#6b8f6b" text-anchor="middle" font-family="sans-serif">Shoot Star</text></svg> <svg width="58" height="98" viewBox="0 0 58 98" xmlns="http://www.w3.org/2000/svg"><rect width="58" height="98" fill="#0a0c10" rx="4"/><line x1="29" y1="16" x2="29" y2="44" stroke="#c8d4c8" stroke-width="1.5"/><rect x="17" y="44" width="24" height="3" fill="#c8d4c8" rx="1"/><line x1="29" y1="47" x2="29" y2="75" stroke="#c8d4c8" stroke-width="1.5"/><text x="29" y="92" font-size="7" fill="#6b8f6b" text-anchor="middle" font-family="sans-serif">Doji</text></svg> <svg width="78" height="98" viewBox="0 0 78 98" xmlns="http://www.w3.org/2000/svg"><rect width="78" height="98" fill="#0a0c10" rx="4"/><line x1="26" y1="33" x2="26" y2="36" stroke="#ef4444" stroke-width="1"/><rect x="20" y="36" width="12" height="26" fill="#ef4444" rx="2"/><line x1="26" y1="62" x2="26" y2="66" stroke="#ef4444" stroke-width="1"/><line x1="52" y1="23" x2="52" y2="28" stroke="#22c55e" stroke-width="1"/><rect x="44" y="28" width="16" height="46" fill="#22c55e" rx="2"/><line x1="52" y1="74" x2="52" y2="78" stroke="#22c55e" stroke-width="1"/><text x="39" y="94" font-size="7" fill="#6b8f6b" text-anchor="middle" font-family="sans-serif">Bullish Engulf</text></svg></div>
+<table><tr><th>Candle</th><th>What it means</th></tr>
+<tr><td>Green</td><td>Close above open. Buyers won the period.</td></tr>
+<tr><td>Red</td><td>Close below open. Sellers won the period.</td></tr>
+<tr><td>Long upper wick</td><td>Sellers rejected the high aggressively.</td></tr>
+<tr><td>Long lower wick</td><td>Buyers rejected the low aggressively.</td></tr>
+<tr><td>Large body, no wicks</td><td>Maximum conviction in one direction.</td></tr></table></div>
+<div class="sec"><div class="st"><span class="sn">3</span>Volume</div>
+<div class="rule"><div class="rl">Volume confirms price moves</div><div class="rt">A breakout on high volume is real. A breakout on low volume is suspect. Always check the volume panel before acting.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">4</span>Trend Identification</div>
+<table><tr><th>Trend</th><th>Definition</th><th>Trade</th></tr>
+<tr><td>Uptrend</td><td>Higher highs, higher lows</td><td><span class="bg">Look for longs</span></td></tr>
+<tr><td>Downtrend</td><td>Lower highs, lower lows</td><td><span class="br">Look for shorts</span></td></tr>
+<tr><td>Choppy</td><td>No clear direction</td><td><span class="by">Reduce size or sit out</span></td></tr></table></div></div><div class="disc">For educational purposes only. Trading involves substantial risk of loss. Not financial advice.</div><div class="ft2"><span class="ftx">topstocktrading.com · Free Resource</span><span class="fbn">TST</span></div></div></body></html>
