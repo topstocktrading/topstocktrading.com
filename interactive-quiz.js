@@ -1,670 +1,1097 @@
-// ============================================================
-// TST INTERACTIVE TRADE QUIZ — v4
-// 20 questions — 10 zone-click, 10 multiple choice
-// All patterns visible on raw candlestick chart, no indicators needed
-// ============================================================
+// TST Interactive Quiz — 20 questions with real canvas chart rendering
+// 10 zone-click questions + 10 multiple choice questions
 
-window.TST_INTERACTIVE_QUIZ = (function() {
+const QUIZ_QUESTIONS = [
 
-  function seededRandom(seed) {
-    var s = seed
-    return function() { s = (s * 9301 + 49297) % 233280; return s / 233280 }
+// ── ZONE-CLICK QUESTIONS (1-10) ──────────────────────────────────────────
+
+{
+  id: 'q1', type: 'zone',
+  title: 'Bull Flag Breakout',
+  instruction: 'Click the ideal entry point for this bull flag breakout.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    // Flagpole — strong green candles
+    const pole = [
+      {o:142,h:148,l:140,c:147,v:3200},
+      {o:147,h:155,l:146,c:154,v:3800},
+      {o:154,h:163,l:153,c:162,v:4200},
+      {o:162,h:172,l:161,c:171,v:3900},
+    ];
+    // Flag — tight consolidation, slightly down
+    const flag = [
+      {o:171,h:173,l:169,c:170,v:1100},
+      {o:170,h:172,l:168,c:169,v:900},
+      {o:169,h:171,l:167,c:170,v:850},
+      {o:170,h:172,l:168,c:169,v:820},
+      {o:169,h:171,l:167,c:168,v:800},
+    ];
+    // Breakout
+    const breakout = [
+      {o:168,h:178,l:167,c:177,v:4100},
+      {o:177,h:183,l:176,c:182,v:3600},
+    ];
+    const all = [...pole,...flag,...breakout];
+    const prices = all.flatMap(c=>[c.h,c.l]);
+    const minP=Math.min(...prices)-4, maxP=Math.max(...prices)+4;
+    const candles = [...pole,...flag,...breakout];
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    // Flag resistance line
+    const flagHigh = 173;
+    const y = priceToY(flagHigh,minP,maxP,H);
+    ctx.strokeStyle='rgba(251,191,36,0.6)'; ctx.lineWidth=1.5; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W)+(pole.length)*candleSlot(W,candles.length), y);
+    ctx.lineTo(W-10, y); ctx.stroke(); ctx.setLineDash([]);
+    // Zone markers
+    drawZoneLabel(ctx, W, H, 'TOO EARLY', 0.52, 0.62);
+    drawZoneLabel(ctx, W, H, 'IDEAL ENTRY', 0.62, 0.72);
+    drawZoneLabel(ctx, W, H, 'TOO LATE', 0.72, 0.85);
+    drawLabel(ctx, 'Bull Flag', W, H);
+  },
+  zones: { early: [0.52,0.62], ideal: [0.62,0.75], late: [0.75,0.88] },
+  feedback: { early:'Too early — the flag hasn\'t broken out yet. Wait for price to close above the flag high on volume.', ideal:'Perfect entry! Price has broken above the flag resistance on a strong volume candle — classic bull flag breakout.', late:'Too late — you\'re chasing. The best risk/reward was at the breakout candle, not several candles later.' }
+},
+
+{
+  id: 'q2', type: 'zone',
+  title: 'Opening Range Breakout',
+  instruction: 'Click the ideal entry for this Opening Range Breakout (ORB).',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:185,h:188,l:183,c:186,v:2800},
+      {o:186,h:189,l:184,c:185,v:2600},
+      {o:185,h:188,l:183,c:187,v:2400},
+      {o:187,h:189,l:184,c:186,v:2200},
+      {o:186,h:190,l:185,c:188,v:2300},
+      {o:188,h:190,l:186,c:187,v:2100},
+      {o:187,h:196,l:186,c:195,v:5200},
+      {o:195,h:200,l:194,c:199,v:4800},
+      {o:199,h:203,l:197,c:202,v:4100},
+    ];
+    const minP=181, maxP=206;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    // ORB lines
+    ctx.strokeStyle='rgba(0,210,122,0.7)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    const yHigh = priceToY(190,minP,maxP,H);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),yHigh); ctx.lineTo(W-10,yHigh); ctx.stroke();
+    ctx.strokeStyle='rgba(239,68,68,0.5)';
+    const yLow = priceToY(183,minP,maxP,H);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),yLow); ctx.lineTo(W-10,yLow); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(0,210,122,0.8)'; ctx.font='9px sans-serif';
+    ctx.fillText('ORB HIGH: $190',leftPad(W)+4, yHigh-4);
+    ctx.fillStyle='rgba(239,68,68,0.8)';
+    ctx.fillText('ORB LOW: $183',leftPad(W)+4, yLow+12);
+    drawZoneLabel(ctx, W, H, 'SETTING UP', 0.08, 0.48);
+    drawZoneLabel(ctx, W, H, 'IDEAL', 0.56, 0.68);
+    drawZoneLabel(ctx, W, H, 'TOO LATE', 0.72, 0.88);
+    drawLabel(ctx, 'Opening Range Breakout (ORB)', W, H);
+  },
+  zones: { early: [0.08,0.52], ideal: [0.56,0.70], late: [0.70,0.88] },
+  feedback: { early:'That\'s still inside the opening range — no breakout signal yet. Wait for price to break and close above ORB high on volume.', ideal:'Correct! Entry on the breakout candle above the ORB high with volume expansion — textbook ORB entry.', late:'Too late. You want to enter on the breakout candle itself, not two candles after.' }
+},
+
+{
+  id: 'q3', type: 'zone',
+  title: 'Consolidation Retest',
+  instruction: 'A breakout happened, then a pullback to prior resistance now acting as support. Click the ideal entry.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:62,h:65,l:61,c:64,v:1800},
+      {o:64,h:66,l:63,c:65,v:1900},
+      {o:65,h:68,l:64,c:67,v:2200},
+      {o:67,h:70,l:66,c:70,v:3100},
+      {o:70,h:76,l:69,c:75,v:4800},
+      {o:75,h:78,l:73,c:74,v:2800},
+      {o:74,h:76,l:70,c:71,v:2200},
+      {o:71,h:72,l:69,c:70,v:1900},
+      {o:70,h:71,l:69,c:70,v:1700},
+      {o:70,h:74,l:69,c:73,v:2600},
+      {o:73,h:78,l:72,c:77,v:3400},
+    ];
+    const minP=59, maxP=81;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const yRes = priceToY(70,minP,maxP,H);
+    ctx.strokeStyle='rgba(0,210,122,0.7)'; ctx.lineWidth=1.5; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),yRes); ctx.lineTo(W-10,yRes); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(0,210,122,0.8)'; ctx.font='9px sans-serif';
+    ctx.fillText('Support (old resistance)',leftPad(W)+4, yRes-4);
+    drawZoneLabel(ctx, W, H, 'BREAKOUT', 0.3, 0.42);
+    drawZoneLabel(ctx, W, H, 'PULLBACK', 0.44, 0.62);
+    drawZoneLabel(ctx, W, H, 'IDEAL RETEST', 0.62, 0.74);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.76, 0.88);
+    drawLabel(ctx, 'Consolidation Retest', W, H);
+  },
+  zones: { early: [0.3,0.58], ideal: [0.62,0.76], late: [0.76,0.90] },
+  feedback: { early:'Not the retest entry — the stock just broke out or is still pulling back. Wait for the touch of the prior resistance level.', ideal:'Excellent! You bought the retest of prior resistance now acting as support — this is the ideal risk/reward entry with a tight stop below the level.', late:'The retest already happened and price has moved away. Entry here gives you poor risk/reward.' }
+},
+
+{
+  id: 'q4', type: 'zone',
+  title: 'Bear Flag Breakdown',
+  instruction: 'Click the ideal short entry on this bear flag.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const pole = [
+      {o:95,h:96,l:88,c:89,v:3800},
+      {o:89,h:90,l:82,c:83,v:4200},
+      {o:83,h:84,l:77,c:78,v:3900},
+    ];
+    const flag = [
+      {o:78,h:81,l:77,c:80,v:1100},
+      {o:80,h:82,l:79,c:81,v:900},
+      {o:81,h:83,l:80,c:82,v:850},
+      {o:82,h:84,l:81,c:83,v:800},
+      {o:83,h:84,l:81,c:82,v:820},
+    ];
+    const breakdown = [
+      {o:82,h:83,l:75,c:76,v:4600},
+      {o:76,h:77,l:70,c:71,v:4100},
+    ];
+    const all=[...pole,...flag,...breakdown];
+    const minP=68, maxP=99;
+    drawCandles(ctx,all,minP,maxP,W,H);
+    const flagLow=77;
+    const y=priceToY(flagLow,minP,maxP,H);
+    ctx.strokeStyle='rgba(239,68,68,0.7)'; ctx.lineWidth=1.5; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W)+pole.length*candleSlot(W,all.length),y);
+    ctx.lineTo(W-10,y); ctx.stroke(); ctx.setLineDash([]);
+    drawZoneLabel(ctx, W, H, 'POLE', 0.06, 0.24);
+    drawZoneLabel(ctx, W, H, 'FLAG', 0.26, 0.56);
+    drawZoneLabel(ctx, W, H, 'IDEAL SHORT', 0.58, 0.72);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.74, 0.88);
+    drawLabel(ctx, 'Bear Flag Breakdown', W, H);
+  },
+  zones: { early: [0.06,0.54], ideal: [0.58,0.73], late: [0.73,0.90] },
+  feedback: { early:'Too early — you\'re shorting into the flag consolidation, not the breakdown. Wait for price to break below the flag support on volume.', ideal:'Correct! Short entry on the breakdown below the flag support with volume confirmation — ideal bear flag short.', late:'Too late — you\'re chasing the move after most of the profit has already been made.' }
+},
+
+{
+  id: 'q5', type: 'zone',
+  title: 'Head & Shoulders Breakdown',
+  instruction: 'Click the ideal entry for this Head & Shoulders breakdown.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const pts = [
+      {p:60,v:1800},{p:75,v:2200},{p:63,v:1900},
+      {p:85,v:3100},{p:64,v:2000},
+      {p:76,v:2100},{p:61,v:4800},
+      {p:55,v:3600},{p:50,v:3200},
+    ];
+    const candles = pts.map((pt,i) => {
+      const next = pts[i+1];
+      const o = i===0?58:pts[i-1].p;
+      const c = pt.p;
+      return {o,h:Math.max(o,c)+2,l:Math.min(o,c)-2,c,v:pt.v};
+    });
+    candles.pop();
+    const minP=46, maxP=90;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const neckY=priceToY(62,minP,maxP,H);
+    ctx.strokeStyle='rgba(239,68,68,0.8)'; ctx.lineWidth=2; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),neckY); ctx.lineTo(W-10,neckY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(239,68,68,0.8)'; ctx.font='9px sans-serif';
+    ctx.fillText('NECKLINE',leftPad(W)+4,neckY-4);
+    drawZoneLabel(ctx, W, H, 'LS', 0.06, 0.22);
+    drawZoneLabel(ctx, W, H, 'HEAD', 0.24, 0.44);
+    drawZoneLabel(ctx, W, H, 'RS', 0.46, 0.58);
+    drawZoneLabel(ctx, W, H, 'IDEAL SHORT', 0.60, 0.76);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.78, 0.90);
+    drawLabel(ctx, 'Head & Shoulders', W, H);
+  },
+  zones: { early: [0.06,0.56], ideal: [0.60,0.78], late: [0.78,0.92] },
+  feedback: { early:'The Head & Shoulders pattern needs to complete first. Wait for price to break below the neckline.', ideal:'Perfect! Short entry on the neckline break — the H&S pattern is confirmed and the measured move is projected below.', late:'The breakdown has already moved significantly. Entry here is chasing with poor risk/reward.' }
+},
+
+{
+  id: 'q6', type: 'zone',
+  title: 'Support Bounce (3rd Test)',
+  instruction: 'Price is testing support for the third time. Click the ideal long entry.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:72,h:78,l:71,c:77,v:2100},
+      {o:77,h:80,l:70,c:71,v:3200},
+      {o:71,h:73,l:70,c:72,v:2400},
+      {o:72,h:77,l:71,c:76,v:2800},
+      {o:76,h:80,l:75,c:79,v:2200},
+      {o:79,h:82,l:78,c:80,v:1900},
+      {o:80,h:83,l:70,c:71,v:3800},
+      {o:71,h:73,l:70,c:72,v:2600},
+      {o:72,h:76,l:70,c:75,v:2900},
+      {o:75,h:82,l:74,c:81,v:3400},
+      {o:81,h:85,l:80,c:84,v:2800},
+    ];
+    const minP=67, maxP=88;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const suppY=priceToY(70,minP,maxP,H);
+    ctx.strokeStyle='rgba(0,210,122,0.8)'; ctx.lineWidth=2; ctx.setLineDash([5,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),suppY); ctx.lineTo(W-10,suppY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(0,210,122,0.8)'; ctx.font='9px sans-serif';
+    ctx.fillText('SUPPORT $70',leftPad(W)+4,suppY-4);
+    const slot=candleSlot(W,candles.length);
+    const lp=leftPad(W);
+    ctx.fillStyle='rgba(0,210,122,0.5)'; ctx.font='8px sans-serif';
+    ctx.fillText('1st test',lp+1*slot,suppY+14);
+    ctx.fillText('2nd test',lp+6*slot,suppY+14);
+    ctx.fillText('3rd test',lp+8*slot,suppY+14);
+    drawZoneLabel(ctx, W, H, 'BOUNCE', 0.56, 0.68);
+    drawZoneLabel(ctx, W, H, 'IDEAL', 0.68, 0.78);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.80, 0.90);
+    drawLabel(ctx, 'Support Bounce — 3rd Test', W, H);
+  },
+  zones: { early: [0.06,0.62], ideal: [0.62,0.78], late: [0.78,0.92] },
+  feedback: { early:'Wait for the support level to be tested and show a rejection. The reversal candle is your signal.', ideal:'Correct! Entry on the rejection candle at support — the hammer/wick shows buyers stepped in aggressively. Stop below $70.', late:'The bounce has already moved away from support. Entry here gives you poor risk/reward versus waiting for the next test.' }
+},
+
+{
+  id: 'q7', type: 'zone',
+  title: 'Doji Top Reversal',
+  instruction: 'A doji forms after an extended run. Click where you would enter the short.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:55,h:58,l:54,c:57,v:1800},
+      {o:57,h:61,l:56,c:60,v:2200},
+      {o:60,h:65,l:59,c:64,v:2800},
+      {o:64,h:69,l:63,c:68,v:3200},
+      {o:68,h:73,l:67,c:72,v:3600},
+      {o:72,h:77,l:71,c:76,v:3200},
+      {o:76,h:79,l:72,c:73,v:4100}, // doji at top
+      {o:73,h:74,l:68,c:69,v:3800},
+      {o:69,h:70,l:64,c:65,v:3200},
+      {o:65,h:66,l:60,c:61,v:2800},
+    ];
+    const minP=51, maxP=83;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const slot=candleSlot(W,candles.length);
+    const lp=leftPad(W);
+    ctx.strokeStyle='rgba(251,191,36,0.8)'; ctx.lineWidth=2;
+    const dojiX=lp+6*slot+slot/2;
+    const dojiY=priceToY(76,minP,maxP,H);
+    ctx.beginPath(); ctx.arc(dojiX,dojiY,12,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle='rgba(251,191,36,0.9)'; ctx.font='9px sans-serif';
+    ctx.fillText('DOJI',dojiX-12,dojiY-16);
+    drawZoneLabel(ctx, W, H, 'RUN UP', 0.06, 0.52);
+    drawZoneLabel(ctx, W, H, 'DOJI', 0.52, 0.62);
+    drawZoneLabel(ctx, W, H, 'IDEAL SHORT', 0.62, 0.74);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.76, 0.88);
+    drawLabel(ctx, 'Doji Top Reversal', W, H);
+  },
+  zones: { early: [0.06,0.56], ideal: [0.62,0.76], late: [0.76,0.90] },
+  feedback: { early:'Don\'t short into the run — wait for the doji to confirm and then for price to begin breaking down.', ideal:'Correct! Short entry after the doji is confirmed and price begins moving below it. The doji showed indecision and exhaustion at the top.', late:'The reversal move is already underway. Entry here gives up too much profit.' }
+},
+
+{
+  id: 'q8', type: 'zone',
+  title: 'Hammer Reversal',
+  instruction: 'A hammer candle forms at support after a downtrend. Click the ideal long entry.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:88,h:90,l:84,c:85,v:2200},
+      {o:85,h:86,l:80,c:81,v:2600},
+      {o:81,h:82,l:76,c:77,v:2900},
+      {o:77,h:78,l:72,c:73,v:3200},
+      {o:73,h:74,l:65,c:72,v:4800}, // hammer
+      {o:72,h:78,l:71,c:77,v:3600},
+      {o:77,h:83,l:76,c:82,v:3200},
+      {o:82,h:87,l:81,c:86,v:2800},
+    ];
+    const minP=62, maxP=93;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const suppY=priceToY(72,minP,maxP,H);
+    ctx.strokeStyle='rgba(0,210,122,0.6)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),suppY); ctx.lineTo(W-10,suppY); ctx.stroke();
+    ctx.setLineDash([]);
+    const slot=candleSlot(W,candles.length);
+    const lp=leftPad(W);
+    ctx.strokeStyle='rgba(251,191,36,0.9)'; ctx.lineWidth=2;
+    const hamX=lp+4*slot+slot/2;
+    const hamY=priceToY(72,minP,maxP,H);
+    ctx.beginPath(); ctx.arc(hamX,hamY+8,14,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle='rgba(251,191,36,0.9)'; ctx.font='9px sans-serif';
+    ctx.fillText('HAMMER',hamX-20,hamY+30);
+    drawZoneLabel(ctx, W, H, 'DOWNTREND', 0.06, 0.42);
+    drawZoneLabel(ctx, W, H, 'HAMMER', 0.42, 0.52);
+    drawZoneLabel(ctx, W, H, 'IDEAL', 0.52, 0.64);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.68, 0.82);
+    drawLabel(ctx, 'Hammer Reversal', W, H);
+  },
+  zones: { early: [0.06,0.48], ideal: [0.52,0.66], late: [0.66,0.84] },
+  feedback: { early:'Don\'t buy before the hammer is complete or confirmed. The hammer needs to form first, then you need the next candle to confirm.', ideal:'Correct! Entry on the confirmation candle after the hammer — the next green candle closing above the hammer high confirms buyers have taken control.', late:'The move away from the hammer is already significant. Better entry was available at the confirmation candle.' }
+},
+
+{
+  id: 'q9', type: 'zone',
+  title: 'Lower High Lower Low (Short Setup)',
+  instruction: 'Price has established a downtrend with lower highs. Click the ideal short entry.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:80,h:85,l:79,c:84,v:2100},
+      {o:84,h:88,l:76,c:77,v:3800},
+      {o:77,h:82,l:76,c:81,v:2200},
+      {o:81,h:83,l:77,c:78,v:2000},
+      {o:78,h:80,l:70,c:71,v:3600},
+      {o:71,h:77,l:70,c:76,v:2100},
+      {o:76,h:78,l:72,c:73,v:1900},
+      {o:73,h:75,l:64,c:65,v:4100},
+      {o:65,h:70,l:64,c:69,v:2200},
+    ];
+    const minP=61, maxP=92;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    // Draw lower highs
+    ctx.strokeStyle='rgba(239,68,68,0.6)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    const lp=leftPad(W); const slot=candleSlot(W,candles.length);
+    ctx.beginPath();
+    ctx.moveTo(lp+1*slot+slot/2, priceToY(88,minP,maxP,H));
+    ctx.lineTo(lp+3*slot+slot/2, priceToY(83,minP,maxP,H));
+    ctx.lineTo(lp+5*slot+slot/2, priceToY(77,minP,maxP,H));
+    ctx.lineTo(lp+7*slot+slot/2, priceToY(70,minP,maxP,H));
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(239,68,68,0.8)'; ctx.font='8px sans-serif';
+    ctx.fillText('LH',lp+1*slot, priceToY(88,minP,maxP,H)-6);
+    ctx.fillText('LH',lp+3*slot, priceToY(83,minP,maxP,H)-6);
+    ctx.fillText('LH',lp+5*slot, priceToY(77,minP,maxP,H)-6);
+    drawZoneLabel(ctx, W, H, 'DOWNTREND', 0.06, 0.48);
+    drawZoneLabel(ctx, W, H, 'IDEAL SHORT', 0.50, 0.64);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.68, 0.82);
+    drawLabel(ctx, 'LHLL Downtrend Short', W, H);
+  },
+  zones: { early: [0.06,0.46], ideal: [0.50,0.66], late: [0.66,0.84] },
+  feedback: { early:'Wait for the next lower high to form — that\'s the short entry. You need confirmation that the bounce has peaked.', ideal:'Correct! Short entry at the lower high — price has bounced but failed to make a new high, confirming the downtrend is intact.', late:'You missed the optimal lower high entry. Wait for the next bounce to form a new lower high.' }
+},
+
+{
+  id: 'q10', type: 'zone',
+  title: 'Ascending Triangle Breakout',
+  instruction: 'Click the ideal entry for this ascending triangle breakout.',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:68,h:72,l:67,c:71,v:1900},
+      {o:71,h:76,l:70,c:72,v:3200},
+      {o:72,h:74,l:68,c:69,v:2100},
+      {o:69,h:73,l:68,c:72,v:2300},
+      {o:72,h:76,l:71,c:73,v:2800},
+      {o:73,h:76,l:72,c:74,v:2200},
+      {o:74,h:76,l:73,c:75,v:2000},
+      {o:75,h:76,l:74,c:75,v:1900},
+      {o:75,h:83,l:74,c:82,v:5100},
+      {o:82,h:87,l:81,c:86,v:4200},
+    ];
+    const minP=64, maxP=91;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const resY=priceToY(76,minP,maxP,H);
+    ctx.strokeStyle='rgba(239,68,68,0.7)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),resY); ctx.lineTo(W-10,resY); ctx.stroke();
+    ctx.strokeStyle='rgba(0,210,122,0.7)';
+    const lp=leftPad(W); const slot=candleSlot(W,candles.length);
+    ctx.beginPath();
+    ctx.moveTo(lp,priceToY(67,minP,maxP,H));
+    ctx.lineTo(lp+8*slot,priceToY(74,minP,maxP,H));
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(239,68,68,0.8)'; ctx.font='9px sans-serif';
+    ctx.fillText('FLAT RESISTANCE $76',lp+4,resY-5);
+    ctx.fillStyle='rgba(0,210,122,0.8)';
+    ctx.fillText('Rising lows',lp+4,priceToY(66,minP,maxP,H));
+    drawZoneLabel(ctx, W, H, 'TRIANGLE', 0.06, 0.64);
+    drawZoneLabel(ctx, W, H, 'IDEAL', 0.64, 0.76);
+    drawZoneLabel(ctx, W, H, 'LATE', 0.78, 0.90);
+    drawLabel(ctx, 'Ascending Triangle Breakout', W, H);
+  },
+  zones: { early: [0.06,0.60], ideal: [0.64,0.78], late: [0.78,0.92] },
+  feedback: { early:'Still inside the triangle — wait for the breakout above flat resistance on strong volume.', ideal:'Perfect! Entry on the breakout above flat resistance with a volume spike — the ascending triangle is confirmed.', late:'The breakout has already moved significantly past the entry point. Wait for a pullback to the breakout level.' }
+},
+
+// ── MULTIPLE CHOICE QUESTIONS (11-20) ────────────────────────────────────
+
+{
+  id: 'q11', type: 'mc',
+  title: 'Fake Breakout',
+  instruction: 'What is happening in this chart?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:72,h:75,l:71,c:74,v:2100},
+      {o:74,h:77,l:73,c:76,v:2400},
+      {o:76,h:79,l:75,c:78,v:2800},
+      {o:78,h:83,l:77,c:79,v:3200}, // spike above
+      {o:79,h:80,l:72,c:73,v:4100}, // reversal
+      {o:73,h:74,l:68,c:69,v:3600},
+      {o:69,h:70,l:65,c:66,v:3100},
+    ];
+    const minP=62, maxP=87;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const resY=priceToY(79,minP,maxP,H);
+    ctx.strokeStyle='rgba(239,68,68,0.8)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),resY); ctx.lineTo(W-10,resY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(239,68,68,0.9)'; ctx.font='9px sans-serif';
+    ctx.fillText('RESISTANCE $79',leftPad(W)+4,resY-5);
+    drawLabel(ctx, 'Identify This Pattern', W, H);
+  },
+  choices: [
+    'A bull flag breakout — buy the momentum',
+    'A fake breakout (bull trap) — price failed to hold above resistance',
+    'An ascending triangle completing — strong buy signal',
+    'Normal consolidation — price will try again'
+  ],
+  correct: 1,
+  feedback: 'Correct! This is a fake breakout (bull trap). Price briefly broke above resistance but immediately reversed back below it on high volume. Buyers who entered on the breakout are now trapped. The short entry is when price closes back below the resistance level.'
+},
+
+{
+  id: 'q12', type: 'mc',
+  title: 'Green to Red Reversal',
+  instruction: 'The stock opened above yesterday\'s close but is now reversing. What does this signal?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:58,h:64,l:57,c:63,v:2200,'label':'Yesterday'},
+      {o:66,h:70,l:58,c:59,v:4800,'label':'Today'},
+    ];
+    const minP=54, maxP=74;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const prevCloseY=priceToY(63,minP,maxP,H);
+    ctx.strokeStyle='rgba(0,210,122,0.8)'; ctx.lineWidth=1.5; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(leftPad(W),prevCloseY); ctx.lineTo(W-10,prevCloseY); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(0,210,122,0.9)'; ctx.font='9px sans-serif';
+    ctx.fillText('Yesterday close: $63',leftPad(W)+4,prevCloseY-5);
+    ctx.fillStyle='rgba(239,68,68,0.9)';
+    ctx.fillText('Today opened above ($66) → closed below ($59)',leftPad(W)+4,prevCloseY+15);
+    drawLabel(ctx, 'Green to Red — What Now?', W, H);
+  },
+  choices: [
+    'Bullish signal — the large wick shows buyers are supporting the stock',
+    'Neutral — opening gaps fill regularly and this is expected',
+    'Bearish signal — buyers failed to hold the open, sellers in control',
+    'Buy signal — the stock is oversold after today\'s decline'
+  ],
+  correct: 2,
+  feedback: 'Correct! Green to red is a bearish signal. The stock opened above the prior close (green territory) but sellers overwhelmed buyers and drove price below yesterday\'s close. Every buyer from the open is now underwater. This signals distribution and often leads to continued selling, especially if it occurs after a multi-day run.'
+},
+
+{
+  id: 'q13', type: 'mc',
+  title: 'The Kill Candle',
+  instruction: 'What is this large red candle called and what does it signal?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:68,h:72,l:67,c:71,v:1800},
+      {o:71,h:75,l:70,c:74,v:2100},
+      {o:74,h:78,l:73,c:77,v:2400},
+      {o:77,h:82,l:76,c:81,v:2800},
+      {o:81,h:84,l:65,c:67,v:7200}, // kill candle
+      {o:67,h:68,l:62,c:63,v:3600},
+    ];
+    const minP=59, maxP=88;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const slot=candleSlot(W,candles.length);
+    const lp=leftPad(W);
+    ctx.strokeStyle='rgba(239,68,68,0.9)'; ctx.lineWidth=2;
+    const killX=lp+4*slot+slot/2;
+    ctx.beginPath(); ctx.arc(killX,priceToY(75,minP,maxP,H),16,0,Math.PI*2); ctx.stroke();
+    ctx.fillStyle='rgba(239,68,68,0.9)'; ctx.font='9px sans-serif';
+    ctx.fillText('?',killX-2,priceToY(75,minP,maxP,H)+4);
+    drawLabel(ctx, 'Name This Candle', W, H);
+  },
+  choices: [
+    'Evening star — three-candle reversal pattern starting the decline',
+    'Kill candle — large red reversal bar that destroys the prior trend on heavy volume',
+    'Bearish harami — small candle inside a large prior candle',
+    'Shooting star — long upper wick showing rejection'
+  ],
+  correct: 1,
+  feedback: 'Correct! This is a kill candle — a large, high-volume red candle that reverses a significant portion of the prior move. It signals that sellers have taken aggressive control and the trend has likely changed. The high volume is key: it shows institutional selling, not retail noise. After a kill candle, assume the prior uptrend is over until proven otherwise.'
+},
+
+{
+  id: 'q14', type: 'mc',
+  title: 'Weak Second Leg',
+  instruction: 'The second leg of this rally is smaller than the first. What does this warn about?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:60,h:62,l:59,c:61,v:1800},
+      {o:61,h:65,l:60,c:64,v:3200},
+      {o:64,h:70,l:63,c:69,v:4100},
+      {o:69,h:72,l:67,c:68,v:2800},
+      {o:68,h:70,l:64,c:65,v:2200},
+      {o:65,h:67,l:64,c:66,v:1900},
+      {o:66,h:69,l:65,c:68,v:2100},
+      {o:68,h:71,l:67,c:70,v:1800}, // weak 2nd leg peak
+      {o:70,h:71,l:65,c:66,v:3200},
+    ];
+    const minP=56, maxP=76;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const lp=leftPad(W); const slot=candleSlot(W,candles.length);
+    ctx.strokeStyle='rgba(0,210,122,0.6)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+    ctx.beginPath();
+    ctx.moveTo(lp+1*slot,priceToY(61,minP,maxP,H));
+    ctx.lineTo(lp+2*slot+slot/2,priceToY(69,minP,maxP,H));
+    ctx.stroke();
+    ctx.strokeStyle='rgba(239,68,68,0.6)';
+    ctx.beginPath();
+    ctx.moveTo(lp+5*slot,priceToY(65,minP,maxP,H));
+    ctx.lineTo(lp+7*slot+slot/2,priceToY(70,minP,maxP,H));
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle='rgba(0,210,122,0.8)'; ctx.font='8px sans-serif';
+    ctx.fillText('+9pts',lp+1*slot+6,priceToY(65,minP,maxP,H));
+    ctx.fillStyle='rgba(239,68,68,0.8)';
+    ctx.fillText('+5pts',lp+5*slot+6,priceToY(67,minP,maxP,H));
+    drawLabel(ctx, 'Weak Second Leg Warning', W, H);
+  },
+  choices: [
+    'The stock needs rest before continuing higher — a normal consolidation',
+    'A buying opportunity — dips should be bought aggressively',
+    'Momentum is deteriorating — buyers are losing conviction, reversal likely',
+    'Volume patterns suggest institutional accumulation — bullish'
+  ],
+  correct: 2,
+  feedback: 'Correct! A weak second leg — where the second push to new highs is smaller than the first — signals deteriorating momentum. Buyers are becoming less aggressive. The second leg took more time to go less distance on lower volume. This is a warning that the trend is exhausting. It does not mean sell immediately, but it means tighten your stop, reduce size, and prepare for a reversal.'
+},
+
+{
+  id: 'q15', type: 'mc',
+  title: 'Parabolic Exhaustion',
+  instruction: 'A stock has gone parabolic. What should you do?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:50,h:52,l:49,c:51,v:1600},
+      {o:51,h:54,l:50,c:53,v:1900},
+      {o:53,h:57,l:52,c:56,v:2400},
+      {o:56,h:62,l:55,c:61,v:3200},
+      {o:61,h:70,l:60,c:69,v:4800},
+      {o:69,h:82,l:68,c:81,v:7200},
+      {o:81,h:98,l:80,c:97,v:11000},
+      {o:97,h:101,l:74,c:76,v:9800},
+    ];
+    const minP=46, maxP=105;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    drawLabel(ctx, 'Parabolic Move — What Now?', W, H);
+  },
+  choices: [
+    'Buy aggressively — the momentum is undeniable and will continue',
+    'Add to your position — parabolic stocks always go higher before they stop',
+    'Never buy into a parabola — if already long, scale out as it accelerates',
+    'Use a wide stop to hold through the volatility'
+  ],
+  correct: 2,
+  feedback: 'Correct! Parabolic moves always end badly for the last buyers. When a stock goes vertical, it is the final phase driven by FOMO. The last candle in this example shows exactly what happens: a massive run up followed by a collapse in the same session. If you are already long, scale out as the move accelerates — you do not need to sell at the top. Never buy into a parabola.'
+},
+
+{
+  id: 'q16', type: 'mc',
+  title: 'V-Shape Recovery Risk',
+  instruction: 'A stock crashed and is sharply recovering in a V-shape. What is the primary risk of buying this?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:80,h:82,l:79,c:81,v:1800},
+      {o:81,h:83,l:80,c:82,v:2100},
+      {o:82,h:84,l:70,c:72,v:7800},
+      {o:72,h:74,l:62,c:64,v:9200},
+      {o:64,h:66,l:60,c:65,v:6800},
+      {o:65,h:72,l:64,c:71,v:5200},
+      {o:71,h:79,l:70,c:78,v:4800},
+      {o:78,h:83,l:77,c:82,v:3600},
+    ];
+    const minP=57, maxP=87;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    drawLabel(ctx, 'V-Shape Recovery', W, H);
+  },
+  choices: [
+    'None — V-shape recoveries are the safest pattern to buy',
+    'The recovery may form a W (double bottom) before truly reversing, trapping buyers',
+    'Volume is too high — high volume reversals always fail',
+    'The stock is now overbought and will definitely retrace'
+  ],
+  correct: 1,
+  feedback: 'Correct! The primary risk of buying a V-shape is that it becomes a W. Many apparent V-recoveries stall, pull back to test the lows, and shake out buyers before the real recovery begins. The safest approach is to wait for the recovery to stall, form a base, and break out of that base on volume — rather than buying on the way up into the V.'
+},
+
+{
+  id: 'q17', type: 'mc',
+  title: 'Accumulation vs Distribution',
+  instruction: 'Which of these volume patterns signals accumulation (institutional buying)?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    // Two scenarios side by side
+    const half = W/2 - 10;
+    const leftCandles = [
+      {o:70,h:72,l:68,c:69,v:5800},
+      {o:69,h:71,l:68,c:69,v:4900},
+      {o:69,h:72,l:68,c:70,v:5200},
+      {o:70,h:73,l:69,c:72,v:6100},
+    ];
+    const rightCandles = [
+      {o:70,h:75,l:69,c:74,v:4200},
+      {o:74,h:79,l:73,c:78,v:3800},
+      {o:78,h:82,l:77,c:80,v:3100},
+      {o:80,h:83,l:79,c:81,v:2400},
+    ];
+    const minP=65, maxP=87;
+    ctx.save();
+    drawGridHalf(ctx, 0, W, H);
+    drawCandlesHalf(ctx, leftCandles, minP, maxP, 0, W, H);
+    ctx.fillStyle='rgba(100,160,100,0.8)'; ctx.font='10px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('A: Tight range, high volume',W/4,H-8);
+    drawGridHalf(ctx, W/2, W, H);
+    drawCandlesHalf(ctx, rightCandles, minP, maxP, W/2, W, H);
+    ctx.fillStyle='rgba(100,160,100,0.8)'; ctx.font='10px sans-serif';
+    ctx.fillText('B: Rising price, falling volume',W*3/4,H-8);
+    ctx.restore();
+    drawLabel(ctx, 'Which is Accumulation?', W, H);
+  },
+  choices: [
+    'Chart B — rising price with declining volume shows buyers in control',
+    'Chart A — tight price range with high volume signals institutions absorbing supply',
+    'Neither — both show distribution patterns',
+    'Both charts show the same thing — volume does not matter'
+  ],
+  correct: 1,
+  feedback: 'Correct! Chart A shows accumulation. When price consolidates in a tight range on above-average volume, it signals that large buyers are absorbing all the available supply (selling) without letting price fall. They are "accumulating" quietly. Chart B (rising price, falling volume) actually suggests the opposite — weakening buying pressure, which is often a warning sign the move may stall.'
+},
+
+{
+  id: 'q18', type: 'mc',
+  title: 'Morning Flush Setup',
+  instruction: 'A stock with a strong catalyst flushes in the first 15 minutes. What does the morning flush set up?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:48,h:56,l:47,c:50,v:4800},
+      {o:50,h:51,l:43,c:44,v:7200},
+      {o:44,h:45,l:40,c:41,v:8100},
+      {o:41,h:42,l:39,c:41,v:5200},
+      {o:41,h:46,l:40,c:45,v:6100},
+      {o:45,h:51,l:44,c:50,v:5400},
+      {o:50,h:55,l:49,c:54,v:4200},
+      {o:54,h:58,l:53,c:57,v:3600},
+    ];
+    const minP=36, maxP=60;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const lp=leftPad(W); const slot=candleSlot(W,candles.length);
+    ctx.fillStyle='rgba(239,68,68,0.5)'; ctx.font='8px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('FLUSH',lp+1*slot+slot,priceToY(41,minP,maxP,H)+12);
+    ctx.fillStyle='rgba(0,210,122,0.5)';
+    ctx.fillText('RECOVERY',lp+5*slot+slot,priceToY(48,minP,maxP,H));
+    drawLabel(ctx, 'Morning Flush Recovery', W, H);
+  },
+  choices: [
+    'Nothing — morning flushes always lead to continued selling all day',
+    'A long opportunity when price reclaims a key level after the flush',
+    'A short opportunity — flush stocks always set lower highs',
+    'A gap fill trade back to the previous close'
+  ],
+  correct: 1,
+  feedback: 'Correct! The morning flush sets up a long opportunity when price reclaims a key level (VWAP, opening range low, or prior support) on volume after the flush is complete. The flush forces out weak holders through stop losses and panic selling. Once that selling is exhausted, only buyers remain — and the reversal can be powerful. The key: wait for the reclaim candle, don\'t try to catch the bottom.'
+},
+
+{
+  id: 'q19', type: 'mc',
+  title: 'Healthy Pullback vs Breakdown',
+  instruction: 'Which chart shows a healthy pullback (buying opportunity) vs a breakdown (avoid)?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const leftCandles = [
+      {o:60,h:65,l:59,c:64,v:3200},
+      {o:64,h:70,l:63,c:69,v:4100},
+      {o:69,h:72,l:65,c:66,v:2100},
+      {o:66,h:68,l:63,c:64,v:1800},
+      {o:64,h:66,l:63,c:65,v:1600},
+    ];
+    const rightCandles = [
+      {o:60,h:65,l:59,c:64,v:3200},
+      {o:64,h:70,l:63,c:69,v:4100},
+      {o:69,h:70,l:60,c:61,v:5800},
+      {o:61,h:62,l:55,c:56,v:6200},
+      {o:56,h:57,l:50,c:51,v:5900},
+    ];
+    const minP=47, maxP=75;
+    ctx.save();
+    drawGridHalf(ctx,0,W,H);
+    drawCandlesHalf(ctx,leftCandles,minP,maxP,0,W,H);
+    ctx.fillStyle='rgba(0,210,122,0.8)'; ctx.font='9px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('A: Pulls back 5%, low vol',W/4,H-8);
+    drawGridHalf(ctx,W/2,W,H);
+    drawCandlesHalf(ctx,rightCandles,minP,maxP,W/2,W,H);
+    ctx.fillStyle='rgba(239,68,68,0.8)'; ctx.font='9px sans-serif';
+    ctx.fillText('B: Drops 20%, high vol',W*3/4,H-8);
+    ctx.restore();
+    drawLabel(ctx,'Pullback or Breakdown?',W,H);
+  },
+  choices: [
+    'A = breakdown, B = healthy pullback',
+    'Both are breakdowns — any decline after a run should be sold',
+    'A = healthy pullback, B = breakdown',
+    'Both are healthy pullbacks — dips are always buying opportunities'
+  ],
+  correct: 2,
+  feedback: 'Correct! Chart A is a healthy pullback: price pulls back 5% on declining volume after a move — normal digestion. Buyers are in control, sellers are not aggressive. Chart B is a breakdown: price drops 20% on increasing volume — sellers are in control. The key difference is volume. Healthy pullbacks see volume dry up on the decline. Breakdowns see volume expand on the decline.'
+},
+
+{
+  id: 'q20', type: 'mc',
+  title: 'Three Pushes Up',
+  instruction: 'Three distinct pushes to higher highs, each smaller than the last. What does this signal?',
+  draw: function(ctx, W, H) {
+    drawGrid(ctx, W, H);
+    const candles = [
+      {o:55,h:57,l:54,c:56,v:1800},
+      {o:56,h:64,l:55,c:63,v:4200},
+      {o:63,h:65,l:60,c:61,v:2100},
+      {o:61,h:63,l:60,c:62,v:1900},
+      {o:62,h:69,l:61,c:68,v:3400},
+      {o:68,h:70,l:65,c:66,v:1800},
+      {o:66,h:68,l:65,c:67,v:1700},
+      {o:67,h:72,l:66,c:71,v:2600},
+      {o:71,h:73,l:64,c:65,v:4800},
+    ];
+    const minP=51, maxP=77;
+    drawCandles(ctx,candles,minP,maxP,W,H);
+    const lp=leftPad(W); const slot=candleSlot(W,candles.length);
+    ctx.strokeStyle='rgba(0,210,122,0.6)'; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(lp+1*slot+slot/2,priceToY(63,minP,maxP,H));
+    ctx.lineTo(lp+4*slot+slot/2,priceToY(68,minP,maxP,H));
+    ctx.lineTo(lp+7*slot+slot/2,priceToY(71,minP,maxP,H));
+    ctx.stroke();
+    ctx.fillStyle='rgba(0,210,122,0.8)'; ctx.font='8px sans-serif';
+    ctx.fillText('Push 1',lp+1*slot-6,priceToY(63,minP,maxP,H)-8);
+    ctx.fillText('Push 2',lp+4*slot-6,priceToY(68,minP,maxP,H)-8);
+    ctx.fillText('Push 3',lp+7*slot-6,priceToY(71,minP,maxP,H)-8);
+    const plus1 = 63-56; const plus2 = 68-62; const plus3 = 71-67;
+    ctx.fillStyle='rgba(100,180,100,0.7)'; ctx.font='7px sans-serif';
+    ctx.fillText('+'+plus1+'pts',lp+1*slot+4,priceToY(59,minP,maxP,H));
+    ctx.fillText('+'+plus2+'pts',lp+4*slot+4,priceToY(64,minP,maxP,H));
+    ctx.fillStyle='rgba(239,68,68,0.7)';
+    ctx.fillText('+'+plus3+'pts',lp+7*slot+4,priceToY(68,minP,maxP,H));
+    drawLabel(ctx,'Three Pushes Up',W,H);
+  },
+  choices: [
+    'Continuation signal — three pushes confirm a strong uptrend, buy the next dip',
+    'Exhaustion signal — diminishing momentum on each push suggests reversal ahead',
+    'Neutral — three pushes is a normal number of waves in any trend',
+    'Buy signal — the third push always leads to a fourth, larger push'
+  ],
+  correct: 1,
+  feedback: 'Correct! Three pushes up with diminishing size is a classic exhaustion signal. Each push took more time and produced less gain than the previous one. Momentum is deteriorating. Buyers are becoming less aggressive. The third push often fails to hold and leads to a sharp reversal. This does not mean short immediately — wait for confirmation of the reversal before acting. But it is a clear signal to stop buying and tighten your stop.'
+}
+
+]; // end QUIZ_QUESTIONS
+
+// ── DRAWING HELPERS ──────────────────────────────────────────────────────
+
+function leftPad(W) { return 48; }
+function rightPad(W) { return 20; }
+function topPad(H) { return 24; }
+function bottomPad(H) { return 52; }
+function chartW(W) { return W - leftPad(W) - rightPad(W); }
+function chartH(H) { return H - topPad(H) - bottomPad(H); }
+function candleSlot(W, n) { return chartW(W) / n; }
+
+function priceToY(price, minP, maxP, H) {
+  const range = maxP - minP;
+  const ratio = (maxP - price) / range;
+  return topPad(H) + ratio * chartH(H);
+}
+
+function xForCandle(idx, W, n) {
+  const slot = candleSlot(W, n);
+  return leftPad(W) + idx * slot + slot * 0.15;
+}
+
+function drawGrid(ctx, W, H) {
+  ctx.fillStyle = '#111712';
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = '#1a221a';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 5; i++) {
+    const y = topPad(H) + (chartH(H) / 5) * i;
+    ctx.beginPath(); ctx.moveTo(leftPad(W), y); ctx.lineTo(W - rightPad(W), y); ctx.stroke();
   }
+}
 
-  function gaussianRandom(rand) {
-    var u = 0, v = 0
-    while (u === 0) u = rand()
-    while (v === 0) v = rand()
-    return Math.max(-2, Math.min(2, Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v)))
+function drawGridHalf(ctx, startX, W, H) {
+  const hw = W/2 - 8;
+  ctx.fillStyle = '#111712';
+  ctx.fillRect(startX, 0, hw, H);
+  ctx.strokeStyle = '#1a221a';
+  ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 5; i++) {
+    const y = topPad(H) + (chartH(H) / 5) * i;
+    ctx.beginPath(); ctx.moveTo(startX+8, y); ctx.lineTo(startX+hw, y); ctx.stroke();
   }
+}
 
-  function generateOneCandle(rand, openPrice, drift, volatility) {
-    var noise = gaussianRandom(rand) * volatility
-    var close = openPrice + drift + noise
-    var bodyHigh = Math.max(openPrice, close)
-    var bodyLow = Math.min(openPrice, close)
-    return { open: openPrice, close: close, high: bodyHigh + Math.abs(gaussianRandom(rand)) * volatility * 0.35, low: bodyLow - Math.abs(gaussianRandom(rand)) * volatility * 0.35 }
+function drawCandles(ctx, candles, minP, maxP, W, H) {
+  const n = candles.length;
+  const slot = candleSlot(W, n);
+  const maxVol = Math.max(...candles.map(c => c.v));
+
+  candles.forEach((c, i) => {
+    const x = xForCandle(i, W, n);
+    const cw = slot * 0.7;
+    const isGreen = c.c >= c.o;
+    const color = isGreen ? '#22c55e' : '#ef4444';
+
+    // Volume bar
+    const volH = (c.v / maxVol) * 36;
+    ctx.fillStyle = isGreen ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)';
+    ctx.fillRect(x, H - bottomPad(H) - volH + 8, cw, volH);
+
+    // Wick
+    ctx.strokeStyle = color; ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(x + cw/2, priceToY(c.h, minP, maxP, H));
+    ctx.lineTo(x + cw/2, priceToY(c.l, minP, maxP, H));
+    ctx.stroke();
+
+    // Body
+    const bodyTop = priceToY(Math.max(c.o, c.c), minP, maxP, H);
+    const bodyBot = priceToY(Math.min(c.o, c.c), minP, maxP, H);
+    const bodyH = Math.max(bodyBot - bodyTop, 1.5);
+    ctx.fillStyle = color;
+    ctx.fillRect(x, bodyTop, cw, bodyH);
+  });
+
+  // Price labels
+  ctx.fillStyle = '#4a6a4a'; ctx.font = '9px monospace'; ctx.textAlign = 'right';
+  for (let i = 0; i <= 5; i++) {
+    const price = minP + ((maxP - minP) / 5) * (5 - i);
+    const y = topPad(H) + (chartH(H) / 5) * i;
+    ctx.fillText('$' + price.toFixed(0), leftPad(W) - 3, y + 3);
   }
+  ctx.textAlign = 'left';
+}
 
-  function buildPhase(rand, startPrice, startTime, interval, count, avgDrift, volatility, volBase, volTrendPct) {
-    var candles = [], price = startPrice, t = startTime
-    for (var i = 0; i < count; i++) {
-      var driftThisCandle = avgDrift * (0.4 + rand() * 1.2) * (rand() > 0.15 ? 1 : -0.6)
-      var c = generateOneCandle(rand, price, driftThisCandle, volatility)
-      var vol = Math.max(5000, Math.round(volBase * (1 + volTrendPct * (count > 1 ? i/(count-1) : 0)) * (0.75 + rand() * 0.5)))
-      candles.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: vol })
-      price = c.close; t += interval
+function drawCandlesHalf(ctx, candles, minP, maxP, startX, W, H) {
+  const hw = W/2 - 8;
+  const n = candles.length;
+  const slot = hw / n;
+  const maxVol = Math.max(...candles.map(c => c.v));
+
+  candles.forEach((c, i) => {
+    const x = startX + 8 + i * slot + slot * 0.15;
+    const cw = slot * 0.7;
+    const isGreen = c.c >= c.o;
+    const color = isGreen ? '#22c55e' : '#ef4444';
+
+    const volH = (c.v / maxVol) * 30;
+    ctx.fillStyle = isGreen ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)';
+    ctx.fillRect(x, H - bottomPad(H) - volH + 8, cw, volH);
+
+    ctx.strokeStyle = color; ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x+cw/2, priceToY(c.h,minP,maxP,H));
+    ctx.lineTo(x+cw/2, priceToY(c.l,minP,maxP,H));
+    ctx.stroke();
+
+    const bodyTop = priceToY(Math.max(c.o,c.c),minP,maxP,H);
+    const bodyBot = priceToY(Math.min(c.o,c.c),minP,maxP,H);
+    ctx.fillStyle = color;
+    ctx.fillRect(x, bodyTop, cw, Math.max(bodyBot-bodyTop,1.5));
+  });
+}
+
+function drawZoneLabel(ctx, W, H, text, x1pct, x2pct) {
+  const x1 = x1pct * W;
+  const x2 = x2pct * W;
+  const y = H - 6;
+  const color = text.includes('IDEAL') ? 'rgba(0,210,122,0.8)' :
+                text.includes('LATE') ? 'rgba(239,68,68,0.6)' :
+                text.includes('EARLY') || text.includes('TOO EARLY') ? 'rgba(251,191,36,0.6)' :
+                'rgba(100,120,100,0.5)';
+  ctx.fillStyle = color; ctx.font = 'bold 8px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(text, (x1+x2)/2, y);
+  // Tick marks
+  ctx.strokeStyle = color; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x1, H-14); ctx.lineTo(x1, H-10); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x2, H-14); ctx.lineTo(x2, H-10); ctx.stroke();
+  ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(x1, H-12); ctx.lineTo(x2, H-12); ctx.stroke();
+  ctx.textAlign = 'left';
+}
+
+function drawLabel(ctx, text, W, H) {
+  ctx.fillStyle = 'rgba(200,212,200,0.8)'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText(text, W/2, 16);
+  ctx.textAlign = 'left';
+}
+
+// ── QUIZ ENGINE ──────────────────────────────────────────────────────────
+
+window.TST_INTERACTIVE_QUIZ = {
+  current: 0,
+  score: 0,
+  answered: [],
+  canvas: null,
+  ctx: null,
+
+  init: function(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    this.render(container);
+  },
+
+  render: function(container) {
+    container.innerHTML = `
+      <div style="background:#111712;border-radius:12px;padding:24px;max-width:680px;margin:0 auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:#f0f4f1;" id="quiz-q-title"></div>
+          <div style="font-size:12px;color:#6b7c6e;" id="quiz-progress"></div>
+        </div>
+        <div style="font-size:13px;color:#8aad8a;margin-bottom:12px;" id="quiz-instruction"></div>
+        <canvas id="quiz-canvas" style="width:100%;border-radius:8px;cursor:crosshair;display:block;"></canvas>
+        <div id="quiz-choices" style="margin-top:12px;"></div>
+        <div id="quiz-feedback" style="margin-top:12px;display:none;background:#0c100d;border-radius:8px;padding:14px;font-size:13px;color:#c8d4c8;line-height:1.7;border-left:3px solid #4ab44a;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
+          <div style="font-size:13px;color:#6b7c6e;" id="quiz-score-display"></div>
+          <button id="quiz-next-btn" onclick="TST_INTERACTIVE_QUIZ.next()" style="display:none;background:#22c55e;color:#000;border:none;border-radius:8px;padding:10px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:14px;cursor:pointer;">Next Question →</button>
+        </div>
+      </div>`;
+
+    this.canvas = document.getElementById('quiz-canvas');
+    this.ctx = this.canvas.getContext('2d');
+    this.loadQuestion();
+  },
+
+  loadQuestion: function() {
+    const q = QUIZ_QUESTIONS[this.current];
+    document.getElementById('quiz-q-title').textContent = q.title;
+    document.getElementById('quiz-instruction').textContent = q.instruction;
+    document.getElementById('quiz-progress').textContent = `Question ${this.current + 1} of ${QUIZ_QUESTIONS.length}`;
+    document.getElementById('quiz-feedback').style.display = 'none';
+    document.getElementById('quiz-next-btn').style.display = 'none';
+    document.getElementById('quiz-score-display').textContent = `Score: ${this.score}/${this.current}`;
+
+    // Set canvas size
+    const W = this.canvas.offsetWidth || 640;
+    const H = Math.round(W * 0.56);
+    this.canvas.width = W;
+    this.canvas.height = H;
+
+    // Draw the chart
+    q.draw(this.ctx, W, H);
+
+    // Set up interaction
+    if (q.type === 'zone') {
+      this.canvas.style.cursor = 'crosshair';
+      this.canvas.onclick = (e) => this.handleZoneClick(e, q);
+      document.getElementById('quiz-choices').innerHTML = '';
+    } else {
+      this.canvas.style.cursor = 'default';
+      this.canvas.onclick = null;
+      this.renderChoices(q);
     }
-    return { candles: candles, endPrice: price, endTime: t }
-  }
+  },
 
-  function buildLegToTarget(rand, startPrice, targetPrice, startTime, interval, count, volatility, volBase) {
-    var candles = [], price = startPrice, t = startTime
-    var totalMove = targetPrice - startPrice
-    for (var i = 0; i < count; i++) {
-      var c = generateOneCandle(rand, price, (totalMove / count) * (0.6 + rand() * 0.8), volatility)
-      candles.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: Math.max(5000, Math.round(volBase * (0.8 + rand() * 0.4))) })
-      price = c.close; t += interval
+  handleZoneClick: function(e, q) {
+    if (this.answered[this.current]) return;
+    const rect = this.canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const pct = x / this.canvas.width;
+    const W = this.canvas.width;
+    const H = this.canvas.height;
+
+    let result = 'late';
+    if (pct >= q.zones.early[0] && pct <= q.zones.early[1]) result = 'early';
+    else if (pct >= q.zones.ideal[0] && pct <= q.zones.ideal[1]) result = 'ideal';
+
+    // Draw click marker
+    const ctx = this.ctx;
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
+    const isIdeal = result === 'ideal';
+
+    ctx.strokeStyle = isIdeal ? '#22c55e' : '#ef4444';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(clickX, clickY, 10, 0, Math.PI*2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(clickX, 20); ctx.lineTo(clickX, H-20); ctx.setLineDash([4,3]); ctx.stroke(); ctx.setLineDash([]);
+
+    this.answered[this.current] = true;
+    if (isIdeal) this.score++;
+
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.style.borderLeftColor = isIdeal ? '#22c55e' : '#ef4444';
+    feedback.textContent = q.feedback[result];
+    feedback.style.display = 'block';
+    document.getElementById('quiz-next-btn').style.display = 'block';
+    document.getElementById('quiz-score-display').textContent = `Score: ${this.score}/${this.current + 1}`;
+  },
+
+  renderChoices: function(q) {
+    const div = document.getElementById('quiz-choices');
+    div.innerHTML = q.choices.map((c, i) => `
+      <div onclick="TST_INTERACTIVE_QUIZ.handleChoice(${i})" id="choice-${i}" style="background:#0c100d;border:1px solid #1e2820;border-radius:8px;padding:12px 16px;margin-bottom:8px;cursor:pointer;font-size:13px;color:#c8d4c8;line-height:1.5;transition:border-color 0.2s;">
+        <span style="color:#4ab44a;font-weight:700;margin-right:8px;">${String.fromCharCode(65+i)}.</span>${c}
+      </div>`).join('');
+  },
+
+  handleChoice: function(idx) {
+    if (this.answered[this.current]) return;
+    const q = QUIZ_QUESTIONS[this.current];
+    this.answered[this.current] = true;
+    const isCorrect = idx === q.correct;
+    if (isCorrect) this.score++;
+
+    // Color the choices
+    q.choices.forEach((_, i) => {
+      const el = document.getElementById('choice-'+i);
+      if (i === q.correct) { el.style.borderColor = '#22c55e'; el.style.background = 'rgba(34,197,94,0.08)'; }
+      else if (i === idx && !isCorrect) { el.style.borderColor = '#ef4444'; el.style.background = 'rgba(239,68,68,0.08)'; }
+      el.style.cursor = 'default';
+    });
+
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.style.borderLeftColor = isCorrect ? '#22c55e' : '#ef4444';
+    feedback.textContent = q.feedback;
+    feedback.style.display = 'block';
+    document.getElementById('quiz-next-btn').style.display = 'block';
+    document.getElementById('quiz-score-display').textContent = `Score: ${this.score}/${this.current + 1}`;
+  },
+
+  next: function() {
+    this.current++;
+    if (this.current >= QUIZ_QUESTIONS.length) {
+      this.showResults();
+      return;
     }
-    return { candles: candles, endPrice: price, endTime: t }
-  }
+    this.loadQuestion();
+  },
 
-  function buildConvergingPhase(rand, startPrice, startTime, interval, count, avgDrift, volStart, volEnd, volBase, volTrendPct) {
-    var candles = [], price = startPrice, t = startTime
-    for (var i = 0; i < count; i++) {
-      var progress = count > 1 ? i / (count - 1) : 0
-      var volatility = volStart + (volEnd - volStart) * progress
-      var c = generateOneCandle(rand, price, avgDrift * (0.4 + rand() * 1.2) * (rand() > 0.15 ? 1 : -0.6), volatility)
-      candles.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: Math.max(5000, Math.round(volBase * (1 + volTrendPct * progress) * (0.75 + rand() * 0.5))) })
-      price = c.close; t += interval
+  showResults: function() {
+    const pct = Math.round((this.score / QUIZ_QUESTIONS.length) * 100);
+    const passed = pct >= 75;
+    const container = document.querySelector('#quiz-canvas').parentElement;
+    container.innerHTML = `
+      <div style="text-align:center;padding:40px 24px;">
+        <div style="font-size:48px;margin-bottom:16px;">${passed ? '🎯' : '📚'}</div>
+        <div style="font-family:Rajdhani,sans-serif;font-size:32px;font-weight:700;color:${passed?'#22c55e':'#fbbf24'};margin-bottom:8px;">${pct}%</div>
+        <div style="font-size:16px;color:#f0f4f1;margin-bottom:8px;">${this.score} of ${QUIZ_QUESTIONS.length} correct</div>
+        <div style="font-size:13px;color:#6b7c6e;margin-bottom:24px;line-height:1.7;">${passed ? 'Excellent work. You demonstrated strong pattern recognition across bullish, bearish, and reversal setups.' : 'Keep studying the chart patterns and setups. Review the lessons for any patterns you missed, then retake the quiz.'}</div>
+        <button onclick="TST_INTERACTIVE_QUIZ.restart()" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:12px 28px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:15px;cursor:pointer;">Retake Quiz</button>
+      </div>`;
+    // Save to Supabase
+    if (window.TST_QUIZ && typeof TST_QUIZ.saveResult === 'function') {
+      TST_QUIZ.saveResult('interactive-quiz', pct, passed);
     }
-    return { candles: candles, endPrice: price, endTime: t }
+  },
+
+  restart: function() {
+    this.current = 0; this.score = 0; this.answered = [];
+    const container = document.getElementById('quiz-canvas')?.parentElement || document.querySelector('[id*="quiz"]');
+    if (container) this.render(container);
   }
-
-  // ─── ZONE-CLICK GENERATORS (10) ───
-
-  // 1. Bull Flag
-  function generateBullFlag(opts) {
-    var rand = seededRandom(opts.seed || 42), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var leg = buildPhase(rand, p, t, iv, 16, 0.22, 0.14, 210000, 0.15); all = all.concat(leg.candles); p = leg.endPrice; t = leg.endTime
-    var flag = buildPhase(rand, p, t, iv, 13, 0.005, 0.035, 95000, -0.60); all = all.concat(flag.candles); p = flag.endPrice; t = flag.endTime
-    var bo = buildPhase(rand, p, t, iv, 9, 0.20, 0.16, 260000, 0.35); all = all.concat(bo.candles)
-    var ls = leg.candles.length, fs = flag.candles.length
-    return { candles: all, zones: { tooEarly:{start:0,end:ls-1}, ideal:{start:ls+fs-2,end:ls+fs+2}, tooLate:{start:ls+fs+5,end:all.length-1} } }
-  }
-
-  // 2. Opening Range Breakout
-  function generateORB(opts) {
-    var rand = seededRandom(opts.seed || 150), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||1)*60, all = []
-    // 5 tight candles establishing the range — low volume, small bodies
-    var range = buildPhase(rand, p, t, iv, 5, 0.01, 0.04, 85000, 0); all = all.concat(range.candles); p = range.endPrice; t = range.endTime
-    var breakStart = all.length
-    // Breakout candle — large, high volume, closes well above range high
-    var bo1 = buildPhase(rand, p, t, iv, 2, 0.28, 0.12, 280000, 0.30); all = all.concat(bo1.candles); p = bo1.endPrice; t = bo1.endTime
-    var breakEnd = all.length - 1
-    // Continuation — keeps going
-    var cont = buildPhase(rand, p, t, iv, 10, 0.16, 0.10, 190000, 0.10); all = all.concat(cont.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:breakStart-1}, ideal:{start:breakStart,end:breakStart+2}, tooLate:{start:breakEnd+4,end:all.length-1} } }
-  }
-
-  // 3. Consolidation Breakout Retest
-  function generateConsolidationRetest(opts) {
-    var rand = seededRandom(opts.seed || 250), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    // Initial uptrend
-    var up = buildPhase(rand, p, t, iv, 8, 0.18, 0.11, 170000, 0.10); all = all.concat(up.candles); p = up.endPrice; t = up.endTime
-    // Consolidation at the top
-    var cons = buildPhase(rand, p, t, iv, 8, 0.005, 0.03, 80000, -0.30); all = all.concat(cons.candles); p = cons.endPrice; t = cons.endTime
-    // Breakout above consolidation
-    var bo = buildPhase(rand, p, t, iv, 3, 0.25, 0.13, 250000, 0.40); all = all.concat(bo.candles); p = bo.endPrice; t = bo.endTime
-    // Retest — pulls back to breakout level on low volume
-    var retest = buildPhase(rand, p, t, iv, 5, -0.12, 0.08, 90000, -0.35); all = all.concat(retest.candles); p = retest.endPrice; t = retest.endTime
-    var retestStart = all.length
-    // Bounce off retest — ideal entry
-    var bounce = buildPhase(rand, p, t, iv, 2, 0.20, 0.10, 200000, 0.20); all = all.concat(bounce.candles); p = bounce.endPrice; t = bounce.endTime
-    var retestEnd = all.length - 1
-    var cont = buildPhase(rand, p, t, iv, 7, 0.16, 0.11, 170000, 0.10); all = all.concat(cont.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:retestStart-1}, ideal:{start:retestStart,end:retestStart+2}, tooLate:{start:retestEnd+4,end:all.length-1} } }
-  }
-
-  // 4. Bear Flag Breakdown
-  function generateBearFlag(opts) {
-    var rand = seededRandom(opts.seed || 350), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    // Strong leg down — the flagpole
-    var leg = buildPhase(rand, p, t, iv, 14, -0.22, 0.15, 220000, 0.15); all = all.concat(leg.candles); p = leg.endPrice; t = leg.endTime
-    // Weak bounce — rising on low volume (bear flag)
-    var flag = buildPhase(rand, p, t, iv, 10, 0.06, 0.04, 80000, -0.50); all = all.concat(flag.candles); p = flag.endPrice; t = flag.endTime
-    var breakStart = all.length
-    // Breakdown — resumes down with volume
-    var bo = buildPhase(rand, p, t, iv, 3, -0.24, 0.16, 250000, 0.40); all = all.concat(bo.candles); p = bo.endPrice; t = bo.endTime
-    var breakEnd = all.length - 1
-    var cont = buildPhase(rand, p, t, iv, 8, -0.18, 0.13, 190000, 0.10); all = all.concat(cont.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:leg.candles.length-1}, ideal:{start:breakStart,end:breakStart+2}, tooLate:{start:breakEnd+4,end:all.length-1} } }
-  }
-
-  // 5. Head & Shoulders
-  function generateHeadShoulders(opts) {
-    var rand = seededRandom(opts.seed || 202), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var neck = p
-    var lsu = buildLegToTarget(rand, p, p+2.2, t, iv, 6, 0.10, 160000); all=all.concat(lsu.candles); p=lsu.endPrice; t=lsu.endTime
-    var lsd = buildLegToTarget(rand, p, neck+0.2, t, iv, 6, 0.10, 130000); all=all.concat(lsd.candles); p=lsd.endPrice; t=lsd.endTime
-    var hu = buildLegToTarget(rand, p, p+3.8, t, iv, 7, 0.12, 200000); all=all.concat(hu.candles); p=hu.endPrice; t=hu.endTime
-    var hd = buildLegToTarget(rand, p, neck+0.1, t, iv, 7, 0.12, 150000); all=all.concat(hd.candles); p=hd.endPrice; t=hd.endTime
-    var rsu = buildLegToTarget(rand, p, p+2.0, t, iv, 6, 0.10, 140000); all=all.concat(rsu.candles); p=rsu.endPrice; t=rsu.endTime
-    var rsd = buildLegToTarget(rand, p, neck, t, iv, 6, 0.10, 130000); all=all.concat(rsd.candles); p=rsd.endPrice; t=rsd.endTime
-    var neckZoneStart = all.length
-    var bd = buildPhase(rand, p, t, iv, 5, -0.24, 0.15, 220000, 0.45); all=all.concat(bd.candles); p=bd.endPrice; t=bd.endTime
-    var neckZoneEnd = all.length - 1
-    var cont = buildPhase(rand, p, t, iv, 7, -0.16, 0.13, 180000, 0.10); all=all.concat(cont.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:neckZoneStart-1}, ideal:{start:neckZoneStart,end:neckZoneStart+2}, tooLate:{start:neckZoneEnd+4,end:all.length-1} } }
-  }
-
-  // 6. Support Bounce (3rd test)
-  function generateSupportBounce(opts) {
-    var rand = seededRandom(opts.seed || 222), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var supportLevel = p
-    var up1 = buildPhase(rand, p, t, iv, 8, 0.18, 0.10, 160000, 0.05); all=all.concat(up1.candles); p=up1.endPrice; t=up1.endTime
-    var dn1 = buildLegToTarget(rand, p, supportLevel+0.1, t, iv, 7, 0.09, 110000); all=all.concat(dn1.candles); p=dn1.endPrice; t=dn1.endTime
-    var up2 = buildPhase(rand, p, t, iv, 6, 0.14, 0.09, 130000, 0.05); all=all.concat(up2.candles); p=up2.endPrice; t=up2.endTime
-    var dn2 = buildLegToTarget(rand, p, supportLevel+0.05, t, iv, 6, 0.09, 105000); all=all.concat(dn2.candles); p=dn2.endPrice; t=dn2.endTime
-    var bounceStart = all.length
-    var bounce = buildPhase(rand, p, t, iv, 2, 0.20, 0.10, 200000, 0.15); all=all.concat(bounce.candles); p=bounce.endPrice; t=bounce.endTime
-    var bounceEnd = all.length - 1
-    var cont = buildPhase(rand, p, t, iv, 8, 0.16, 0.12, 170000, 0.10); all=all.concat(cont.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:bounceStart-1}, ideal:{start:bounceStart,end:bounceStart+2}, tooLate:{start:bounceEnd+4,end:all.length-1} } }
-  }
-
-  // 7. Doji at the Top
-  function generateDojiTop(opts) {
-    var rand = seededRandom(opts.seed || 450), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    // Extended uptrend
-    var up = buildPhase(rand, p, t, iv, 16, 0.19, 0.11, 180000, -0.10); all=all.concat(up.candles); p=up.endPrice; t=up.endTime
-    // Doji — near-zero drift, tiny body, long wicks both sides
-    var dojiCandle = generateOneCandle(rand, p, 0.01, 0.06)
-    all.push({ time: t, open: p, high: p + 0.40, low: p - 0.38, close: p + 0.02, volume: Math.round(130000 * (0.8 + rand() * 0.4)) })
-    t += iv; p = p + 0.02
-    var dojiIdx = all.length - 1
-    // Reversal follows the doji
-    var reversal = buildPhase(rand, p, t, iv, 10, -0.20, 0.14, 210000, 0.20); all=all.concat(reversal.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:dojiIdx-1}, ideal:{start:dojiIdx,end:dojiIdx+2}, tooLate:{start:dojiIdx+6,end:all.length-1} } }
-  }
-
-  // 8. Hammer Reversal
-  function generateHammer(opts) {
-    var rand = seededRandom(opts.seed || 550), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    // Downtrend
-    var down = buildPhase(rand, p, t, iv, 14, -0.18, 0.12, 160000, 0.10); all=all.concat(down.candles); p=down.endPrice; t=down.endTime
-    // Hammer candle — small body at the top, very long lower wick
-    var hammerOpen = p
-    var hammerClose = p + 0.08
-    all.push({ time: t, open: hammerOpen, high: hammerClose + 0.10, low: hammerOpen - 0.55, close: hammerClose, volume: 240000 })
-    t += iv; p = hammerClose
-    var hammerIdx = all.length - 1
-    // Recovery
-    var recovery = buildPhase(rand, p, t, iv, 10, 0.20, 0.12, 200000, 0.15); all=all.concat(recovery.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:hammerIdx-1}, ideal:{start:hammerIdx,end:hammerIdx+2}, tooLate:{start:hammerIdx+6,end:all.length-1} } }
-  }
-
-  // 9. Lower High Lower Low (downtrend confirmation)
-  function generateLHLL(opts) {
-    var rand = seededRandom(opts.seed || 650), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    // First high
-    var up1 = buildPhase(rand, p, t, iv, 6, 0.20, 0.10, 160000, 0.05); all=all.concat(up1.candles); p=up1.endPrice; t=up1.endTime
-    // First low
-    var dn1 = buildPhase(rand, p, t, iv, 6, -0.22, 0.11, 180000, 0.10); all=all.concat(dn1.candles); p=dn1.endPrice; t=dn1.endTime
-    // Lower high — doesn't reach first high
-    var up2 = buildPhase(rand, p, t, iv, 5, 0.12, 0.09, 120000, -0.10); all=all.concat(up2.candles); p=up2.endPrice; t=up2.endTime
-    var confirmStart = all.length
-    // Lower low — breaks below first low = confirmation
-    var dn2 = buildPhase(rand, p, t, iv, 3, -0.26, 0.14, 220000, 0.30); all=all.concat(dn2.candles); p=dn2.endPrice; t=dn2.endTime
-    var confirmEnd = all.length - 1
-    var cont = buildPhase(rand, p, t, iv, 7, -0.18, 0.12, 190000, 0.10); all=all.concat(cont.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:confirmStart-1}, ideal:{start:confirmStart,end:confirmStart+2}, tooLate:{start:confirmEnd+4,end:all.length-1} } }
-  }
-
-  // 10. Ascending Triangle
-  function generateAscendingTriangle(opts) {
-    var rand = seededRandom(opts.seed || 303), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var resistance = p + 3
-    for (var wave = 0; wave < 3; wave++) {
-      var toR = buildLegToTarget(rand, p, resistance-(0.15*rand()), t, iv, 5, 0.08, 130000); all=all.concat(toR.candles); p=toR.endPrice; t=toR.endTime
-      var toLow = buildLegToTarget(rand, p, resistance-2.4+(wave*0.6), t, iv, 5, 0.08, 110000); all=all.concat(toLow.candles); p=toLow.endPrice; t=toLow.endTime
-    }
-    var breakZoneStart = all.length
-    var bo = buildPhase(rand, p, t, iv, 6, 0.22, 0.15, 230000, 0.45); all=all.concat(bo.candles); p=bo.endPrice; t=bo.endTime
-    var breakZoneEnd = all.length - 1
-    var cont = buildPhase(rand, p, t, iv, 7, 0.16, 0.14, 190000, 0.10); all=all.concat(cont.candles)
-    return { candles: all, zones: { tooEarly:{start:0,end:breakZoneStart-1}, ideal:{start:breakZoneStart,end:breakZoneStart+2}, tooLate:{start:breakZoneEnd+4,end:all.length-1} } }
-  }
-
-  // ─── MULTIPLE CHOICE GENERATORS (10) ───
-
-  function generateFakeBreakout(opts) {
-    var rand = seededRandom(opts.seed || 77), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var leg = buildPhase(rand, p, t, iv, 13, 0.20, 0.14, 190000, 0.10); all=all.concat(leg.candles); p=leg.endPrice; t=leg.endTime
-    var flag = buildPhase(rand, p, t, iv, 11, 0.00, 0.04, 115000, 0.10); all=all.concat(flag.candles); p=flag.endPrice; t=flag.endTime
-    var fb = buildPhase(rand, p, t, iv, 5, 0.10, 0.10, 85000, -0.10); all=all.concat(fb.candles); p=fb.endPrice; t=fb.endTime
-    var rev = buildPhase(rand, p, t, iv, 7, -0.30, 0.18, 240000, 0.30); all=all.concat(rev.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateGreenToRed(opts) {
-    var rand = seededRandom(opts.seed || 888), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var morn = buildPhase(rand, p, t, iv, 8, 0.20, 0.12, 200000, 0.10); all=all.concat(morn.candles); p=morn.endPrice; t=morn.endTime
-    var stall = buildPhase(rand, p, t, iv, 5, 0.01, 0.06, 85000, -0.30); all=all.concat(stall.candles); p=stall.endPrice; t=stall.endTime
-    var gtr = buildPhase(rand, p, t, iv, 9, -0.24, 0.14, 220000, 0.35); all=all.concat(gtr.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateKillCandle(opts) {
-    var rand = seededRandom(opts.seed || 999), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var up = buildPhase(rand, p, t, iv, 18, 0.19, 0.11, 180000, -0.15); all=all.concat(up.candles); p=up.endPrice; t=up.endTime
-    var body = p * 0.035
-    all.push({ time: t, open: p+0.15, high: p+0.30, low: p-body-0.20, close: p-body, volume: 380000 }); p=p-body; t+=iv
-    var dn = buildPhase(rand, p, t, iv, 8, -0.18, 0.13, 200000, 0.10); all=all.concat(dn.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateWeakSecondLeg(opts) {
-    var rand = seededRandom(opts.seed || 1111), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    // First leg — strong, 10 candles, high volume, clear upward move
-    var leg1 = buildPhase(rand, p, t, iv, 10, 0.28, 0.13, 240000, 0.10); all=all.concat(leg1.candles); p=leg1.endPrice; t=leg1.endTime
-    // Pullback — clear and visible, several candles down
-    var pb = buildPhase(rand, p, t, iv, 6, -0.14, 0.09, 110000, -0.20); all=all.concat(pb.candles); p=pb.endPrice; t=pb.endTime
-    // Second leg — NOTICEABLY shorter (6 candles vs 10), MUCH lower volume (half)
-    // Force it to not reach the prior high
-    var leg2Target = leg1.endPrice - 0.40 // explicitly stops below first leg high
-    var leg2 = buildLegToTarget(rand, p, leg2Target, t, iv, 6, 0.08, 95000); all=all.concat(leg2.candles); p=leg2.endPrice; t=leg2.endTime
-    // Reversal — clear rollover
-    var rev = buildPhase(rand, p, t, iv, 10, -0.24, 0.14, 220000, 0.30); all=all.concat(rev.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateParabolic(opts) {
-    var rand = seededRandom(opts.seed || 1212), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var base = buildPhase(rand, p, t, iv, 8, 0.15, 0.10, 160000, 0.05); all=all.concat(base.candles); p=base.endPrice; t=base.endTime
-    var acc1 = buildPhase(rand, p, t, iv, 5, 0.30, 0.14, 220000, 0.20); all=all.concat(acc1.candles); p=acc1.endPrice; t=acc1.endTime
-    var acc2 = buildPhase(rand, p, t, iv, 4, 0.42, 0.18, 290000, 0.30); all=all.concat(acc2.candles); p=acc2.endPrice; t=acc2.endTime
-    var climax = buildPhase(rand, p, t, iv, 2, 0.55, 0.20, 380000, 0.10); all=all.concat(climax.candles); p=climax.endPrice; t=climax.endTime
-    var crash = buildPhase(rand, p, t, iv, 8, -0.38, 0.22, 300000, -0.10); all=all.concat(crash.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateVShape(opts) {
-    var rand = seededRandom(opts.seed || 1313), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var stable = buildPhase(rand, p, t, iv, 5, 0.01, 0.04, 90000, 0); all=all.concat(stable.candles); p=stable.endPrice; t=stable.endTime
-    var flush = buildPhase(rand, p, t, iv, 6, -0.32, 0.20, 270000, 0.40); all=all.concat(flush.candles); p=flush.endPrice; t=flush.endTime
-    all.push({ time: t, open: p, high: p+0.15, low: p-0.30, close: p+0.10, volume: 260000 }); p=p+0.10; t+=iv
-    var recovery = buildPhase(rand, p, t, iv, 7, 0.30, 0.16, 250000, -0.10); all=all.concat(recovery.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateAccumulation(opts) {
-    var rand = seededRandom(opts.seed || 707), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    for (var i = 0; i < 22; i++) {
-      var drift = (rand() > 0.5 ? 1 : -0.8) * (0.02 + rand() * 0.06)
-      var c = generateOneCandle(rand, p, drift, 0.06)
-      var isUp = c.close >= c.open
-      all.push({ time: t, open: c.open, high: c.high, low: c.low, close: c.close, volume: Math.round(isUp ? 140000+rand()*60000 : 60000+rand()*30000) })
-      p = c.close; t += iv
-    }
-    var bo = buildPhase(rand, p, t, iv, 6, 0.18, 0.13, 220000, 0.40); all=all.concat(bo.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateMorningFlush(opts) {
-    var rand = seededRandom(opts.seed || 1414), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var gapOpen = p + 2.5
-    var open1 = generateOneCandle(rand, gapOpen, 0.25, 0.10)
-    all.push({ time: t, open: gapOpen, high: open1.high, low: gapOpen-0.10, close: open1.close, volume: 300000 }); p=open1.close; t+=iv
-    var push = buildPhase(rand, p, t, iv, 3, 0.14, 0.09, 220000, -0.10); all=all.concat(push.candles); p=push.endPrice; t=push.endTime
-    var flush = buildPhase(rand, p, t, iv, 10, -0.28, 0.18, 280000, 0.20); all=all.concat(flush.candles); p=flush.endPrice; t=flush.endTime
-    var bounce = buildPhase(rand, p, t, iv, 5, 0.08, 0.09, 110000, -0.20); all=all.concat(bounce.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateHealthyPullback(opts) {
-    var rand = seededRandom(opts.seed || 606), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    var up = buildPhase(rand, p, t, iv, 14, 0.20, 0.13, 180000, 0.05); all=all.concat(up.candles); p=up.endPrice; t=up.endTime
-    var pb = buildPhase(rand, p, t, iv, 8, -0.10, 0.08, 100000, -0.30); all=all.concat(pb.candles); p=pb.endPrice; t=pb.endTime
-    var bounce = buildPhase(rand, p, t, iv, 9, 0.22, 0.14, 200000, 0.35); all=all.concat(bounce.candles)
-    return { candles: all, zones: null }
-  }
-
-  function generateThreePushes(opts) {
-    var rand = seededRandom(opts.seed || 1515), p = opts.startPrice || 100, t = opts.startTime, iv = (opts.timeframeMinutes||2)*60, all = []
-    // Three progressively weaker pushes up
-    var push1 = buildPhase(rand, p, t, iv, 7, 0.26, 0.13, 220000, 0.10); all=all.concat(push1.candles); p=push1.endPrice; t=push1.endTime
-    var pb1 = buildPhase(rand, p, t, iv, 4, -0.12, 0.09, 100000, -0.20); all=all.concat(pb1.candles); p=pb1.endPrice; t=pb1.endTime
-    var push2 = buildPhase(rand, p, t, iv, 6, 0.16, 0.11, 160000, -0.10); all=all.concat(push2.candles); p=push2.endPrice; t=push2.endTime
-    var pb2 = buildPhase(rand, p, t, iv, 4, -0.11, 0.09, 95000, -0.15); all=all.concat(pb2.candles); p=pb2.endPrice; t=pb2.endTime
-    var push3 = buildPhase(rand, p, t, iv, 5, 0.08, 0.09, 90000, -0.20); all=all.concat(push3.candles); p=push3.endPrice; t=push3.endTime
-    // Reversal
-    var rev = buildPhase(rand, p, t, iv, 9, -0.22, 0.14, 230000, 0.30); all=all.concat(rev.candles)
-    return { candles: all, zones: null }
-  }
-
-  // ─── QUESTION BANK ───
-  var QUESTIONS = [
-    // ZONE CLICK (10)
-    {
-      id:'iq_z1_bullflag', title:'Bull Flag Breakout — Find Your Entry', type:'zone', generator:'bullFlag', seed:42,
-      question:'This stock formed a bull flag. Strong uptrend leg, then tight consolidation on declining volume. Click where you would enter long.',
-      zoneFeedback:{
-        tooEarly:'Too early — you entered during the initial move before any consolidation formed. No defined risk and no confirmation the move continues.',
-        ideal:'Perfect entry — you caught the breakout right as price cleared the consolidation on volume. Confirmed structure, defined risk below the flag low.',
-        tooLate:'Too late — the move already extended before you clicked. Chasing here means poor risk/reward.'
-      }
-    },
-    {
-      id:'iq_z2_orb', title:'Opening Range Breakout — Find Your Entry', type:'zone', generator:'orb', seed:150,
-      question:'The first 5 candles established a tight range on the open. Now price is breaking above the range high on a volume surge. Click where you would enter long.',
-      zoneFeedback:{
-        tooEarly:'Too early — price was still inside the opening range when you clicked. You need the breakout candle to close above the range high before entering.',
-        ideal:'Strong entry — you entered right on the breakout above the opening range with volume confirming conviction. This is the highest-probability window in an ORB setup.',
-        tooLate:'Too late — the ORB move already ran. The edge is the first 1-2 candles after the breakout, not several candles into the continuation.'
-      }
-    },
-    {
-      id:'iq_z3_retest', title:'Consolidation Breakout Retest — Find Your Entry', type:'zone', generator:'consolidationRetest', seed:250,
-      question:'This stock broke out of consolidation, then pulled back to retest the breakout level on low volume. Click where you would enter on the retest bounce.',
-      zoneFeedback:{
-        tooEarly:'Too early — the retest wasn\'t complete yet. Entering before price returns to the breakout level and confirms the hold means no structure to trade against.',
-        ideal:'Strong entry — you entered right at the retest of the breakout level where prior resistance becomes support. Low volume on the pullback confirmed no real selling pressure.',
-        tooLate:'Too late — the retest bounce already ran. The edge in a retest entry is as close to the level as possible, not after it moves away.'
-      }
-    },
-    {
-      id:'iq_z4_bearflag', title:'Bear Flag Breakdown — Find Your Entry', type:'zone', generator:'bearFlag', seed:350,
-      question:'This stock dropped hard, then bounced weakly on low volume — a classic bear flag. Click where you would enter SHORT on the breakdown.',
-      zoneFeedback:{
-        tooEarly:'Too early — you shorted during the initial leg down before the flag formed. No setup yet, just chasing a move already in progress.',
-        ideal:'Strong short entry — you entered right as price broke below the bear flag on volume. The weak low-volume bounce confirmed sellers were just pausing before continuing.',
-        tooLate:'Too late — the breakdown already extended. The best short entry is the first candle breaking below the flag low, not after the move runs.'
-      }
-    },
-    {
-      id:'iq_z5_hs', title:'Head & Shoulders — Find Your Short Entry', type:'zone', generator:'headShoulders', seed:202,
-      question:'Classic head and shoulders top — left shoulder, higher head, right shoulder that failed to match the head. Click where you would enter SHORT.',
-      zoneFeedback:{
-        tooEarly:'Too early — the pattern wasn\'t confirmed yet. Price could still have made another high during shoulder formation.',
-        ideal:'Strong short entry — this is the neckline break confirming the reversal. Volume picked up on the break showing real sellers stepped in.',
-        tooLate:'Too late — the breakdown already ran. The best entry is the neckline break itself.'
-      }
-    },
-    {
-      id:'iq_z6_support', title:'Support Bounce (3rd Test) — Find Your Entry', type:'zone', generator:'supportBounce', seed:222,
-      question:'This stock has tested and held the same support level twice before. It\'s pulling back to that level a third time. Click where you would enter long on the bounce.',
-      zoneFeedback:{
-        tooEarly:'Too early — price was still falling toward support. You need confirmation the level is holding before entering.',
-        ideal:'Strong entry — you entered on the rejection candle at support showing buyers defending the level for the third time. Three successful tests is a high-probability setup.',
-        tooLate:'Too late — the bounce already ran off the lows. The edge is entering as close to support as possible with confirmation.'
-      }
-    },
-    {
-      id:'iq_z7_doji', title:'Doji at the Top — What Do You Do?', type:'zone', generator:'dojiTop', seed:450,
-      question:'This stock has been trending up for a while and just printed a doji candle at the highs — equal open and close, long wicks both directions. Click where a SHORT entry makes sense.',
-      zoneFeedback:{
-        tooEarly:'Too early — the doji hadn\'t formed yet. The uptrend was still intact with no indecision signal.',
-        ideal:'Strong entry — the doji at the top signals indecision after an extended move. Entering short on the next red candle after the doji is the classic confirmation entry.',
-        tooLate:'Too late — the reversal already played out. The signal was the doji itself, not several candles into the sell-off.'
-      }
-    },
-    {
-      id:'iq_z8_hammer', title:'Hammer Reversal — Find Your Entry', type:'zone', generator:'hammer', seed:550,
-      question:'After a sustained downtrend, a hammer candle appears — small body near the high, very long lower wick showing buyers rejected the lows hard. Click where you would enter long.',
-      zoneFeedback:{
-        tooEarly:'Too early — the downtrend was still intact. The hammer hadn\'t formed yet to signal a potential reversal.',
-        ideal:'Strong entry — the hammer\'s long lower wick shows buyers stepped in aggressively at the lows. Entering on the next green candle after the hammer is the confirmation entry.',
-        tooLate:'Too late — the recovery already ran from the hammer low. The entry was the candle after the hammer, not several candles into the bounce.'
-      }
-    },
-    {
-      id:'iq_z9_lhll', title:'Lower High Lower Low — Confirm the Downtrend', type:'zone', generator:'lhll', seed:650,
-      question:'This chart shows a high, a sell-off to a low, then a bounce that failed to reach the prior high. Click where the downtrend is CONFIRMED with a lower low.',
-      zoneFeedback:{
-        tooEarly:'Too early — the lower high had formed but price hadn\'t broken below the prior low yet. That break is the confirmation — without it you\'re anticipating, not trading a confirmed trend.',
-        ideal:'Strong entry — you identified the moment price broke below the prior low, confirming the lower high lower low structure. This is the textbook downtrend confirmation entry.',
-        tooLate:'Too late — the confirmed downtrend already ran significantly. The entry is the break of the prior low, not after the move extends.'
-      }
-    },
-    {
-      id:'iq_z10_triangle', title:'Ascending Triangle — Find Your Entry', type:'zone', generator:'ascendingTriangle', seed:303,
-      question:'Three higher lows against flat resistance. Buyers are stepping in sooner each time. Click where you would enter LONG on the breakout.',
-      zoneFeedback:{
-        tooEarly:'Too early — price was still inside the triangle below resistance. No breakout confirmation yet.',
-        ideal:'Strong entry — the breakout above resistance with volume. Higher lows showed increasing urgency from buyers and the volume confirmed real conviction on the break.',
-        tooLate:'Too late — the breakout already ran. The edge is the first candle clearing resistance with volume.'
-      }
-    },
-
-    // MULTIPLE CHOICE (10)
-    {
-      id:'iq_mc1_fakebreakout', title:'Fake Breakout Recognition', generator:'fakeBreakout', seed:77,
-      question:'This stock formed what looks like a flag and attempted a breakout. Look carefully at the volume during consolidation and the breakout candle. What is happening?',
-      choices:['Clean flag setup — the breakout is valid, buy immediately','Volume stayed elevated during consolidation (should have declined) and the breakout came on weak volume — this is a failed breakout likely to reverse','The pattern is identical to a healthy flag','Volume never matters for flags — only price structure counts'],
-      correct:1,
-      explanation:'This is a failed breakout. In a healthy flag, volume DECLINES during consolidation — sellers are passive. Here volume stayed elevated meaning real selling pressure was present. The breakout then came on weak volume with no real buyers behind it. Both signals together predicted the reversal.'
-    },
-    {
-      id:'iq_mc2_greenred', title:'Green to Red — What Does It Signal?', generator:'greenToRed', seed:888,
-      question:'This stock opened strong, pushed higher, then volume dried up at the highs and price crossed back below the opening price — going red. What does this tell you?',
-      choices:['Buy immediately — stocks always recover from intraday dips','This is a Green to Red reversal — early buyers are trapped, sellers are in control, and the path of least resistance is lower for the rest of the session','Green to Red moves always reverse back green by close','This only matters for swing traders'],
-      correct:1,
-      explanation:'Green to Red is one of the most reliable intraday warning signals. Early buyers are now underwater and will sell into any bounce. The sellers who shorted the high are profitable and not covering. Volume drying up at the highs showed distribution. Once it goes red, sellers have control.'
-    },
-    {
-      id:'iq_mc3_killcandle', title:'Kill Candle — What Happens Next?', generator:'killCandle', seed:999,
-      question:'This stock was in a steady uptrend then printed a massive red candle closing near its lows on the highest volume of the entire move. What does this tell you?',
-      choices:['One candle means nothing — the uptrend will resume immediately','This is a kill candle — massive red body closing near the lows on explosive volume signals real sellers stepped in with size. The uptrend is likely over','High volume on a down candle is always bullish — buyers are absorbing supply','You should buy immediately since the selloff is overdone'],
-      correct:1,
-      explanation:'A kill candle is one of the clearest reversal signals. Large red body closing near lows plus volume that dwarfs everything before it means institutional sellers stepped in with size. The balance of power shifted from buyers to sellers and subsequent price action typically confirms the reversal.'
-    },
-    {
-      id:'iq_mc4_weakleg', title:'Weak Second Leg — What Does It Mean?', generator:'weakSecondLeg', seed:1111,
-      question:'This stock made a strong first leg up on heavy volume, pulled back, then attempted a second leg. The second leg is shorter and volume is significantly lower. What does this tell you?',
-      choices:['The second leg being shorter means nothing — stocks move in random increments','A weak second leg with declining volume signals buyer exhaustion — each push attracts fewer buyers. A reversal is likely forming','Lower volume on the second leg is bullish — no one is selling','You should size up since the trend is clearly continuing'],
-      correct:1,
-      explanation:'Weak second legs are one of the most reliable early warning signals of a trend reversal. When the first leg is strong and high volume but the second attempt covers less ground on lower volume — buyers are losing conviction. They\'re paying up for a move attracting fewer participants. This is where disciplined traders tighten stops rather than add.'
-    },
-    {
-      id:'iq_mc5_parabolic', title:'Parabolic Move — What Is the Risk?', generator:'parabolic', seed:1212,
-      question:'This stock has been accelerating — each leg larger and faster than the last, with volume exploding on every push. It just printed its biggest candle yet. What is the highest-probability next move?',
-      choices:['Buy aggressively — parabolic moves always continue for weeks','Parabolic moves end violently. The acceleration cannot be sustained — when the last buyer buys there is no one left to push it higher and the reversal happens with the same speed as the move up','Parabolic moves always consolidate sideways before continuing','Volume increasing confirms the trend continues indefinitely'],
-      correct:1,
-      explanation:'Parabolic moves are the most dangerous moment to be a new buyer. When a stock goes vertical — FOMO is driving the buying, not value. At some point the last buyer buys. The reversal from a parabolic move can be just as fast and violent as the move up — cascading stops from everyone who bought near the top.'
-    },
-    {
-      id:'iq_mc6_vshape', title:'V-Shape Recovery — Real or Dead Cat?', generator:'vShape', seed:1313,
-      question:'This stock flushed sharply on huge volume then immediately started recovering at the same speed on strong volume. How do you read this?',
-      choices:['Never buy a stock that just dropped','The speed and volume of the recovery matching the selloff suggests a genuine V-shape — immediate aggressive buying means the selling was a liquidity flush, not a fundamental change','You should wait at least two weeks before buying anything that dropped','V-shapes never happen'],
-      correct:1,
-      explanation:'V-shape recoveries are real. The key difference from a dead cat bounce is the character of the recovery — when it\'s as aggressive as the selloff with volume still elevated, it means buyers stepped in with the same conviction sellers had. A dead cat is slow, grinds higher on low volume. A real V is sharp and immediate.'
-    },
-    {
-      id:'iq_mc7_accumulation', title:'Accumulation or Distribution?', generator:'accumulation', seed:707,
-      question:'This stock has been sideways for weeks. Look at volume on up days versus down days. What is most likely happening?',
-      choices:['Sideways price action is always meaningless','Volume is heavier on green days and lighter on red days — this is accumulation. Smart money buying the dips while retail sells into weakness, coiling the spring before a breakout','This is clearly distribution — the stock is about to collapse','Only price range matters in consolidation'],
-      correct:1,
-      explanation:'Accumulation is what happens before a breakout — and the volume pattern reveals it before price does. When green days carry heavier volume than red days in a sideways range, buyers are absorbing supply. When supply runs out, the breakout happens on heavy volume — exactly what followed here.'
-    },
-    {
-      id:'iq_mc8_morningflush', title:'Morning Flush — Buy the Dip or Stay Out?', generator:'morningFlush', seed:1414,
-      question:'This stock gapped up strongly, pushed higher for a few candles, then flushed hard on massive volume giving back most of the gap. What is the correct read?',
-      choices:['Buy immediately — gap ups always recover by end of day','This is a morning flush. The stock lured in gap buyers then flushed them hard. Without a clean base and reclaim of a key level, the safest move is to wait for structure — not catch the knife mid-flush','The flush is complete — the bigger the red candle the more bullish','Gap ups never fail so this is always a buy'],
-      correct:1,
-      explanation:'Morning flushes are one of the most common traps for beginners. A strong gap up creates FOMO — people buy the open. Instead, early sellers distribute into that excitement and the stock flushes hard. A flush alone does not make it buyable. You need a base to form, a reclaim of a key level on volume, and clear structure before entering.'
-    },
-    {
-      id:'iq_mc9_pullback', title:'Healthy Pullback vs Breakdown — Which Is This?', generator:'healthyPullback', seed:606,
-      question:'This stock was in a clear uptrend and pulled back. Look at volume during the pullback and how price reacted at the lows. How do you classify this?',
-      choices:['Any pullback in an uptrend is a breakdown — sell immediately','This is a healthy pullback — volume declined during the selling (no real pressure) and price held at a logical level before resuming the uptrend on renewed volume. This is a buyable dip, not a reversal','Anything over 5% is a breakdown','Pullbacks are always followed by lower lows'],
-      correct:1,
-      explanation:'Not every pullback is a breakdown. A healthy pullback has three characteristics: volume declines during the selling, price holds at a meaningful level, and the recovery comes on increased volume. A real breakdown has the opposite — heavy volume on the sell and no holding of levels. This chart showed all characteristics of a healthy pullback.'
-    },
-    {
-      id:'iq_mc10_threepushes', title:'Three Pushes Up — What Does It Signal?', generator:'threePushes', seed:1515,
-      question:'This stock made three pushes higher. Each push was smaller than the last and came on lower volume. The third push barely moved. What does this pattern tell you?',
-      choices:['Three pushes up is a very bullish sign — buy the third push aggressively','This is an exhaustion pattern — each push requiring less selling to stop it but also attracting fewer buyers. When the third push fails to extend the prior high it signals buyers are running out. A reversal is likely next','Lower volume means the move is safe — no one is selling','Three is a random number — this means nothing'],
-      correct:1,
-      explanation:'Three pushes up is a textbook exhaustion pattern. The first push is strong — real buyers with conviction. The second push is weaker — fewer buyers willing to pay up. The third push barely moves — almost no one left to buy. The market is showing you the pool of buyers is drying up. When the third push fails to make a new high or barely does, the next move is almost always a reversal.'
-    }
-  ]
-
-  // ─── RENDERING ENGINE ───
-
-  function loadLightweightCharts(callback) {
-    if (window.LightweightCharts) { callback(); return }
-    var script = document.createElement('script')
-    script.src = 'https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js'
-    script.onload = callback
-    document.head.appendChild(script)
-  }
-
-  function generateCandles(q) {
-    var opts = { seed: q.seed, startPrice: 100 + (q.seed % 50), startTime: Math.floor(Date.now()/1000) - 7200, timeframeMinutes: 2 }
-    if (q.generator === 'bullFlag') return generateBullFlag(opts)
-    if (q.generator === 'orb') return generateORB(opts)
-    if (q.generator === 'consolidationRetest') return generateConsolidationRetest(opts)
-    if (q.generator === 'bearFlag') return generateBearFlag(opts)
-    if (q.generator === 'headShoulders') return generateHeadShoulders(opts)
-    if (q.generator === 'supportBounce') return generateSupportBounce(opts)
-    if (q.generator === 'dojiTop') return generateDojiTop(opts)
-    if (q.generator === 'hammer') return generateHammer(opts)
-    if (q.generator === 'lhll') return generateLHLL(opts)
-    if (q.generator === 'ascendingTriangle') return generateAscendingTriangle(opts)
-    if (q.generator === 'fakeBreakout') return { candles: generateFakeBreakout(opts).candles, zones: null }
-    if (q.generator === 'greenToRed') return generateGreenToRed(opts)
-    if (q.generator === 'killCandle') return generateKillCandle(opts)
-    if (q.generator === 'weakSecondLeg') return generateWeakSecondLeg(opts)
-    if (q.generator === 'parabolic') return generateParabolic(opts)
-    if (q.generator === 'vShape') return generateVShape(opts)
-    if (q.generator === 'accumulation') return generateAccumulation(opts)
-    if (q.generator === 'morningFlush') return generateMorningFlush(opts)
-    if (q.generator === 'healthyPullback') return generateHealthyPullback(opts)
-    if (q.generator === 'threePushes') return generateThreePushes(opts)
-    return generateBullFlag(opts)
-  }
-
-  function getZoneForIndex(zones, idx) {
-    if (!zones) return null
-    if (idx >= zones.ideal.start && idx <= zones.ideal.end) return 'ideal'
-    if (idx >= zones.tooEarly.start && idx <= zones.tooEarly.end) return 'tooEarly'
-    if (idx >= zones.tooLate.start && idx <= zones.tooLate.end) return 'tooLate'
-    return 'tooEarly'
-  }
-
-  function renderChart(containerId, candles, onCandleClick) {
-    var container = document.getElementById(containerId)
-    if (!container) return null
-    container.innerHTML = ''
-    var chart = LightweightCharts.createChart(container, {
-      width: container.clientWidth, height: 420,
-      layout: { background: { color: '#111712' }, textColor: '#8a9a8c' },
-      grid: { vertLines: { color: '#1a2018' }, horzLines: { color: '#1a2018' } },
-      timeScale: { timeVisible: true, secondsVisible: false, borderColor: '#1e2820' },
-      rightPriceScale: { borderColor: '#1e2820', scaleMargins: { top: 0.1, bottom: 0.28 } },
-      crosshair: { mode: 0 },
-    })
-    var series = chart.addCandlestickSeries({ upColor:'#22c55e', downColor:'#ef4444', borderUpColor:'#22c55e', borderDownColor:'#ef4444', wickUpColor:'#22c55e', wickDownColor:'#ef4444' })
-    series.setData(candles)
-    var volumeSeries = chart.addHistogramSeries({ priceFormat:{type:'volume'}, priceScaleId:'volume', color:'#3a4a3c' })
-    chart.priceScale('volume').applyOptions({ scaleMargins:{top:0.78,bottom:0} })
-    volumeSeries.setData(candles.map(function(c) { return { time:c.time, value:c.volume||0, color:c.close>=c.open?'rgba(34,197,94,0.5)':'rgba(239,68,68,0.5)' } }))
-    chart.timeScale().fitContent()
-    if (onCandleClick) {
-      chart.subscribeClick(function(param) {
-        if (!param.time) return
-        var idx = candles.findIndex(function(c) { return c.time === param.time })
-        if (idx === -1) return
-        onCandleClick(idx, series, candles)
-      })
-      container.style.cursor = 'crosshair'
-    }
-    window.addEventListener('resize', function() { chart.applyOptions({width:container.clientWidth}) })
-    return series
-  }
-
-  function renderQuestion(sectionEl, q, onAnswered) {
-    var isZone = q.type === 'zone'
-    sectionEl.innerHTML =
-      '<div class="iq-question-wrap">' +
-        '<div class="iq-header">' +
-          '<div class="iq-ticker">' + q.title + '</div>' +
-          '<div class="iq-meta">Illustrative pattern · 2-min chart' + (isZone ? ' · Click the chart to answer' : '') + '</div>' +
-        '</div>' +
-        '<div class="iq-chart-container" id="chart-' + q.id + '"><div class="iq-loading">Rendering chart...</div></div>' +
-        '<div class="iq-question-text">' + q.question + '</div>' +
-        (isZone ? '' : '<div class="iq-choices" id="choices-' + q.id + '"></div>') +
-        '<div class="iq-explanation" id="explain-' + q.id + '" style="display:none;"></div>' +
-      '</div>'
-    if (!isZone) {
-      var choicesEl = document.getElementById('choices-' + q.id)
-      q.choices.forEach(function(choice, i) {
-        var btn = document.createElement('div')
-        btn.className = 'iq-choice'
-        btn.innerHTML = '<span class="iq-choice-letter">' + String.fromCharCode(65+i) + '</span><span>' + choice + '</span>'
-        btn.onclick = function() { handleAnswer(q, i, choicesEl, onAnswered) }
-        choicesEl.appendChild(btn)
-      })
-    }
-    loadLightweightCharts(function() {
-      var result = generateCandles(q)
-      var candles = result.candles
-      var zones = result.zones
-      if (isZone) {
-        var answered = false
-        renderChart('chart-' + q.id, candles, function(clickedIdx, series) {
-          if (answered) return
-          answered = true
-          handleZoneAnswer(q, clickedIdx, candles, zones, series, onAnswered)
-        })
-      } else {
-        renderChart('chart-' + q.id, candles)
-      }
-    })
-  }
-
-  function handleZoneAnswer(q, clickedIdx, candles, zones, series, onAnswered) {
-    var zoneHit = getZoneForIndex(zones, clickedIdx)
-    var isCorrect = zoneHit === 'ideal'
-    var markers = [{ time:candles[clickedIdx].time, position:'belowBar', color:isCorrect?'#22c55e':'#ef4444', shape:'arrowUp', text:'Your entry' }]
-    if (!isCorrect && zones) {
-      var idealMid = Math.floor((zones.ideal.start + zones.ideal.end) / 2)
-      if (candles[idealMid]) markers.push({ time:candles[idealMid].time, position:'aboveBar', color:'#22c55e', shape:'arrowDown', text:'Ideal entry' })
-    }
-    series.setMarkers(markers)
-    var explainEl = document.getElementById('explain-' + q.id)
-    explainEl.style.display = 'block'
-    explainEl.className = 'iq-explanation ' + (isCorrect ? 'iq-correct' : 'iq-incorrect')
-    explainEl.innerHTML = '<div class="iq-result-label">' + (isCorrect ? '✓ Strong Entry' : '✗ Not the ideal spot') + '</div><div class="iq-explanation-text">' + (q.zoneFeedback[zoneHit] || q.zoneFeedback.tooEarly) + '</div>'
-    if (onAnswered) onAnswered(isCorrect)
-  }
-
-  function handleAnswer(q, chosenIdx, choicesEl, onAnswered) {
-    var allChoices = choicesEl.querySelectorAll('.iq-choice')
-    allChoices.forEach(function(el, i) {
-      el.onclick = null
-      if (i === q.correct) el.classList.add('correct')
-      else if (i === chosenIdx) el.classList.add('incorrect')
-    })
-    var explainEl = document.getElementById('explain-' + q.id)
-    var isCorrect = chosenIdx === q.correct
-    explainEl.style.display = 'block'
-    explainEl.className = 'iq-explanation ' + (isCorrect ? 'iq-correct' : 'iq-incorrect')
-    explainEl.innerHTML = '<div class="iq-result-label">' + (isCorrect ? '✓ Correct' : '✗ Not quite') + '</div><div class="iq-explanation-text">' + q.explanation + '</div>'
-    if (onAnswered) onAnswered(isCorrect)
-  }
-
-  function render(containerId) {
-    var container = document.getElementById(containerId)
-    if (!container) return
-    var correctCount = 0, answeredCount = 0
-    container.innerHTML = '<div id="iq-progress-bar" class="iq-progress-bar"></div><div id="iq-questions-stack" class="iq-questions-stack"></div>'
-    var stack = document.getElementById('iq-questions-stack')
-    function updateProgress() {
-      var bar = document.getElementById('iq-progress-bar')
-      if (!bar) return
-      bar.innerHTML = '<div class="iq-progress-text">' + answeredCount + ' of ' + QUESTIONS.length + ' answered' + (answeredCount === QUESTIONS.length ? ' · Score: ' + correctCount + '/' + QUESTIONS.length : '') + '</div>'
-    }
-    QUESTIONS.forEach(function(q, i) {
-      var qEl = document.createElement('div')
-      qEl.className = 'iq-stack-item'
-      qEl.id = 'iq-stack-item-' + q.id
-      stack.appendChild(qEl)
-      var numberBadge = document.createElement('div')
-      numberBadge.className = 'iq-question-number'
-      numberBadge.textContent = 'Question ' + (i + 1) + ' of ' + QUESTIONS.length
-      qEl.appendChild(numberBadge)
-      var qBody = document.createElement('div')
-      qEl.appendChild(qBody)
-      renderQuestion(qBody, q, function(correct) {
-        if (correct) correctCount++
-        answeredCount++
-        updateProgress()
-      })
-    })
-    updateProgress()
-  }
-
-  return { render: render, QUESTIONS: QUESTIONS }
-})()
+};
