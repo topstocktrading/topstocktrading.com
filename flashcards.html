@@ -7,53 +7,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{background:#0a0f0a;color:#c8d4c8;font-family:'DM Sans',sans-serif;min-height:100vh;padding:24px;}
-.header{max-width:520px;margin:0 auto 24px;text-align:center;}
-.logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:#fff;margin-bottom:4px;}
+body{background:#0a0f0a;color:#c8d4c8;font-family:'DM Sans',sans-serif;min-height:100vh;padding:24px 16px;}
+.header{max-width:520px;margin:0 auto 20px;text-align:center;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:#fff;margin-bottom:2px;}
 .logo span{color:#00d27a;}
-h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:#fff;margin-bottom:4px;}
-.sub{font-size:13px;color:#5a7a5a;margin-bottom:16px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:1px;color:#fff;margin-bottom:4px;}
+.sub{font-size:13px;color:#5a7a5a;margin-bottom:14px;}
 .progress-wrap{max-width:520px;margin:0 auto 8px;}
-.progress-bar{height:4px;background:#1e2820;border-radius:2px;margin-bottom:6px;}
+.progress-bar{height:4px;background:#1e2820;border-radius:2px;margin-bottom:5px;}
 .progress-fill{height:4px;background:#00d27a;border-radius:2px;transition:width 0.3s;}
 .progress-text{display:flex;justify-content:space-between;font-size:11px;color:#3a5a3a;}
-.cat-filters{max-width:520px;margin:0 auto 20px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+.cat-filters{max-width:520px;margin:0 auto 18px;display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
 .cat-btn{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;border:1px solid #1e2820;background:#0d1a0d;color:#5a7a5a;cursor:pointer;}
 .cat-btn.active{background:rgba(0,210,122,0.1);color:#00d27a;border-color:rgba(0,210,122,0.3);}
-.card-area{max-width:520px;margin:0 auto 20px;perspective:1000px;height:280px;cursor:pointer;}
+.card-area{max-width:520px;margin:0 auto 18px;perspective:1000px;height:300px;cursor:pointer;}
 .card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform 0.45s;border-radius:16px;}
 .card.flipped{transform:rotateY(180deg);}
-.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:32px;text-align:center;}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:28px;text-align:center;}
 .front{background:#0d1a0d;border:1px solid #1e3020;}
 .back{background:#111a12;border:1px solid #1e3020;transform:rotateY(180deg);}
-.card-num{position:absolute;top:14px;right:16px;font-size:10px;color:#2d4a2d;font-weight:700;}
-.cat-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:10px;background:rgba(0,210,122,0.08);border:1px solid rgba(0,210,122,0.15);color:#4ab44a;margin-bottom:14px;}
+.card-num{position:absolute;top:13px;right:15px;font-size:10px;color:#2d4a2d;font-weight:700;}
+.cat-badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:10px;background:rgba(0,210,122,0.08);border:1px solid rgba(0,210,122,0.15);color:#4ab44a;margin-bottom:12px;flex-shrink:0;}
 .card-term{font-size:22px;font-weight:700;color:#e8f0e8;line-height:1.2;}
-.back-term{font-size:14px;font-weight:700;color:#4ab44a;margin-bottom:10px;}
-.card-def{font-size:13px;color:#8aad8a;line-height:1.7;}
-.tap-hint{position:absolute;bottom:14px;right:16px;font-size:10px;color:#1e3020;}
+.back-term{font-size:13px;font-weight:700;color:#4ab44a;margin-bottom:8px;flex-shrink:0;}
+.card-def{font-size:12px;color:#8aad8a;line-height:1.65;}
+.tap-hint{position:absolute;bottom:13px;right:15px;font-size:10px;color:#1e3020;}
+.card-svg{margin:8px 0 4px;flex-shrink:0;}
 .nav-btns{max-width:520px;margin:0 auto;display:flex;justify-content:center;gap:12px;}
 .nav-btn{background:#0d1a0d;border:1px solid #1e2820;color:#c8d4c8;font-size:13px;font-weight:600;padding:12px 28px;border-radius:10px;cursor:pointer;}
 .nav-btn:hover{border-color:#4ab44a;color:#4ab44a;}
 .nav-btn.primary{background:#00d27a;color:#0a0c10;border-color:#00d27a;}
-.nav-btn.primary:hover{background:#00e888;}
-.tst-link{display:block;text-align:center;margin-top:20px;font-size:11px;color:#3a5a3a;}
+.tst-link{display:block;text-align:center;margin-top:18px;font-size:11px;color:#3a5a3a;}
 .tst-link a{color:#4ab44a;text-decoration:none;}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div class="logo">TOP <span>STOCK</span> TRADING</div>
   <h1>TST Flashcards</h1>
   <div class="sub">100 essential trading terms · Tap card to flip</div>
 </div>
-
 <div class="progress-wrap">
   <div class="progress-bar"><div class="progress-fill" id="fill" style="width:1%;"></div></div>
   <div class="progress-text"><span id="cardNum">Card 1 of 100</span><span id="catLabel" style="color:#4ab44a;"></span></div>
 </div>
-
 <div class="cat-filters">
   <div class="cat-btn active" onclick="filterCat('all',this)">All</div>
   <div class="cat-btn" onclick="filterCat('Terminology',this)">Terminology</div>
@@ -64,7 +61,6 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:#
   <div class="cat-btn" onclick="filterCat('Psychology',this)">Psychology</div>
   <div class="cat-btn" onclick="filterCat('Options',this)">Options</div>
 </div>
-
 <div class="card-area" onclick="flip()">
   <div class="card" id="card">
     <div class="face front">
@@ -77,133 +73,354 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:#
       <div class="card-num" id="backNum">#001</div>
       <div class="cat-badge" id="backCat"></div>
       <div class="back-term" id="backTerm"></div>
+      <div id="backSvg" class="card-svg"></div>
       <div class="card-def" id="backDef"></div>
     </div>
   </div>
 </div>
-
 <div class="nav-btns">
   <div class="nav-btn" onclick="prev()">← Prev</div>
   <div class="nav-btn primary" onclick="next()">Next →</div>
 </div>
-
 <div class="tst-link">Full course at <a href="https://topstocktrading.com/members.html">topstocktrading.com</a></div>
 
 <script>
+// SVG illustrations for visual cards
+const SVG = {
+  'Bull Flag': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="14" y1="14" x2="186" y2="14" stroke="#1a221a" stroke-width="0.5"/>
+    <line x1="14" y1="38" x2="186" y2="38" stroke="#1a221a" stroke-width="0.5"/>
+    <line x1="14" y1="62" x2="186" y2="62" stroke="#1a221a" stroke-width="0.5"/>
+    <line x1="22" y1="68" x2="22" y2="64" stroke="#22c55e" stroke-width="1"/><rect x="18" y="54" width="8" height="10" fill="#22c55e" rx="1"/>
+    <line x1="36" y1="56" x2="36" y2="51" stroke="#22c55e" stroke-width="1"/><rect x="32" y="40" width="8" height="14" fill="#22c55e" rx="1"/>
+    <line x1="50" y1="42" x2="50" y2="36" stroke="#22c55e" stroke-width="1"/><rect x="46" y="27" width="8" height="13" fill="#22c55e" rx="1"/>
+    <line x1="64" y1="29" x2="64" y2="23" stroke="#22c55e" stroke-width="1"/><rect x="60" y="16" width="8" height="12" fill="#22c55e" rx="1"/>
+    <line x1="78" y1="17" x2="78" y2="14" stroke="#ef4444" stroke-width="1"/><rect x="74" y="19" width="8" height="6" fill="#ef4444" rx="1"/><line x1="78" y1="25" x2="78" y2="27" stroke="#ef4444" stroke-width="1"/>
+    <line x1="92" y1="20" x2="92" y2="17" stroke="#ef4444" stroke-width="1"/><rect x="88" y="22" width="8" height="5" fill="#ef4444" rx="1"/><line x1="92" y1="27" x2="92" y2="29" stroke="#ef4444" stroke-width="1"/>
+    <line x1="106" y1="22" x2="106" y2="19" stroke="#22c55e" stroke-width="1"/><rect x="102" y="24" width="8" height="5" fill="#22c55e" rx="1"/>
+    <line x1="120" y1="23" x2="120" y2="20" stroke="#ef4444" stroke-width="1"/><rect x="116" y="25" width="8" height="5" fill="#ef4444" rx="1"/>
+    <line x1="138" y1="24" x2="138" y2="18" stroke="#22c55e" stroke-width="1"/><rect x="134" y="10" width="8" height="14" fill="#22c55e" rx="1"/>
+    <line x1="70" y1="16" x2="186" y2="16" stroke="#00d27a" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="40" y="76" font-size="7" fill="#4ab44a" font-family="sans-serif">POLE</text>
+    <text x="94" y="76" font-size="7" fill="#fbbf24" font-family="sans-serif">FLAG</text>
+    <text x="132" y="76" font-size="7" fill="#00d27a" font-family="sans-serif">BREAK↑</text>
+  </svg>`,
+
+  'Bear Flag': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="14" y1="20" x2="186" y2="20" stroke="#1a221a" stroke-width="0.5"/>
+    <line x1="14" y1="44" x2="186" y2="44" stroke="#1a221a" stroke-width="0.5"/>
+    <line x1="14" y1="62" x2="186" y2="62" stroke="#1a221a" stroke-width="0.5"/>
+    <line x1="22" y1="12" x2="22" y2="15" stroke="#ef4444" stroke-width="1"/><rect x="18" y="15" width="8" height="12" fill="#ef4444" rx="1"/><line x1="22" y1="27" x2="22" y2="30" stroke="#ef4444" stroke-width="1"/>
+    <line x1="36" y1="28" x2="36" y2="31" stroke="#ef4444" stroke-width="1"/><rect x="32" y="31" width="8" height="13" fill="#ef4444" rx="1"/><line x1="36" y1="44" x2="36" y2="47" stroke="#ef4444" stroke-width="1"/>
+    <line x1="50" y1="45" x2="50" y2="48" stroke="#ef4444" stroke-width="1"/><rect x="46" y="48" width="8" height="12" fill="#ef4444" rx="1"/><line x1="50" y1="60" x2="50" y2="63" stroke="#ef4444" stroke-width="1"/>
+    <line x1="68" y1="60" x2="68" y2="57" stroke="#22c55e" stroke-width="1"/><rect x="64" y="54" width="8" height="6" fill="#22c55e" rx="1"/>
+    <line x1="82" y1="56" x2="82" y2="53" stroke="#22c55e" stroke-width="1"/><rect x="78" y="50" width="8" height="6" fill="#22c55e" rx="1"/>
+    <line x1="96" y1="52" x2="96" y2="49" stroke="#ef4444" stroke-width="1"/><rect x="92" y="46" width="8" height="6" fill="#ef4444" rx="1"/>
+    <line x1="110" y1="48" x2="110" y2="45" stroke="#22c55e" stroke-width="1"/><rect x="106" y="42" width="8" height="6" fill="#22c55e" rx="1"/>
+    <line x1="126" y1="44" x2="126" y2="47" stroke="#ef4444" stroke-width="1"/><rect x="122" y="47" width="8" height="14" fill="#ef4444" rx="1"/><line x1="126" y1="61" x2="126" y2="64" stroke="#ef4444" stroke-width="1"/>
+    <line x1="58" y1="61" x2="186" y2="61" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+    <text x="28" y="76" font-size="7" fill="#ef4444" font-family="sans-serif">POLE</text>
+    <text x="86" y="76" font-size="7" fill="#fbbf24" font-family="sans-serif">FLAG</text>
+    <text x="122" y="76" font-size="7" fill="#ef4444" font-family="sans-serif">BREAK↓</text>
+  </svg>`,
+
+  'Head & Shoulders': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <polyline points="14,65 34,40 54,65" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <polyline points="54,65 84,14 114,65" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <polyline points="114,65 138,40 158,65" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <line x1="14" y1="65" x2="186" y2="65" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <line x1="158" y1="65" x2="180" y2="76" stroke="#ef4444" stroke-width="2"/>
+    <polygon points="176,73 184,79 181,70" fill="#ef4444"/>
+    <text x="26" y="35" font-size="7" fill="#6b8f6b" font-family="sans-serif">LS</text>
+    <text x="80" y="10" font-size="7" fill="#6b8f6b" font-family="sans-serif">HEAD</text>
+    <text x="130" y="35" font-size="7" fill="#6b8f6b" font-family="sans-serif">RS</text>
+    <text x="155" y="61" font-size="7" fill="#ef4444" font-family="sans-serif">NECKLINE</text>
+  </svg>`,
+
+  'Ascending Triangle': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="14" y1="24" x2="148" y2="24" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <line x1="14" y1="70" x2="148" y2="24" stroke="#00d27a" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <rect x="18" y="52" width="7" height="14" fill="#22c55e" rx="1"/>
+    <rect x="38" y="22" width="7" height="8" fill="#ef4444" rx="1"/>
+    <rect x="56" y="44" width="7" height="12" fill="#22c55e" rx="1"/>
+    <rect x="76" y="22" width="7" height="7" fill="#ef4444" rx="1"/>
+    <rect x="94" y="38" width="7" height="10" fill="#22c55e" rx="1"/>
+    <rect x="114" y="22" width="7" height="6" fill="#ef4444" rx="1"/>
+    <rect x="152" y="10" width="9" height="18" fill="#22c55e" rx="1"/>
+    <text x="14" y="20" font-size="7" fill="#ef4444" font-family="sans-serif">FLAT TOP</text>
+    <text x="14" y="78" font-size="7" fill="#00d27a" font-family="sans-serif">RISING LOWS</text>
+    <text x="148" y="8" font-size="7" fill="#00d27a" font-family="sans-serif">BREAK!</text>
+  </svg>`,
+
+  'Double Top': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <polyline points="14,68 44,18 74,50" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <polyline points="74,50 104,18 134,68" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="14" y1="18" x2="186" y2="18" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="14" y1="50" x2="186" y2="50" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="134" y1="68" x2="158" y2="78" stroke="#ef4444" stroke-width="2"/>
+    <polygon points="153,75 162,80 159,71" fill="#ef4444"/>
+    <text x="40" y="14" font-size="7" fill="#ef4444" font-family="sans-serif">SAME RESISTANCE</text>
+    <text x="76" y="46" font-size="7" fill="#fbbf24" font-family="sans-serif">VALLEY → short on break</text>
+  </svg>`,
+
+  'Double Bottom': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <polyline points="14,14 44,64 74,32" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    <polyline points="74,32 104,64 134,14" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <line x1="14" y1="64" x2="186" y2="64" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="14" y1="32" x2="186" y2="32" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="134" y1="14" x2="158" y2="4" stroke="#22c55e" stroke-width="2"/>
+    <polygon points="153,7 162,1 159,10" fill="#22c55e"/>
+    <text x="40" y="72" font-size="7" fill="#22c55e" font-family="sans-serif">SAME SUPPORT</text>
+    <text x="72" y="28" font-size="7" fill="#fbbf24" font-family="sans-serif">PEAK → long on break</text>
+  </svg>`,
+
+  'Support Level': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="14" y1="56" x2="186" y2="56" stroke="#00d27a" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <polyline points="14,20 36,56 58,28 84,56 106,32 136,56 158,24" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <circle cx="36" cy="56" r="4" fill="none" stroke="#00d27a" stroke-width="1.5"/>
+    <circle cx="84" cy="56" r="4" fill="none" stroke="#00d27a" stroke-width="1.5"/>
+    <circle cx="136" cy="56" r="4" fill="none" stroke="#00d27a" stroke-width="1.5"/>
+    <text x="14" y="52" font-size="7" fill="#00d27a" font-family="sans-serif">SUPPORT — bounces here repeatedly</text>
+  </svg>`,
+
+  'Resistance Level': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="14" y1="26" x2="186" y2="26" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <polyline points="14,62 36,26 58,48 84,26 106,50 136,26 158,44" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <circle cx="36" cy="26" r="4" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="84" cy="26" r="4" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="136" cy="26" r="4" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="14" y="20" font-size="7" fill="#ef4444" font-family="sans-serif">RESISTANCE — rejected here repeatedly</text>
+  </svg>`,
+
+  'Higher High Higher Low (HHHL)': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <polyline points="14,70 40,50 66,38 92,26 118,14" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <circle cx="40" cy="50" r="3" fill="#22c55e"/>
+    <circle cx="92" cy="26" r="3" fill="#22c55e"/>
+    <text x="42" y="48" font-size="7" fill="#6b8f6b" font-family="sans-serif">HL</text>
+    <text x="94" y="24" font-size="7" fill="#6b8f6b" font-family="sans-serif">HL</text>
+    <line x1="14" y1="62" x2="66" y2="46" stroke="#22c55e" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.4"/>
+    <text x="14" y="78" font-size="8" fill="#22c55e" font-family="sans-serif">Each low is HIGHER than the last → uptrend</text>
+  </svg>`,
+
+  'Lower High Lower Low (LHLL)': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <polyline points="14,14 40,34 66,46 92,58 118,70" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="40" cy="34" r="3" fill="#ef4444"/>
+    <circle cx="92" cy="58" r="3" fill="#ef4444"/>
+    <text x="42" y="32" font-size="7" fill="#6b8f6b" font-family="sans-serif">LH</text>
+    <text x="94" y="56" font-size="7" fill="#6b8f6b" font-family="sans-serif">LH</text>
+    <text x="14" y="78" font-size="8" fill="#ef4444" font-family="sans-serif">Each high is LOWER than the last → downtrend</text>
+  </svg>`,
+
+  'Cup & Handle': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <path d="M14,18 Q56,72 100,72 Q144,72 154,18" fill="none" stroke="#22c55e" stroke-width="2"/>
+    <polyline points="154,18 164,30 180,26" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="14" y1="18" x2="200" y2="18" stroke="#00d27a" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="183" y="8" width="9" height="14" fill="#22c55e" rx="1"/>
+    <text x="56" y="78" font-size="7" fill="#6b8f6b" font-family="sans-serif">CUP</text>
+    <text x="158" y="42" font-size="7" fill="#fbbf24" font-family="sans-serif">HDL</text>
+    <text x="181" y="6" font-size="7" fill="#00d27a" font-family="sans-serif">BUY</text>
+  </svg>`,
+
+  'Pennant': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="18" y1="70" x2="18" y2="14" stroke="#22c55e" stroke-width="1"/><rect x="14" y="14" width="8" height="20" fill="#22c55e" rx="1"/>
+    <line x1="32" y1="60" x2="32" y2="54" stroke="#22c55e" stroke-width="1"/><rect x="28" y="22" width="8" height="16" fill="#22c55e" rx="1"/>
+    <line x1="20" y1="22" x2="90" y2="36" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+    <line x1="20" y1="54" x2="90" y2="36" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,2"/>
+    <rect x="55" y="32" width="7" height="6" fill="#22c55e" rx="1"/>
+    <rect x="70" y="33" width="7" height="5" fill="#ef4444" rx="1"/>
+    <rect x="94" y="22" width="9" height="18" fill="#22c55e" rx="1"/>
+    <text x="18" y="78" font-size="7" fill="#4ab44a" font-family="sans-serif">POLE → PENNANT → BREAK</text>
+  </svg>`,
+
+  'Hammer': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="60" y1="14" x2="60" y2="20" stroke="#22c55e" stroke-width="2"/><rect x="50" y="20" width="20" height="10" fill="#22c55e" rx="2"/><line x1="60" y1="30" x2="60" y2="65" stroke="#22c55e" stroke-width="2"/>
+    <text x="86" y="22" font-size="10" font-weight="700" fill="#22c55e" font-family="sans-serif">Small body</text>
+    <text x="86" y="36" font-size="9" fill="#8aad8a" font-family="sans-serif">at the top</text>
+    <text x="86" y="52" font-size="10" font-weight="700" fill="#22c55e" font-family="sans-serif">Long lower wick</text>
+    <text x="86" y="66" font-size="9" fill="#8aad8a" font-family="sans-serif">buyers rejected the low</text>
+    <line x1="46" y1="30" x2="46" y2="65" stroke="#2d4a2d" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <text x="18" y="78" font-size="8" fill="#4ab44a" font-family="sans-serif">Bullish reversal at support</text>
+  </svg>`,
+
+  'Shooting Star': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="60" y1="14" x2="60" y2="50" stroke="#ef4444" stroke-width="2"/><rect x="50" y="50" width="20" height="10" fill="#ef4444" rx="2"/><line x1="60" y1="60" x2="60" y2="66" stroke="#ef4444" stroke-width="2"/>
+    <text x="86" y="22" font-size="10" font-weight="700" fill="#ef4444" font-family="sans-serif">Long upper wick</text>
+    <text x="86" y="36" font-size="9" fill="#8aad8a" font-family="sans-serif">sellers rejected the high</text>
+    <text x="86" y="52" font-size="10" font-weight="700" fill="#ef4444" font-family="sans-serif">Small body</text>
+    <text x="86" y="66" font-size="9" fill="#8aad8a" font-family="sans-serif">at the bottom</text>
+    <text x="18" y="78" font-size="8" fill="#ef4444" font-family="sans-serif">Bearish reversal at resistance</text>
+  </svg>`,
+
+  'Doji': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="60" y1="14" x2="60" y2="38" stroke="#c8d4c8" stroke-width="2"/><rect x="46" y="38" width="28" height="4" fill="#c8d4c8" rx="1"/><line x1="60" y1="42" x2="60" y2="66" stroke="#c8d4c8" stroke-width="2"/>
+    <text x="86" y="28" font-size="10" font-weight="700" fill="#c8d4c8" font-family="sans-serif">Open ≈ Close</text>
+    <text x="86" y="44" font-size="9" fill="#8aad8a" font-family="sans-serif">Neither side won</text>
+    <text x="86" y="58" font-size="9" fill="#8aad8a" font-family="sans-serif">Indecision / reversal warning</text>
+    <text x="18" y="78" font-size="8" fill="#fbbf24" font-family="sans-serif">Wait for next candle confirmation</text>
+  </svg>`,
+
+  'Bullish Engulfing': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="60" y1="30" x2="60" y2="33" stroke="#ef4444" stroke-width="1.5"/><rect x="52" y="33" width="16" height="20" fill="#ef4444" rx="2"/><line x1="60" y1="53" x2="60" y2="57" stroke="#ef4444" stroke-width="1.5"/>
+    <line x1="90" y1="20" x2="90" y2="25" stroke="#22c55e" stroke-width="1.5"/><rect x="80" y="25" width="20" height="36" fill="#22c55e" rx="2"/><line x1="90" y1="61" x2="90" y2="66" stroke="#22c55e" stroke-width="1.5"/>
+    <text x="116" y="36" font-size="9" fill="#22c55e" font-family="sans-serif">Green candle</text>
+    <text x="116" y="48" font-size="9" fill="#8aad8a" font-family="sans-serif">completely covers</text>
+    <text x="116" y="60" font-size="9" fill="#8aad8a" font-family="sans-serif">the red candle</text>
+    <text x="18" y="78" font-size="8" fill="#22c55e" font-family="sans-serif">Strong bullish reversal at support</text>
+  </svg>`,
+
+  'Bearish Engulfing': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="60" y1="22" x2="60" y2="26" stroke="#22c55e" stroke-width="1.5"/><rect x="52" y="26" width="16" height="20" fill="#22c55e" rx="2"/><line x1="60" y1="46" x2="60" y2="50" stroke="#22c55e" stroke-width="1.5"/>
+    <line x1="90" y1="18" x2="90" y2="22" stroke="#ef4444" stroke-width="1.5"/><rect x="80" y="22" width="20" height="38" fill="#ef4444" rx="2"/><line x1="90" y1="60" x2="90" y2="65" stroke="#ef4444" stroke-width="1.5"/>
+    <text x="116" y="34" font-size="9" fill="#ef4444" font-family="sans-serif">Red candle</text>
+    <text x="116" y="46" font-size="9" fill="#8aad8a" font-family="sans-serif">completely covers</text>
+    <text x="116" y="58" font-size="9" fill="#8aad8a" font-family="sans-serif">the green candle</text>
+    <text x="18" y="78" font-size="8" fill="#ef4444" font-family="sans-serif">Strong bearish reversal at resistance</text>
+  </svg>`,
+
+  'Marubozu': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <rect x="40" y="14" width="20" height="52" fill="#22c55e" rx="2"/>
+    <rect x="80" y="14" width="20" height="52" fill="#ef4444" rx="2"/>
+    <text x="110" y="28" font-size="9" fill="#c8d4c8" font-family="sans-serif">No wicks at all</text>
+    <text x="110" y="42" font-size="9" fill="#8aad8a" font-family="sans-serif">Opens at one extreme</text>
+    <text x="110" y="56" font-size="9" fill="#8aad8a" font-family="sans-serif">closes at the other</text>
+    <text x="18" y="78" font-size="8" fill="#fbbf24" font-family="sans-serif">Maximum conviction — strongest momentum signal</text>
+  </svg>`,
+
+  'Morning Star': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <line x1="44" y1="16" x2="44" y2="20" stroke="#ef4444" stroke-width="1"/><rect x="38" y="20" width="12" height="30" fill="#ef4444" rx="2"/><line x1="44" y1="50" x2="44" y2="54" stroke="#ef4444" stroke-width="1"/>
+    <rect x="68" y="48" width="10" height="8" fill="#fbbf24" rx="2"/>
+    <line x1="90" y1="22" x2="90" y2="26" stroke="#22c55e" stroke-width="1"/><rect x="84" y="26" width="12" height="28" fill="#22c55e" rx="2"/><line x1="90" y1="54" x2="90" y2="58" stroke="#22c55e" stroke-width="1"/>
+    <text x="110" y="28" font-size="9" fill="#c8d4c8" font-family="sans-serif">3-candle pattern</text>
+    <text x="110" y="40" font-size="9" fill="#8aad8a" font-family="sans-serif">Red → Small → Green</text>
+    <text x="110" y="52" font-size="9" fill="#8aad8a" font-family="sans-serif">Bullish reversal</text>
+    <text x="18" y="78" font-size="8" fill="#22c55e" font-family="sans-serif">Strong reversal signal at support on daily chart</text>
+  </svg>`,
+
+  'Trendline': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <polyline points="14,70 40,50 66,38 92,22 118,10" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+    <line x1="14" y1="72" x2="118" y2="12" stroke="#00d27a" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <circle cx="40" cy="50" r="3" fill="#00d27a"/>
+    <circle cx="92" cy="22" r="3" fill="#00d27a"/>
+    <text x="120" y="44" font-size="9" fill="#00d27a" font-family="sans-serif">Connect the</text>
+    <text x="120" y="56" font-size="9" fill="#00d27a" font-family="sans-serif">higher lows</text>
+    <text x="14" y="78" font-size="8" fill="#4ab44a" font-family="sans-serif">Min 2 touch points to draw a valid trendline</text>
+  </svg>`,
+
+  'Moving Average (MA)': `<svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg"><rect width="200" height="80" fill="#0a0c10" rx="5"/>
+    <polyline points="14,40 28,24 42,46 56,18 70,38 84,22 98,42 112,16 126,36 140,20" fill="none" stroke="#4ab44a" stroke-width="1" opacity="0.4"/>
+    <polyline points="14,42 40,38 66,30 92,26 118,22 140,20" fill="none" stroke="#00d27a" stroke-width="2"/>
+    <text x="148" y="24" font-size="9" fill="#00d27a" font-family="sans-serif">MA line</text>
+    <text x="148" y="36" font-size="9" fill="#8aad8a" font-family="sans-serif">smooths noise</text>
+    <text x="14" y="70" font-size="8" fill="#4ab44a" font-family="sans-serif">Price above MA = bullish · below = bearish</text>
+  </svg>`,
+};
+
 const CARDS = [
-  // TERMINOLOGY (25)
-  {cat:'Terminology',term:'Float',def:'The number of shares available for public trading. Low float stocks have fewer shares available and tend to move faster and more violently on news.'},
-  {cat:'Terminology',term:'Market Cap',def:'Total market value of a company. Calculated as share price × total shares outstanding. Small cap: under $2B. Mid cap: $2B–$10B. Large cap: over $10B.'},
-  {cat:'Terminology',term:'Volume',def:'The number of shares traded during a given period. Higher volume on a move adds credibility. Low volume moves are often unsustainable.'},
-  {cat:'Terminology',term:'Relative Volume (RVOL)',def:'Current volume compared to average volume for the same time of day. RVOL of 2.0 means twice the normal volume — signals increased interest.'},
-  {cat:'Terminology',term:'Bid Price',def:'The highest price a buyer is willing to pay for a stock right now. When you sell at market, you typically get the bid.'},
-  {cat:'Terminology',term:'Ask Price',def:'The lowest price a seller is willing to accept right now. When you buy at market, you typically pay the ask.'},
-  {cat:'Terminology',term:'Spread',def:'The difference between the bid and ask price. Wide spreads cost more to trade. Thin stocks with low volume tend to have wide spreads.'},
-  {cat:'Terminology',term:'Short Interest',def:'The percentage of a stock\'s float that has been sold short. High short interest (over 20%) creates potential for short squeezes.'},
-  {cat:'Terminology',term:'Short Squeeze',def:'When a heavily shorted stock rises sharply, forcing short sellers to buy shares to cover their positions — which drives the price even higher.'},
-  {cat:'Terminology',term:'VWAP',def:'Volume Weighted Average Price. The average price weighted by volume throughout the day. Used as a key intraday support and resistance level.'},
-  {cat:'Terminology',term:'Level 2',def:'A real-time display of all buy and sell orders at different price levels. Shows the "depth" of the market and where significant orders are stacked.'},
-  {cat:'Terminology',term:'Market Order',def:'An order to buy or sell immediately at the best available price. Fast execution but no price guarantee. Risky in thin stocks with wide spreads.'},
-  {cat:'Terminology',term:'Limit Order',def:'An order to buy or sell at a specific price or better. Gives price control but no execution guarantee. Preferred by most active traders.'},
-  {cat:'Terminology',term:'Stop Loss',def:'A predetermined price at which you exit a losing trade. Automatically limits your loss. Must be set before entering every trade.'},
-  {cat:'Terminology',term:'Stop Market Order',def:'Triggers a market order when your stop price is hit. Fast but may fill at a worse price than expected during fast moves.'},
-  {cat:'Terminology',term:'Catalyst',def:'The news event or development driving a stock\'s move. Earnings beats, FDA approvals, contract wins, or product launches. No catalyst = no edge.'},
-  {cat:'Terminology',term:'Pre-Market',def:'Trading that occurs before the regular 9:30am ET open, typically from 4am. Lower volume, wider spreads, and more volatile price action.'},
-  {cat:'Terminology',term:'After-Hours',def:'Trading after the 4pm ET close. Same characteristics as pre-market — lower volume, less liquidity, more volatility.'},
-  {cat:'Terminology',term:'Gap Up / Gap Down',def:'When a stock opens significantly above or below the prior day\'s close. Created by news or earnings. Gap direction often signals the day\'s bias.'},
-  {cat:'Terminology',term:'Earnings Per Share (EPS)',def:'Company\'s profit divided by total shares. A beat means actual EPS exceeded estimates. Often the catalyst for earnings day moves.'},
-  {cat:'Terminology',term:'P/E Ratio',def:'Price-to-earnings ratio. Stock price divided by annual EPS. Used to assess valuation. High P/E can mean growth expectations or overvaluation.'},
-  {cat:'Terminology',term:'Margin',def:'Borrowing money from your broker to buy more shares than your cash allows. Amplifies both gains and losses. Not recommended for beginners.'},
-  {cat:'Terminology',term:'Pattern Day Trader (PDT)',def:'A FINRA rule requiring $25,000 minimum account balance if you make 4+ day trades in 5 business days in a margin account.'},
-  {cat:'Terminology',term:'Circuit Breaker / Halt',def:'A temporary stop in trading when a stock moves too fast. Level 1 halt: stock down 5%+ in 5 min. Stocks can resume up or down from the halt.'},
-  {cat:'Terminology',term:'Wash Sale Rule',def:'IRS rule that disallows a tax loss if you buy the same or substantially identical security within 30 days before or after selling it at a loss.'},
+  {cat:"Terminology",term:"Float",def:"The number of shares available for public trading. Low float stocks have fewer shares available and tend to move faster and more violently on news."},
+  {cat:"Terminology",term:"Market Cap",def:"Total market value of a company. Share price × total shares outstanding. Small cap: under $2B. Mid cap: $2B–$10B. Large cap: over $10B."},
+  {cat:"Terminology",term:"Volume",def:"The number of shares traded during a given period. Higher volume on a move adds credibility. Low volume moves are often unsustainable."},
+  {cat:"Terminology",term:"Relative Volume (RVOL)",def:"Current volume compared to average volume for the same time of day. RVOL of 2.0 means twice the normal volume — signals increased interest."},
+  {cat:"Terminology",term:"Bid Price",def:"The highest price a buyer is willing to pay for a stock right now. When you sell at market, you typically get the bid."},
+  {cat:"Terminology",term:"Ask Price",def:"The lowest price a seller is willing to accept right now. When you buy at market, you typically pay the ask."},
+  {cat:"Terminology",term:"Spread",def:"The difference between the bid and ask price. Wide spreads cost more to trade. Thin stocks with low volume tend to have wide spreads."},
+  {cat:"Terminology",term:"Short Interest",def:"The percentage of a stock's float that has been sold short. High short interest (over 20%) creates potential for short squeezes."},
+  {cat:"Terminology",term:"Short Squeeze",def:"When a heavily shorted stock rises sharply, forcing short sellers to buy shares to cover — which drives the price even higher."},
+  {cat:"Terminology",term:"VWAP",def:"Volume Weighted Average Price. The average price weighted by volume throughout the day. Used as a key intraday support and resistance level."},
+  {cat:"Terminology",term:"Level 2",def:"A real-time display of all buy and sell orders at different price levels. Shows the depth of the market and where significant orders are stacked."},
+  {cat:"Terminology",term:"Market Order",def:"An order to buy or sell immediately at the best available price. Fast execution but no price guarantee. Risky in thin stocks with wide spreads."},
+  {cat:"Terminology",term:"Limit Order",def:"An order to buy or sell at a specific price or better. Gives price control but no execution guarantee. Preferred by most active traders."},
+  {cat:"Terminology",term:"Stop Loss",def:"A predetermined price at which you exit a losing trade. Automatically limits your loss. Must be set before entering every trade."},
+  {cat:"Terminology",term:"Catalyst",def:"The news event driving a stock's move. Earnings beats, FDA approvals, contract wins. No catalyst = no edge in momentum trading."},
+  {cat:"Terminology",term:"Pre-Market",def:"Trading before the 9:30am ET open, typically from 4am. Lower volume, wider spreads, and more volatile price action."},
+  {cat:"Terminology",term:"Gap Up / Gap Down",def:"When a stock opens significantly above or below the prior day's close. Created by news or earnings. Gap direction often signals the day's bias."},
+  {cat:"Terminology",term:"Pattern Day Trader (PDT)",def:"FINRA rule requiring $25,000 minimum if you make 4+ day trades in 5 business days in a margin account."},
+  {cat:"Terminology",term:"Circuit Breaker / Halt",def:"A temporary stop in trading when a stock moves too fast. Stocks can resume up or down from the halt price."},
+  {cat:"Terminology",term:"Margin",def:"Borrowing money from your broker to buy more shares than your cash allows. Amplifies both gains and losses. Not recommended for beginners."},
+  {cat:"Terminology",term:"Wash Sale Rule",def:"IRS rule that disallows a tax loss if you buy the same security within 30 days before or after selling it at a loss."},
+  {cat:"Terminology",term:"Float Rotation",def:"When a low float stock trades its entire float multiple times in a single day. Signals extreme momentum and creates explosive moves."},
+  {cat:"Terminology",term:"After-Hours",def:"Trading after the 4pm ET close. Same characteristics as pre-market — lower volume, less liquidity, more volatile price action."},
+  {cat:"Terminology",term:"Earnings Per Share (EPS)",def:"Company's profit divided by total shares. A beat means actual EPS exceeded analyst estimates — often the catalyst for earnings day moves."},
+  {cat:"Terminology",term:"P/E Ratio",def:"Price-to-earnings ratio. Stock price divided by annual EPS. Used to assess valuation. High P/E can mean growth expectations or overvaluation."},
 
-  // CHART PATTERNS (20)
-  {cat:'Chart Patterns',term:'Bull Flag',def:'A continuation pattern. Strong upward move (flagpole), then a tight downward drift on low volume (flag). Entry on breakout above the flag. Signals more upside.'},
-  {cat:'Chart Patterns',term:'Bear Flag',def:'A continuation pattern. Strong downward move (flagpole), then a tight upward drift on low volume (flag). Entry on breakdown below the flag. Signals more downside.'},
-  {cat:'Chart Patterns',term:'Pennant',def:'Similar to a flag but the consolidation forms converging trendlines (a small symmetrical triangle) after a strong move. Breakout direction matches the flagpole.'},
-  {cat:'Chart Patterns',term:'Head & Shoulders',def:'Reversal pattern. Left shoulder, higher head, lower right shoulder — all along a neckline. Break below neckline signals bearish reversal. Most reliable reversal pattern.'},
-  {cat:'Chart Patterns',term:'Inverse Head & Shoulders',def:'Bullish reversal pattern. Three lows with the middle (head) being the lowest. Break above neckline signals bullish reversal.'},
-  {cat:'Chart Patterns',term:'Double Top',def:'Two peaks at approximately the same price level. Signals resistance. Break below the valley between the peaks confirms a bearish reversal.'},
-  {cat:'Chart Patterns',term:'Double Bottom',def:'Two lows at approximately the same price level. Signals support. Break above the peak between the lows confirms a bullish reversal.'},
-  {cat:'Chart Patterns',term:'Ascending Triangle',def:'Flat top resistance with a series of higher lows. Buyers are becoming more aggressive. Breakout above the flat top is the trade. Bullish bias.'},
-  {cat:'Chart Patterns',term:'Descending Triangle',def:'Flat bottom support with a series of lower highs. Sellers are becoming more aggressive. Breakdown below flat bottom is the trade. Bearish bias.'},
-  {cat:'Chart Patterns',term:'Symmetrical Triangle',def:'Converging trendlines with equal slope up and down. Compression before a breakout. Direction not predetermined — wait for the break.'},
-  {cat:'Chart Patterns',term:'Cup & Handle',def:'Rounded bottom (cup) followed by a small downward drift (handle). Bullish continuation. Entry on breakout above handle resistance.'},
-  {cat:'Chart Patterns',term:'Opening Range Breakout (ORB)',def:'The high and low established in the first 5–15 minutes of trading. A break above the ORB high is a long signal. Break below the ORB low is a short signal.'},
-  {cat:'Chart Patterns',term:'Consolidation',def:'A period where price moves sideways in a tight range after a directional move. Represents balance between buyers and sellers before the next move.'},
-  {cat:'Chart Patterns',term:'Breakout',def:'When price moves above a resistance level (or below support) on above-average volume. The entry signal in most continuation and breakout patterns.'},
-  {cat:'Chart Patterns',term:'Fake Breakout',def:'Price breaks a key level, triggers entries, then immediately reverses. Common at well-known levels. Use buffer entries and honor your stop.'},
-  {cat:'Chart Patterns',term:'V-Shape Recovery',def:'A sharp selloff immediately followed by an equally sharp recovery. Risky to buy — can look like recovery but continue lower. Confirm with volume.'},
-  {cat:'Chart Patterns',term:'Higher High Higher Low (HHHL)',def:'The definition of an uptrend. Each swing high is higher than the last. Each swing low is higher than the last. Trade with the trend.'},
-  {cat:'Chart Patterns',term:'Lower High Lower Low (LHLL)',def:'The definition of a downtrend. Each swing high is lower than the last. Each swing low is lower than the last. Short with the trend.'},
-  {cat:'Chart Patterns',term:'Support Level',def:'A price area where buying has historically emerged and stopped declines. The more times price bounces from a level, the stronger the support.'},
-  {cat:'Chart Patterns',term:'Resistance Level',def:'A price area where selling has historically emerged and stopped rallies. A broken resistance level often becomes support (role reversal).'},
+  {cat:"Chart Patterns",term:"Bull Flag",def:"Continuation pattern. Strong upward move (flagpole) then tight downward drift on low volume (flag). Entry on breakout above flag. Signals more upside."},
+  {cat:"Chart Patterns",term:"Bear Flag",def:"Continuation pattern. Strong downward move (flagpole) then tight upward drift on low volume (flag). Entry on breakdown below flag. Signals more downside."},
+  {cat:"Chart Patterns",term:"Pennant",def:"Similar to a flag but consolidation forms converging trendlines (small symmetrical triangle) after a strong move. Breakout direction matches the flagpole."},
+  {cat:"Chart Patterns",term:"Head & Shoulders",def:"Reversal pattern. Left shoulder, higher head, lower right shoulder along a neckline. Break below neckline signals bearish reversal."},
+  {cat:"Chart Patterns",term:"Ascending Triangle",def:"Flat top resistance with a series of higher lows. Buyers becoming more aggressive. Breakout above the flat top. Bullish bias."},
+  {cat:"Chart Patterns",term:"Double Top",def:"Two peaks at approximately the same resistance level. Break below the valley between the peaks confirms bearish reversal."},
+  {cat:"Chart Patterns",term:"Double Bottom",def:"Two lows at approximately the same support level. Break above the peak between the lows confirms bullish reversal."},
+  {cat:"Chart Patterns",term:"Cup & Handle",def:"Rounded bottom (cup) followed by a small downward drift (handle). Bullish continuation. Entry on breakout above handle resistance."},
+  {cat:"Chart Patterns",term:"Support Level",def:"A price area where buying has historically emerged and stopped declines. The more times price bounces from a level, the stronger the support."},
+  {cat:"Chart Patterns",term:"Resistance Level",def:"A price area where selling has historically emerged and stopped rallies. Broken resistance often becomes support (role reversal)."},
+  {cat:"Chart Patterns",term:"Higher High Higher Low (HHHL)",def:"The definition of an uptrend. Each swing high is higher than the last. Each swing low is higher than the last. Trade with the trend."},
+  {cat:"Chart Patterns",term:"Lower High Lower Low (LHLL)",def:"The definition of a downtrend. Each swing high is lower than the last. Each swing low is lower than the last. Short with the trend."},
+  {cat:"Chart Patterns",term:"Fake Breakout",def:"Price breaks a key level, triggers entries, then immediately reverses. Use a small buffer above the breakout level for entry and always have a defined stop."},
+  {cat:"Chart Patterns",term:"V-Shape Recovery",def:"A sharp selloff immediately followed by an equally sharp recovery. Risky to buy — can look like recovery but continue lower. Confirm with volume."},
+  {cat:"Chart Patterns",term:"Opening Range Breakout (ORB)",def:"The high and low established in the first 5–15 minutes of trading. Break above ORB high = long signal. Break below = short signal."},
+  {cat:"Chart Patterns",term:"Consolidation",def:"A period where price moves sideways in a tight range after a directional move. Represents balance between buyers and sellers before the next move."},
+  {cat:"Chart Patterns",term:"Breakout",def:"When price moves above a resistance level (or below support) on above-average volume. The entry signal in most continuation and breakout patterns."},
+  {cat:"Chart Patterns",term:"Descending Triangle",def:"Flat bottom support with a series of lower highs. Sellers becoming more aggressive. Breakdown below flat bottom. Bearish bias."},
+  {cat:"Chart Patterns",term:"Symmetrical Triangle",def:"Converging trendlines with equal slope up and down. Compression before a breakout. Direction not predetermined — wait for the break."},
 
-  // CANDLESTICKS (15)
-  {cat:'Candlesticks',term:'Bullish Engulfing',def:'A large green candle that completely covers the prior red candle\'s body. Strong reversal signal at support. More significant on higher timeframes.'},
-  {cat:'Candlesticks',term:'Bearish Engulfing',def:'A large red candle that completely covers the prior green candle\'s body. Strong reversal signal at resistance. Watch for high volume to confirm.'},
-  {cat:'Candlesticks',term:'Hammer',def:'Small body at the top of the candle, long lower wick (at least 2x the body). Appears after a downtrend at support. Buyers rejected the lows aggressively.'},
-  {cat:'Candlesticks',term:'Shooting Star',def:'Small body at the bottom, long upper wick. Appears after an uptrend at resistance. Sellers rejected the highs aggressively. Bearish reversal signal.'},
-  {cat:'Candlesticks',term:'Doji',def:'Open and close are nearly equal. Represents indecision. Long wicks on both sides mean both sides fought and neither won. Often precedes a reversal.'},
-  {cat:'Candlesticks',term:'Marubozu',def:'A candle with no wicks — opens at one extreme and closes at the other. Represents maximum conviction in one direction. Strong momentum signal.'},
-  {cat:'Candlesticks',term:'Spinning Top',def:'Small body with roughly equal wicks on both sides. Indecision — neither bulls nor bears took control. Often appears during consolidation.'},
-  {cat:'Candlesticks',term:'Morning Star',def:'3-candle bullish reversal pattern: large red candle, small indecision candle (gap down), large green candle. Strong reversal at support on daily chart.'},
-  {cat:'Candlesticks',term:'Evening Star',def:'3-candle bearish reversal pattern: large green candle, small indecision candle (gap up), large red candle. Strong reversal at resistance on daily chart.'},
-  {cat:'Candlesticks',term:'Three White Soldiers',def:'Three consecutive large green candles with small wicks. Each opens within the prior candle\'s body and closes at a new high. Strong bullish momentum signal.'},
-  {cat:'Candlesticks',term:'Three Black Crows',def:'Three consecutive large red candles. Each opens within the prior candle\'s body and closes at a new low. Strong bearish momentum signal.'},
-  {cat:'Candlesticks',term:'Harami (Inside Bar)',def:'A small candle contained entirely within the prior candle\'s body. Represents compression and indecision. Often precedes a directional move.'},
-  {cat:'Candlesticks',term:'Kill Candle',def:'A large red candle that reverses a significant portion of the prior move, often on high volume. Signals that sellers have taken control of the momentum.'},
-  {cat:'Candlesticks',term:'Wick Rejection',def:'When a candle\'s wick tests a level but the body closes away from it. Signals that the level held. Long wicks at support = buyers stepping in aggressively.'},
-  {cat:'Candlesticks',term:'Green to Red Reversal',def:'A stock that opens above the prior day\'s close (green) but reverses and closes below it (red). Bearish signal, especially on high volume. Signals distribution.'},
+  {cat:"Candlesticks",term:"Bullish Engulfing",def:"A large green candle that completely covers the prior red candle's body. Strong reversal signal at support. More significant on higher timeframes."},
+  {cat:"Candlesticks",term:"Bearish Engulfing",def:"A large red candle that completely covers the prior green candle's body. Strong reversal signal at resistance. Watch for high volume to confirm."},
+  {cat:"Candlesticks",term:"Hammer",def:"Small body at the top, long lower wick (at least 2x the body). Appears after a downtrend at support. Buyers rejected the lows aggressively."},
+  {cat:"Candlesticks",term:"Shooting Star",def:"Small body at the bottom, long upper wick. Appears after an uptrend at resistance. Sellers rejected the highs aggressively. Bearish reversal."},
+  {cat:"Candlesticks",term:"Doji",def:"Open and close are nearly equal. Represents indecision. Long wicks on both sides mean both sides fought and neither won. Often precedes a reversal."},
+  {cat:"Candlesticks",term:"Marubozu",def:"A candle with no wicks — opens at one extreme and closes at the other. Represents maximum conviction in one direction. Strong momentum signal."},
+  {cat:"Candlesticks",term:"Morning Star",def:"3-candle bullish reversal: large red candle, small indecision candle, large green candle. Strong reversal at support on daily chart."},
+  {cat:"Candlesticks",term:"Spinning Top",def:"Small body with roughly equal wicks on both sides. Indecision — neither bulls nor bears took control. Often appears during consolidation."},
+  {cat:"Candlesticks",term:"Three White Soldiers",def:"Three consecutive large green candles. Each opens within the prior body and closes at a new high. Strong bullish momentum signal."},
+  {cat:"Candlesticks",term:"Three Black Crows",def:"Three consecutive large red candles. Each opens within the prior body and closes at a new low. Strong bearish momentum signal."},
+  {cat:"Candlesticks",term:"Harami (Inside Bar)",def:"A small candle contained entirely within the prior candle's body. Represents compression and indecision. Often precedes a directional move."},
+  {cat:"Candlesticks",term:"Kill Candle",def:"A large red candle that reverses a significant portion of the prior move on high volume. Signals that sellers have taken control of the momentum."},
+  {cat:"Candlesticks",term:"Wick Rejection",def:"When a candle's wick tests a level but the body closes away from it. Long wicks at support = buyers stepping in aggressively."},
+  {cat:"Candlesticks",term:"Green to Red Reversal",def:"A stock that opens above the prior close (green) but reverses and closes below it (red). Bearish signal especially on high volume."},
+  {cat:"Candlesticks",term:"Evening Star",def:"3-candle bearish reversal: large green candle, small indecision candle, large red candle. Strong reversal at resistance on daily chart."},
 
-  // RISK MANAGEMENT (15)
-  {cat:'Risk Management',term:'The 1% Rule',def:'Never risk more than 1% of your total account on a single trade. On a $10,000 account that is $100 max risk. Survives losing streaks without account damage.'},
-  {cat:'Risk Management',term:'Position Sizing',def:'Calculating the exact number of shares to buy based on your dollar risk and stop distance. Formula: Shares = Dollar Risk ÷ (Entry − Stop).'},
-  {cat:'Risk Management',term:'Risk-to-Reward (R:R)',def:'The ratio of potential profit to potential loss on a trade. 3:1 means risking $100 to make $300. Never trade below 2:1. Higher is better.'},
-  {cat:'Risk Management',term:'Daily Loss Limit',def:'The maximum amount you allow yourself to lose in a single trading session. When hit, you stop trading for the day. Non-negotiable rule.'},
-  {cat:'Risk Management',term:'Trailing Stop',def:'A stop that moves with price as a trade goes in your favor. Locks in profits while allowing the trade room to run. Set at a percentage or dollar amount.'},
-  {cat:'Risk Management',term:'Scaling In',def:'Entering a position in multiple smaller pieces rather than all at once. Reduces risk if the first entry is wrong. Add to winners, not losers.'},
-  {cat:'Risk Management',term:'Scaling Out',def:'Taking partial profits as a trade moves in your favor. Reduces risk by locking in gains while leaving some shares to capture the full move.'},
-  {cat:'Risk Management',term:'Breakeven Stop',def:'Moving your stop loss to your entry price once a trade is profitable. Eliminates the possibility of a winner becoming a loser. Do this after first target.'},
-  {cat:'Risk Management',term:'Max Drawdown',def:'The largest peak-to-trough decline in account value over a period. A key measure of risk. Professionals typically limit max drawdown to 10–20% of account.'},
-  {cat:'Risk Management',term:'Kelly Criterion',def:'A mathematical formula for optimal position sizing based on win rate and R:R. Used by professionals. Practical version: never bet more than half the Kelly amount.'},
-  {cat:'Risk Management',term:'Correlation Risk',def:'When multiple positions move together because they are in the same sector or react to the same catalyst. Being long 5 tech stocks is like having one big tech position.'},
-  {cat:'Risk Management',term:'Overtrading',def:'Taking more trades than your edge supports — often from boredom or the need to "be in the market." Destroys accounts slowly through commissions and bad trades.'},
-  {cat:'Risk Management',term:'Revenge Trading',def:'Taking impulsive trades after a loss to "make it back." Leads to larger losses. The antidote is a hard daily loss limit and stepping away when hit.'},
-  {cat:'Risk Management',term:'Paper Trading',def:'Simulated trading with fake money in real market conditions. Use to practice setups and learn your platform before risking real capital.'},
-  {cat:'Risk Management',term:'Win Rate',def:'The percentage of trades that are profitable. 50-60% is good. 40% with a 3:1 R:R is still profitable. Win rate alone means nothing without R:R context.'},
+  {cat:"Risk Management",term:"The 1% Rule",def:"Never risk more than 1% of your total account on a single trade. On a $10,000 account that is $100 max risk. Survives losing streaks without account damage."},
+  {cat:"Risk Management",term:"Position Sizing",def:"Calculating the exact number of shares to buy based on your dollar risk and stop distance. Formula: Shares = Dollar Risk ÷ (Entry − Stop)."},
+  {cat:"Risk Management",term:"Risk-to-Reward (R:R)",def:"The ratio of potential profit to potential loss. 3:1 means risking $100 to make $300. Never trade below 2:1. Higher is better."},
+  {cat:"Risk Management",term:"Daily Loss Limit",def:"The maximum amount you allow yourself to lose in a single session. When hit, you stop trading for the day. Non-negotiable rule."},
+  {cat:"Risk Management",term:"Trailing Stop",def:"A stop that moves with price as a trade goes in your favor. Locks in profits while allowing the trade room to run."},
+  {cat:"Risk Management",term:"Scaling In",def:"Entering a position in multiple smaller pieces rather than all at once. Reduces risk if the first entry is wrong. Add to winners, not losers."},
+  {cat:"Risk Management",term:"Scaling Out",def:"Taking partial profits as a trade moves in your favor. Reduces risk by locking in gains while leaving some shares to capture the full move."},
+  {cat:"Risk Management",term:"Breakeven Stop",def:"Moving your stop loss to your entry price once a trade is profitable. Eliminates the possibility of a winner becoming a loser."},
+  {cat:"Risk Management",term:"Max Drawdown",def:"The largest peak-to-trough decline in account value. Key measure of risk. Professionals typically limit max drawdown to 10–20%."},
+  {cat:"Risk Management",term:"Correlation Risk",def:"Multiple positions moving together because they are in the same sector. Long 5 tech stocks is like having one big tech position."},
+  {cat:"Risk Management",term:"Overtrading",def:"Taking more trades than your edge supports — often from boredom. Destroys accounts slowly through commissions and bad setups."},
+  {cat:"Risk Management",term:"Revenge Trading",def:"Taking impulsive trades after a loss to make it back. Leads to larger losses. The antidote is a hard daily loss limit and stepping away."},
+  {cat:"Risk Management",term:"Paper Trading",def:"Simulated trading with fake money in real market conditions. Use to practice setups and learn your platform before risking real capital."},
+  {cat:"Risk Management",term:"Win Rate",def:"The percentage of trades that are profitable. 50-60% is good. A 40% win rate with 3:1 R:R is still profitable. Win rate alone means nothing without R:R context."},
+  {cat:"Risk Management",term:"Kelly Criterion",def:"Mathematical formula for optimal position sizing based on win rate and R:R. Practical version: never bet more than half the Kelly amount."},
 
-  // MARKET STRUCTURE (10)
-  {cat:'Market Structure',term:'Trendline',def:'A diagonal line connecting at least two price points (highs in downtrends, lows in uptrends). Used to visualize trend direction and identify breakout points.'},
-  {cat:'Market Structure',term:'Moving Average (MA)',def:'The average price over a set number of periods. Smooths out noise. Common: 20MA (short-term), 50MA (medium), 200MA (long-term trend).'},
-  {cat:'Market Structure',term:'EMA vs SMA',def:'Exponential MA gives more weight to recent prices and reacts faster. Simple MA treats all prices equally and reacts slower. Day traders prefer EMAs.'},
-  {cat:'Market Structure',term:'Golden Cross',def:'When the 50-day MA crosses above the 200-day MA. Considered a long-term bullish signal. Often seen as institutional buying confirmation.'},
-  {cat:'Market Structure',term:'Death Cross',def:'When the 50-day MA crosses below the 200-day MA. Considered a long-term bearish signal. Often precedes continued weakness.'},
-  {cat:'Market Structure',term:'Sector Rotation',def:'Money moving from one market sector to another as economic conditions change. When tech sells off and energy rallies — that\'s rotation.'},
-  {cat:'Market Structure',term:'Market Breadth',def:'Measures how many stocks are participating in a move. Strong breadth (most stocks rising) = healthy bull market. Narrow breadth = weakening rally.'},
-  {cat:'Market Structure',term:'Liquidity',def:'How easily you can buy or sell a security without affecting its price. High liquidity = tight spreads, fast fills. Low liquidity = wide spreads, slippage.'},
-  {cat:'Market Structure',term:'Institutional Buying',def:'Large purchases by funds, banks, or hedge funds. Identified by above-average volume on up days. Stock can\'t sustain a move without institutional participation.'},
-  {cat:'Market Structure',term:'Power Hour',def:'The last hour of trading (3–4pm ET) which often sees increased volume and decisive moves as institutions and traders close or adjust positions.'},
+  {cat:"Market Structure",term:"Trendline",def:"A diagonal line connecting at least two price points. Used to visualize trend direction and identify breakout points."},
+  {cat:"Market Structure",term:"Moving Average (MA)",def:"The average price over a set number of periods. Smooths out noise. Common: 20MA (short-term), 50MA (medium), 200MA (long-term trend)."},
+  {cat:"Market Structure",term:"EMA vs SMA",def:"Exponential MA gives more weight to recent prices and reacts faster. Simple MA treats all prices equally. Day traders prefer EMAs."},
+  {cat:"Market Structure",term:"Golden Cross",def:"When the 50-day MA crosses above the 200-day MA. Long-term bullish signal. Often seen as institutional buying confirmation."},
+  {cat:"Market Structure",term:"Death Cross",def:"When the 50-day MA crosses below the 200-day MA. Long-term bearish signal. Often precedes continued weakness."},
+  {cat:"Market Structure",term:"Sector Rotation",def:"Money moving from one market sector to another as economic conditions change. When tech sells off and energy rallies — that is rotation."},
+  {cat:"Market Structure",term:"Market Breadth",def:"Measures how many stocks are participating in a move. Strong breadth = healthy bull market. Narrow breadth = weakening rally."},
+  {cat:"Market Structure",term:"Liquidity",def:"How easily you can buy or sell without affecting price. High liquidity = tight spreads, fast fills. Low liquidity = wide spreads, slippage."},
+  {cat:"Market Structure",term:"Institutional Buying",def:"Large purchases by funds, banks, or hedge funds. Identified by above-average volume on up days. Stocks cannot sustain moves without institutional participation."},
+  {cat:"Market Structure",term:"Power Hour",def:"The last hour of trading (3–4pm ET) which often sees increased volume and decisive moves as institutions adjust positions."},
 
-  // PSYCHOLOGY (10)
-  {cat:'Psychology',term:'FOMO',def:'Fear Of Missing Out. The urge to chase a move that has already happened. Leads to buying at highs and poor risk/reward. The best setups have clear entries — if you missed it, wait.'},
-  {cat:'Psychology',term:'Loss Aversion',def:'The psychological tendency to feel losses more intensely than equivalent gains. Causes traders to hold losers too long and cut winners too early.'},
-  {cat:'Psychology',term:'Confirmation Bias',def:'Seeking information that confirms what you already believe about a trade while ignoring contradicting evidence. Leads to ignoring warning signs.'},
-  {cat:'Psychology',term:'Recency Bias',def:'Overweighting recent events when making decisions. After a win streak, traders feel invincible. After a loss streak, they become paralyzed. Both are dangerous.'},
-  {cat:'Psychology',term:'Anchoring',def:'Fixating on a specific price (like your entry) and making decisions relative to it. "I\'ll sell when I get back to breakeven" is anchoring. The market doesn\'t know your entry.'},
-  {cat:'Psychology',term:'Sunk Cost Fallacy',def:'Holding a losing trade because of money already lost ("I can\'t sell, I\'d take a loss"). The money is already gone. Your only question is: what\'s the best decision right now?'},
-  {cat:'Psychology',term:'Overconfidence',def:'Overestimating your ability or edge after a winning streak. Leads to oversizing, taking lower-quality setups, and giving back gains quickly.'},
-  {cat:'Psychology',term:'Process vs Outcome',def:'Judging a trade on the quality of your decision-making process, not the result. A well-executed trade that loses is still good trading. A lucky win on a bad process is not.'},
-  {cat:'Psychology',term:'Trading Journal',def:'A record of every trade including setup, entry, exit, P&L, and reflection. The only way to identify patterns in your behavior and improve systematically over time.'},
-  {cat:'Psychology',term:'State Management',def:'Being aware of and controlling your emotional state before and during trading. Tired, angry, stressed, or excited traders make worse decisions. Stop when not at your best.'},
+  {cat:"Psychology",term:"FOMO",def:"Fear Of Missing Out. The urge to chase a move that has already happened. Leads to buying at highs and poor R:R. Best setups have clear entries — if you missed it, wait."},
+  {cat:"Psychology",term:"Loss Aversion",def:"The psychological tendency to feel losses more intensely than equivalent gains. Causes traders to hold losers too long and cut winners too early."},
+  {cat:"Psychology",term:"Confirmation Bias",def:"Seeking information that confirms what you already believe about a trade while ignoring contradicting evidence. Leads to ignoring warning signs."},
+  {cat:"Psychology",term:"Recency Bias",def:"Overweighting recent events. After a win streak traders feel invincible. After a loss streak they become paralyzed. Both are dangerous."},
+  {cat:"Psychology",term:"Anchoring",def:"Fixating on a specific price like your entry and making decisions relative to it. The market does not know your entry. Only current price matters."},
+  {cat:"Psychology",term:"Sunk Cost Fallacy",def:"Holding a losing trade because of money already lost. The money is already gone. Your only question: what is the best decision right now?"},
+  {cat:"Psychology",term:"Overconfidence",def:"Overestimating your edge after a winning streak. Leads to oversizing, taking lower-quality setups, and giving back gains quickly."},
+  {cat:"Psychology",term:"Process vs Outcome",def:"Judging a trade on the quality of your decision-making, not the result. A well-executed trade that loses is still good trading."},
+  {cat:"Psychology",term:"Trading Journal",def:"A record of every trade including setup, entry, exit, P&L, and reflection. The only way to identify patterns in your behavior and improve systematically."},
+  {cat:"Psychology",term:"State Management",def:"Being aware of and controlling your emotional state before and during trading. Tired, angry, or excited traders make worse decisions."},
 
-  // OPTIONS (5)
-  {cat:'Options',term:'Call Option',def:'The right (not obligation) to buy 100 shares of a stock at the strike price before expiration. Profits when the stock rises. Bought when you are bullish.'},
-  {cat:'Options',term:'Put Option',def:'The right (not obligation) to sell 100 shares at the strike price before expiration. Profits when the stock falls. Bought when you are bearish.'},
-  {cat:'Options',term:'Strike Price',def:'The predetermined price at which the option can be exercised. An option is "in the money" when the stock is past the strike price in the profitable direction.'},
-  {cat:'Options',term:'Expiration Date',def:'The date on which the option contract expires. Options lose value as expiration approaches (time decay). Weekly options expire every Friday.'},
-  {cat:'Options',term:'Implied Volatility (IV)',def:'The market\'s expectation of future price movement embedded in the option\'s price. High IV = expensive options. IV often spikes into earnings then crushes after.'}
+  {cat:"Options",term:"Call Option",def:"The right (not obligation) to buy 100 shares at the strike price before expiration. Profits when the stock rises. Bought when you are bullish."},
+  {cat:"Options",term:"Put Option",def:"The right (not obligation) to sell 100 shares at the strike price before expiration. Profits when the stock falls. Bought when you are bearish."},
+  {cat:"Options",term:"Strike Price",def:"The predetermined price at which the option can be exercised. An option is in the money when the stock is past the strike in your profitable direction."},
+  {cat:"Options",term:"Expiration Date",def:"The date on which the option contract expires. Options lose value as expiration approaches (time decay). Weekly options expire every Friday."},
+  {cat:"Options",term:"Implied Volatility (IV)",def:"The market's expectation of future price movement embedded in the option's price. High IV = expensive options. IV often spikes into earnings then crushes after."}
 ];
 
 let filtered = [...CARDS];
@@ -217,12 +434,22 @@ function render() {
   document.getElementById('backCat').textContent = c.cat;
   document.getElementById('backTerm').textContent = c.term;
   document.getElementById('backDef').textContent = c.def;
-  const num = String(CARDS.indexOf(c) + 1).padStart(3,'0');
+  const origIdx = CARDS.indexOf(c);
+  const num = String(origIdx + 1).padStart(3,'0');
   document.getElementById('cardNumBadge').textContent = '#' + num;
   document.getElementById('backNum').textContent = '#' + num;
   document.getElementById('cardNum').textContent = 'Card ' + (current+1) + ' of ' + filtered.length;
   document.getElementById('catLabel').textContent = c.cat;
   document.getElementById('fill').style.width = ((current+1)/filtered.length*100) + '%';
+  // SVG illustration
+  const svgEl = document.getElementById('backSvg');
+  if (SVG[c.term]) {
+    svgEl.innerHTML = SVG[c.term];
+    svgEl.style.display = 'block';
+  } else {
+    svgEl.innerHTML = '';
+    svgEl.style.display = 'none';
+  }
   if (flipped) { document.getElementById('card').classList.remove('flipped'); flipped = false; }
 }
 
@@ -238,7 +465,6 @@ function filterCat(cat, btn) {
   render();
 }
 
-// Keyboard navigation
 document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight') next();
   if (e.key === 'ArrowLeft') prev();
