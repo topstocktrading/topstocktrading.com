@@ -1,375 +1,515 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TST Academy — Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>TST Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--green:#00d27a;--dark:#0a0c10;--card:#12151c;--card2:#161920;--border:#1e2330;--text:#e8eaf0;--muted:#6b7280;--red:#e05c5c;}
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
-  .top-nav{background:rgba(10,12,16,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:14px 32px;position:sticky;top:0;z-index:100;}
-  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#fff;}
-  .nav-logo span{color:var(--green);}
-  .nav-badge{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border-radius:3px;background:rgba(224,92,92,0.15);color:var(--red);border:1px solid rgba(224,92,92,0.3);}
-  .wrap{max-width:860px;margin:0 auto;padding:40px 24px;}
-  h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;color:#fff;margin-bottom:4px;}
-  .sub{font-size:14px;color:var(--muted);margin-bottom:36px;}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;margin-bottom:24px;}
-  .card-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:8px;}
-  .card-title span{font-size:11px;font-weight:400;color:var(--muted);font-family:'DM Sans',sans-serif;}
-  label{display:block;font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
-  select,input[type=text]{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.2s;margin-bottom:18px;}
-  select:focus,input[type=text]:focus{border-color:var(--green);}
-  select option{background:var(--dark);}
-  textarea{width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;resize:vertical;min-height:90px;transition:border-color 0.2s;margin-bottom:18px;line-height:1.6;}
-  textarea:focus{border-color:var(--green);}
-  .drop-zone{border:2px dashed var(--border);border-radius:12px;padding:48px 24px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;position:relative;margin-bottom:18px;}
-  .drop-zone:hover,.drop-zone.drag{border-color:var(--green);background:rgba(0,210,122,0.04);}
-  .drop-zone.has-file{border-color:var(--green);background:rgba(0,210,122,0.06);}
-  .drop-icon{font-size:36px;margin-bottom:10px;opacity:0.4;}
-  .drop-text{font-size:14px;color:var(--muted);}
-  .drop-text strong{color:var(--green);}
-  .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
-  .preview{max-width:100%;max-height:200px;border-radius:8px;margin-top:14px;border:1px solid var(--border);}
-  .btn{background:var(--green);color:#0a0c10;border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif;cursor:pointer;transition:background 0.2s;width:100%;}
-  .btn:hover{background:#00e888;}
-  .btn:disabled{opacity:0.4;cursor:not-allowed;}
-  .status{border-radius:8px;padding:14px 18px;font-size:14px;margin-top:16px;display:none;}
-  .status.success{background:rgba(0,210,122,0.08);border:1px solid rgba(0,210,122,0.3);color:var(--green);}
-  .status.error{background:rgba(224,92,92,0.08);border:1px solid rgba(224,92,92,0.3);color:var(--red);}
-  .status.loading{background:rgba(107,114,128,0.08);border:1px solid var(--border);color:var(--muted);}
-  .uploads-list{display:flex;flex-direction:column;gap:10px;}
-  .upload-item{background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px;}
-  .upload-thumb{width:64px;height:48px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;}
-  .upload-info{flex:1;}
-  .upload-lesson{font-size:12px;color:var(--green);font-weight:600;font-family:'Rajdhani',sans-serif;letter-spacing:0.5px;}
-  .upload-caption{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.5;}
-  .upload-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;padding:4px;flex-shrink:0;}
-  .upload-del:hover{color:var(--red);}
-  #login-screen{position:fixed;inset:0;background:var(--dark);z-index:1000;display:flex;align-items:center;justify-content:center;}
-  .login-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px 40px;width:100%;max-width:380px;text-align:center;}
-  .login-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:#fff;margin-bottom:4px;}
-  .login-logo span{color:var(--green);}
-  .login-sub{font-size:13px;color:var(--muted);margin-bottom:28px;}
-  .login-box h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:#fff;margin-bottom:20px;}
-  .login-err{font-size:13px;color:var(--red);margin-top:10px;display:none;}
-  .caption-hint{font-size:12px;color:var(--muted);margin-top:-12px;margin-bottom:18px;line-height:1.6;font-style:italic;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#07090a;color:#c8d4c8;font-family:'DM Sans',sans-serif;min-height:100vh;}
+
+/* LOGIN */
+.login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:#07090a;}
+.login-box{background:#0e1314;border:1px solid #1a2020;border-radius:16px;padding:48px 40px;width:360px;text-align:center;}
+.login-logo{font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;letter-spacing:4px;color:#4a6a4a;text-transform:uppercase;margin-bottom:24px;}
+.login-title{font-family:Rajdhani,sans-serif;font-size:32px;font-weight:700;color:#fff;margin-bottom:4px;}
+.login-sub{font-size:13px;color:#3a5a3a;margin-bottom:28px;}
+.login-input{width:100%;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:12px 16px;color:#e8f0e8;font-size:14px;outline:none;margin-bottom:12px;font-family:'DM Sans',sans-serif;}
+.login-input:focus{border-color:#2a4a2a;}
+.login-btn{width:100%;background:#22c55e;color:#000;border:none;border-radius:8px;padding:13px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:15px;cursor:pointer;letter-spacing:1px;}
+.login-btn:hover{background:#16a34a;}
+.login-err{font-size:12px;color:#ef4444;margin-top:10px;display:none;}
+
+/* APP */
+.app{display:none;min-height:100vh;}
+.app-nav{background:#0e1314;border-bottom:1px solid #1a2020;padding:0 28px;display:flex;align-items:center;gap:0;height:52px;}
+.app-nav-logo{font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:3px;color:#fff;margin-right:32px;}
+.app-nav-logo span{color:#22c55e;}
+.nav-tab{background:none;border:none;border-bottom:2px solid transparent;padding:0 16px;height:52px;color:#4a6a4a;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
+.nav-tab:hover{color:#c8d4c8;}
+.nav-tab.active{color:#22c55e;border-bottom-color:#22c55e;}
+.nav-right{margin-left:auto;font-size:12px;color:#2a4a2a;}
+
+.app-body{padding:28px;max-width:1200px;margin:0 auto;}
+
+/* METRIC CARDS */
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;}
+.metric-card{background:#0e1314;border:1px solid #1a2020;border-radius:10px;padding:20px;}
+.metric-val{font-family:Rajdhani,sans-serif;font-size:32px;font-weight:700;color:#22c55e;}
+.metric-val.gold{color:#d4af37;}
+.metric-val.red{color:#ef4444;}
+.metric-val.blue{color:#60a5fa;}
+.metric-label{font-size:11px;color:#3a5a3a;text-transform:uppercase;letter-spacing:2px;margin-top:4px;}
+
+/* SECTION HEADERS */
+.section-head{font-size:11px;font-weight:700;letter-spacing:3px;color:#2a4a2a;text-transform:uppercase;margin-bottom:14px;margin-top:28px;}
+
+/* PANEL */
+.panel{background:#0e1314;border:1px solid #1a2020;border-radius:10px;padding:20px;margin-bottom:16px;}
+
+/* NOTIF POST */
+.notif-input{width:100%;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:10px 14px;color:#e8f0e8;font-size:13px;outline:none;margin-bottom:10px;font-family:'DM Sans',sans-serif;}
+.notif-input:focus{border-color:#2a4a2a;}
+.btn-post{background:#22c55e;color:#000;border:none;border-radius:8px;padding:9px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.5px;}
+.btn-post:hover{background:#16a34a;}
+.post-status{font-size:12px;color:#3a5a3a;margin-left:12px;}
+
+/* UPLOAD */
+.upload-row{display:flex;gap:10px;margin-bottom:10px;}
+.upload-select{flex:1;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:9px 14px;color:#e8f0e8;font-size:13px;outline:none;font-family:'DM Sans',sans-serif;}
+.upload-num{width:64px;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:9px;color:#e8f0e8;font-size:13px;outline:none;text-align:center;}
+.dropzone{border:1.5px dashed #1a2020;border-radius:8px;padding:24px;text-align:center;cursor:pointer;color:#3a5a3a;font-size:13px;transition:border-color 0.2s;}
+.dropzone:hover,.dropzone.drag{border-color:#22c55e;color:#4ab44a;}
+.upload-status{font-size:12px;color:#3a5a3a;margin-top:8px;}
+
+/* TABLE */
+.tbl-wrap{background:#0e1314;border:1px solid #1a2020;border-radius:10px;overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+th{background:#080b0b;font-size:10px;font-weight:700;letter-spacing:2px;color:#2a5a2a;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid #1a2020;}
+td{padding:10px 14px;border-bottom:1px solid #080b0b;font-size:12px;color:#8aad8a;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(34,197,94,0.02);}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.badge-10k{background:rgba(212,175,55,0.12);color:#d4af37;}
+.badge-base{background:rgba(34,197,94,0.08);color:#4ab44a;}
+
+/* 10K CARDS */
+.tenk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;}
+.tenk-card{background:#0e1314;border:1px solid rgba(212,175,55,0.15);border-radius:10px;padding:16px;}
+.tenk-email{font-size:13px;font-weight:600;color:#e8f0e8;margin-bottom:10px;word-break:break-all;}
+.tenk-stats{display:flex;gap:8px;margin-bottom:8px;}
+.tenk-stat{background:#07090a;border-radius:6px;padding:8px;text-align:center;flex:1;}
+.tenk-stat-val{font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;}
+.tenk-stat-label{font-size:9px;color:#2a4a2a;text-transform:uppercase;letter-spacing:1px;}
+.tenk-weak{font-size:11px;color:#3a5a3a;}
+
+/* NOTIF HISTORY */
+.notif-hist-item{padding:10px 0;border-bottom:1px solid #0d1212;font-size:12px;color:#4a6a4a;}
+.notif-hist-item:last-child{border-bottom:none;}
+.notif-hist-title{color:#8aad8a;margin-bottom:2px;}
+
+/* SEARCH */
+.search-bar{background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:8px 14px;color:#e8f0e8;font-size:13px;outline:none;width:240px;font-family:'DM Sans',sans-serif;margin-bottom:14px;}
+.search-bar:focus{border-color:#2a4a2a;}
+
+/* LOADING */
+.loading{text-align:center;padding:48px;color:#2a4a2a;font-size:13px;}
 </style>
 </head>
 <body>
 
-<div id="login-screen">
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
   <div class="login-box">
-    <div class="login-logo">TOP <span>STOCK</span> TRADING</div>
-    <div class="login-sub">Admin Panel</div>
-    <h2>SIGN IN</h2>
-    <div style="text-align:left;margin-bottom:14px;">
-      <label>Password</label>
-      <input type="password" id="ap" placeholder="Admin password" onkeydown="if(event.key==='Enter')adminLogin()" style="width:100%;background:var(--dark);border:1px solid var(--border);border-radius:8px;padding:12px 16px;color:var(--text);font-size:15px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:0;">
-    </div>
-    <button class="btn" onclick="adminLogin()">Enter Admin</button>
-    <div class="login-err" id="aerr">Wrong password.</div>
+    <div class="login-logo">Top Stock Trading</div>
+    <div class="login-title">Admin Panel</div>
+    <div class="login-sub">h@topstocktrading.com only</div>
+    <input class="login-input" type="email" id="loginEmail" placeholder="Email" value="h@topstocktrading.com">
+    <input class="login-input" type="password" id="loginPass" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Access Admin</button>
+    <div class="login-err" id="loginErr">Incorrect credentials or not an admin account.</div>
   </div>
 </div>
 
-<nav class="top-nav">
-  <div class="nav-logo">TOP <span>STOCK</span> TRADING</div>
-  <div class="nav-badge">ADMIN ONLY</div>
-</nav>
-
-<div class="wrap">
-  <h1>CONTENT MANAGER</h1>
-  <div class="sub">Upload chart images to any lesson. They go live on the members page instantly.</div>
-
-  <div class="card">
-    <div class="card-title">📸 Upload Chart Image</div>
-
-    <label>Select Lesson</label>
-    <select id="lesson-select">
-      <optgroup label="── Beginner: Chart Patterns ──">
-        <option value="b6-0">Flags & Pennants (b6-0)</option>
-        <option value="b6-1">Triangles (b6-1)</option>
-        <option value="b6-2">Head & Shoulders (b6-2)</option>
-        <option value="b6-3">Double Tops & Bottoms (b6-3)</option>
-        <option value="b6-4">Cups & Handles (b6-4)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Volume ──">
-        <option value="b2-0">Why Volume Matters (b2-0)</option>
-        <option value="b2-1">Volume Signals (b2-1)</option>
-        <option value="b2-2">Volume & Price Action (b2-2)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Support & Resistance ──">
-        <option value="b3-0">What Is Support & Resistance (b3-0)</option>
-        <option value="b3-1">Identifying Key Levels (b3-1)</option>
-        <option value="b3-2">How Price Reacts to Levels (b3-2)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Market Structure ──">
-        <option value="b4-0">Higher Highs & Higher Lows (b4-0)</option>
-        <option value="b4-1">Lower Highs & Lower Lows (b4-1)</option>
-        <option value="b4-2">Range Bound Markets (b4-2)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Trendlines ──">
-        <option value="b5-0">Drawing Trendlines (b5-0)</option>
-        <option value="b5-1">Trendline Breaks (b5-1)</option>
-        <option value="b5-2">Channel Trading (b5-2)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Consolidations ──">
-        <option value="b7-0">What Is Consolidation (b7-0)</option>
-        <option value="b7-1">Trading Inside Consolidation (b7-1)</option>
-        <option value="b7-2">Breakouts From Consolidation (b7-2)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Gaps ──">
-        <option value="b8-0">Types of Gaps (b8-0)</option>
-        <option value="b8-1">Gap Fills (b8-1)</option>
-        <option value="b8-2">Trading Gaps (b8-2)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Indicators ──">
-        <option value="b10-0">How to Use Indicators (b10-0)</option>
-        <option value="b10-1">Moving Averages (b10-1)</option>
-        <option value="b10-2">RSI (b10-2)</option>
-        <option value="b10-3">MACD (b10-3)</option>
-        <option value="b10-4">VWAP (b10-4)</option>
-        <option value="b10-5">Volume Profile (b10-5)</option>
-        <option value="b10-6">Fibonacci Retracement (b10-6)</option>
-      </optgroup>
-      <optgroup label="── Beginner: Other ──">
-        <option value="b-pillars">The 3 Pillars of Trading</option>
-        <option value="b-types">Types of Traders</option>
-        <option value="b-hours">Market Hours</option>
-        <option value="b9-0">Reading Level 2 (b9-0)</option>
-        <option value="b9-1">Reading the Tape (b9-1)</option>
-        <option value="b9-2">Spotting Buyers & Sellers (b9-2)</option>
-        <option value="b11-0">Cash Account Rules (b11-0)</option>
-        <option value="b11-1">Margin Account Rules (b11-1)</option>
-        <option value="b11-2">PDT Rule (b11-2)</option>
-        <option value="b12-0">Going Long (b12-0)</option>
-        <option value="b12-1">Going Short (b12-1)</option>
-        <option value="b12-2">Short Selling Mechanics (b12-2)</option>
-        <option value="b13-0">Market Orders (b13-0)</option>
-        <option value="b13-1">Limit Orders (b13-1)</option>
-        <option value="b13-2">Stop Orders (b13-2)</option>
-        <option value="b13-3">Stop Limit Orders (b13-3)</option>
-        <option value="b13-4">Trailing Stops (b13-4)</option>
-        <option value="b14-0">Why Journaling Matters (b14-0)</option>
-        <option value="b14-1">What to Track (b14-1)</option>
-        <option value="b14-2">Reviewing Your Journal (b14-2)</option>
-      </optgroup>
-      <optgroup label="── Intermediate ──">
-        <option value="n1">Stock Personalities</option>
-        <option value="n2">Timeframes</option>
-        <option value="n3">Best Times of Day</option>
-        <option value="n4">What Stocks to Trade</option>
-        <option value="n5">Scanning for Stocks</option>
-        <option value="n7-0">Dip Buys</option>
-        <option value="n7-1">Breakouts & Breakdowns</option>
-        <option value="n8-0">Scaling Out</option>
-        <option value="n8-1">Selling Into Key Levels</option>
-      </optgroup>
-      <optgroup label="── Advanced: Small Caps & Swing ──">
-        <option value="a1-0">Sizing for Small Caps</option>
-        <option value="a1-1">Short Squeezes</option>
-        <option value="a1-2">Float & Why It Matters</option>
-        <option value="a2-0">Breakout Swings</option>
-        <option value="a2-1">Earnings Plays</option>
-        <option value="a2-2">IBS Plays</option>
-        <option value="a2-4">News-Driven Swings</option>
-        <option value="a2-5">Momentum Names</option>
-      </optgroup>
-      <optgroup label="── Advanced: TST Price Action Notes ──">
-        <option value="a6-0">Kill Candles</option>
-        <option value="a6-1">Fake 2nd Higher Lows</option>
-        <option value="a6-2">Stop Loss Hunts</option>
-        <option value="a6-3">Trapped Shorts</option>
-        <option value="a6-4">Weak Second Legs = Reversal</option>
-        <option value="a6-5">Staircase Up Elevator Down</option>
-        <option value="a6-6">Repeated vs Slow Resistance Attacks</option>
-        <option value="a6-7">Slow Walk Downs on Options</option>
-        <option value="a6-8">Accumulation vs Distribution</option>
-        <option value="a6-9">Gap Holds & Power Hour</option>
-        <option value="a6-10">Liquidity Sweeps</option>
-        <option value="a6-gdbf">Gap Down Bear Flags</option>
-        <option value="a6-blue">Blue Sky Setup</option>
-        <option value="a6-er2">ER Day 2</option>
-        <option value="a6-mflush">The Morning Flush</option>
-        <option value="a6-gtr">Green to Red & Vice Versa</option>
-      </optgroup>
-      <optgroup label="── Advanced: Concepts ──">
-        <option value="a7-0">Best Trades Rarely Full Size</option>
-        <option value="a7-1">Pyramiding Winners</option>
-        <option value="a7-2">Mean Reversion</option>
-        <option value="a7-3">Exhaustion Signals</option>
-        <option value="a7-4">Washout Longs</option>
-      </optgroup>
-    </select>
-
-    <label>Chart Caption <span style="font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;">(shows below the image on the members page)</span></label>
-    <textarea id="caption" placeholder="Describe what the chart shows in 2-3 sentences. What pattern is it? What happened? What should the student notice?"></textarea>
-    <div class="caption-hint">💡 Example: "NVDA consolidates in a tight range between $194.40 and $194.75 for 90 minutes on low volume. Green lines mark the range boundaries. Price breaks out with a volume surge and runs to $196.91 — textbook breakout."</div>
-
-    <div class="drop-zone" id="drop-zone">
-      <div class="drop-icon">📸</div>
-      <div class="drop-text">Drop chart image here or <strong>click to browse</strong></div>
-      <input type="file" id="file-input" accept="image/*">
-      <img id="preview" class="preview" style="display:none;">
-    </div>
-
-    <button class="btn" id="upload-btn" onclick="uploadImage()" disabled>Upload to Lesson</button>
-    <div class="status" id="status"></div>
-  </div>
-
-  <div class="card" id="recent-card" style="display:none;">
-    <div class="card-title">✅ Recently Uploaded <span>— these are live on the members page</span></div>
-    <div class="uploads-list" id="uploads-list"></div>
+<!-- APP -->
+<div class="app" id="app">
+  <nav class="app-nav">
+    <div class="app-nav-logo">TST <span>ADMIN</span></div>
+    <button class="nav-tab active" onclick="showTab('overview',this)">Overview</button>
+    <button class="nav-tab" onclick="showTab('students',this)">Students</button>
+    <button class="nav-tab" onclick="showTab('tenk',this)">10K Members</button>
+    <button class="nav-tab" onclick="showTab('messages',this)">Messages</button>
+    <button class="nav-tab" onclick="showTab('notify',this)">Notifications</button>
+    <button class="nav-tab" onclick="showTab('upload',this)">Upload Images</button>
+    <div class="nav-right" id="adminEmail"></div>
+  </nav>
+  <div class="app-body" id="appBody">
+    <div class="loading">Loading...</div>
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://jjecwvcxbocogvwsjwmr.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
-const BUCKET = 'lesson-charts';
-const ADMIN_PASS = 'tst2024admin';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
+const ADMIN_EMAIL = 'h@topstocktrading.com';
 
-const LESSON_NAMES = {
-  'b6-0':'Flags & Pennants','b6-1':'Triangles','b6-2':'Head & Shoulders','b6-3':'Double Tops & Bottoms','b6-4':'Cups & Handles',
-  'b2-0':'Why Volume Matters','b2-1':'Volume Signals','b2-2':'Volume & Price Action',
-  'b3-0':'What Is Support & Resistance','b3-1':'Identifying Key Levels','b3-2':'How Price Reacts to Levels',
-  'b4-0':'Higher Highs & Higher Lows','b4-1':'Lower Highs & Lower Lows','b4-2':'Range Bound Markets',
-  'b5-0':'Drawing Trendlines','b5-1':'Trendline Breaks','b5-2':'Channel Trading',
-  'b7-0':'What Is Consolidation','b7-1':'Trading Inside Consolidation','b7-2':'Breakouts From Consolidation',
-  'b8-0':'Types of Gaps','b8-1':'Gap Fills','b8-2':'Trading Gaps',
-  'b10-0':'How to Use Indicators','b10-1':'Moving Averages','b10-2':'RSI','b10-3':'MACD','b10-4':'VWAP','b10-5':'Volume Profile','b10-6':'Fibonacci',
-  'b9-0':'Reading Level 2','b9-1':'Reading the Tape','b9-2':'Spotting Buyers & Sellers',
-  'b11-0':'Cash Account Rules','b11-1':'Margin Account Rules','b11-2':'PDT Rule',
-  'b12-0':'Going Long','b12-1':'Going Short','b12-2':'Short Selling Mechanics',
-  'b13-0':'Market Orders','b13-1':'Limit Orders','b13-2':'Stop Orders','b13-3':'Stop Limit Orders','b13-4':'Trailing Stops',
-  'b14-0':'Why Journaling Matters','b14-1':'What to Track','b14-2':'Reviewing Your Journal',
-  'n7-0':'Dip Buys','n7-1':'Breakouts & Breakdowns','n8-0':'Scaling Out','n8-1':'Selling Into Key Levels',
-  'a1-0':'Sizing for Small Caps','a1-1':'Short Squeezes','a1-2':'Float & Why It Matters','a2-0':'Breakout Swings','a2-1':'Earnings Plays','a2-2':'IBS Plays','a2-4':'News-Driven Swings','a2-5':'Momentum Names','a6-0':'Kill Candles','a6-1':'Fake 2nd Higher Lows','a6-2':'Stop Loss Hunts','a6-3':'Trapped Shorts','a6-4':'Weak Second Legs = Reversal','a6-5':'Staircase Up Elevator Down','a6-6':'Repeated vs Slow Resistance Attacks','a6-7':'Slow Walk Downs on Options','a6-8':'Accumulation vs Distribution','a6-9':'Gap Holds & Power Hour','a6-10':'Liquidity Sweeps','a7-0':'Best Trades Rarely Full Size','a7-1':'Pyramiding Winners','a7-2':'Mean Reversion','a7-3':'Exhaustion Signals','a7-4':'Washout Longs','a6-gdbf':'Gap Down Bear Flags','a6-blue':'Blue Sky Setup','a6-er2':'ER Day 2','a6-mflush':'The Morning Flush','a6-gtr':'Green to Red & Vice Versa',
-  'a6-0':'Kill Candles','a6-1':'Fake 2nd Higher Lows','a6-2':'Stop Loss Hunts','a6-3':'Trapped Shorts','a6-4':'Weak Second Legs','a6-5':'Staircase Up Elevator Down','a6-6':'Repeated vs Slow Resistance Attacks','a6-7':'Slow Walk Downs on Options','a6-8':'Accumulation vs Distribution','a6-9':'Gap Holds & Power Hour','a6-10':'Liquidity Sweeps','a7-0':'Best Trades Rarely Full Size','a7-1':'Pyramiding Winners','a7-2':'Mean Reversion','a7-3':'Exhaustion Signals','a7-4':'Washout Longs','a6-gdbf':'Gap Down Bear Flags','a6-blue':'Blue Sky Setup','a6-er2':'ER Day 2','a6-mflush':'The Morning Flush','a6-gtr':'Green to Red & Vice Versa','a2-4':'News-Driven Swings','a2-5':'Momentum Names','a2-2':'IBS Plays',
-};
+let sb, currentTab = 'overview';
+let allStudents = [], allMessages = [], allNotifs = [];
 
-let selectedFile = null;
-let uploads = JSON.parse(localStorage.getItem('tst_uploads') || '[]');
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  const err   = document.getElementById('loginErr');
+  err.style.display = 'none';
 
-function adminLogin() {
-  const pw = document.getElementById('ap').value;
-  if (pw === ADMIN_PASS) {
-    document.getElementById('login-screen').style.display = 'none';
-    renderUploads();
+  if (email !== ADMIN_EMAIL) { err.style.display = 'block'; return; }
+
+  sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error || !data.user) { err.style.display = 'block'; return; }
+
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('adminEmail').textContent = email;
+  await loadAll();
+  showTab('overview', document.querySelector('.nav-tab.active'));
+}
+
+async function loadAll() {
+  const [usersR, quizR, msgR, tiersR, notifR] = await Promise.all([
+    sb.from('users').select('*').order('created_at', {ascending:false}),
+    sb.from('quiz_results').select('*'),
+    sb.from('messages').select('*').order('created_at', {ascending:false}),
+    sb.from('user_tiers').select('*'),
+    sb.from('notifications').select('*').order('created_at', {ascending:false}).limit(30),
+  ]);
+
+  const users   = usersR.data  || [];
+  const quizzes = quizR.data   || [];
+  const msgs    = msgR.data    || [];
+  const tiers   = tiersR.data  || [];
+  allNotifs     = notifR.data  || [];
+  allMessages   = msgs;
+
+  allStudents = users.map(u => {
+    const uq = quizzes.filter(q => q.user_id === u.id);
+    const um = msgs.filter(m => m.user_id === u.id);
+    const td = tiers.find(t => t.user_id === u.id);
+    const tier = (td && td.tier) || u.tier || 'base';
+    const avg = uq.length ? Math.round(uq.reduce((s,q)=>s+q.score,0)/uq.length) : null;
+    const retakes = uq.reduce((s,q)=>s+(q.attempts>1?q.attempts-1:0),0);
+    const worst = uq.length ? [...uq].sort((a,b)=>a.score-b.score)[0] : null;
+    const unread = um.filter(m=>!m.read && m.sender==='member').length;
+    return {id:u.id, email:u.email||'Unknown', tier, quizzes:uq, messages:um, avg, retakes, worst, unread, joined:u.created_at};
+  });
+}
+
+function showTab(tab, btn) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const body = document.getElementById('appBody');
+
+  if (tab === 'overview')   renderOverview(body);
+  if (tab === 'students')   renderStudents(body);
+  if (tab === 'tenk')       renderTenk(body);
+  if (tab === 'messages')   renderMessages(body);
+  if (tab === 'notify')     renderNotify(body);
+  if (tab === 'upload')     renderUpload(body);
+}
+
+// ── OVERVIEW ────────────────────────────────────────────────────────────
+function renderOverview(body) {
+  const total    = allStudents.length;
+  const tenk     = allStudents.filter(s=>s.tier==='10k').length;
+  const struggle = allStudents.filter(s=>s.avg!==null&&s.avg<70).length;
+  const unread   = allStudents.reduce((n,s)=>n+s.unread,0);
+
+  let h = '<div class="metrics">';
+  h += metric('Course Members', total, '');
+  h += metric('10K Members', tenk, 'gold');
+  h += metric('Struggling (<70%)', struggle, 'red');
+  h += metric('Unread Messages', unread, 'blue');
+  h += '</div>';
+
+  h += '<div class="section-head">Recent Notifications</div>';
+  h += '<div class="panel">';
+  if (!allNotifs.length) {
+    h += '<div style="font-size:13px;color:#2a4a2a;">No notifications posted yet.</div>';
   } else {
-    document.getElementById('aerr').style.display = 'block';
+    h += allNotifs.slice(0,5).map(n =>
+      '<div class="notif-hist-item"><div class="notif-hist-title">' + n.title + '</div>' +
+      fmtDate(n.created_at) + '</div>'
+    ).join('');
   }
+  h += '</div>';
+
+  h += '<div class="section-head">Recent Student Activity</div>';
+  h += '<div class="tbl-wrap"><table><thead><tr>';
+  ['Email','Tier','Sections','Avg Score','Last Active'].forEach(c => h += '<th>'+c+'</th>');
+  h += '</tr></thead><tbody>';
+  allStudents.slice(0,10).forEach(s => {
+    h += '<tr>';
+    h += '<td style="color:#c8d4c8;">'+s.email+'</td>';
+    h += '<td>'+tierBadge(s.tier)+'</td>';
+    h += '<td>'+s.quizzes.length+'</td>';
+    h += '<td>'+scoreSpan(s.avg)+'</td>';
+    h += '<td>'+fmtDate(s.joined)+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+
+  body.innerHTML = h;
 }
 
-const dropZone = document.getElementById('drop-zone');
-const fileInput = document.getElementById('file-input');
-const preview = document.getElementById('preview');
-
-fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
-dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag'));
-dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); });
-
-function handleFile(file) {
-  if (!file || !file.type.startsWith('image/')) return;
-  selectedFile = file;
-  const reader = new FileReader();
-  reader.onload = e => {
-    preview.src = e.target.result;
-    preview.style.display = 'block';
-    dropZone.classList.add('has-file');
-    dropZone.querySelector('.drop-text').innerHTML = `<strong>${file.name}</strong> (${(file.size/1024).toFixed(0)}KB) — ready to upload`;
-  };
-  reader.readAsDataURL(file);
-  document.getElementById('upload-btn').disabled = false;
+// ── STUDENTS ────────────────────────────────────────────────────────────
+function renderStudents(body) {
+  let h = '<input class="search-bar" id="stuSearch" placeholder="Search by email..." oninput="filterStudents(this.value)">';
+  h += '<div id="stuTable">' + buildStudentTable(allStudents) + '</div>';
+  body.innerHTML = h;
 }
 
-async function uploadImage() {
-  if (!selectedFile) return;
-  const lessonId = document.getElementById('lesson-select').value;
-  const caption = document.getElementById('caption').value.trim();
-  const btn = document.getElementById('upload-btn');
+function buildStudentTable(students) {
+  if (!students.length) return '<div style="color:#2a4a2a;font-size:13px;padding:20px;">No students found.</div>';
+  let h = '<div class="tbl-wrap"><table><thead><tr>';
+  ['Email','Tier','Sections','Avg Score','Retakes','Weakest Section','Unread Msgs'].forEach(c => h += '<th>'+c+'</th>');
+  h += '</tr></thead><tbody>';
+  students.forEach(s => {
+    h += '<tr>';
+    h += '<td style="color:#c8d4c8;">'+s.email+'</td>';
+    h += '<td>'+tierBadge(s.tier)+'</td>';
+    h += '<td>'+s.quizzes.length+'</td>';
+    h += '<td>'+scoreSpan(s.avg)+'</td>';
+    h += '<td>'+(s.retakes>0?'<span style="color:#fbbf24;font-weight:700;">'+s.retakes+'</span>':'<span style="color:#2a4a2a;">0</span>')+'</td>';
+    h += '<td>'+(s.worst?'<span style="color:'+(s.worst.score<70?'#ef4444':'#fbbf24')+';">'+s.worst.section+' ('+s.worst.score+'%)</span>':'—')+'</td>';
+    h += '<td>'+(s.unread>0?'<span style="color:#ef4444;font-weight:700;">'+s.unread+' unread</span>':'<span style="color:#2a4a2a;">—</span>')+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table></div>';
+  return h;
+}
 
-  btn.disabled = true;
-  showStatus('loading', '⏳ Uploading...');
+function filterStudents(q) {
+  const filtered = allStudents.filter(s=>s.email.toLowerCase().includes(q.toLowerCase()));
+  document.getElementById('stuTable').innerHTML = buildStudentTable(filtered);
+}
 
-  const ext = selectedFile.name.split('.').pop();
-  const ts = Date.now();
-  const filename = `${lessonId}-${ts}.${ext}`;
-  const captionFilename = `${lessonId}-${ts}.txt`;
-
-  try {
-    // Upload image
-    const imgRes = await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${filename}`, {
-      method: 'POST',
-      headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': selectedFile.type, 'x-upsert': 'true' },
-      body: selectedFile
+// ── 10K MEMBERS ─────────────────────────────────────────────────────────
+function renderTenk(body) {
+  const tenk = allStudents.filter(s=>s.tier==='10k');
+  let h = '<div class="section-head">10K Members (' + tenk.length + ' / 20 spots)</div>';
+  if (!tenk.length) {
+    h += '<div style="color:#2a4a2a;font-size:13px;">No 10K members yet.</div>';
+  } else {
+    h += '<div class="tenk-grid">';
+    tenk.forEach(s => {
+      h += '<div class="tenk-card">';
+      h += '<div class="tenk-email">'+s.email+'</div>';
+      h += '<div class="tenk-stats">';
+      h += tenkStat(s.avg!==null?s.avg+'%':'—', 'Score', s.avg===null?'#2a4a2a':s.avg>=85?'#22c55e':s.avg>=70?'#fbbf24':'#ef4444');
+      h += tenkStat(s.quizzes.length, 'Sections', '#4ab44a');
+      h += tenkStat(s.unread, 'Unread', s.unread>0?'#ef4444':'#4ab44a');
+      h += '</div>';
+      if (s.worst) h += '<div class="tenk-weak">Weakest: '+s.worst.section+' ('+s.worst.score+'%)</div>';
+      h += '<div style="margin-top:10px;"><button onclick="viewStudentMsgs(\''+s.id+'\')" style="background:#0e1314;border:1px solid #1a2020;color:#4ab44a;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;">View Messages →</button></div>';
+      h += '</div>';
     });
-    if (!imgRes.ok) { const e = await imgRes.json(); throw new Error(e.message || 'Image upload failed'); }
+    h += '</div>';
+  }
+  body.innerHTML = h;
+}
 
-    // Upload caption as .txt file if caption exists
-    if (caption) {
-      await fetch(`${SUPABASE_URL}/storage/v1/object/${BUCKET}/${captionFilename}`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'text/plain', 'x-upsert': 'true' },
-        body: caption
-      });
-    }
+// ── MESSAGES ────────────────────────────────────────────────────────────
+function renderMessages(body, filterUserId) {
+  const memberMsgs = allMessages.filter(m=>m.sender==='member');
+  const byUser = {};
+  memberMsgs.forEach(m => { if(!byUser[m.user_id]) byUser[m.user_id]=[]; byUser[m.user_id].push(m); });
 
-    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/${BUCKET}/${filename}`;
-    const lessonName = LESSON_NAMES[lessonId] || lessonId;
+  let h = '<div class="section-head">Student Messages</div>';
 
-    uploads.unshift({ lessonId, lessonName, filename, publicUrl, caption, thumb: preview.src, ts });
-    localStorage.setItem('tst_uploads', JSON.stringify(uploads.slice(0, 50)));
+  const userIds = filterUserId ? [filterUserId] : Object.keys(byUser);
 
-    showStatus('success', `✅ Uploaded! "${lessonName}" chart is now live on the members page.`);
-    renderUploads();
-    reset();
-  } catch (err) {
-    showStatus('error', `❌ Error: ${err.message}`);
-    btn.disabled = false;
+  if (!userIds.length) {
+    h += '<div style="color:#2a4a2a;font-size:13px;">No messages yet.</div>';
+    body.innerHTML = h;
+    return;
+  }
+
+  userIds.forEach(uid => {
+    const student = allStudents.find(s=>s.id===uid);
+    const email = student ? student.email : uid.substring(0,8)+'...';
+    const msgs = byUser[uid] || [];
+    const allThread = allMessages.filter(m=>m.user_id===uid).sort((a,b)=>new Date(a.created_at)-new Date(b.created_at));
+
+    h += '<div class="panel" style="margin-bottom:14px;">';
+    h += '<div style="font-size:13px;font-weight:700;color:#c8d4c8;margin-bottom:12px;">'+email+'</div>';
+    h += '<div style="max-height:220px;overflow-y:auto;margin-bottom:12px;">';
+    allThread.forEach(m => {
+      const isMe = m.sender === 'tst';
+      h += '<div style="display:flex;justify-content:'+(isMe?'flex-end':'flex-start')+';margin-bottom:8px;">';
+      h += '<div style="background:'+(isMe?'#163016':'#0e1314')+';border:1px solid '+(isMe?'#1a4a1a':'#1a2020')+';border-radius:8px;padding:8px 12px;max-width:80%;font-size:12px;color:'+(isMe?'#4ab44a':'#8aad8a')+';line-height:1.5;">';
+      h += m.content;
+      h += '<div style="font-size:10px;color:#2a4a2a;margin-top:4px;">'+fmtDate(m.created_at)+'</div>';
+      h += '</div></div>';
+    });
+    h += '</div>';
+    h += '<div style="display:flex;gap:8px;">';
+    h += '<input id="reply-'+uid+'" placeholder="Reply..." style="flex:1;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:8px 12px;color:#e8f0e8;font-size:12px;outline:none;font-family:DM Sans,sans-serif;">';
+    h += '<button onclick="sendReply(\''+uid+'\')" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:8px 16px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:12px;cursor:pointer;">Send</button>';
+    h += '</div>';
+    h += '</div>';
+  });
+
+  body.innerHTML = h;
+}
+
+function viewStudentMsgs(uid) {
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.nav-tab')[3].classList.add('active');
+  currentTab = 'messages';
+  renderMessages(document.getElementById('appBody'), uid);
+}
+
+async function sendReply(userId) {
+  const input = document.getElementById('reply-'+userId);
+  const content = input ? input.value.trim() : '';
+  if (!content) return;
+  try {
+    await sb.from('messages').insert({user_id:userId, sender:'tst', content});
+    await sb.from('messages').update({read:true}).eq('user_id',userId).eq('sender','member');
+    input.value = '';
+    await loadAll();
+    renderMessages(document.getElementById('appBody'));
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+// ── NOTIFICATIONS ────────────────────────────────────────────────────────
+function renderNotify(body) {
+  let h = '<div class="section-head">Post Notification</div>';
+  h += '<div class="panel">';
+  h += '<input class="notif-input" id="notifTitle" placeholder="e.g. New live trade added — NVDA breakout breakdown">';
+  h += '<div style="display:flex;align-items:center;">';
+  h += '<button class="btn-post" onclick="postNotif()">Post to All Students</button>';
+  h += '<span class="post-status" id="postStatus"></span>';
+  h += '</div>';
+  h += '</div>';
+
+  h += '<div class="section-head">Notification History</div>';
+  h += '<div class="panel">';
+  if (!allNotifs.length) {
+    h += '<div style="font-size:13px;color:#2a4a2a;">No notifications yet.</div>';
+  } else {
+    h += allNotifs.map(n =>
+      '<div class="notif-hist-item"><div class="notif-hist-title">'+n.title+'</div>'+fmtDate(n.created_at)+'</div>'
+    ).join('');
+  }
+  h += '</div>';
+  body.innerHTML = h;
+}
+
+async function postNotif() {
+  const title = (document.getElementById('notifTitle')||{}).value||'';
+  const status = document.getElementById('postStatus');
+  if (!title.trim()) { if(status) status.textContent='Enter a title first.'; return; }
+  try {
+    await sb.from('notifications').insert({title:title.trim()});
+    if(status){ status.style.color='#22c55e'; status.textContent='✓ Posted'; }
+    document.getElementById('notifTitle').value='';
+    await loadAll();
+    setTimeout(()=>{ if(status) status.textContent=''; },3000);
+  } catch(e) {
+    if(status){ status.style.color='#ef4444'; status.textContent='Error: '+e.message; }
   }
 }
 
-function showStatus(type, msg) {
-  const s = document.getElementById('status');
-  s.className = `status ${type}`;
-  s.textContent = msg;
-  s.style.display = 'block';
+// ── UPLOAD ────────────────────────────────────────────────────────────────
+const LESSON_IDS = [
+  {id:'a6-0',name:'Kill Candles'},{id:'a6-1',name:'Fake 2nd Higher Lows'},
+  {id:'a6-2',name:'Stop Loss Hunts'},{id:'a6-3',name:'Trapped Shorts'},
+  {id:'a6-4',name:'Weak Second Legs'},{id:'a6-5',name:'Staircase Up Elevator Down'},
+  {id:'a6-6',name:'Repeated vs Slow Resistance Attacks'},{id:'a6-8',name:'Accumulation vs Distribution'},
+  {id:'a6-9',name:'Gap Holds & Power Hour'},{id:'a6-10',name:'Liquidity Sweeps'},
+  {id:'a6-gdbf',name:'Gap Down Bear Flags'},{id:'a6-blue',name:'Blue Sky Setup'},
+  {id:'a6-er2',name:'ER Day 2'},{id:'a6-mflush',name:'Morning Flush'},
+  {id:'a6-gtr',name:'Green to Red & Vice Versa'},{id:'a6-bt',name:'Bull Trap & Bear Trap'},
+  {id:'a6-11',name:'V-Shape Recovery'},{id:'a6-btfs',name:'Best Trades Rarely Full Size'},
+  {id:'a6-pw',name:'Pyramiding Winners'},{id:'a6-mr',name:'Mean Reversion'},
+  {id:'a6-es',name:'Exhaustion Signals'},{id:'a6-wl',name:'Washout Longs'},
+  {id:'lt-flags',name:'Live: Flag & Pennant'},{id:'lt-breakouts',name:'Live: Breakouts'},
+  {id:'lt-dips',name:'Live: Dip Buys'},{id:'lt-smallcap',name:'Live: Small Cap'},
+  {id:'lt-options',name:'Live: Options'},{id:'lt-sweeps',name:'Live: Liquidity Sweeps'},
+  {id:'lt-vshape',name:'Live: V-Shape Recovery'},
+  {id:'b6-1',name:'Chart: Flags & Pennants'},{id:'b6-2',name:'Chart: Triangles'},
+  {id:'b6-3',name:'Chart: Reversals'},{id:'b6-4',name:'Chart: Head & Shoulders'},
+  {id:'b6-5',name:'Chart: Double Tops & Bottoms'},{id:'b6-6',name:'Chart: Cups & Handles'},
+  {id:'n3-0',name:'The Opening Range'},{id:'n-opening',name:'The Opening Drive'},
+];
+
+function renderUpload(body) {
+  let h = '<div class="section-head">Upload Lesson Image</div>';
+  h += '<div class="panel">';
+  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:14px;">Images are named automatically: <code style="color:#4ab44a;">lessonID-N.jpg</code>. Pick the lesson, set the image number, then drop.</div>';
+  h += '<div class="upload-row">';
+  h += '<select class="upload-select" id="upLesson">';
+  h += LESSON_IDS.map(l=>'<option value="'+l.id+'">'+l.name+'</option>').join('');
+  h += '</select>';
+  h += '<input class="upload-num" type="number" id="upNum" value="1" min="1" max="20">';
+  h += '</div>';
+  h += '<div class="dropzone" id="dropzone" onclick="document.getElementById(\'upFile\').click()">Drop image here or click to browse</div>';
+  h += '<input type="file" id="upFile" accept="image/*" style="display:none;" onchange="uploadImg(this)">';
+  h += '<div class="upload-status" id="upStatus"></div>';
+  h += '</div>';
+
+  h += '<div class="section-head">Upload Caption (optional)</div>';
+  h += '<div class="panel">';
+  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:10px;">Add a text caption that appears below the image in the lesson. Saves as <code style="color:#4ab44a;">lessonID-N.txt</code></div>';
+  h += '<textarea id="upCaption" placeholder="e.g. This is a textbook bull flag on the 5-minute chart. Notice the tight consolidation on declining volume before the breakout..." style="width:100%;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:10px 14px;color:#e8f0e8;font-size:13px;outline:none;resize:vertical;min-height:80px;font-family:DM Sans,sans-serif;margin-bottom:10px;"></textarea>';
+  h += '<button class="btn-post" onclick="uploadCaption()">Save Caption</button>';
+  h += '<span class="post-status" id="captionStatus"></span>';
+  h += '</div>';
+
+  body.innerHTML = h;
+
+  const dz = document.getElementById('dropzone');
+  dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', ()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop', e=>{ e.preventDefault(); dz.classList.remove('drag'); const f=e.dataTransfer.files[0]; if(f) doUpload(f); });
 }
 
-function reset() {
-  selectedFile = null;
-  fileInput.value = '';
-  preview.style.display = 'none';
-  dropZone.classList.remove('has-file');
-  dropZone.querySelector('.drop-text').innerHTML = 'Drop chart image here or <strong>click to browse</strong>';
-  document.getElementById('caption').value = '';
-  document.getElementById('upload-btn').disabled = true;
+function uploadImg(input) { if(input.files[0]) doUpload(input.files[0]); }
+
+async function doUpload(file) {
+  const lessonId = document.getElementById('upLesson').value;
+  const num      = document.getElementById('upNum').value || '1';
+  const status   = document.getElementById('upStatus');
+  const ext      = file.name.split('.').pop().toLowerCase();
+  const filename = lessonId + '-' + num + '.' + ext;
+  status.style.color='#fbbf24'; status.textContent='Uploading '+filename+'...';
+  try {
+    const {error} = await sb.storage.from('lesson-charts').upload(filename, file, {upsert:true});
+    if(error) throw error;
+    status.style.color='#22c55e'; status.textContent='✓ Uploaded: '+filename;
+  } catch(e) { status.style.color='#ef4444'; status.textContent='Error: '+e.message; }
 }
 
-function renderUploads() {
-  if (!uploads.length) return;
-  document.getElementById('recent-card').style.display = 'block';
-  const list = document.getElementById('uploads-list');
-  list.innerHTML = uploads.slice(0, 10).map((u, i) => `
-    <div class="upload-item">
-      <img class="upload-thumb" src="${u.thumb || ''}" onerror="this.style.display='none'">
-      <div class="upload-info">
-        <div class="upload-lesson">${u.lessonName}</div>
-        <div class="upload-caption">${u.caption || '<em style="color:#3a4455">No caption</em>'}</div>
-      </div>
-      <button class="upload-del" onclick="copyUrl(${i})" title="Copy image URL">📋</button>
-    </div>
-  `).join('');
+async function uploadCaption() {
+  const lessonId = document.getElementById('upLesson').value;
+  const num      = document.getElementById('upNum').value || '1';
+  const text     = (document.getElementById('upCaption')||{}).value||'';
+  const status   = document.getElementById('captionStatus');
+  if (!text.trim()) { status.textContent='Enter a caption first.'; return; }
+  const filename = lessonId+'-'+num+'.txt';
+  status.style.color='#fbbf24'; status.textContent='Saving...';
+  try {
+    const blob = new Blob([text], {type:'text/plain'});
+    const {error} = await sb.storage.from('lesson-charts').upload(filename, blob, {upsert:true, contentType:'text/plain'});
+    if(error) throw error;
+    status.style.color='#22c55e'; status.textContent='✓ Saved: '+filename;
+  } catch(e) { status.style.color='#ef4444'; status.textContent='Error: '+e.message; }
 }
 
-function copyUrl(i) {
-  navigator.clipboard.writeText(uploads[i].publicUrl);
-  showStatus('success', '📋 URL copied to clipboard!');
+// ── HELPERS ──────────────────────────────────────────────────────────────
+function metric(label, val, cls) {
+  return '<div class="metric-card"><div class="metric-val '+cls+'">'+val+'</div><div class="metric-label">'+label+'</div></div>';
+}
+function tenkStat(val, label, color) {
+  return '<div class="tenk-stat"><div class="tenk-stat-val" style="color:'+color+';">'+val+'</div><div class="tenk-stat-label">'+label+'</div></div>';
+}
+function tierBadge(tier) {
+  return tier==='10k'
+    ? '<span class="badge badge-10k">⭐ 10K</span>'
+    : '<span class="badge badge-base">Base</span>';
+}
+function scoreSpan(avg) {
+  if(avg===null) return '<span style="color:#2a4a2a;">—</span>';
+  const c = avg>=85?'#22c55e':avg>=70?'#fbbf24':'#ef4444';
+  return '<span style="font-weight:700;color:'+c+';">'+avg+'%</span>';
+}
+function fmtDate(d) {
+  if(!d) return '—';
+  return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
 </script>
 </body>
