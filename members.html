@@ -1408,19 +1408,23 @@ async function loadNotifications() {
 }
 
 function renderNotifList() {
-  const list = document.getElementById('notifList');
+  var list = document.getElementById('notifList');
   if (!list) return;
   if (!_notifData.length) {
     list.innerHTML = '<div class="notif-empty">No notifications yet</div>';
     return;
   }
-  list.innerHTML = _notifData.map(n => {
-    const date = new Date(n.created_at).toLocaleDateString('en-US', { month:'short', day:'numeric' });
-    return '<div class="notif-item ' + (n.read ? '' : 'unread') + '" onclick="markNotifRead('' + n.id + '')">' +
-      '<div class="notif-item-title">' + (n.read ? '' : '🟢 ') + n.title + '</div>' +
-      '<div class="notif-item-date">' + date + '</div>' +
-    '</div>';
-  }).join('');
+  var html = '';
+  _notifData.forEach(function(n) {
+    var date = new Date(n.created_at).toLocaleDateString('en-US', {month:'short', day:'numeric'});
+    var cls = n.read ? 'notif-item' : 'notif-item unread';
+    var dot = n.read ? '' : '<span style="color:#22c55e;margin-right:4px;">●</span>';
+    html += '<div class="' + cls + '" onclick="markNotifRead('' + n.id + '')">';
+    html += '<div class="notif-item-title">' + dot + n.title + '</div>';
+    html += '<div class="notif-item-date">' + date + '</div>';
+    html += '</div>';
+  });
+  list.innerHTML = html;
 }
 
 async function markNotifRead(notifId) {
@@ -1459,6 +1463,6 @@ document.addEventListener('click', function(e) {
 <script src="auth.js"></script>
 <script src="profile.js?v=5"></script>
 <script src="quiz.js"></script>
-<script src="interactive-quiz.js"></script>
+
 </body>
 </html>
