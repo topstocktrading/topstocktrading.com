@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TST Admin — Student Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0f0a; color:#c8d4c8; font-family:'DM Sans',sans-serif; min-height:100vh; }
+.login-wrap { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+.login-box { background:#111712; border:1px solid #1e2820; border-radius:16px; padding:48px; width:360px; text-align:center; }
+.login-title { font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:2px; color:#fff; margin-bottom:8px; }
+.login-sub { font-size:13px; color:#5a7a5a; margin-bottom:28px; }
+input[type=password] { width:100%; background:#0c100d; border:1px solid #1e2820; border-radius:8px; padding:12px 16px; color:#f0f4f1; font-size:14px; outline:none; margin-bottom:12px; }
+.btn-login { width:100%; background:#4ab44a; color:#080d08; font-weight:700; font-size:14px; padding:14px; border:none; border-radius:8px; cursor:pointer; }
+.btn-login:hover { background:#5ac45a; }
+
+/* Main app */
+.app { display:none; }
+nav { background:#0d1a0d; border-bottom:1px solid #1e2820; padding:16px 32px; display:flex; align-items:center; justify-content:space-between; }
+.nav-title { font-family:'Bebas Neue',sans-serif; font-size:20px; letter-spacing:2px; color:#fff; }
+.nav-title span { color:#4ab44a; }
+.nav-right { font-size:12px; color:#5a7a5a; }
+
+.main { padding:32px; max-width:1200px; margin:0 auto; }
+
+/* Stats row */
+.stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:32px; }
+.stat-card { background:#111712; border:1px solid #1e2820; border-radius:10px; padding:20px; text-align:center; }
+.stat-num { font-size:28px; font-weight:700; color:#4ab44a; }
+.stat-label { font-size:11px; color:#5a7a5a; letter-spacing:2px; text-transform:uppercase; margin-top:4px; }
+
+/* Filters */
+.filters { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+.filter-btn { background:#0d1a0d; border:1px solid #1e2820; color:#5a7a5a; font-size:12px; font-weight:600; padding:6px 14px; border-radius:20px; cursor:pointer; }
+.filter-btn.active { background:rgba(74,180,74,0.1); color:#4ab44a; border-color:rgba(74,180,74,0.3); }
+.search-input { background:#0d1a0d; border:1px solid #1e2820; border-radius:8px; padding:8px 14px; color:#f0f4f1; font-size:13px; outline:none; width:220px; }
+
+/* Table */
+.table-wrap { background:#111712; border:1px solid #1e2820; border-radius:12px; overflow:hidden; }
+table { width:100%; border-collapse:collapse; }
+th { background:#0d1a0d; font-size:10px; font-weight:700; letter-spacing:2px; color:#4ab44a; text-transform:uppercase; padding:12px 16px; text-align:left; border-bottom:1px solid #1e2820; }
+td { padding:12px 16px; border-bottom:1px solid #0d1a0d; font-size:13px; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(74,180,74,0.03); }
+.badge { display:inline-block; font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; }
+.badge-elite { background:rgba(212,175,55,0.15); color:#d4af37; }
+.badge-standard { background:rgba(74,180,74,0.1); color:#4ab44a; }
+.badge-warn { background:rgba(239,68,68,0.1); color:#ef4444; }
+.badge-ok { background:rgba(34,197,94,0.1); color:#22c55e; }
+.score-cell { font-weight:700; }
+.score-low { color:#ef4444; }
+.score-mid { color:#fbbf24; }
+.score-high { color:#22c55e; }
+.retake-flag { font-size:10px; color:#fbbf24; margin-left:6px; }
+
+/* Student detail modal */
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:100; align-items:center; justify-content:center; }
+.modal.open { display:flex; }
+.modal-box { background:#111712; border:1px solid #1e2820; border-radius:16px; padding:32px; width:640px; max-height:80vh; overflow-y:auto; }
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+.modal-title { font-size:18px; font-weight:700; color:#f0f4f1; }
+.modal-close { background:none; border:none; color:#5a7a5a; font-size:20px; cursor:pointer; }
+.section-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #1a221a; }
+.section-name { font-size:13px; color:#c8d4c8; }
+.section-stats { display:flex; gap:16px; align-items:center; }
+
+/* Messages panel */
+.msg-panel { background:#111712; border:1px solid #1e2820; border-radius:12px; padding:24px; margin-top:32px; }
+.msg-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+.msg-title { font-size:14px; font-weight:700; color:#f0f4f1; }
+.msg-list { max-height:300px; overflow-y:auto; }
+.msg-item { background:#0c100d; border-radius:8px; padding:12px; margin-bottom:8px; }
+.msg-meta { font-size:10px; color:#5a7a5a; margin-bottom:6px; }
+.msg-content { font-size:13px; color:#c8d4c8; line-height:1.6; }
+.msg-reply { display:flex; gap:10px; margin-top:12px; }
+.msg-reply textarea { flex:1; background:#0c100d; border:1px solid #1e2820; border-radius:8px; padding:10px; color:#f0f4f1; font-size:13px; font-family:inherit; resize:none; height:60px; outline:none; }
+.msg-reply button { background:#4ab44a; color:#080d08; border:none; border-radius:8px; padding:10px 16px; font-weight:700; font-size:13px; cursor:pointer; flex-shrink:0; }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="loginWrap">
+  <div class="login-box">
+    <div class="login-title">TST <span style="color:#4ab44a">ADMIN</span></div>
+    <div class="login-sub">Student tracker & behavioral dashboard</div>
+    <input type="password" id="adminPass" placeholder="Admin password" onkeydown="if(event.key==='Enter')login()"/>
+    <button class="btn-login" onclick="login()">Access Dashboard</button>
+    <div id="loginError" style="font-size:12px;color:#ef4444;margin-top:10px;display:none;">Incorrect password</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="app">
+  <nav>
+    <div class="nav-title">TST <span>ADMIN</span> — Student Tracker</div>
+    <div class="nav-right" id="lastUpdated">Loading...</div>
+  </nav>
+
+  <div class="main">
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="statTotal">—</div>
+        <div class="stat-label">Total Students</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statElite" style="color:#d4af37;">—</div>
+        <div class="stat-label">10K Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statStruggling" style="color:#ef4444;">—</div>
+        <div class="stat-label">Struggling (&lt;70%)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="statMessages" style="color:#60a5fa;">—</div>
+        <div class="stat-label">Unread Messages</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterStudents('all',this)">All</button>
+      <button class="filter-btn" onclick="filterStudents('elite',this)">10K Members</button>
+      <button class="filter-btn" onclick="filterStudents('struggling',this)">Struggling</button>
+      <button class="filter-btn" onclick="filterStudents('messages',this)">Has Messages</button>
+      <input class="search-input" id="searchInput" placeholder="Search by email..." oninput="searchStudents(this.value)"/>
+    </div>
+
+    <!-- Students Table -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Student</th>
+            <th>Tier</th>
+            <th>Sections Done</th>
+            <th>Avg Score</th>
+            <th>Retakes</th>
+            <th>Weak Section</th>
+            <th>Messages</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="studentTable">
+          <tr><td colspan="8" style="text-align:center;color:#5a7a5a;padding:32px;">Loading students...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Messages Panel -->
+    <div class="msg-panel">
+      <div class="msg-header">
+        <div class="msg-title">📬 Recent Messages</div>
+        <div style="font-size:12px;color:#5a7a5a;">From 10K members only</div>
+      </div>
+      <div class="msg-list" id="msgList">
+        <div style="font-size:13px;color:#5a7a5a;">Loading messages...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Student Detail Modal -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Student Detail</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://jjecwvcxbocogvwsjwmr.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI1MjI1MDUsImV4cCI6MjA1ODA5ODUwNX0.B-3s0yMBPanicpZqP3HsoU2DFn0MIGhMlaxPKwEiHes';
+const ADMIN_PASSWORD = 'tst2024admin';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let allStudents = [];
+let currentFilter = 'all';
+
+function login() {
+  const pass = document.getElementById('adminPass').value;
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('loginWrap').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadData();
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+
+async function loadData() {
+  document.getElementById('lastUpdated').textContent = 'Updated ' + new Date().toLocaleTimeString();
+
+  // Load all users with their quiz results and messages
+  const [usersRes, quizRes, msgRes, tiersRes] = await Promise.all([
+    sb.from('users').select('*'),
+    sb.from('quiz_results').select('*'),
+    sb.from('messages').select('*').order('created_at', { ascending: false }),
+    sb.from('user_tiers').select('*')
+  ]);
+
+  const users = usersRes.data || [];
+  const quizzes = quizRes.data || [];
+  const messages = msgRes.data || [];
+  const tiers = tiersRes.data || [];
+
+  // Build student objects
+  allStudents = users.map(function(u) {
+    var userQuizzes = quizzes.filter(function(q){ return q.user_id === u.id; });
+    var userMessages = messages.filter(function(m){ return m.user_id === u.id; });
+    var tierData = tiers.find(function(t){ return t.user_id === u.id; });
+    var avgScore = userQuizzes.length > 0
+      ? Math.round(userQuizzes.reduce(function(s,q){ return s+q.score; },0) / userQuizzes.length)
+      : null;
+    var totalRetakes = userQuizzes.reduce(function(s,q){ return s+(q.attempts-1); },0);
+    var worstSection = userQuizzes.length > 0
+      ? userQuizzes.sort(function(a,b){ return a.score-b.score; })[0]
+      : null;
+    var unreadCount = userMessages.filter(function(m){ return !m.read && m.sender === 'member'; }).length;
+    var tier = (tierData && tierData.tier) || u.tier || 'base';
+
+    return {
+      id: u.id,
+      email: u.email || 'Unknown',
+      tier: tier,
+      quizzes: userQuizzes,
+      messages: userMessages,
+      avgScore: avgScore,
+      totalRetakes: totalRetakes,
+      worstSection: worstSection,
+      unreadCount: unreadCount,
+      sectionsCount: userQuizzes.length
+    };
+  });
+
+  // Update stats
+  document.getElementById('statTotal').textContent = allStudents.length;
+  document.getElementById('statElite').textContent = allStudents.filter(function(s){ return s.tier === '10k'; }).length;
+  document.getElementById('statStruggling').textContent = allStudents.filter(function(s){ return s.avgScore !== null && s.avgScore < 70; }).length;
+  document.getElementById('statMessages').textContent = allStudents.reduce(function(sum,s){ return sum+s.unreadCount; },0);
+
+  renderTable(allStudents);
+  renderMessages(messages.slice(0,10));
+}
+
+function renderTable(students) {
+  var tbody = document.getElementById('studentTable');
+  if (students.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#5a7a5a;padding:32px;">No students found</td></tr>';
+    return;
+  }
+  tbody.innerHTML = students.map(function(s) {
+    var tierBadge = s.tier === '10k'
+      ? '<span class="badge badge-elite">⭐ 10K</span>'
+      : '<span class="badge badge-standard">Standard</span>';
+    var scoreColor = s.avgScore === null ? '' : s.avgScore >= 85 ? 'score-high' : s.avgScore >= 70 ? 'score-mid' : 'score-low';
+    var scoreText = s.avgScore === null ? '<span style="color:#5a7a5a;">No quizzes</span>' : '<span class="score-cell ' + scoreColor + '">' + s.avgScore + '%</span>';
+    var retakeText = s.totalRetakes > 0 ? '<span style="color:#fbbf24;font-weight:700;">' + s.totalRetakes + ' retakes</span>' : '<span style="color:#4ab44a;">None</span>';
+    var weakText = s.worstSection ? '<span style="font-size:12px;color:#' + (s.worstSection.score < 70 ? 'ef4444' : 'fbbf24') + ';">' + s.worstSection.section + ' (' + s.worstSection.score + '%)</span>' : '—';
+    var msgText = s.unreadCount > 0 ? '<span class="badge badge-warn">' + s.unreadCount + ' unread</span>' : '<span style="color:#5a7a5a;">—</span>';
+
+    return '<tr>' +
+      '<td style="color:#f0f4f1;">' + s.email + '</td>' +
+      '<td>' + tierBadge + '</td>' +
+      '<td>' + s.sectionsCount + ' sections</td>' +
+      '<td>' + scoreText + '</td>' +
+      '<td>' + retakeText + '</td>' +
+      '<td>' + weakText + '</td>' +
+      '<td>' + msgText + '</td>' +
+      '<td><button onclick="viewStudent(\'' + s.id + '\')" style="background:#0d1a0d;border:1px solid #1e2820;color:#4ab44a;font-size:12px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;">View →</button></td>' +
+    '</tr>';
+  }).join('');
+}
+
+function renderMessages(messages) {
+  var list = document.getElementById('msgList');
+  var memberMessages = messages.filter(function(m){ return m.sender === 'member'; });
+  if (memberMessages.length === 0) {
+    list.innerHTML = '<div style="font-size:13px;color:#5a7a5a;">No messages yet.</div>';
+    return;
+  }
+  list.innerHTML = memberMessages.map(function(m) {
+    var student = allStudents.find(function(s){ return s.id === m.user_id; });
+    var email = student ? student.email : 'Unknown';
+    return '<div class="msg-item">' +
+      '<div class="msg-meta">' + email + ' · ' + new Date(m.created_at).toLocaleDateString() + (m.read ? '' : ' · <span style="color:#4ab44a;font-weight:700;">NEW</span>') + '</div>' +
+      '<div class="msg-content">' + m.content + '</div>' +
+      '<div class="msg-reply">' +
+        '<textarea id="reply-' + m.id + '" placeholder="Reply to this message..."></textarea>' +
+        '<button onclick="replyMessage(\'' + m.user_id + '\', \'' + m.id + '\')">Reply</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+async function replyMessage(userId, msgId) {
+  var input = document.getElementById('reply-' + msgId);
+  var content = input ? input.value.trim() : '';
+  if (!content) return;
+  try {
+    await sb.from('messages').insert({ user_id: userId, sender: 'tst', content: content });
+    await sb.from('messages').update({ read: true }).eq('id', msgId);
+    input.value = '';
+    alert('Reply sent!');
+    loadData();
+  } catch(e) { alert('Error sending reply: ' + e.message); }
+}
+
+function viewStudent(id) {
+  var s = allStudents.find(function(s){ return s.id === id; });
+  if (!s) return;
+  document.getElementById('modalTitle').textContent = s.email;
+  var quizRows = s.quizzes.length === 0
+    ? '<div style="color:#5a7a5a;font-size:13px;">No quizzes completed yet.</div>'
+    : s.quizzes.sort(function(a,b){ return a.score-b.score; }).map(function(q) {
+        var col = q.score >= 85 ? '#22c55e' : q.score >= 70 ? '#fbbf24' : '#ef4444';
+        return '<div class="section-row">' +
+          '<span class="section-name">' + q.section.charAt(0).toUpperCase() + q.section.slice(1) + '</span>' +
+          '<div class="section-stats">' +
+            (q.attempts > 1 ? '<span style="font-size:11px;color:#fbbf24;">' + q.attempts + ' attempts</span>' : '') +
+            '<span style="font-size:14px;font-weight:700;color:' + col + ';">' + q.score + '%' + (q.passed ? ' ✓' : ' ✗') + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+  document.getElementById('modalContent').innerHTML =
+    '<div style="display:flex;gap:16px;margin-bottom:20px;">' +
+      '<div style="background:#0c100d;border-radius:8px;padding:12px;text-align:center;flex:1;">' +
+        '<div style="font-size:20px;font-weight:700;color:#4ab44a;">' + (s.avgScore || '—') + (s.avgScore ? '%' : '') + '</div>' +
+        '<div style="font-size:10px;color:#5a7a5a;text-transform:uppercase;letter-spacing:1px;">Avg Score</div>' +
+      '</div>' +
+      '<div style="background:#0c100d;border-radius:8px;padding:12px;text-align:center;flex:1;">' +
+        '<div style="font-size:20px;font-weight:700;color:#4ab44a;">' + s.sectionsCount + '</div>' +
+        '<div style="font-size:10px;color:#5a7a5a;text-transform:uppercase;letter-spacing:1px;">Sections</div>' +
+      '</div>' +
+      '<div style="background:#0c100d;border-radius:8px;padding:12px;text-align:center;flex:1;">' +
+        '<div style="font-size:20px;font-weight:700;color:' + (s.totalRetakes > 0 ? '#fbbf24' : '#4ab44a') + ';">' + s.totalRetakes + '</div>' +
+        '<div style="font-size:10px;color:#5a7a5a;text-transform:uppercase;letter-spacing:1px;">Retakes</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:11px;font-weight:700;letter-spacing:2px;color:#5a7a5a;text-transform:uppercase;margin-bottom:12px;">Quiz Performance</div>' +
+    quizRows;
+
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+function filterStudents(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var filtered = allStudents;
+  if (type === 'elite') filtered = allStudents.filter(function(s){ return s.tier === '10k'; });
+  if (type === 'struggling') filtered = allStudents.filter(function(s){ return s.avgScore !== null && s.avgScore < 70; });
+  if (type === 'messages') filtered = allStudents.filter(function(s){ return s.unreadCount > 0; });
+  renderTable(filtered);
+}
+
+function searchStudents(query) {
+  var filtered = allStudents.filter(function(s){ return s.email.toLowerCase().includes(query.toLowerCase()); });
+  renderTable(filtered);
+}
+
+// Close modal on backdrop click
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
