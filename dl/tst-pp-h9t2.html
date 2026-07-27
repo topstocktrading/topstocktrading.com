@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>The Trader's Pattern Playbook — TST</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&family=Courier+Prime&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#111;display:flex;justify-content:center;padding:40px 20px;font-family:'DM Sans',sans-serif;}
+.page{width:680px;background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+.hd{background:#0a0c10;padding:28px 44px 24px;position:relative;}
+.hd-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;color:#fff;}
+.logo span{color:#00d27a;}
+.dt{font-size:9px;font-weight:700;letter-spacing:3px;color:#4b5563;text-transform:uppercase;}
+.tb{border-left:4px solid #00d27a;padding-left:14px;}
+.ti{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:1px;color:#fff;line-height:1;margin-bottom:4px;}
+.su{font-size:11px;color:#6b7280;}
+.hbar{position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#00d27a,#00a8ff);}
+.body{padding:28px 44px 20px;}
+.intro{font-size:12px;color:#374151;line-height:1.75;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid #e5e7eb;}
+.intro strong{color:#111827;}
+.sec{margin-top:14px;}
+.st{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;color:#111827;margin-bottom:6px;padding-bottom:4px;border-bottom:2px solid #00d27a;display:flex;align-items:center;gap:8px;}
+.sn{background:#00d27a;color:#0a0c10;font-size:9px;font-weight:700;min-width:18px;height:18px;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0;padding:0 4px;}
+.rule{background:#f9fafb;border-left:3px solid #00d27a;border-radius:0 5px 5px 0;padding:8px 12px;margin-bottom:6px;}
+.rl{font-size:9px;font-weight:700;letter-spacing:2px;color:#00d27a;text-transform:uppercase;margin-bottom:2px;}
+.rt{font-size:11px;color:#374151;line-height:1.6;}
+.fm{background:#0a0c10;border-radius:6px;padding:12px 16px;margin-bottom:10px;text-align:center;}
+.fl{font-size:9px;font-weight:700;letter-spacing:2px;color:#6b7280;text-transform:uppercase;margin-bottom:4px;}
+.ft{font-family:'Courier Prime',monospace;font-size:13px;color:#00d27a;font-weight:700;}
+.fs{font-size:9px;color:#4b5563;margin-top:3px;}
+.warn{background:#fff7ed;border:1px solid #fed7aa;border-radius:5px;padding:8px 12px;margin-bottom:10px;}
+.wl{font-size:9px;font-weight:700;letter-spacing:2px;color:#ea580c;text-transform:uppercase;margin-bottom:2px;}
+.wt{font-size:11px;color:#7c2d12;line-height:1.6;}
+table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:11px;}
+th{background:#0a0c10;color:#00d27a;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 8px;text-align:left;}
+td{padding:6px 8px;border-bottom:1px solid #f3f4f6;color:#374151;}
+tr:nth-child(even) td{background:#f9fafb;}
+.bg{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#dcfce7;color:#166534;}
+.by{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#fef9c3;color:#854d0e;}
+.br{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:#fee2e2;color:#991b1b;}
+.ft2{background:#0a0c10;padding:8px 44px;display:flex;justify-content:space-between;align-items:center;}
+.ftx{font-size:8px;color:#4b5563;}
+.fbn{font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:2px;color:#00d27a;}
+.disc{font-size:8px;color:#6b7280;line-height:1.5;padding:8px 44px 14px;font-style:italic;border-top:1px solid #e5e7eb;}
+.cl{list-style:none;padding:0;margin-bottom:10px;}
+.cl li{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#374151;padding:5px 0;border-bottom:1px solid #f3f4f6;line-height:1.5;}
+.cl li::before{content:'☐';font-size:12px;color:#00d27a;flex-shrink:0;}
+.svg-wrap{display:flex;justify-content:center;margin:10px 0;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.cr{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:10px 0;}
+</style></head><body><div class="page"><div class="hd"><div class="hd-top"><div class="logo">TOP <span>STOCK</span> TRADING</div><span class="dt">Free Resource</span></div><div class="tb"><div class="ti">The Trader's Pattern Playbook</div><div class="su">The 6 chart patterns that appear most often with visual examples and exact entry rules</div></div><div class="hbar"></div></div><div class="body"><div class="intro">These 6 patterns appear constantly in active markets. <strong>Mastering them — and knowing exactly where to enter — separates traders with edge from traders who are guessing.</strong></div>
+<div class="sec"><div class="st"><span class="sn">1</span>Bull Flag — Bullish Continuation</div>
+<div class="svg-wrap"><svg width="280" height="118" viewBox="0 0 280 118" xmlns="http://www.w3.org/2000/svg"><rect width="280" height="118" fill="#0a0c10" rx="6"/><line x1="20" y1="20" x2="260" y2="20" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="50" x2="260" y2="50" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="80" x2="260" y2="80" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="100" x2="260" y2="100" stroke="#1a221a" stroke-width="0.5"/>
+<line x1="35" y1="100" x2="35" y2="95" stroke="#22c55e" stroke-width="1"/><rect x="30" y="80" width="10" height="15" fill="#22c55e" rx="1"/>
+<line x1="55" y1="82" x2="55" y2="76" stroke="#22c55e" stroke-width="1"/><rect x="50" y="60" width="10" height="20" fill="#22c55e" rx="1"/>
+<line x1="75" y1="62" x2="75" y2="55" stroke="#22c55e" stroke-width="1"/><rect x="70" y="40" width="10" height="18" fill="#22c55e" rx="1"/>
+<line x1="95" y1="42" x2="95" y2="35" stroke="#22c55e" stroke-width="1"/><rect x="90" y="22" width="10" height="16" fill="#22c55e" rx="1"/>
+<line x1="115" y1="24" x2="115" y2="20" stroke="#ef4444" stroke-width="1"/><rect x="110" y="26" width="10" height="8" fill="#ef4444" rx="1"/><line x1="115" y1="34" x2="115" y2="37" stroke="#ef4444" stroke-width="1"/>
+<line x1="135" y1="28" x2="135" y2="25" stroke="#ef4444" stroke-width="1"/><rect x="130" y="30" width="10" height="7" fill="#ef4444" rx="1"/><line x1="135" y1="37" x2="135" y2="40" stroke="#ef4444" stroke-width="1"/>
+<line x1="155" y1="32" x2="155" y2="29" stroke="#22c55e" stroke-width="1"/><rect x="150" y="34" width="10" height="6" fill="#22c55e" rx="1"/>
+<line x1="175" y1="33" x2="175" y2="30" stroke="#ef4444" stroke-width="1"/><rect x="170" y="35" width="10" height="7" fill="#ef4444" rx="1"/>
+<line x1="200" y1="34" x2="200" y2="28" stroke="#22c55e" stroke-width="1"/><rect x="195" y="12" width="10" height="20" fill="#22c55e" rx="1"/>
+<line x1="100" y1="22" x2="260" y2="22" stroke="#00d27a" stroke-width="1" stroke-dasharray="3,2"/>
+<text x="58" y="114" font-size="8" fill="#4ab44a" font-family="sans-serif">FLAGPOLE</text>
+<text x="138" y="114" font-size="8" fill="#fbbf24" font-family="sans-serif">FLAG</text>
+<text x="192" y="114" font-size="8" fill="#00d27a" font-family="sans-serif">BREAK ↑</text></svg></div>
+<div class="rule"><div class="rl">Entry</div><div class="rt">Breakout above the flag on volume. Stop below the flag low. Target = flagpole length projected up.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">2</span>Bear Flag — Bearish Continuation</div>
+<div class="svg-wrap"><svg width="280" height="118" viewBox="0 0 280 118" xmlns="http://www.w3.org/2000/svg"><rect width="280" height="118" fill="#0a0c10" rx="6"/><line x1="20" y1="20" x2="260" y2="20" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="50" x2="260" y2="50" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="80" x2="260" y2="80" stroke="#1a221a" stroke-width="0.5"/>
+<line x1="35" y1="16" x2="35" y2="20" stroke="#ef4444" stroke-width="1"/><rect x="30" y="20" width="10" height="16" fill="#ef4444" rx="1"/><line x1="35" y1="36" x2="35" y2="40" stroke="#ef4444" stroke-width="1"/>
+<line x1="55" y1="38" x2="55" y2="42" stroke="#ef4444" stroke-width="1"/><rect x="50" y="42" width="10" height="18" fill="#ef4444" rx="1"/><line x1="55" y1="60" x2="55" y2="64" stroke="#ef4444" stroke-width="1"/>
+<line x1="75" y1="62" x2="75" y2="66" stroke="#ef4444" stroke-width="1"/><rect x="70" y="66" width="10" height="16" fill="#ef4444" rx="1"/><line x1="75" y1="82" x2="75" y2="86" stroke="#ef4444" stroke-width="1"/>
+<line x1="100" y1="82" x2="100" y2="79" stroke="#22c55e" stroke-width="1"/><rect x="95" y="76" width="10" height="6" fill="#22c55e" rx="1"/>
+<line x1="120" y1="78" x2="120" y2="75" stroke="#22c55e" stroke-width="1"/><rect x="115" y="72" width="10" height="6" fill="#22c55e" rx="1"/>
+<line x1="140" y1="74" x2="140" y2="71" stroke="#ef4444" stroke-width="1"/><rect x="135" y="68" width="10" height="6" fill="#ef4444" rx="1"/>
+<line x1="160" y1="70" x2="160" y2="67" stroke="#22c55e" stroke-width="1"/><rect x="155" y="64" width="10" height="6" fill="#22c55e" rx="1"/>
+<line x1="184" y1="66" x2="184" y2="70" stroke="#ef4444" stroke-width="1"/><rect x="179" y="70" width="10" height="20" fill="#ef4444" rx="1"/><line x1="184" y1="90" x2="184" y2="94" stroke="#ef4444" stroke-width="1"/>
+<line x1="85" y1="83" x2="260" y2="83" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+<text x="50" y="114" font-size="8" fill="#ef4444" font-family="sans-serif">FLAGPOLE</text>
+<text x="124" y="114" font-size="8" fill="#fbbf24" font-family="sans-serif">FLAG</text>
+<text x="178" y="114" font-size="8" fill="#ef4444" font-family="sans-serif">BREAK ↓</text></svg></div>
+<div class="rule"><div class="rl">Entry</div><div class="rt">Breakdown below the flag on volume. Stop above the flag high. Target = flagpole length projected down.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">3</span>Head & Shoulders — Bearish Reversal</div>
+<div class="svg-wrap"><svg width="280" height="118" viewBox="0 0 280 118" xmlns="http://www.w3.org/2000/svg"><rect width="280" height="118" fill="#0a0c10" rx="6"/><line x1="20" y1="30" x2="260" y2="30" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="60" x2="260" y2="60" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="88" x2="260" y2="88" stroke="#1a221a" stroke-width="0.5"/>
+<polyline points="30,88 50,54 70,88" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+<polyline points="70,88 100,24 130,88" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+<polyline points="130,88 155,54 175,88" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+<line x1="20" y1="88" x2="260" y2="88" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>
+<line x1="175" y1="88" x2="208" y2="108" stroke="#ef4444" stroke-width="2"/>
+<polygon points="203,105 212,112 209,102" fill="#ef4444"/>
+<text x="42" y="47" font-size="7" fill="#6b8f6b" font-family="sans-serif">LS</text>
+<text x="97" y="17" font-size="7" fill="#6b8f6b" font-family="sans-serif">HEAD</text>
+<text x="148" y="47" font-size="7" fill="#6b8f6b" font-family="sans-serif">RS</text>
+<text x="185" y="85" font-size="7" fill="#ef4444" font-family="sans-serif">NECKLINE → SHORT</text></svg></div>
+<div class="rule"><div class="rl">Entry</div><div class="rt">Short on break below neckline. Stop above right shoulder. Target = head-to-neckline distance projected down.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">4</span>Ascending Triangle — Bullish Breakout</div>
+<div class="svg-wrap"><svg width="280" height="118" viewBox="0 0 280 118" xmlns="http://www.w3.org/2000/svg"><rect width="280" height="118" fill="#0a0c10" rx="6"/>
+<line x1="20" y1="30" x2="260" y2="30" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="60" x2="260" y2="60" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="90" x2="260" y2="90" stroke="#1a221a" stroke-width="0.5"/>
+<line x1="30" y1="40" x2="200" y2="40" stroke="#ef4444" stroke-width="1.5" stroke-dasharray="4,2"/>
+<line x1="30" y1="100" x2="200" y2="40" stroke="#00d27a" stroke-width="1.5" stroke-dasharray="4,2"/>
+<rect x="28" y="78" width="8" height="18" fill="#22c55e" rx="1"/>
+<rect x="58" y="38" width="8" height="10" fill="#ef4444" rx="1"/>
+<rect x="80" y="70" width="8" height="14" fill="#22c55e" rx="1"/>
+<rect x="108" y="38" width="8" height="9" fill="#ef4444" rx="1"/>
+<rect x="130" y="60" width="8" height="12" fill="#22c55e" rx="1"/>
+<rect x="158" y="38" width="8" height="8" fill="#ef4444" rx="1"/>
+<rect x="178" y="54" width="8" height="10" fill="#22c55e" rx="1"/>
+<rect x="205" y="18" width="10" height="24" fill="#22c55e" rx="1"/><line x1="210" y1="16" x2="210" y2="12" stroke="#22c55e" stroke-width="1"/>
+<text x="30" y="36" font-size="7" fill="#ef4444" font-family="sans-serif">FLAT TOP</text>
+<text x="30" y="114" font-size="7" fill="#00d27a" font-family="sans-serif">RISING LOWS</text>
+<text x="198" y="10" font-size="7" fill="#00d27a" font-family="sans-serif">BREAK!</text></svg></div>
+<div class="rule"><div class="rl">Entry</div><div class="rt">Long on break above flat resistance on volume. Stop below last higher low.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">5</span>Double Top — Bearish Reversal</div>
+<div class="svg-wrap"><svg width="280" height="118" viewBox="0 0 280 118" xmlns="http://www.w3.org/2000/svg"><rect width="280" height="118" fill="#0a0c10" rx="6"/>
+<line x1="20" y1="30" x2="260" y2="30" stroke="#1a221a" stroke-width="0.5"/><line x1="20" y1="60" x2="260" y2="60" stroke="#1a221a" stroke-width="0.5"/>
+<polyline points="30,90 70,28 110,68" fill="none" stroke="#22c55e" stroke-width="1.5"/>
+<polyline points="110,68 150,28 190,90" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+<line x1="30" y1="28" x2="260" y2="28" stroke="#ef4444" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="30" y1="68" x2="260" y2="68" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3,2"/>
+<line x1="190" y1="90" x2="220" y2="108" stroke="#ef4444" stroke-width="2"/>
+<polygon points="215,105 224,112 221,102" fill="#ef4444"/>
+<text x="60" y="24" font-size="7" fill="#ef4444" font-family="sans-serif">SAME RESISTANCE LEVEL</text>
+<text x="80" y="64" font-size="7" fill="#fbbf24" font-family="sans-serif">VALLEY → break = short</text></svg></div>
+<div class="rule"><div class="rl">Entry</div><div class="rt">Short on break below the valley between the two peaks. Stop above the second peak.</div></div></div>
+<div class="sec"><div class="st"><span class="sn">6</span>Cup & Handle — Bullish Continuation</div>
+<div class="svg-wrap"><svg width="280" height="118" viewBox="0 0 280 118" xmlns="http://www.w3.org/2000/svg"><rect width="280" height="118" fill="#0a0c10" rx="6"/>
+<path d="M30,28 Q80,95 140,95 Q200,95 210,28" fill="none" stroke="#22c55e" stroke-width="2"/>
+<polyline points="210,28 222,40 242,36" fill="none" stroke="#ef4444" stroke-width="1.5"/>
+<line x1="30" y1="28" x2="260" y2="28" stroke="#00d27a" stroke-width="1" stroke-dasharray="3,2"/>
+<rect x="245" y="13" width="10" height="18" fill="#22c55e" rx="1"/>
+<text x="80" y="114" font-size="7" fill="#6b8f6b" font-family="sans-serif">CUP (rounded bottom)</text>
+<text x="215" y="52" font-size="7" fill="#fbbf24" font-family="sans-serif">HDL</text>
+<text x="240" y="10" font-size="7" fill="#00d27a" font-family="sans-serif">BUY</text></svg></div>
+<div class="rule"><div class="rl">Entry</div><div class="rt">Long on breakout above handle resistance. Stop below handle low. More common on daily charts.</div></div></div></div><div class="disc">For educational purposes only. Trading involves substantial risk of loss. Not financial advice.</div><div class="ft2"><span class="ftx">topstocktrading.com · Free Resource</span><span class="fbn">TST</span></div></div></body></html>
