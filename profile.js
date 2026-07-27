@@ -674,13 +674,7 @@ var TST_PROFILE = {
         // BEHAVIORAL PROFILE
         '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
           '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Behavioral Profile</div>' +
-          '<div style="background:#0c100d;border-radius:10px;padding:20px;" id="behavioral-profile-content">' +
-            '<div style="text-align:center;padding:16px;">' +
-              '<div style="font-size:28px;margin-bottom:10px;">🧠</div>' +
-              '<div style="font-size:15px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">Profile Being Built</div>' +
-              '<div style="font-size:13px;color:#6b7c6e;line-height:1.7;max-width:400px;margin:0 auto;">Your behavioral profile is generated from your quiz performance, retake patterns, and trade journal data. Complete the course sections and log trades to unlock your full profile.</div>' +
-            '</div>' +
-          '</div>' +
+          TST_PROFILE.buildBehavioralProfile(user.id, client) +
         '</div>' +
 
         // PERSONALIZED CONTENT
@@ -1219,4 +1213,95 @@ var TST_CSV = {
 // ============================================================
 
 
-window.TST_PROFILE = TST_PROFILE;
+  buildBehavioralProfile: async function(userId, client) {
+    try {
+      var qRes = await client.from('quiz_results').select('*').eq('user_id', userId);
+      var quizzes = qRes.data || [];
+      
+      if (quizzes.length === 0) {
+        return '<div style="background:#0c100d;border-radius:10px;padding:24px;text-align:center;">' +
+          '<div style="font-size:28px;margin-bottom:10px;">🧠</div>' +
+          '<div style="font-size:15px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">Profile Being Built</div>' +
+          '<div style="font-size:13px;color:#6b7c6e;line-height:1.7;max-width:400px;margin:0 auto;">Complete course section quizzes to generate your behavioral profile.</div>' +
+        '</div>';
+      }
+
+      // Analyze patterns
+      var weakSections = quizzes.filter(function(q) { return q.score < 75 || q.attempts > 2; });
+      var strongSections = quizzes.filter(function(q) { return q.score >= 90 && q.attempts === 1; });
+      var retakers = quizzes.filter(function(q) { return q.attempts > 1; });
+      var avgScore = Math.round(quizzes.reduce(function(s,q){ return s + q.score; }, 0) / quizzes.length);
+      var totalAttempts = quizzes.reduce(function(s,q){ return s + q.attempts; }, 0);
+      var avgAttempts = (totalAttempts / quizzes.length).toFixed(1);
+
+      // Generate behavioral tendencies
+      var tendencies = [];
+      
+      if (retakers.some(function(q){ return q.section === 'beginner'; })) {
+        tendencies.push({ icon: '⚠️', label: 'Foundation Gaps', desc: 'You required multiple attempts on beginner concepts. Traders with foundation gaps often struggle with pattern recognition under pressure. Revisit the beginner section before advancing.', color: '#ef4444' });
+      }
+      if (retakers.some(function(q){ return q.section === 'psychology'; })) {
+        tendencies.push({ icon: '🧠', label: 'Emotional Awareness Developing', desc: 'Psychology concepts required extra reinforcement. This is extremely common — most traders intellectually understand discipline but struggle to apply it. Your awareness of this is the first step.', color: '#fbbf24' });
+      }
+      if (retakers.some(function(q){ return q.section === 'intermediate' || q.section === 'smallcaps'; })) {
+        tendencies.push({ icon: '📊', label: 'Setup Recognition Building', desc: 'You needed extra repetition on intermediate setups or small caps. This indicates pattern recognition is still developing — which is normal. Focus on logging trades with specific setup types to accelerate this.', color: '#fbbf24' });
+      }
+      if (strongSections.some(function(q){ return q.section === 'beginner' || q.section === 'intermediate'; })) {
+        tendencies.push({ icon: '✅', label: 'Strong Technical Foundation', desc: 'You demonstrated strong grasp of core technical concepts on the first attempt. This suggests you process visual information well and have good pattern intuition.', color: '#22c55e' });
+      }
+      if (avgScore >= 85) {
+        tendencies.push({ icon: '🎯', label: 'High Retention', desc: 'Your average quiz score of ' + avgScore + '% indicates strong retention. Traders who retain concepts well tend to execute more consistently under pressure.', color: '#22c55e' });
+      }
+      if (avgAttempts > 1.8) {
+        tendencies.push({ icon: '🔄', label: 'Persistence Under Difficulty', desc: 'Averaging ' + avgAttempts + ' attempts per section shows persistence. This is a positive trait — most successful traders are not naturally gifted, they grind through the learning curve.', color: '#60a5fa' });
+      }
+
+      if (tendencies.length === 0) {
+        tendencies.push({ icon: '📈', label: 'Profile In Progress', desc: 'Complete more sections to generate a fuller behavioral profile.', color: '#6b7280' });
+      }
+
+      var tendenciesHtml = tendencies.map(function(t) {
+        return '<div style="background:#0c100d;border-left:3px solid ' + t.color + ';border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:10px;">' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">' +
+            '<span style="font-size:16px;">' + t.icon + '</span>' +
+            '<span style="font-size:13px;font-weight:700;color:#f0f4f1;">' + t.label + '</span>' +
+          '</div>' +
+          '<div style="font-size:12px;color:#8aad8a;line-height:1.6;">' + t.desc + '</div>' +
+        '</div>';
+      }).join('');
+
+      var weakHtml = weakSections.length > 0
+        ? '<div style="margin-top:16px;"><div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#ef4444;text-transform:uppercase;margin-bottom:10px;">Focus Areas</div>' +
+          weakSections.map(function(q) {
+            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1a221a;">' +
+              '<span style="font-size:13px;color:#c8d4c8;">' + q.section.charAt(0).toUpperCase() + q.section.slice(1) + '</span>' +
+              '<span style="font-size:12px;color:#ef4444;font-weight:700;">' + q.score + '% · ' + q.attempts + ' attempts</span>' +
+            '</div>';
+          }).join('') + '</div>'
+        : '';
+
+      return '<div style="background:#0c100d;border-radius:10px;padding:20px;">' +
+        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">' +
+          '<div style="text-align:center;background:#111712;border-radius:8px;padding:12px;">' +
+            '<div style="font-size:22px;font-weight:700;color:#4ab44a;">' + avgScore + '%</div>' +
+            '<div style="font-size:10px;color:#6b7c6e;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Avg Score</div>' +
+          '</div>' +
+          '<div style="text-align:center;background:#111712;border-radius:8px;padding:12px;">' +
+            '<div style="font-size:22px;font-weight:700;color:#4ab44a;">' + quizzes.length + '</div>' +
+            '<div style="font-size:10px;color:#6b7c6e;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Sections Done</div>' +
+          '</div>' +
+          '<div style="text-align:center;background:#111712;border-radius:8px;padding:12px;">' +
+            '<div style="font-size:22px;font-weight:700;color:' + (avgAttempts > 1.5 ? '#fbbf24' : '#4ab44a') + ';">' + avgAttempts + 'x</div>' +
+            '<div style="font-size:10px;color:#6b7c6e;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Avg Attempts</div>' +
+          '</div>' +
+        '</div>' +
+        tendenciesHtml +
+        weakHtml +
+      '</div>';
+
+    } catch(e) {
+      return '<div style="font-size:13px;color:#6b7c6e;padding:16px;">Could not load behavioral profile.</div>';
+    }
+  },
+
+  window.TST_PROFILE = TST_PROFILE;
