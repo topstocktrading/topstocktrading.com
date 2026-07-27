@@ -440,9 +440,8 @@
 .iq-stack-item:last-child{border-bottom:none;}
 .iq-question-number{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#22c55e;margin-bottom:12px;}
 
-/* Bell notification */
 .notif-wrap{position:relative;display:inline-block;}
-.notif-dot{position:absolute;top:3px;right:3px;width:7px;height:7px;background:#ef4444;border-radius:50%;display:none;border:1.5px solid #0a0f0a;}
+.notif-dot{position:absolute;top:2px;right:2px;width:7px;height:7px;background:#ef4444;border-radius:50%;display:none;border:1.5px solid #0a0f0a;}
 .notif-dot.show{display:block;}
 .notif-dropdown{display:none;position:absolute;right:0;top:calc(100% + 8px);width:260px;background:#111712;border:1px solid #1e2820;border-radius:8px;z-index:999;box-shadow:0 8px 20px rgba(0,0,0,0.6);}
 .notif-dropdown.open{display:block;}
@@ -478,8 +477,8 @@
     <button class="nav-btn" style="font-size:12px;padding:6px 14px;border-radius:6px;" onclick="showNotesPage()">My Notes</button>
     <button class="nav-btn" style="font-size:12px;padding:6px 14px;border-radius:6px;" onclick="showProfileDashboard()">My Profile</button>
     <div class="notif-wrap" id="notifWrap">
-      <button class="nav-btn" onclick="toggleNotifDropdown()" title="Notifications" style="font-size:12px;padding:6px 10px;border-radius:6px;position:relative;">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <button class="nav-btn" onclick="toggleNotifDropdown()" title="Notifications" style="font-size:12px;padding:5px 8px;border-radius:6px;position:relative;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <div class="notif-dot" id="notifDot"></div>
       </button>
       <div class="notif-dropdown" id="notifDropdown">
@@ -1084,7 +1083,9 @@ const COURSE=[
     {id:'lt-sweeps',name:'Liquidity Sweep Trades'},
     {id:'lt-vshape',name:'V-Shape Recovery Trades'},
   ]},
-
+  {id:'interactive',label:'Interactive Quizzes',badge:'finale',modules:[
+    {id:'interactive-quiz',name:'📊 Trade Setup Identification'},
+  ]},
   {id:'tax',label:'Tax Basics',badge:'beginner',modules:[
     {id:'tax-0',name:'Trader Tax Basics'},
   ]},
@@ -1275,7 +1276,7 @@ const SVG_DONE=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmln
 
 function buildSidebar(){
   const nav=document.getElementById('snav');nav.innerHTML='';
-  if(window._currentUser && typeof loadNotifications === 'function') loadNotifications();
+  if(window._currentUser&&typeof loadNotifications==='function') loadNotifications();
   updateProgress();
   COURSE.forEach(sec=>{
     const isOpen=openSecs.has(sec.id);
@@ -1383,81 +1384,79 @@ function addMsg(text,type,id){
   div.className=`ai-msg ${type}`;if(id)div.id=id;div.textContent=text;
   msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
 }
-// ── NOTIFICATIONS ──────────────────────────────────────────────────────
+var _notifData=[];
+var _notifOpen=false;
 
-var _notifData = [];
-var _notifOpen = false;
-
-async function loadNotifications() {
-  try {
-    var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
-    if (!sb) return;
-    var user = window._currentUser;
-    if (!user) return;
-    var r1 = await sb.from('notifications').select('*').order('created_at', {ascending:false}).limit(20);
-    var notifs = r1.data || [];
-    if (!notifs.length) return;
-    var r2 = await sb.from('notification_reads').select('notification_id').eq('user_id', user.id);
-    var readIds = new Set((r2.data||[]).map(function(r){ return r.notification_id; }));
-    _notifData = notifs.map(function(n){ return Object.assign({}, n, {read: readIds.has(n.id)}); });
-    var unread = _notifData.filter(function(n){ return !n.read; }).length;
-    var dot = document.getElementById('notifDot');
-    if (dot) dot.className = unread > 0 ? 'notif-dot show' : 'notif-dot';
-    renderNotifList();
-  } catch(e) { console.log('Notif error:', e); }
+function toggleNotifDropdown(){
+  _notifOpen=!_notifOpen;
+  var dd=document.getElementById('notifDropdown');
+  if(dd) dd.className=_notifOpen?'notif-dropdown open':'notif-dropdown';
 }
 
-function renderNotifList() {
-  var list = document.getElementById('notifList');
-  if (!list) return;
-  if (!_notifData.length) { list.innerHTML = '<div class="notif-empty">No notifications yet</div>'; return; }
-  var html = '';
-  _notifData.forEach(function(n) {
-    var date = new Date(n.created_at).toLocaleDateString('en-US', {month:'short', day:'numeric'});
-    var cls = n.read ? 'notif-item' : 'notif-item unread';
-    var dot = n.read ? '' : '<span style="color:#22c55e;margin-right:4px;font-size:8px;">&#9679;</span>';
-    html += '<div class="' + cls + '" data-id="' + n.id + '" onclick="markNotifRead(this.dataset.id)">';
-    html += '<div class="notif-item-title">' + dot + n.title + '</div>';
-    html += '<div class="notif-item-date">' + date + '</div>';
-    html += '</div>';
-  });
-  list.innerHTML = html;
-}
-
-async function markNotifRead(notifId) {
-  try {
-    var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
-    var user = window._currentUser;
-    if (!sb || !user) return;
-    await sb.from('notification_reads').upsert({user_id: user.id, notification_id: notifId}, {onConflict: 'user_id,notification_id'});
-    _notifData = _notifData.map(function(n){ return n.id === notifId ? Object.assign({},n,{read:true}) : n; });
-    var unread = _notifData.filter(function(n){ return !n.read; }).length;
-    var dot = document.getElementById('notifDot');
-    if (dot) dot.className = unread > 0 ? 'notif-dot show' : 'notif-dot';
-    renderNotifList();
-  } catch(e) {}
-}
-
-function toggleNotifDropdown() {
-  _notifOpen = !_notifOpen;
-  var dd = document.getElementById('notifDropdown');
-  if (dd) dd.className = _notifOpen ? 'notif-dropdown open' : 'notif-dropdown';
-}
-
-// Close dropdown when clicking outside
-document.addEventListener('click', function(e) {
-  if (!document.getElementById('notifWrap')?.contains(e.target)) {
-    _notifOpen = false;
-    const dd = document.getElementById('notifDropdown');
-    if (dd) dd.className = 'notif-dropdown';
+document.addEventListener('click',function(e){
+  var wrap=document.getElementById('notifWrap');
+  if(wrap&&!wrap.contains(e.target)){
+    _notifOpen=false;
+    var dd=document.getElementById('notifDropdown');
+    if(dd) dd.className='notif-dropdown';
   }
 });
+
+async function loadNotifications(){
+  try{
+    var sb=window.getSupabaseClient?window.getSupabaseClient():null;
+    if(!sb) return;
+    var user=window._currentUser;
+    if(!user) return;
+    var r1=await sb.from('notifications').select('*').order('created_at',{ascending:false}).limit(20);
+    var notifs=r1.data||[];
+    if(!notifs.length) return;
+    var r2=await sb.from('notification_reads').select('notification_id').eq('user_id',user.id);
+    var readSet=new Set((r2.data||[]).map(function(x){return x.notification_id;}));
+    _notifData=notifs.map(function(n){return Object.assign({},n,{read:readSet.has(n.id)});});
+    var unread=_notifData.filter(function(n){return !n.read;}).length;
+    var dot=document.getElementById('notifDot');
+    if(dot) dot.className=unread>0?'notif-dot show':'notif-dot';
+    renderNotifList();
+  }catch(e){}
+}
+
+function renderNotifList(){
+  var list=document.getElementById('notifList');
+  if(!list) return;
+  if(!_notifData.length){list.innerHTML='<div class="notif-empty">No notifications</div>';return;}
+  var html='';
+  _notifData.forEach(function(n){
+    var dt=new Date(n.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    var cls=n.read?'notif-item':'notif-item unread';
+    var dot2=n.read?'':'<span style="color:#22c55e;margin-right:4px;">&#9679;</span>';
+    html+='<div class="'+cls+'" data-nid="'+n.id+'" onclick="markNotifRead(this.getAttribute('data-nid'))">';
+    html+='<div class="notif-item-title">'+dot2+n.title+'</div>';
+    html+='<div class="notif-item-date">'+dt+'</div>';
+    html+='</div>';
+  });
+  list.innerHTML=html;
+}
+
+async function markNotifRead(nid){
+  try{
+    var sb=window.getSupabaseClient?window.getSupabaseClient():null;
+    var user=window._currentUser;
+    if(!sb||!user) return;
+    await sb.from('notification_reads').upsert({user_id:user.id,notification_id:nid},{onConflict:'user_id,notification_id'});
+    _notifData=_notifData.map(function(n){return n.id===nid?Object.assign({},n,{read:true}):n;});
+    var unread=_notifData.filter(function(n){return !n.read;}).length;
+    var dot=document.getElementById('notifDot');
+    if(dot) dot.className=unread>0?'notif-dot show':'notif-dot';
+    renderNotifList();
+  }catch(e){}
+}
 
 </script>
 
 <script src="auth.js"></script>
 <script src="profile.js?v=5"></script>
 <script src="quiz.js"></script>
-
+<script src="interactive-quiz.js"></script>
 </body>
 </html>
