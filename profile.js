@@ -88,6 +88,7 @@ var TST_PROFILE = {
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'journal\', this)">Journal</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
+          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'messages\', this)">Messages</button>' +
           tenKTabHtml +
         '</div>' +
         '<div id="tstTabBody">' +
@@ -126,8 +127,6 @@ var TST_PROFILE = {
     try {
       var client = getSupabase();
       var tradesRes = await client.from('trades').select('*').eq('user_id', user.id);
-      var quizRes = await client.from('quiz_results').select('*').eq('user_id', user.id).order('updated_at', {ascending: false});
-      var quizzes = quizRes.data || [];
       var trades = tradesRes.data || [];
       var quizRes = await client.from('quiz_results').select('*').eq('user_id', user.id);
       var quizzes = quizRes.data || [];
@@ -592,57 +591,31 @@ var TST_PROFILE = {
     body.innerHTML = '<div class="tst-loading">Loading your 10K dashboard...</div>';
     var user = await getUser();
     if (!user) { body.innerHTML = '<div class="tst-empty">Please log in.</div>'; return; }
-    if (tier !== '10k') { body.innerHTML = '<div class="tst-empty" style="padding:48px;text-align:center;color:#6b7c6e;">This section is only available to 10K Playbook members.</div>'; return; }
+    if (tier !== '10k') { body.innerHTML = '<div class="tst-empty">This section is only available to 10K Mentorship members.</div>'; return; }
 
     var client = getSupabase();
+    var sessionData = null;
+    var reviewQueue = [];
     var messages = [];
-    var playbook = null;
-    var booking = null;
-    var personalVideo = null;
 
     try {
-      var msgRes = await client.from('messages').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(20);
-      if (msgRes.data) messages = msgRes.data;
+      var sessionRes = await client.from('tenk_sessions').select('*').eq('user_id', user.id).order('scheduled_date', { ascending: true }).limit(1).maybeSingle();
+      if (sessionRes.data) sessionData = sessionRes.data;
     } catch(e) {}
 
     try {
-      var pbRes = await client.from('playbooks').select('*').eq('user_id', user.id).single();
-      if (pbRes.data) playbook = pbRes.data;
+      var reviewRes = await client.from('tenk_trade_reviews').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(10);
+      if (reviewRes.data) reviewQueue = reviewRes.data;
     } catch(e) {}
 
-    try {
-      var bkRes = await client.from('bookings').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).maybeSingle();
-      if (bkRes.data) booking = bkRes.data;
-    } catch(e) {}
+    var pendingReviews = reviewQueue.filter(function(r){ return !r.reviewed; });
+    var completedReviews = reviewQueue.filter(function(r){ return r.reviewed; });
 
-    // Build messages HTML
-    var messagesHtml = messages.length === 0
-      ? '<div style="font-size:13px;color:#6b7c6e;padding:16px 0;">No messages yet. Ask anything below.</div>'
-      : messages.map(function(m) {
-          var isMine = m.sender === 'member';
-          return '<div style="margin-bottom:14px;display:flex;flex-direction:column;align-items:' + (isMine ? 'flex-end' : 'flex-start') + ';">' +
-            '<div style="max-width:85%;background:' + (isMine ? '#1a2e1a' : '#111a18') + ';border:1px solid ' + (isMine ? '#2d5a2d' : '#1e2820') + ';border-radius:10px;padding:12px 16px;">' +
-              '<div style="font-size:13px;color:#c8d4c8;line-height:1.6;">' + m.content + '</div>' +
-              '<div style="font-size:10px;color:#3a5a3a;margin-top:6px;">' + (isMine ? 'You' : 'TST') + ' · ' + new Date(m.created_at).toLocaleDateString() + '</div>' +
-            '</div>' +
-          '</div>';
-        }).join('');
-
-    // Build playbook HTML
-    var playbookHtml = playbook
-      ? '<div style="font-size:13px;color:#6b7c6e;margin-bottom:16px;">Version ' + playbook.version + ' · Last updated ' + new Date(playbook.updated_at).toLocaleDateString() + '</div>' +
-        '<div style="background:#0c100d;border-radius:8px;padding:20px;font-size:14px;color:#c8d4c8;line-height:1.8;">' + (playbook.content || '') + '</div>'
-      : '<div style="background:#0c100d;border-radius:10px;padding:24px;text-align:center;">' +
-          '<div style="font-size:32px;margin-bottom:12px;">📋</div>' +
-          '<div style="font-size:15px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">Your Playbook Is Being Built</div>' +
-          '<div style="font-size:13px;color:#6b7c6e;line-height:1.7;max-width:400px;margin:0 auto;">Your personalized trading playbook will be created once you have completed the course and logged enough trades for us to analyze your data. Keep logging trades in your Journal.</div>' +
-        '</div>';
-
-    // Build quarterly review HTML
-    var reviewHtml = booking
-      ? '<div style="font-size:13px;color:#6b7c6e;margin-bottom:8px;">Last request: ' + new Date(booking.created_at).toLocaleDateString() + ' · Status: <span style="color:' + (booking.status === 'complete' ? '#22c55e' : '#d4af37') + ';font-weight:700;">' + booking.status + '</span></div>' +
-        (booking.tst_response ? '<div style="background:#0c100d;border-left:3px solid #4ab44a;border-radius:0 8px 8px 0;padding:14px;font-size:13px;color:#c8d4c8;line-height:1.6;margin-top:12px;"><div style="font-size:10px;color:#4ab44a;font-weight:700;letter-spacing:1px;margin-bottom:6px;">TST RESPONSE</div>' + booking.tst_response + '</div>' : '')
-      : '<div style="font-size:13px;color:#6b7c6e;margin-bottom:16px;">Submit a request when you are ready for your quarterly review. We will go through your trades, patterns, and progress.</div>';
+    var nextSessionHtml = sessionData
+      ? '<div style="font-size:20px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">' + new Date(sessionData.scheduled_date).toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric', year:'numeric'}) + '</div>' +
+        '<div style="font-size:13px;color:#6b7c6e;">' + (sessionData.scheduled_time || 'Time TBD') + ' · ' + (sessionData.session_type || 'Quarterly 1:1 Session') + '</div>' +
+        (sessionData.meeting_link ? '<a href="' + sessionData.meeting_link + '" target="_blank" style="display:inline-block;margin-top:12px;background:#d4af37;color:#000;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;text-decoration:none;font-size:13px;">Join Meeting →</a>' : '')
+      : '<div style="font-size:15px;color:#6b7c6e;">No session scheduled yet. Reach out to book your next quarterly 1:1.</div>';
 
     body.innerHTML =
       '<div style="max-width:840px;">' +
@@ -650,98 +623,108 @@ var TST_PROFILE = {
         // Header
         '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">' +
           '<span style="font-size:22px;">⭐</span>' +
-          '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#d4af37;letter-spacing:0.5px;">10K Playbook Dashboard</div>' +
+          '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#d4af37;letter-spacing:0.5px;">10K Member Dashboard</div>' +
         '</div>' +
-        '<div style="font-size:13px;color:#6b7c6e;margin-bottom:28px;line-height:1.6;">Your exclusive 10K Playbook benefits — personalized playbook, behavioral profile, quarterly reviews, personalized content, and direct messaging.</div>' +
+        '<div style="font-size:13px;color:#6b7c6e;margin-bottom:28px;line-height:1.6;">Your exclusive benefits as a 10K Mentorship member — personal trade reviews, quarterly 1:1 sessions, and included tool access.</div>' +
 
-        // MESSAGES
+        // Next Session Card
+        '<div style="background:linear-gradient(135deg,#1a1610,#111712);border:1.5px solid #d4af37;border-radius:14px;padding:24px;margin-bottom:20px;">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#d4af37;margin-bottom:10px;">Your Next 1:1 Session</div>' +
+          nextSessionHtml +
+        '</div>' +
+
+        // Trade Review Queue
         '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
-          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Messages</div>' +
-          '<div style="max-height:300px;overflow-y:auto;margin-bottom:16px;" id="tenk-messages">' + messagesHtml + '</div>' +
-          '<div style="display:flex;gap:10px;">' +
-            '<textarea id="tenk-msg-input" placeholder="Ask anything — trades, setups, course questions..." style="flex:1;background:#0c100d;border:1px solid #1e2820;border-radius:8px;padding:12px;color:#f0f4f1;font-size:13px;font-family:inherit;resize:none;height:60px;outline:none;"></textarea>' +
-            '<button onclick="TST_PROFILE.sendMessage()" style="background:#4ab44a;color:#080d08;border:none;border-radius:8px;padding:12px 20px;font-weight:700;font-size:13px;cursor:pointer;flex-shrink:0;">Send</button>' +
+          '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">' +
+            '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;">Personal Trade Review Queue</div>' +
+            '<div style="font-size:11px;color:#d4af37;font-weight:700;">' + pendingReviews.length + ' pending</div>' +
           '</div>' +
-          '<div style="font-size:11px;color:#3a5a3a;margin-top:8px;">Priority access — responses not guaranteed after your first year.</div>' +
+          (reviewQueue.length === 0
+            ? '<div style="font-size:13px;color:#6b7c6e;">No trades submitted for review yet. Submit your best or most confusing trades from your journal for a personal review.</div>'
+            : reviewQueue.map(function(r){
+                var statusColor = r.reviewed ? '#22c55e' : '#d4af37';
+                var statusText = r.reviewed ? '✓ Reviewed' : '⏳ Pending Review';
+                return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #1e2820;">' +
+                  '<div>' +
+                    '<div style="font-size:14px;font-weight:700;color:#f0f4f1;">' + (r.ticker || 'Trade') + '</div>' +
+                    '<div style="font-size:11px;color:#6b7c6e;">Submitted ' + new Date(r.created_at).toLocaleDateString() + '</div>' +
+                  '</div>' +
+                  '<div style="font-size:12px;font-weight:700;color:' + statusColor + ';">' + statusText + '</div>' +
+                '</div>';
+              }).join('')
+          ) +
+          '<button onclick="TST_PROFILE.showSubmitReview()" style="margin-top:16px;background:transparent;border:1.5px solid #d4af37;color:#d4af37;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">+ Submit a Trade for Review</button>' +
         '</div>' +
 
-        // PLAYBOOK
+        // Included Tools
         '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
-          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Your Personal Playbook</div>' +
-          playbookHtml +
-        '</div>' +
-
-        // BEHAVIORAL PROFILE
-        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
-          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Behavioral Profile</div>' +
-          TST_PROFILE.buildBehavioralProfile(user.id, client) +
-        '</div>' +
-
-        // PERSONALIZED CONTENT
-        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
-          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Personalized Content</div>' +
-          '<div style="background:#0c100d;border-radius:10px;padding:24px;text-align:center;">' +
-            '<div style="font-size:32px;margin-bottom:12px;">🎬</div>' +
-            '<div style="font-size:15px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">Your Trade Review Video</div>' +
-            '<div style="font-size:13px;color:#6b7c6e;line-height:1.7;max-width:440px;margin:0 auto 16px;">After your first quarterly review we will record a personalized video analyzing your actual trades — your specific patterns, your specific edge, your specific mistakes. No one else sees this video.</div>' +
-            '<div style="font-size:12px;color:#3a5a3a;font-style:italic;">Available after your first quarterly review</div>' +
-          '</div>' +
-        '</div>' +
-
-        // QUARTERLY REVIEW
-        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;margin-bottom:20px;">' +
-          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Quarterly Review</div>' +
-          reviewHtml +
-          '<button onclick="TST_PROFILE.submitReviewRequest()" style="margin-top:16px;background:transparent;border:1.5px solid #4ab44a;color:#4ab44a;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Request Quarterly Review →</button>' +
-        '</div>' +
-
-        // INCLUDED
-        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;">' +
-          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Included With Your Membership</div>' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:16px;">Included Tools & Subscriptions</div>' +
           '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
             '<div style="background:#0c100d;border:1px solid #1e2820;border-radius:10px;padding:14px;">' +
               '<div style="font-size:14px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">TradeGrader Pro</div>' +
-              '<div style="font-size:11px;color:#6b7c6e;margin-bottom:8px;">AI-powered trade grading and behavioral analysis — 1 year included</div>' +
+              '<div style="font-size:11px;color:#6b7c6e;margin-bottom:8px;">AI-powered trade grading & behavioral analysis — full year included</div>' +
               '<a href="https://trade-grader.vercel.app" target="_blank" style="font-size:11px;color:#22c55e;font-weight:700;text-decoration:none;">Access TradeGrader →</a>' +
             '</div>' +
             '<div style="background:#0c100d;border:1px solid #1e2820;border-radius:10px;padding:14px;">' +
-              '<div style="font-size:14px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">SMS Trade Alerts</div>' +
-              '<div style="font-size:11px;color:#6b7c6e;margin-bottom:8px;">12 months of swing and long term trade alerts included</div>' +
-              '<span style="font-size:11px;color:#d4af37;">Setup via Messages tab</span>' +
+              '<div style="font-size:14px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">Trade Ideas Scanner</div>' +
+              '<div style="font-size:11px;color:#6b7c6e;margin-bottom:8px;">Custom TST scanner presets — annual subscription included</div>' +
+              '<span style="font-size:11px;color:#d4af37;">Setup instructions coming soon</span>' +
             '</div>' +
           '</div>' +
+        '</div>' +
+
+        // Direct Messaging
+        '<div style="background:#111712;border:1.5px solid #1e2820;border-radius:14px;padding:24px;">' +
+          '<div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6b7c6e;margin-bottom:12px;">Direct Access</div>' +
+          '<div style="font-size:13px;color:#6b7c6e;line-height:1.6;margin-bottom:14px;">As a 10K member you have direct messaging access. Use the Messages tab for questions, trade reviews, or anything else — you get priority response.</div>' +
+          '<button onclick=\'TST_PROFILE.switchTab("messages", document.querySelector(".tst-tab:nth-child(4)"))\' style="background:#d4af37;color:#000;border:none;border-radius:8px;padding:10px 20px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Go to Messages →</button>' +
         '</div>' +
 
       '</div>';
   },
 
-  sendMessage: async function() {
-    var input = document.getElementById('tenk-msg-input');
-    var content = input ? input.value.trim() : '';
-    if (!content) return;
-    var user = await getUser();
-    if (!user) return;
-    var client = getSupabase();
-    try {
-      await client.from('messages').insert({ user_id: user.id, sender: 'member', content: content });
-      input.value = '';
-      await TST_PROFILE.getTier().then(function(tier){ TST_PROFILE.loadTab('tenk', tier); });
-    } catch(e) { console.error('Message send error:', e); }
+  showSubmitReview: function() {
+    var body = document.getElementById('tstTabBody');
+    if (!body) return;
+    body.innerHTML =
+      '<div style="max-width:600px;">' +
+        '<div style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#f0f4f1;margin-bottom:6px;">Submit a Trade for Review</div>' +
+        '<div style="font-size:13px;color:#6b7c6e;margin-bottom:24px;line-height:1.6;">Submit any trade — winner, loser, or one you are unsure about — for a personal review.</div>' +
+        '<input id="reviewTicker" placeholder="Ticker (e.g. AAPL)" style="width:100%;background:#111712;border:1.5px solid #1e2820;border-radius:8px;padding:12px 16px;color:#f0f4f1;font-size:14px;margin-bottom:12px;box-sizing:border-box;outline:none;"/>' +
+        '<textarea id="reviewNotes" placeholder="Describe the trade, your thinking, and what you want feedback on..." style="width:100%;min-height:200px;background:#111712;border:1.5px solid #1e2820;border-radius:8px;padding:12px 16px;color:#f0f4f1;font-size:14px;margin-bottom:16px;resize:vertical;box-sizing:border-box;outline:none;font-family:inherit;"></textarea>' +
+        '<div style="display:flex;gap:12px;">' +
+          '<button onclick=\'TST_PROFILE.getTier().then(function(t){TST_PROFILE.loadTab("tenk", t)})\' style="background:transparent;border:1.5px solid #1e2820;color:#6b7c6e;border-radius:8px;padding:12px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Cancel</button>' +
+          '<button onclick="TST_PROFILE.submitReview()" style="background:#d4af37;color:#000;border:none;border-radius:8px;padding:12px 24px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;">Submit for Review</button>' +
+        '</div>' +
+      '</div>';
   },
 
-  submitReviewRequest: async function() {
+  submitReview: async function() {
+    var ticker = document.getElementById('reviewTicker');
+    var notes = document.getElementById('reviewNotes');
+    if (!ticker || !ticker.value) { alert('Please enter a ticker.'); return; }
     var user = await getUser();
     if (!user) return;
-    var client = getSupabase();
-    var quarter = 'Q' + (Math.ceil((new Date().getMonth()+1)/3)) + ' ' + new Date().getFullYear();
     try {
-      await client.from('bookings').insert({ user_id: user.id, quarter: quarter, status: 'pending', member_notes: 'Quarterly review requested' });
-      alert('Review request submitted. We will get back to you shortly.');
-      await TST_PROFILE.getTier().then(function(tier){ TST_PROFILE.loadTab('tenk', tier); });
-    } catch(e) { console.error('Booking error:', e); }
+      var client = getSupabase();
+      await client.from('tenk_trade_reviews').insert({
+        user_id: user.id,
+        ticker: ticker.value,
+        notes: notes ? notes.value : '',
+        reviewed: false,
+        created_at: new Date().toISOString()
+      });
+      TST_PROFILE.getTier().then(function(t){ TST_PROFILE.loadTab('tenk', t); });
+    } catch(e) {
+      alert('Error submitting review. Please try again.');
+    }
   },
 
-  
+
+
+  // ============================================================
+  // TAB 5 — MESSAGE CENTER
+  // ============================================================
   renderMessages: async function(body, tier) {
     body.innerHTML = '<div class="tst-loading">Loading messages...</div>';
     var user = await getUser();
@@ -1213,95 +1196,4 @@ var TST_CSV = {
 // ============================================================
 
 
-  buildBehavioralProfile: async function(userId, client) {
-    try {
-      var qRes = await client.from('quiz_results').select('*').eq('user_id', userId);
-      var quizzes = qRes.data || [];
-      
-      if (quizzes.length === 0) {
-        return '<div style="background:#0c100d;border-radius:10px;padding:24px;text-align:center;">' +
-          '<div style="font-size:28px;margin-bottom:10px;">🧠</div>' +
-          '<div style="font-size:15px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">Profile Being Built</div>' +
-          '<div style="font-size:13px;color:#6b7c6e;line-height:1.7;max-width:400px;margin:0 auto;">Complete course section quizzes to generate your behavioral profile.</div>' +
-        '</div>';
-      }
-
-      // Analyze patterns
-      var weakSections = quizzes.filter(function(q) { return q.score < 75 || q.attempts > 2; });
-      var strongSections = quizzes.filter(function(q) { return q.score >= 90 && q.attempts === 1; });
-      var retakers = quizzes.filter(function(q) { return q.attempts > 1; });
-      var avgScore = Math.round(quizzes.reduce(function(s,q){ return s + q.score; }, 0) / quizzes.length);
-      var totalAttempts = quizzes.reduce(function(s,q){ return s + q.attempts; }, 0);
-      var avgAttempts = (totalAttempts / quizzes.length).toFixed(1);
-
-      // Generate behavioral tendencies
-      var tendencies = [];
-      
-      if (retakers.some(function(q){ return q.section === 'beginner'; })) {
-        tendencies.push({ icon: '⚠️', label: 'Foundation Gaps', desc: 'You required multiple attempts on beginner concepts. Traders with foundation gaps often struggle with pattern recognition under pressure. Revisit the beginner section before advancing.', color: '#ef4444' });
-      }
-      if (retakers.some(function(q){ return q.section === 'psychology'; })) {
-        tendencies.push({ icon: '🧠', label: 'Emotional Awareness Developing', desc: 'Psychology concepts required extra reinforcement. This is extremely common — most traders intellectually understand discipline but struggle to apply it. Your awareness of this is the first step.', color: '#fbbf24' });
-      }
-      if (retakers.some(function(q){ return q.section === 'intermediate' || q.section === 'smallcaps'; })) {
-        tendencies.push({ icon: '📊', label: 'Setup Recognition Building', desc: 'You needed extra repetition on intermediate setups or small caps. This indicates pattern recognition is still developing — which is normal. Focus on logging trades with specific setup types to accelerate this.', color: '#fbbf24' });
-      }
-      if (strongSections.some(function(q){ return q.section === 'beginner' || q.section === 'intermediate'; })) {
-        tendencies.push({ icon: '✅', label: 'Strong Technical Foundation', desc: 'You demonstrated strong grasp of core technical concepts on the first attempt. This suggests you process visual information well and have good pattern intuition.', color: '#22c55e' });
-      }
-      if (avgScore >= 85) {
-        tendencies.push({ icon: '🎯', label: 'High Retention', desc: 'Your average quiz score of ' + avgScore + '% indicates strong retention. Traders who retain concepts well tend to execute more consistently under pressure.', color: '#22c55e' });
-      }
-      if (avgAttempts > 1.8) {
-        tendencies.push({ icon: '🔄', label: 'Persistence Under Difficulty', desc: 'Averaging ' + avgAttempts + ' attempts per section shows persistence. This is a positive trait — most successful traders are not naturally gifted, they grind through the learning curve.', color: '#60a5fa' });
-      }
-
-      if (tendencies.length === 0) {
-        tendencies.push({ icon: '📈', label: 'Profile In Progress', desc: 'Complete more sections to generate a fuller behavioral profile.', color: '#6b7280' });
-      }
-
-      var tendenciesHtml = tendencies.map(function(t) {
-        return '<div style="background:#0c100d;border-left:3px solid ' + t.color + ';border-radius:0 8px 8px 0;padding:14px 16px;margin-bottom:10px;">' +
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">' +
-            '<span style="font-size:16px;">' + t.icon + '</span>' +
-            '<span style="font-size:13px;font-weight:700;color:#f0f4f1;">' + t.label + '</span>' +
-          '</div>' +
-          '<div style="font-size:12px;color:#8aad8a;line-height:1.6;">' + t.desc + '</div>' +
-        '</div>';
-      }).join('');
-
-      var weakHtml = weakSections.length > 0
-        ? '<div style="margin-top:16px;"><div style="font-size:10px;font-weight:700;letter-spacing:2px;color:#ef4444;text-transform:uppercase;margin-bottom:10px;">Focus Areas</div>' +
-          weakSections.map(function(q) {
-            return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1a221a;">' +
-              '<span style="font-size:13px;color:#c8d4c8;">' + q.section.charAt(0).toUpperCase() + q.section.slice(1) + '</span>' +
-              '<span style="font-size:12px;color:#ef4444;font-weight:700;">' + q.score + '% · ' + q.attempts + ' attempts</span>' +
-            '</div>';
-          }).join('') + '</div>'
-        : '';
-
-      return '<div style="background:#0c100d;border-radius:10px;padding:20px;">' +
-        '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">' +
-          '<div style="text-align:center;background:#111712;border-radius:8px;padding:12px;">' +
-            '<div style="font-size:22px;font-weight:700;color:#4ab44a;">' + avgScore + '%</div>' +
-            '<div style="font-size:10px;color:#6b7c6e;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Avg Score</div>' +
-          '</div>' +
-          '<div style="text-align:center;background:#111712;border-radius:8px;padding:12px;">' +
-            '<div style="font-size:22px;font-weight:700;color:#4ab44a;">' + quizzes.length + '</div>' +
-            '<div style="font-size:10px;color:#6b7c6e;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Sections Done</div>' +
-          '</div>' +
-          '<div style="text-align:center;background:#111712;border-radius:8px;padding:12px;">' +
-            '<div style="font-size:22px;font-weight:700;color:' + (avgAttempts > 1.5 ? '#fbbf24' : '#4ab44a') + ';">' + avgAttempts + 'x</div>' +
-            '<div style="font-size:10px;color:#6b7c6e;text-transform:uppercase;letter-spacing:1px;margin-top:2px;">Avg Attempts</div>' +
-          '</div>' +
-        '</div>' +
-        tendenciesHtml +
-        weakHtml +
-      '</div>';
-
-    } catch(e) {
-      return '<div style="font-size:13px;color:#6b7c6e;padding:16px;">Could not load behavioral profile.</div>';
-    }
-  },
-
-  window.TST_PROFILE = TST_PROFILE;
+window.TST_PROFILE = TST_PROFILE;
