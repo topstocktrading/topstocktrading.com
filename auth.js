@@ -108,6 +108,11 @@
       var session = result.data ? result.data.session : null;
       if (session && session.user) {
         window._currentUser = session.user;
+        // Admin goes to dedicated admin panel
+        if (session.user.email === 'h@topstocktrading.com') {
+          window.location.href = '/admin.html';
+          return;
+        }
         var displayName = session.user.email.split('@')[0];
         var loginScreen = document.getElementById('login-screen');
         var sname = document.getElementById('sname');
@@ -166,6 +171,11 @@
       }
       var user = result.data.user;
       window._currentUser = user;
+      // Admin goes to dedicated admin panel
+      if (user.email === 'h@topstocktrading.com') {
+        window.location.href = '/admin.html';
+        return;
+      }
       var displayName = user.email.split('@')[0];
       var loginScreen = document.getElementById('login-screen');
       var sname = document.getElementById('sname');
