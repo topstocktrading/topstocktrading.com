@@ -454,6 +454,31 @@
 .notif-item-title{font-size:12px;color:#c8d4c8;font-weight:500;margin-bottom:3px;line-height:1.4;}
 .notif-item-date{font-size:10px;color:#3a5a3a;}
 .notif-empty{padding:16px 14px;font-size:12px;color:#3a5a3a;text-align:center;}
+
+/* Admin panel tabs */
+.adm-tab{background:none;border:none;border-bottom:2px solid transparent;padding:0 14px;height:50px;color:#3a5a3a;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap;}
+.adm-tab:hover{color:#8aad8a;}
+.adm-tab.active{color:#22c55e;border-bottom-color:#22c55e;}
+.adm-metric{background:#0e1314;border:1px solid #1a2020;border-radius:10px;padding:18px;}
+.adm-metric-val{font-family:Rajdhani,sans-serif;font-size:30px;font-weight:700;}
+.adm-metric-label{font-size:10px;color:#2a4a2a;text-transform:uppercase;letter-spacing:2px;margin-top:3px;}
+.adm-panel{background:#0e1314;border:1px solid #1a2020;border-radius:10px;padding:18px;margin-bottom:14px;}
+.adm-sh{font-size:10px;font-weight:700;letter-spacing:3px;color:#2a4a2a;text-transform:uppercase;margin-bottom:12px;margin-top:24px;}
+.adm-sh:first-child{margin-top:0;}
+.adm-tbl{width:100%;border-collapse:collapse;background:#0e1314;border:1px solid #1a2020;border-radius:10px;overflow:hidden;}
+.adm-tbl th{background:#080c0c;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#2a5a2a;text-transform:uppercase;padding:9px 12px;text-align:left;border-bottom:1px solid #1a2020;}
+.adm-tbl td{padding:9px 12px;border-bottom:1px solid #080c0c;font-size:12px;color:#6a8a6a;}
+.adm-tbl tr:last-child td{border-bottom:none;}
+.adm-tbl tr:hover td{background:rgba(34,197,94,0.02);}
+.adm-input{width:100%;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:9px 12px;color:#c8d4c8;font-size:13px;outline:none;font-family:'DM Sans',sans-serif;margin-bottom:10px;}
+.adm-input:focus{border-color:#1e3a1e;}
+.adm-btn{background:#22c55e;color:#000;border:none;border-radius:8px;padding:8px 18px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:0.5px;}
+.adm-btn:hover{background:#16a34a;}
+.adm-status{font-size:12px;color:#2a4a2a;margin-left:10px;}
+.adm-dropzone{border:1.5px dashed #1a2020;border-radius:8px;padding:22px;text-align:center;cursor:pointer;color:#2a4a2a;font-size:13px;transition:border-color 0.2s;}
+.adm-dropzone:hover,.adm-dropzone.drag{border-color:#22c55e;color:#4ab44a;}
+.adm-card{background:#0e1314;border:1px solid rgba(212,175,55,0.15);border-radius:10px;padding:14px;}
+.adm-search{background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:8px 12px;color:#c8d4c8;font-size:13px;outline:none;width:220px;font-family:'DM Sans',sans-serif;margin-bottom:14px;}
 </style>
 
 </head>
@@ -501,7 +526,30 @@
   <main class="main" id="mc"></main>
 </div>
 
+<!-- ADMIN PANEL — only shown for h@topstocktrading.com -->
+<div id="adminPanel" style="display:none;min-height:100vh;background:#07090a;">
 
+  <!-- Admin Nav -->
+  <nav style="background:#0e1314;border-bottom:1px solid #1a2020;padding:0 24px;display:flex;align-items:center;gap:0;height:50px;">
+    <div style="font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:3px;color:#fff;margin-right:28px;">TST <span style="color:#22c55e;">ADMIN</span></div>
+    <button class="adm-tab active" onclick="admTab('overview',this)">Overview</button>
+    <button class="adm-tab" onclick="admTab('students',this)">Students</button>
+    <button class="adm-tab" onclick="admTab('tenk',this)">10K Members</button>
+    <button class="adm-tab" onclick="admTab('messages',this)">Messages</button>
+    <button class="adm-tab" onclick="admTab('notify',this)">Notifications</button>
+    <button class="adm-tab" onclick="admTab('upload',this)">Upload Images</button>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:14px;">
+      <span style="font-size:12px;color:#2a4a2a;">h@topstocktrading.com</span>
+      <button onclick="doLogout()" style="background:none;border:1px solid #1a2020;color:#4a6a4a;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">Log Out</button>
+    </div>
+  </nav>
+
+  <!-- Admin Body -->
+  <div style="padding:28px;max-width:1200px;margin:0 auto;" id="admBody">
+    <div style="text-align:center;padding:60px;color:#2a4a2a;">Loading...</div>
+  </div>
+
+</div>
 
 <button class="ai-fab" onclick="toggleChat()">🤖 Ask TST AI</button>
 <div class="ai-panel" id="aip">
@@ -1452,6 +1500,328 @@ document.addEventListener('click', function(e) {
     if (dd) dd.className = 'notif-dropdown';
   }
 });
+
+// ── ADMIN PANEL ──────────────────────────────────────────────────────────
+
+var _admStudents = [], _admMessages = [], _admNotifs = [];
+
+async function showAdminPanel() {
+  // Hide course, show admin
+  var appDiv = document.querySelector('.app');
+  if (appDiv) appDiv.style.display = 'none';
+  var loginDiv = document.getElementById('login-screen');
+  if (loginDiv) loginDiv.style.display = 'none';
+  var adminDiv = document.getElementById('adminPanel');
+  if (adminDiv) adminDiv.style.display = 'block';
+
+  await admLoadAll();
+  admTab('overview', document.querySelector('.adm-tab'));
+}
+
+async function admLoadAll() {
+  var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+  if (!sb) return;
+  var results = await Promise.all([
+    sb.from('users').select('*').order('created_at', {ascending:false}),
+    sb.from('quiz_results').select('*'),
+    sb.from('messages').select('*').order('created_at', {ascending:false}),
+    sb.from('user_tiers').select('*'),
+    sb.from('notifications').select('*').order('created_at', {ascending:false}).limit(30),
+  ]);
+  var users   = results[0].data || [];
+  var quizzes = results[1].data || [];
+  var msgs    = results[2].data || [];
+  var tiers   = results[3].data || [];
+  _admNotifs  = results[4].data || [];
+  _admMessages = msgs;
+  _admStudents = users.map(function(u) {
+    var uq = quizzes.filter(function(q){ return q.user_id===u.id; });
+    var um = msgs.filter(function(m){ return m.user_id===u.id; });
+    var td = tiers.find(function(t){ return t.user_id===u.id; });
+    var tier = (td&&td.tier)||u.tier||'base';
+    var avg = uq.length ? Math.round(uq.reduce(function(s,q){return s+q.score;},0)/uq.length) : null;
+    var retakes = uq.reduce(function(s,q){return s+(q.attempts>1?q.attempts-1:0);},0);
+    var worst = uq.length ? uq.slice().sort(function(a,b){return a.score-b.score;})[0] : null;
+    var unread = um.filter(function(m){return !m.read&&m.sender==='member';}).length;
+    return {id:u.id,email:u.email||'Unknown',tier:tier,quizzes:uq,messages:um,avg:avg,retakes:retakes,worst:worst,unread:unread,joined:u.created_at};
+  });
+}
+
+function admTab(tab, btn) {
+  document.querySelectorAll('.adm-tab').forEach(function(b){b.classList.remove('active');});
+  if (btn) btn.classList.add('active');
+  var body = document.getElementById('admBody');
+  if (!body) return;
+  if (tab==='overview')  admOverview(body);
+  if (tab==='students')  admStudents(body);
+  if (tab==='tenk')      admTenk(body);
+  if (tab==='messages')  admMessages(body);
+  if (tab==='notify')    admNotify(body);
+  if (tab==='upload')    admUpload(body);
+}
+
+function admMetric(label, val, color) {
+  return '<div class="adm-metric"><div class="adm-metric-val" style="color:'+color+';">'+val+'</div><div class="adm-metric-label">'+label+'</div></div>';
+}
+function admScoreColor(avg) { return avg===null?'#2a4a2a':avg>=85?'#22c55e':avg>=70?'#fbbf24':'#ef4444'; }
+function admTierBadge(tier) {
+  return tier==='10k'
+    ? '<span style="background:rgba(212,175,55,0.12);color:#d4af37;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">⭐ 10K</span>'
+    : '<span style="background:rgba(34,197,94,0.08);color:#4ab44a;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">Base</span>';
+}
+function admFmtDate(d) { return d ? new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'; }
+
+function admOverview(body) {
+  var total   = _admStudents.length;
+  var tenk    = _admStudents.filter(function(s){return s.tier==='10k';}).length;
+  var strugg  = _admStudents.filter(function(s){return s.avg!==null&&s.avg<70;}).length;
+  var unread  = _admStudents.reduce(function(n,s){return n+s.unread;},0);
+
+  var h = '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;">';
+  h += admMetric('Course Members', total, '#22c55e');
+  h += admMetric('10K Members', tenk, '#d4af37');
+  h += admMetric('Struggling <70%', strugg, '#ef4444');
+  h += admMetric('Unread Messages', unread, '#60a5fa');
+  h += '</div>';
+
+  h += '<div class="adm-sh">Recent Notifications</div>';
+  h += '<div class="adm-panel">';
+  h += _admNotifs.length ? _admNotifs.slice(0,5).map(function(n){
+    return '<div style="padding:8px 0;border-bottom:1px solid #0d1212;font-size:12px;"><span style="color:#8aad8a;">'+n.title+'</span> <span style="color:#2a4a2a;margin-left:8px;">'+admFmtDate(n.created_at)+'</span></div>';
+  }).join('') : '<div style="font-size:13px;color:#2a4a2a;">No notifications yet.</div>';
+  h += '</div>';
+
+  h += '<div class="adm-sh">All Students</div>';
+  h += admBuildTable(_admStudents.slice(0,15));
+  body.innerHTML = h;
+}
+
+function admBuildTable(students) {
+  if (!students.length) return '<div style="color:#2a4a2a;font-size:13px;padding:16px;">No students.</div>';
+  var h = '<table class="adm-tbl"><thead><tr>';
+  ['Email','Tier','Sections','Avg Score','Retakes','Weakest','Unread'].forEach(function(c){h+='<th>'+c+'</th>';});
+  h += '</tr></thead><tbody>';
+  students.forEach(function(s) {
+    h += '<tr>';
+    h += '<td style="color:#c8d4c8;">'+s.email+'</td>';
+    h += '<td>'+admTierBadge(s.tier)+'</td>';
+    h += '<td>'+s.quizzes.length+'</td>';
+    h += '<td>'+(s.avg!==null?'<span style="font-weight:700;color:'+admScoreColor(s.avg)+';">'+s.avg+'%</span>':'<span style="color:#2a4a2a;">—</span>')+'</td>';
+    h += '<td>'+(s.retakes>0?'<span style="color:#fbbf24;font-weight:700;">'+s.retakes+'</span>':'<span style="color:#2a4a2a;">0</span>')+'</td>';
+    h += '<td>'+(s.worst?'<span style="color:'+(s.worst.score<70?'#ef4444':'#fbbf24')+';">'+s.worst.section+' ('+s.worst.score+'%)</span>':'—')+'</td>';
+    h += '<td>'+(s.unread>0?'<span style="color:#ef4444;font-weight:700;">'+s.unread+'</span>':'<span style="color:#2a4a2a;">0</span>')+'</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  return h;
+}
+
+function admStudents(body) {
+  var h = '<input class="adm-search" id="admSearch" placeholder="Search by email..." oninput="admFilterStudents(this.value)">';
+  h += '<div id="admTable">'+admBuildTable(_admStudents)+'</div>';
+  body.innerHTML = h;
+}
+
+function admFilterStudents(q) {
+  var f = _admStudents.filter(function(s){return s.email.toLowerCase().includes(q.toLowerCase());});
+  document.getElementById('admTable').innerHTML = admBuildTable(f);
+}
+
+function admTenk(body) {
+  var tenk = _admStudents.filter(function(s){return s.tier==='10k';});
+  var h = '<div class="adm-sh">10K Members ('+tenk.length+' / 20)</div>';
+  if (!tenk.length) { h += '<div style="color:#2a4a2a;font-size:13px;">No 10K members yet.</div>'; body.innerHTML=h; return; }
+  h += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">';
+  tenk.forEach(function(s) {
+    h += '<div class="adm-card">';
+    h += '<div style="font-size:13px;font-weight:600;color:#e8f0e8;margin-bottom:10px;word-break:break-all;">'+s.email+'</div>';
+    h += '<div style="display:flex;gap:8px;margin-bottom:8px;">';
+    var statStyle = 'background:#07090a;border-radius:6px;padding:8px;text-align:center;flex:1;';
+    h += '<div style="'+statStyle+'"><div style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:'+admScoreColor(s.avg)+';">'+(s.avg!==null?s.avg+'%':'—')+'</div><div style="font-size:9px;color:#2a4a2a;text-transform:uppercase;letter-spacing:1px;">Score</div></div>';
+    h += '<div style="'+statStyle+'"><div style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:#4ab44a;">'+s.quizzes.length+'</div><div style="font-size:9px;color:#2a4a2a;text-transform:uppercase;letter-spacing:1px;">Sections</div></div>';
+    h += '<div style="'+statStyle+'"><div style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:'+(s.unread>0?'#ef4444':'#4ab44a')+';">'+s.unread+'</div><div style="font-size:9px;color:#2a4a2a;text-transform:uppercase;letter-spacing:1px;">Unread</div></div>';
+    h += '</div>';
+    if (s.worst) h += '<div style="font-size:11px;color:#3a5a3a;margin-bottom:10px;">Weakest: '+s.worst.section+' ('+s.worst.score+'%)</div>';
+    h += '<button onclick="admViewMsgs(''+s.id+'')" style="background:#0a0f0a;border:1px solid #1a2020;color:#4ab44a;font-size:11px;font-weight:700;padding:5px 12px;border-radius:6px;cursor:pointer;">Messages →</button>';
+    h += '</div>';
+  });
+  h += '</div>';
+  body.innerHTML = h;
+}
+
+function admMessages(body, filterUid) {
+  var memberMsgs = _admMessages.filter(function(m){return m.sender==='member';});
+  var byUser = {};
+  memberMsgs.forEach(function(m){if(!byUser[m.user_id])byUser[m.user_id]=[];byUser[m.user_id].push(m);});
+  var userIds = filterUid ? [filterUid] : Object.keys(byUser);
+
+  var h = '<div class="adm-sh">Student Messages</div>';
+  if (!userIds.length) { h += '<div style="color:#2a4a2a;font-size:13px;">No messages yet.</div>'; body.innerHTML=h; return; }
+
+  userIds.forEach(function(uid) {
+    var student = _admStudents.find(function(s){return s.id===uid;});
+    var email = student ? student.email : uid.substring(0,8)+'...';
+    var thread = _admMessages.filter(function(m){return m.user_id===uid;}).sort(function(a,b){return new Date(a.created_at)-new Date(b.created_at);});
+    h += '<div class="adm-panel" style="margin-bottom:12px;">';
+    h += '<div style="font-size:13px;font-weight:700;color:#c8d4c8;margin-bottom:10px;">'+email+'</div>';
+    h += '<div style="max-height:200px;overflow-y:auto;margin-bottom:10px;">';
+    thread.forEach(function(m) {
+      var isMe = m.sender==='tst';
+      h += '<div style="display:flex;justify-content:'+(isMe?'flex-end':'flex-start')+';margin-bottom:6px;">';
+      h += '<div style="background:'+(isMe?'#0d1f0d':'#080c0c')+';border:1px solid '+(isMe?'#1a3a1a':'#1a2020')+';border-radius:8px;padding:8px 11px;max-width:80%;font-size:12px;color:'+(isMe?'#4ab44a':'#8aad8a')+';line-height:1.5;">';
+      h += m.content;
+      h += '<div style="font-size:10px;color:#2a4a2a;margin-top:3px;">'+admFmtDate(m.created_at)+'</div>';
+      h += '</div></div>';
+    });
+    h += '</div>';
+    h += '<div style="display:flex;gap:8px;">';
+    h += '<input id="admReply-'+uid+'" placeholder="Reply..." style="flex:1;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:7px 11px;color:#c8d4c8;font-size:12px;outline:none;font-family:DM Sans,sans-serif;">';
+    h += '<button onclick="admSendReply(''+uid+'')" class="adm-btn">Send</button>';
+    h += '</div></div>';
+  });
+  body.innerHTML = h;
+}
+
+function admViewMsgs(uid) {
+  document.querySelectorAll('.adm-tab').forEach(function(b){b.classList.remove('active');});
+  var tabs = document.querySelectorAll('.adm-tab');
+  if (tabs[3]) tabs[3].classList.add('active');
+  admMessages(document.getElementById('admBody'), uid);
+}
+
+async function admSendReply(userId) {
+  var input = document.getElementById('admReply-'+userId);
+  var content = input ? input.value.trim() : '';
+  if (!content) return;
+  var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+  if (!sb) return;
+  try {
+    await sb.from('messages').insert({user_id:userId, sender:'tst', content:content});
+    await sb.from('messages').update({read:true}).eq('user_id',userId).eq('sender','member');
+    if (input) input.value = '';
+    await admLoadAll();
+    admMessages(document.getElementById('admBody'));
+  } catch(e) { alert('Error: '+e.message); }
+}
+
+function admNotify(body) {
+  var h = '<div class="adm-sh">Post Notification</div>';
+  h += '<div class="adm-panel">';
+  h += '<input class="adm-input" id="admNotifTitle" placeholder="e.g. New live trade added — NVDA breakout">';
+  h += '<div style="display:flex;align-items:center;">';
+  h += '<button class="adm-btn" onclick="admPostNotif()">Post to All Students</button>';
+  h += '<span class="adm-status" id="admNotifStatus"></span>';
+  h += '</div></div>';
+  h += '<div class="adm-sh">History</div>';
+  h += '<div class="adm-panel">';
+  h += _admNotifs.length ? _admNotifs.map(function(n){
+    return '<div style="padding:8px 0;border-bottom:1px solid #0d1212;font-size:12px;"><span style="color:#8aad8a;">'+n.title+'</span><span style="color:#2a4a2a;margin-left:10px;">'+admFmtDate(n.created_at)+'</span></div>';
+  }).join('') : '<div style="font-size:13px;color:#2a4a2a;">None yet.</div>';
+  h += '</div>';
+  body.innerHTML = h;
+}
+
+async function admPostNotif() {
+  var title = (document.getElementById('admNotifTitle')||{}).value||'';
+  var status = document.getElementById('admNotifStatus');
+  if (!title.trim()) { if(status) status.textContent='Enter a title first.'; return; }
+  var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+  if (!sb) return;
+  try {
+    await sb.from('notifications').insert({title:title.trim()});
+    if(status){status.style.color='#22c55e';status.textContent='✓ Posted';}
+    document.getElementById('admNotifTitle').value='';
+    await admLoadAll();
+    setTimeout(function(){if(status)status.textContent='';},3000);
+  } catch(e){ if(status){status.style.color='#ef4444';status.textContent='Error: '+e.message;} }
+}
+
+var ADM_LESSONS = [
+  {id:'a6-0',name:'Kill Candles'},{id:'a6-1',name:'Fake 2nd Higher Lows'},
+  {id:'a6-2',name:'Stop Loss Hunts'},{id:'a6-3',name:'Trapped Shorts'},
+  {id:'a6-4',name:'Weak Second Legs'},{id:'a6-5',name:'Staircase Up Elevator Down'},
+  {id:'a6-6',name:'Repeated vs Slow Resistance Attacks'},{id:'a6-8',name:'Accumulation vs Distribution'},
+  {id:'a6-9',name:'Gap Holds & Power Hour'},{id:'a6-10',name:'Liquidity Sweeps'},
+  {id:'a6-gdbf',name:'Gap Down Bear Flags'},{id:'a6-blue',name:'Blue Sky Setup'},
+  {id:'a6-er2',name:'ER Day 2'},{id:'a6-mflush',name:'Morning Flush'},
+  {id:'a6-gtr',name:'Green to Red & Vice Versa'},{id:'a6-bt',name:'Bull Trap & Bear Trap'},
+  {id:'a6-11',name:'V-Shape Recovery'},{id:'a6-btfs',name:'Best Trades Rarely Full Size'},
+  {id:'a6-pw',name:'Pyramiding Winners'},{id:'a6-mr',name:'Mean Reversion'},
+  {id:'a6-es',name:'Exhaustion Signals'},{id:'a6-wl',name:'Washout Longs'},
+  {id:'lt-flags',name:'Live: Flag & Pennant'},{id:'lt-breakouts',name:'Live: Breakouts'},
+  {id:'lt-dips',name:'Live: Dip Buys'},{id:'lt-smallcap',name:'Live: Small Cap'},
+  {id:'lt-options',name:'Live: Options'},{id:'lt-sweeps',name:'Live: Liquidity Sweeps'},
+  {id:'lt-vshape',name:'Live: V-Shape Recovery'},
+  {id:'b6-1',name:'Chart: Flags & Pennants'},{id:'b6-2',name:'Chart: Triangles'},
+  {id:'b6-3',name:'Chart: Reversals'},{id:'b6-4',name:'Chart: Head & Shoulders'},
+  {id:'b6-5',name:'Chart: Double Tops & Bottoms'},{id:'b6-6',name:'Chart: Cups & Handles'},
+  {id:'n3-0',name:'The Opening Range'},{id:'n-opening',name:'The Opening Drive'},
+];
+
+function admUpload(body) {
+  var opts = ADM_LESSONS.map(function(l){return '<option value="'+l.id+'">'+l.name+'</option>';}).join('');
+  var h = '<div class="adm-sh">Upload Lesson Image</div>';
+  h += '<div class="adm-panel">';
+  h += '<div style="font-size:12px;color:#2a4a2a;margin-bottom:12px;">Files are named automatically as <code style="color:#4ab44a;">lessonID-N.ext</code></div>';
+  h += '<div style="display:flex;gap:10px;margin-bottom:10px;">';
+  h += '<select id="admLesson" class="adm-input" style="margin:0;flex:1;">'+opts+'</select>';
+  h += '<input type="number" id="admImgNum" value="1" min="1" max="20" style="width:64px;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:9px;color:#c8d4c8;font-size:13px;outline:none;text-align:center;">';
+  h += '</div>';
+  h += '<div class="adm-dropzone" id="admDropzone" onclick="document.getElementById('admFile').click()">Drop image here or click to browse</div>';
+  h += '<input type="file" id="admFile" accept="image/*" style="display:none;" onchange="admUploadImg(this)">';
+  h += '<div id="admUpStatus" style="font-size:12px;color:#2a4a2a;margin-top:8px;"></div>';
+  h += '</div>';
+
+  h += '<div class="adm-sh">Add Caption (optional)</div>';
+  h += '<div class="adm-panel">';
+  h += '<div style="font-size:12px;color:#2a4a2a;margin-bottom:10px;">Caption appears below the image in the lesson</div>';
+  h += '<textarea id="admCaption" placeholder="Describe what the student should notice in this chart..." style="width:100%;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:10px 12px;color:#c8d4c8;font-size:13px;outline:none;resize:vertical;min-height:72px;font-family:DM Sans,sans-serif;margin-bottom:10px;"></textarea>';
+  h += '<button class="adm-btn" onclick="admUploadCaption()">Save Caption</button>';
+  h += '<span class="adm-status" id="admCaptionStatus"></span>';
+  h += '</div>';
+  body.innerHTML = h;
+
+  var dz = document.getElementById('admDropzone');
+  if (dz) {
+    dz.addEventListener('dragover', function(e){e.preventDefault();dz.classList.add('drag');});
+    dz.addEventListener('dragleave', function(){dz.classList.remove('drag');});
+    dz.addEventListener('drop', function(e){e.preventDefault();dz.classList.remove('drag');var f=e.dataTransfer.files[0];if(f)admDoUpload(f);});
+  }
+}
+
+function admUploadImg(input) { if(input.files[0]) admDoUpload(input.files[0]); }
+
+async function admDoUpload(file) {
+  var lid    = (document.getElementById('admLesson')||{}).value||'';
+  var num    = (document.getElementById('admImgNum')||{}).value||'1';
+  var status = document.getElementById('admUpStatus');
+  var ext    = file.name.split('.').pop().toLowerCase();
+  var fname  = lid+'-'+num+'.'+ext;
+  if(status){status.style.color='#fbbf24';status.textContent='Uploading '+fname+'...';}
+  var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+  if (!sb) return;
+  try {
+    var r = await sb.storage.from('lesson-charts').upload(fname, file, {upsert:true});
+    if(r.error) throw r.error;
+    if(status){status.style.color='#22c55e';status.textContent='✓ Uploaded: '+fname;}
+  } catch(e){if(status){status.style.color='#ef4444';status.textContent='Error: '+e.message;}}
+}
+
+async function admUploadCaption() {
+  var lid    = (document.getElementById('admLesson')||{}).value||'';
+  var num    = (document.getElementById('admImgNum')||{}).value||'1';
+  var text   = (document.getElementById('admCaption')||{}).value||'';
+  var status = document.getElementById('admCaptionStatus');
+  if(!text.trim()){if(status)status.textContent='Enter a caption first.';return;}
+  var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+  if (!sb) return;
+  try {
+    var blob = new Blob([text],{type:'text/plain'});
+    var r = await sb.storage.from('lesson-charts').upload(lid+'-'+num+'.txt', blob, {upsert:true,contentType:'text/plain'});
+    if(r.error) throw r.error;
+    if(status){status.style.color='#22c55e';status.textContent='✓ Saved';}
+  } catch(e){if(status){status.style.color='#ef4444';status.textContent='Error: '+e.message;}}
+}
 
 </script>
 
