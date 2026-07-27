@@ -90,7 +90,8 @@ var TST_PROFILE = {
       ? '<button class="tst-tab" style="color:#d4af37;" onclick="TST_PROFILE.switchTab(\'tenk\', this)">⭐ 10K Members</button>'
       : '';
 
-    var isAdmin = (await this.getUser()) && (await this.getUser()).email === 'h@topstocktrading.com';
+    var _u = window._currentUser || (await this.getUser());
+    var isAdmin = _u && _u.email === 'h@topstocktrading.com';
     var adminTabHtml = isAdmin
       ? '<button class="tst-tab" style="color:#ef4444;margin-left:auto;" onclick="TST_PROFILE.switchTab(\'admin\', this)">⚡ Admin</button>'
       : '';
