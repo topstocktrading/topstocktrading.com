@@ -980,6 +980,7 @@
           </ul>
           <div class="course-price">
             <div class="price-num">$10,000</div>
+            <div id="elite-spots-counter" style="font-size:12px;color:#d4af37;font-weight:700;margin-top:4px;"></div>
             <div class="price-period">one-time</div>
           </div>
           <a href="#" class="btn-course">Apply Now</a>
@@ -1124,6 +1125,33 @@ async function loadYouTubeVideos() {
 }
 loadYouTubeVideos();
 */
+</script>
+
+<script>
+// Fetch elite spots from Supabase
+(function() {
+  var SUPABASE_URL = 'https://jjecwvcxbocogvwsjwmr.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI1MjI1MDUsImV4cCI6MjA1ODA5ODUwNX0.B-3s0yMBPanicpZqP3HsoU2DFn0MIGhMlaxPKwEiHes';
+  fetch(SUPABASE_URL + '/rest/v1/elite_spots?select=total_spots,filled_spots&limit=1', {
+    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY }
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data && data[0]) {
+      var remaining = data[0].total_spots - data[0].filled_spots;
+      var el = document.getElementById('elite-spots-counter');
+      if (el) {
+        if (remaining <= 0) {
+          el.textContent = 'Enrollment closed — join waitlist below';
+          el.style.color = '#ef4444';
+        } else {
+          el.textContent = remaining + ' of 20 spots remaining';
+        }
+      }
+    }
+  })
+  .catch(function() {});
+})();
 </script>
 </body>
 </html>
