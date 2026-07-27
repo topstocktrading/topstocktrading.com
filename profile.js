@@ -88,7 +88,7 @@ var TST_PROFILE = {
 
     var tenKTabHtml = tier === '10k'
       ? '<button class="tst-tab" style="color:#d4af37;" onclick="TST_PROFILE.switchTab(\'tenk\', this)">⭐ 10K Members</button>'
-      : '';
+      : '<button class="tst-tab" style="color:#3a5a3a;cursor:not-allowed;" title="10K Membership required" disabled>🔒 10K Members</button>';
 
 
 
