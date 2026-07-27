@@ -90,11 +90,7 @@ var TST_PROFILE = {
       ? '<button class="tst-tab" style="color:#d4af37;" onclick="TST_PROFILE.switchTab(\'tenk\', this)">⭐ 10K Members</button>'
       : '';
 
-    var _u = window._currentUser || (await this.getUser());
-    var isAdmin = _u && _u.email === 'h@topstocktrading.com';
-    var adminTabHtml = isAdmin
-      ? '<button class="tst-tab" style="color:#ef4444;margin-left:auto;" onclick="TST_PROFILE.switchTab(\'admin\', this)">⚡ Admin</button>'
-      : '';
+
 
     mc.innerHTML =
       '<div style="max-width:880px;">' +
@@ -104,7 +100,6 @@ var TST_PROFILE = {
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
           tenKTabHtml +
-          adminTabHtml +
         '</div>' +
         '<div id="tstTabBody">' +
           '<div style="text-align:center;padding:48px;color:#6b7c6e;">Loading dashboard...</div>' +
@@ -129,7 +124,6 @@ var TST_PROFILE = {
     if (tab === 'notes')     await this.renderNotes(body, tier);
     if (tab === 'messages')  await this.renderMessages(body, tier);
     if (tab === 'tenk')      await this.renderTenK(body, tier);
-    if (tab === 'admin')     await this.renderAdmin(body);
   },
 
   // ============================================================
@@ -738,235 +732,6 @@ var TST_PROFILE = {
       '</div>';
   },
 
-  // ============================================================
-  // ADMIN TAB
-  // ============================================================
-  renderAdmin: async function(body) {
-    body.innerHTML = '<div style="text-align:center;padding:48px;color:#6b7c6e;">Loading admin data...</div>';
-
-    var client = getSupabase();
-    if (!client) { body.innerHTML = '<div style="color:#ef4444;">No Supabase connection.</div>'; return; }
-
-    try {
-      // Fetch all data in parallel
-      var results = await Promise.all([
-        client.from('users').select('*').order('created_at', {ascending: false}),
-        client.from('quiz_results').select('*'),
-        client.from('messages').select('*').order('created_at', {ascending: false}),
-        client.from('user_tiers').select('*'),
-        client.from('notifications').select('*').order('created_at', {ascending: false}).limit(10),
-      ]);
-
-      var users    = results[0].data || [];
-      var quizzes  = results[1].data || [];
-      var messages = results[2].data || [];
-      var tiers    = results[3].data || [];
-      var notifs   = results[4].data || [];
-
-      // Build student map
-      var students = users.map(function(u) {
-        var uq = quizzes.filter(function(q){ return q.user_id === u.id; });
-        var um = messages.filter(function(m){ return m.user_id === u.id; });
-        var td = tiers.find(function(t){ return t.user_id === u.id; });
-        var tier = (td && td.tier) || u.tier || 'base';
-        var avg = uq.length ? Math.round(uq.reduce(function(s,q){ return s+q.score; },0)/uq.length) : null;
-        var retakes = uq.reduce(function(s,q){ return s+(q.attempts>1?q.attempts-1:0); },0);
-        var worst = uq.length ? uq.slice().sort(function(a,b){ return a.score-b.score; })[0] : null;
-        var unread = um.filter(function(m){ return !m.read && m.sender==='member'; }).length;
-        return {id:u.id, email:u.email||'Unknown', tier:tier, quizzes:uq, messages:um, avg:avg, retakes:retakes, worst:worst, unread:unread, joined:u.created_at};
-      });
-
-      var totalStudents = students.length;
-      var tenkMembers   = students.filter(function(s){ return s.tier==='10k'; });
-      var struggling    = students.filter(function(s){ return s.avg!==null && s.avg<70; });
-      var unreadTotal   = students.reduce(function(n,s){ return n+s.unread; },0);
-
-      // Lesson IDs for image upload
-      var lessonIds = [
-        {id:'a6-0',name:'Kill Candles'},{id:'a6-1',name:'Fake 2nd Higher Lows'},
-        {id:'a6-2',name:'Stop Loss Hunts'},{id:'a6-3',name:'Trapped Shorts'},
-        {id:'a6-4',name:'Weak Second Legs'},{id:'a6-5',name:'Staircase Up Elevator Down'},
-        {id:'a6-6',name:'Repeated vs Slow Resistance Attacks'},{id:'a6-8',name:'Accumulation vs Distribution'},
-        {id:'a6-9',name:'Gap Holds & Power Hour'},{id:'a6-10',name:'Liquidity Sweeps'},
-        {id:'a6-gdbf',name:'Gap Down Bear Flags'},{id:'a6-blue',name:'Blue Sky Setup'},
-        {id:'a6-er2',name:'ER Day 2'},{id:'a6-mflush',name:'Morning Flush'},
-        {id:'a6-gtr',name:'Green to Red & Vice Versa'},{id:'a6-bt',name:'Bull Trap & Bear Trap'},
-        {id:'a6-11',name:'V-Shape Recovery'},{id:'a6-btfs',name:'Best Trades Rarely Full Size'},
-        {id:'a6-pw',name:'Pyramiding Winners'},{id:'a6-mr',name:'Mean Reversion'},
-        {id:'a6-es',name:'Exhaustion Signals'},{id:'a6-wl',name:'Washout Longs'},
-        {id:'lt-flags',name:'Live: Flag & Pennant'},{id:'lt-breakouts',name:'Live: Breakouts'},
-        {id:'lt-dips',name:'Live: Dip Buys'},{id:'lt-smallcap',name:'Live: Small Cap'},
-        {id:'lt-options',name:'Live: Options'},{id:'lt-sweeps',name:'Live: Liquidity Sweeps'},
-        {id:'lt-vshape',name:'Live: V-Shape Recovery'},
-      ];
-
-      // Build HTML
-      var S = '<div style="max-width:900px;">';
-
-      // Header
-      S += '<div style="font-family:Rajdhani,sans-serif;font-size:28px;font-weight:700;color:#f0f4f1;margin-bottom:4px;">Admin Panel</div>';
-      S += '<div style="font-size:13px;color:#6b7c6e;margin-bottom:28px;">h@topstocktrading.com — full access</div>';
-
-      // Metric cards
-      S += '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px;">';
-      S += adminMetric('Course Members', totalStudents, '#4ab44a');
-      S += adminMetric('10K Members', tenkMembers.length, '#d4af37');
-      S += adminMetric('Struggling (<70%)', struggling.length, '#ef4444');
-      S += adminMetric('Unread Messages', unreadTotal, '#60a5fa');
-      S += '</div>';
-
-      // ── POST NOTIFICATION ──
-      S += '<div style="background:#111712;border:1px solid #1e2820;border-radius:12px;padding:20px;margin-bottom:20px;">';
-      S += '<div style="font-size:12px;font-weight:700;letter-spacing:2px;color:#4ab44a;text-transform:uppercase;margin-bottom:14px;">Post Notification</div>';
-      S += '<input id="notifTitle" placeholder="Notification title — e.g. New live trade: NVDA breakout" style="width:100%;background:#0a0f0a;border:1px solid #1e2820;border-radius:8px;padding:10px 14px;color:#f0f4f1;font-size:13px;outline:none;margin-bottom:10px;">';
-      S += '<div style="display:flex;gap:10px;">';
-      S += '<button onclick="TST_PROFILE.postNotification()" style="background:#4ab44a;color:#000;border:none;border-radius:8px;padding:10px 20px;font-weight:700;font-size:13px;cursor:pointer;">Post to All Students</button>';
-      S += '<span id="notifStatus" style="font-size:12px;color:#6b7c6e;align-self:center;"></span>';
-      S += '</div>';
-      if (notifs.length) {
-        S += '<div style="margin-top:14px;border-top:1px solid #1a221a;padding-top:14px;">';
-        S += '<div style="font-size:11px;color:#4a6a4a;margin-bottom:8px;">Recent notifications</div>';
-        S += notifs.slice(0,5).map(function(n){
-          return '<div style="font-size:12px;color:#6b7c6e;padding:4px 0;">' +
-            new Date(n.created_at).toLocaleDateString() + ' — ' + n.title + '</div>';
-        }).join('');
-        S += '</div>';
-      }
-      S += '</div>';
-
-      // ── UPLOAD LESSON IMAGE ──
-      S += '<div style="background:#111712;border:1px solid #1e2820;border-radius:12px;padding:20px;margin-bottom:20px;">';
-      S += '<div style="font-size:12px;font-weight:700;letter-spacing:2px;color:#4ab44a;text-transform:uppercase;margin-bottom:14px;">Upload Lesson Image</div>';
-      S += '<div style="display:flex;gap:10px;margin-bottom:10px;">';
-      S += '<select id="uploadLesson" style="flex:1;background:#0a0f0a;border:1px solid #1e2820;border-radius:8px;padding:10px 14px;color:#f0f4f1;font-size:13px;outline:none;">';
-      S += lessonIds.map(function(l){ return '<option value="'+l.id+'">'+l.name+'</option>'; }).join('');
-      S += '</select>';
-      S += '<input type="number" id="uploadImgNum" value="1" min="1" max="10" style="width:70px;background:#0a0f0a;border:1px solid #1e2820;border-radius:8px;padding:10px;color:#f0f4f1;font-size:13px;outline:none;" title="Image number">';
-      S += '</div>';
-      S += '<div id="uploadDropzone" style="border:2px dashed #1e2820;border-radius:8px;padding:28px;text-align:center;cursor:pointer;color:#4a6a4a;font-size:13px;" onclick="document.getElementById('uploadInput').click()">';
-      S += 'Drag & drop image here or click to browse';
-      S += '</div>';
-      S += '<input type="file" id="uploadInput" accept="image/*" style="display:none;" onchange="TST_PROFILE.handleImageUpload(this)">';
-      S += '<div id="uploadStatus" style="font-size:12px;color:#6b7c6e;margin-top:8px;"></div>';
-      S += '</div>';
-
-      // ── 10K MEMBER CARDS ──
-      if (tenkMembers.length) {
-        S += '<div style="font-size:12px;font-weight:700;letter-spacing:2px;color:#d4af37;text-transform:uppercase;margin-bottom:14px;">⭐ 10K Members</div>';
-        S += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:28px;">';
-        tenkMembers.forEach(function(s) {
-          S += '<div style="background:#111712;border:1px solid rgba(212,175,55,0.2);border-radius:10px;padding:16px;">';
-          S += '<div style="font-size:13px;font-weight:700;color:#f0f4f1;margin-bottom:8px;">' + s.email + '</div>';
-          S += '<div style="display:flex;gap:10px;margin-bottom:8px;">';
-          S += '<div style="background:#0a0f0a;border-radius:6px;padding:8px;text-align:center;flex:1;">';
-          S += '<div style="font-size:18px;font-weight:700;color:' + scoreColor(s.avg) + ';">' + (s.avg!==null?s.avg+'%':'—') + '</div>';
-          S += '<div style="font-size:9px;color:#4a6a4a;text-transform:uppercase;letter-spacing:1px;">Avg Score</div></div>';
-          S += '<div style="background:#0a0f0a;border-radius:6px;padding:8px;text-align:center;flex:1;">';
-          S += '<div style="font-size:18px;font-weight:700;color:#4ab44a;">' + s.quizzes.length + '</div>';
-          S += '<div style="font-size:9px;color:#4a6a4a;text-transform:uppercase;letter-spacing:1px;">Sections</div></div>';
-          S += '<div style="background:#0a0f0a;border-radius:6px;padding:8px;text-align:center;flex:1;">';
-          S += '<div style="font-size:18px;font-weight:700;color:' + (s.unread>0?'#ef4444':'#4ab44a') + ';">' + s.unread + '</div>';
-          S += '<div style="font-size:9px;color:#4a6a4a;text-transform:uppercase;letter-spacing:1px;">Unread</div></div>';
-          S += '</div>';
-          if (s.worst) S += '<div style="font-size:11px;color:#6b7c6e;">Weakest: ' + s.worst.section + ' (' + s.worst.score + '%)</div>';
-          S += '</div>';
-        });
-        S += '</div>';
-      }
-
-      // ── ALL STUDENTS TABLE ──
-      S += '<div style="font-size:12px;font-weight:700;letter-spacing:2px;color:#4ab44a;text-transform:uppercase;margin-bottom:14px;">All Students</div>';
-      S += '<div style="background:#111712;border:1px solid #1e2820;border-radius:12px;overflow:hidden;margin-bottom:28px;">';
-      S += '<table style="width:100%;border-collapse:collapse;">';
-      S += '<thead><tr style="background:#0d1a0d;">';
-      ['Email','Tier','Sections','Avg Score','Retakes','Weakest Section','Messages'].forEach(function(h){
-        S += '<th style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:#4ab44a;text-transform:uppercase;padding:10px 14px;text-align:left;border-bottom:1px solid #1e2820;">' + h + '</th>';
-      });
-      S += '</tr></thead><tbody>';
-
-      if (!students.length) {
-        S += '<tr><td colspan="7" style="text-align:center;color:#4a6a4a;padding:28px;font-size:13px;">No students yet.</td></tr>';
-      } else {
-        students.forEach(function(s) {
-          var tierBadge = s.tier==='10k'
-            ? '<span style="background:rgba(212,175,55,0.15);color:#d4af37;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">⭐ 10K</span>'
-            : '<span style="background:rgba(74,180,74,0.1);color:#4ab44a;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;">Base</span>';
-          var avgTxt = s.avg!==null ? '<span style="font-weight:700;color:'+scoreColor(s.avg)+'">'+s.avg+'%</span>' : '<span style="color:#4a6a4a;">—</span>';
-          var retakeTxt = s.retakes>0 ? '<span style="color:#fbbf24;font-weight:700;">'+s.retakes+'</span>' : '<span style="color:#4a6a4a;">0</span>';
-          var worstTxt = s.worst ? '<span style="font-size:11px;color:'+(s.worst.score<70?'#ef4444':'#fbbf24')+';">'+s.worst.section+' ('+s.worst.score+'%)</span>' : '—';
-          var msgTxt = s.unread>0 ? '<span style="color:#ef4444;font-weight:700;">'+s.unread+' unread</span>' : '<span style="color:#4a6a4a;">—</span>';
-          S += '<tr style="border-bottom:1px solid #0d1a0d;">';
-          S += '<td style="padding:10px 14px;font-size:12px;color:#c8d4c8;">'+s.email+'</td>';
-          S += '<td style="padding:10px 14px;">'+tierBadge+'</td>';
-          S += '<td style="padding:10px 14px;font-size:13px;color:#c8d4c8;">'+s.quizzes.length+'</td>';
-          S += '<td style="padding:10px 14px;">'+avgTxt+'</td>';
-          S += '<td style="padding:10px 14px;">'+retakeTxt+'</td>';
-          S += '<td style="padding:10px 14px;">'+worstTxt+'</td>';
-          S += '<td style="padding:10px 14px;">'+msgTxt+'</td>';
-          S += '</tr>';
-        });
-      }
-      S += '</tbody></table></div>';
-      S += '</div>'; // max-width wrapper
-
-      body.innerHTML = S;
-
-      // Wire up drag-drop on dropzone
-      var dz = document.getElementById('uploadDropzone');
-      if (dz) {
-        dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.style.borderColor='#4ab44a'; });
-        dz.addEventListener('dragleave', function(){ dz.style.borderColor='#1e2820'; });
-        dz.addEventListener('drop', function(e){
-          e.preventDefault(); dz.style.borderColor='#1e2820';
-          var f = e.dataTransfer.files[0];
-          if (f) TST_PROFILE.uploadImage(f);
-        });
-      }
-
-    } catch(e) {
-      body.innerHTML = '<div style="color:#ef4444;padding:20px;">Error loading admin data: ' + e.message + '</div>';
-      console.error(e);
-    }
-  },
-
-  postNotification: async function() {
-    var title = (document.getElementById('notifTitle')||{}).value || '';
-    var status = document.getElementById('notifStatus');
-    if (!title.trim()) { if(status) status.textContent = 'Please enter a title.'; return; }
-    try {
-      var client = getSupabase();
-      await client.from('notifications').insert({ title: title.trim() });
-      if (status) { status.style.color='#4ab44a'; status.textContent = '✓ Posted to all students'; }
-      document.getElementById('notifTitle').value = '';
-      setTimeout(function(){ if(status) status.textContent=''; }, 3000);
-    } catch(e) {
-      if (status) { status.style.color='#ef4444'; status.textContent = 'Error: ' + e.message; }
-    }
-  },
-
-  handleImageUpload: async function(input) {
-    var f = input.files[0];
-    if (f) await this.uploadImage(f);
-  },
-
-  uploadImage: async function(file) {
-    var lessonId = (document.getElementById('uploadLesson')||{}).value || '';
-    var imgNum   = (document.getElementById('uploadImgNum')||{}).value || '1';
-    var status   = document.getElementById('uploadStatus');
-    if (!lessonId) { if(status) status.textContent='Pick a lesson first.'; return; }
-    var ext = file.name.split('.').pop().toLowerCase();
-    var filename = lessonId + '-' + imgNum + '.' + ext;
-    if (status) { status.style.color='#fbbf24'; status.textContent = 'Uploading ' + filename + '...'; }
-    try {
-      var client = getSupabase();
-      var { error } = await client.storage.from('lesson-charts').upload(filename, file, { upsert: true });
-      if (error) throw error;
-      if (status) { status.style.color='#4ab44a'; status.textContent = '✓ Uploaded: ' + filename; }
-    } catch(e) {
-      if (status) { status.style.color='#ef4444'; status.textContent = 'Error: ' + e.message; }
-    }
-  },
-
 ,
 
   sendTenkMessage: async function() {
@@ -1472,13 +1237,3 @@ var TST_CSV = {
 window.TST_PROFILE = TST_PROFILE;
 
 
-function adminMetric(label, value, color) {
-  return '<div style="background:#111712;border:1px solid #1e2820;border-radius:10px;padding:18px;text-align:center;">' +
-    '<div style="font-size:26px;font-weight:700;color:' + color + ';">' + value + '</div>' +
-    '<div style="font-size:10px;color:#4a6a4a;text-transform:uppercase;letter-spacing:2px;margin-top:4px;">' + label + '</div>' +
-  '</div>';
-}
-function scoreColor(avg) {
-  if (avg === null) return '#4a6a4a';
-  return avg >= 85 ? '#22c55e' : avg >= 70 ? '#fbbf24' : '#ef4444';
-}
