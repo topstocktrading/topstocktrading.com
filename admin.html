@@ -126,7 +126,9 @@ tr:hover td{background:rgba(34,197,94,0.02);}
       <span id="adminEmail" style="font-size:12px;color:#2a4a2a;"></span>
       <button onclick="doLogout()" style="background:none;border:1px solid #1a2020;color:#3a5a3a;font-size:12px;padding:5px 12px;border-radius:6px;cursor:pointer;font-family:DM Sans,sans-serif;">Log Out</button>
     </div>
-  </nav>
+  
+    <button onclick="openIpPanel()" style="background:#1a3a1a;border:1px solid #2a4a2a;color:#4ab44a;padding:6px 14px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:bold;">&#128272; IP Management</button>
+</nav>
   <div class="app-body" id="appBody">
     <div class="loading">Loading...</div>
   </div>
@@ -699,5 +701,105 @@ function fmtDate(d) {
   return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
 }
 </script>
+
+<!-- IP Management Panel -->
+<div id="ip-panel" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:9999;display:none;align-items:center;justify-content:center;">
+  <div style="background:#1a2a1a;border:1px solid #2a4a2a;border-radius:12px;padding:32px;max-width:500px;width:90%;font-family:Arial,sans-serif;">
+    <div style="font-size:16px;font-weight:bold;color:#e8f0e8;margin-bottom:6px;">&#128272; Device / IP Management</div>
+    <div style="font-size:11px;color:#5a7a5a;margin-bottom:20px;">Look up a member and reset their registered devices.</div>
+    <div style="margin-bottom:12px;">
+      <input id="ip-search-email" type="email" placeholder="Member email address..." 
+        style="width:100%;padding:10px 12px;background:#0d1a0d;border:1px solid #2a4a2a;border-radius:6px;color:#e8f0e8;font-size:13px;box-sizing:border-box;">
+    </div>
+    <button onclick="ipLookup()" style="background:#4ab44a;color:#0d1a0d;font-weight:bold;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-size:13px;width:100%;margin-bottom:16px;">Look Up Member</button>
+    <div id="ip-result" style="display:none;background:#0d1a0d;border:1px solid #1a3a1a;border-radius:8px;padding:16px;margin-bottom:16px;">
+      <div style="font-size:11px;color:#5a7a5a;margin-bottom:8px;">REGISTERED DEVICES</div>
+      <div id="ip-list" style="margin-bottom:12px;"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button onclick="ipClearOne()" id="ip-clear-one-btn" style="background:#d44444;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:12px;">Clear Device 1</button>
+        <button onclick="ipClearAll()" style="background:#9a2020;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:12px;">Clear All Devices</button>
+        <button onclick="ipUnblock()" id="ip-unblock-btn" style="display:none;background:#e8a020;color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:12px;">Unblock Account</button>
+      </div>
+      <div id="ip-action-msg" style="margin-top:10px;font-size:11px;color:#4ab44a;display:none;"></div>
+    </div>
+    <button onclick="document.getElementById('ip-panel').style.display='none'" 
+      style="background:transparent;border:1px solid #2a4a2a;color:#5a7a5a;padding:8px 20px;border-radius:6px;cursor:pointer;font-size:12px;width:100%;">Close</button>
+  </div>
+</div>
+
+<script>
+var _ipCurrentUserId = null;
+var _ipCurrentIps = [];
+
+function openIpPanel() {
+  var p = document.getElementById('ip-panel');
+  p.style.display = 'flex';
+  document.getElementById('ip-result').style.display = 'none';
+  document.getElementById('ip-search-email').value = '';
+  document.getElementById('ip-action-msg').style.display = 'none';
+}
+
+async function ipLookup() {
+  var email = document.getElementById('ip-search-email').value.trim();
+  if (!email) return;
+  var sb = window.getSupabaseClient ? window.getSupabaseClient() : null;
+  if (!sb) { alert('Supabase not loaded'); return; }
+  var { data, error } = await sb.from('users').select('id, full_name, allowed_ips, ip_blocked').eq('email', email).single();
+  if (error || !data) { alert('Member not found: ' + email); return; }
+  _ipCurrentUserId = data.id;
+  _ipCurrentIps = data.allowed_ips || [];
+  var listEl = document.getElementById('ip-list');
+  var blocked = data.ip_blocked === true;
+  listEl.innerHTML = '';
+  if (_ipCurrentIps.length === 0) {
+    listEl.innerHTML = '<div style="color:#5a7a5a;font-size:12px;">No devices registered yet.</div>';
+  } else {
+    _ipCurrentIps.forEach(function(ip, i) {
+      listEl.innerHTML += '<div style="color:#e8f0e8;font-size:12px;padding:4px 0;border-bottom:1px solid #1a3a1a;">Device ' + (i+1) + ': <span style="color:#4ab44a;">' + ip + '</span></div>';
+    });
+  }
+  if (blocked) {
+    listEl.innerHTML += '<div style="color:#d44444;font-size:11px;margin-top:8px;">&#9888; Account is manually blocked</div>';
+    document.getElementById('ip-unblock-btn').style.display = 'inline-block';
+  } else {
+    document.getElementById('ip-unblock-btn').style.display = 'none';
+  }
+  document.getElementById('ip-clear-one-btn').style.display = _ipCurrentIps.length > 0 ? 'inline-block' : 'none';
+  document.getElementById('ip-result').style.display = 'block';
+  document.getElementById('ip-action-msg').style.display = 'none';
+}
+
+async function ipClearOne() {
+  if (!_ipCurrentUserId || _ipCurrentIps.length === 0) return;
+  var newIps = _ipCurrentIps.slice(1);
+  var sb = window.getSupabaseClient();
+  await sb.from('users').update({ allowed_ips: newIps }).eq('id', _ipCurrentUserId);
+  showIpMsg('Device 1 removed. Member can now log in from a new device.');
+  await ipLookup();
+}
+
+async function ipClearAll() {
+  if (!_ipCurrentUserId) return;
+  var sb = window.getSupabaseClient();
+  await sb.from('users').update({ allowed_ips: [], ip_blocked: false }).eq('id', _ipCurrentUserId);
+  showIpMsg('All devices cleared. Member can log in fresh from any 2 devices.');
+  await ipLookup();
+}
+
+async function ipUnblock() {
+  if (!_ipCurrentUserId) return;
+  var sb = window.getSupabaseClient();
+  await sb.from('users').update({ ip_blocked: false }).eq('id', _ipCurrentUserId);
+  showIpMsg('Account unblocked.');
+  await ipLookup();
+}
+
+function showIpMsg(msg) {
+  var el = document.getElementById('ip-action-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+</script>
+
 </body>
 </html>
