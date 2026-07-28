@@ -604,10 +604,10 @@ function renderUpload(body) {
   h += '<div class="panel">';
   h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:14px;">Images are named automatically: <code style="color:#4ab44a;">lessonID-N.jpg</code>. Pick the lesson, set the image number, then drop.</div>';
   h += '<div class="upload-row">';
-  h += '<select class="upload-select" id="upLesson" onchange="document.getElementById('upNum').value=1;" onchange="document.getElementById('upNum').value=1;">';
+  h += '<select class="upload-select" id="upLesson" onchange="var n=_uploadNums[this.value]||1;document.getElementById(\"upNum\").value=n;">';
   h += LESSON_IDS.map(l=>'<option value="'+l.id+'">'+l.name+'</option>').join('');
   h += '</select>';
-  h += '<input class="upload-num" type="number" id="upNum" value="'+(_uploadNums[(LESSON_IDS[0]||{id:''}).id]||1)+'" min="1" max="99">';
+  h += '<input class="upload-num" type="number" id="upNum" value="1" min="1" max="99">';
   h += '</div>';
   h += '<div class="dropzone" id="dropzone" onclick="document.getElementById(\'upFile\').click()">Drop image here or click to browse</div>';
   h += '<input type="file" id="upFile" accept="image/*" style="display:none;" onchange="uploadImg(this)">';
