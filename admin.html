@@ -139,6 +139,7 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const ADMIN_EMAIL = 'h@topstocktrading.com';
 
 let sb, currentTab = 'overview';
+let _uploadNums = {};
 let allStudents = [], allMessages = [], allNotifs = [];
 
 async function doLogin() {
