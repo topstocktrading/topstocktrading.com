@@ -72,8 +72,45 @@
     if (!client) return;
     client.auth.getSession().then(function(result) {
       var session = result.data ? result.data.session : null;
-      if (session && session.user) { showCourse(session.user); }
+      if (session && session.user) { withIpCheck(client, session.user, showCourse); }
     }).catch(function(e) { console.log('Session check failed:', e); });
+  }
+
+
+  async function checkIpAccess(client, userId) {
+    var ip = '';
+    try {
+      var resp = await fetch('https://api.ipify.org?format=json');
+      var ipData = await resp.json();
+      ip = ipData.ip || '';
+    } catch(e) {
+      return { allowed: true, ip: '' };
+    }
+    var { data: userData, error } = await client
+      .from('users')
+      .select('allowed_ips, ip_blocked')
+      .eq('id', userId)
+      .single();
+    if (error || !userData) return { allowed: true, ip };
+    if (userData.ip_blocked === true) return { allowed: false, ip, reason: 'blocked' };
+    var allowedIps = userData.allowed_ips || [];
+    if (allowedIps.includes(ip)) return { allowed: true, ip };
+    if (allowedIps.length < 2) {
+      await client.from('users').update({ allowed_ips: [...allowedIps, ip] }).eq('id', userId);
+      return { allowed: true, ip };
+    }
+    return { allowed: false, ip, reason: 'limit' };
+  }
+
+  function showIpBlockedScreen() {
+    document.body.innerHTML = '<div style="min-height:100vh;background:#0d1a0d;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;padding:20px;"><div style="background:#1a2a1a;border:1px solid #2a4a2a;border-radius:12px;padding:40px;max-width:480px;width:100%;text-align:center;"><div style="font-size:40px;margin-bottom:16px;">&#128274;</div><div style="font-size:22px;font-weight:bold;color:#e8f0e8;margin-bottom:12px;">Device Limit Reached</div><div style="font-size:14px;color:#5a7a5a;line-height:1.7;margin-bottom:24px;">Your account is already registered on 2 devices. Contact support to remove a previous device and access the course from this one.</div><a href="mailto:support@topstocktrading.com?subject=Device%20Limit%20Reset%20Request" style="display:inline-block;background:#4ab44a;color:#0d1a0d;font-weight:bold;font-size:14px;padding:12px 28px;border-radius:8px;text-decoration:none;">Contact Support</a><div style="margin-top:20px;font-size:11px;color:#3a5a3a;">support@topstocktrading.com</div></div></div>';
+  }
+
+  function withIpCheck(client, user, callback) {
+    checkIpAccess(client, user.id).then(function(ipResult) {
+      if (!ipResult.allowed) { showIpBlockedScreen(); return; }
+      callback(user);
+    }).catch(function() { callback(user); });
   }
 
   window.doLogin = function() {
@@ -101,7 +138,7 @@
         if (btn) { btn.textContent = 'Access My Course'; btn.disabled = false; }
         return;
       }
-      showCourse(result.data.user);
+      withIpCheck(client, result.data.user, showCourse);
     }).catch(function(err) {
       if (errEl) { errEl.textContent = 'Login error. Please try again.'; errEl.style.display = 'block'; }
       if (btn) { btn.textContent = 'Access My Course'; btn.disabled = false; }
