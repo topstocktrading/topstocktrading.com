@@ -139,7 +139,6 @@ const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFz
 const ADMIN_EMAIL = 'h@topstocktrading.com';
 
 let sb, currentTab = 'overview';
-var _uploadNums = {}; // track image number per lesson
 let allStudents = [], allMessages = [], allNotifs = [];
 
 async function doLogin() {
@@ -601,29 +600,30 @@ const LESSON_IDS = [
 ];
 
 function renderUpload(body) {
-  const currentLesson = document.getElementById('upLesson') ? document.getElementById('upLesson').value : (LESSON_IDS[0] ? LESSON_IDS[0].id : '');
-  const currentNum = _uploadNums[currentLesson] || 1;
   let h = '<div class="section-head">Upload Lesson Image</div>';
   h += '<div class="panel">';
-  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:14px;">Files named automatically as <code style="color:#4ab44a;">lessonID-N.ext</code>. Number auto-increments after each upload.</div>';
+  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:14px;">Images are named automatically: <code style="color:#4ab44a;">lessonID-N.jpg</code>. Pick the lesson, set the image number, then drop.</div>';
   h += '<div class="upload-row">';
-  h += '<select class="upload-select" id="upLesson" onchange="var n=_uploadNums[this.value]||1;document.getElementById('upNum').value=n;">';
-  h += LESSON_IDS.map(l=>'<option value="'+l.id+'"'+(l.id===currentLesson?' selected':'')+'>'+l.name+'</option>').join('');
+  h += '<select class="upload-select" id="upLesson" onchange="document.getElementById('upNum').value=1;" onchange="document.getElementById('upNum').value=1;">';
+  h += LESSON_IDS.map(l=>'<option value="'+l.id+'">'+l.name+'</option>').join('');
   h += '</select>';
-  h += '<input class="upload-num" type="number" id="upNum" value="'+currentNum+'" min="1" max="99">';
+  h += '<input class="upload-num" type="number" id="upNum" value="'+(_uploadNums[(LESSON_IDS[0]||{id:''}).id]||1)+'" min="1" max="99">';
   h += '</div>';
-  h += '<div class="dropzone" id="dropzone" onclick="document.getElementById('upFile').click()">Drop image here or click to browse</div>';
+  h += '<div class="dropzone" id="dropzone" onclick="document.getElementById(\'upFile\').click()">Drop image here or click to browse</div>';
   h += '<input type="file" id="upFile" accept="image/*" style="display:none;" onchange="uploadImg(this)">';
   h += '<div class="upload-status" id="upStatus"></div>';
   h += '</div>';
-  h += '<div class="section-head">Add Caption (optional)</div>';
+
+  h += '<div class="section-head">Upload Caption (optional)</div>';
   h += '<div class="panel">';
-  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:10px;">Caption appears below the image in the lesson. Saved as <code style="color:#4ab44a;">lessonID-N.txt</code></div>';
-  h += '<textarea id="upCaption" placeholder="Describe what the student should notice in this chart..." style="width:100%;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:10px 14px;color:#e8f0e8;font-size:13px;outline:none;resize:vertical;min-height:80px;font-family:DM Sans,sans-serif;margin-bottom:10px;"></textarea>';
+  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:10px;">Add a text caption that appears below the image in the lesson. Saves as <code style="color:#4ab44a;">lessonID-N.txt</code></div>';
+  h += '<textarea id="upCaption" placeholder="e.g. This is a textbook bull flag on the 5-minute chart. Notice the tight consolidation on declining volume before the breakout..." style="width:100%;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:10px 14px;color:#e8f0e8;font-size:13px;outline:none;resize:vertical;min-height:80px;font-family:DM Sans,sans-serif;margin-bottom:10px;"></textarea>';
   h += '<button class="btn-post" onclick="uploadCaption()">Save Caption</button>';
   h += '<span class="post-status" id="captionStatus"></span>';
   h += '</div>';
+
   body.innerHTML = h;
+
   const dz = document.getElementById('dropzone');
   dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('drag'); });
   dz.addEventListener('dragleave', ()=>dz.classList.remove('drag'));
@@ -633,24 +633,25 @@ function renderUpload(body) {
 function uploadImg(input) { if(input.files[0]) doUpload(input.files[0]); }
 
 async function doUpload(file) {
-  const lessonSel = document.getElementById('upLesson');
-  const numEl = document.getElementById('upNum');
-  const status = document.getElementById('upStatus');
-  if (!lessonSel || !numEl || !status) return;
-  const lessonId = lessonSel.value;
-  // Always read from _uploadNums as source of truth
-  if (!_uploadNums[lessonId]) _uploadNums[lessonId] = 1;
-  const num = _uploadNums[lessonId];
-  const ext = file.name.split('.').pop().toLowerCase();
+  const lessonId = document.getElementById('upLesson').value;
+  const num      = document.getElementById('upNum').value || '1';
+  const status   = document.getElementById('upStatus');
+  const ext      = file.name.split('.').pop().toLowerCase();
   const filename = lessonId + '-' + num + '.' + ext;
   status.style.color='#fbbf24'; status.textContent='Uploading '+filename+'...';
   try {
     const {error} = await sb.storage.from('lesson-charts').upload(filename, file, {upsert:true});
     if(error) throw error;
-    // Increment and save
-    _uploadNums[lessonId] = num + 1;
-    numEl.value = _uploadNums[lessonId];
-    status.style.color='#22c55e'; status.textContent='✓ Uploaded: '+filename+' — next: '+lessonId+'-'+_uploadNums[lessonId]+'.'+ext;
+    status.style.color='#22c55e'; status.textContent='✓ Uploaded: '+filename;
+    // Auto-increment — store in _uploadNums so it survives re-renders
+    var numEl = document.getElementById('upNum');
+    var lessonEl = document.getElementById('upLesson');
+    if (numEl && lessonEl) {
+      var nextNum = parseInt(numEl.value) + 1;
+      _uploadNums[lessonEl.value] = nextNum;
+      numEl.value = nextNum;
+      status.textContent += ' — next will be #' + nextNum;
+    }
   } catch(e) { status.style.color='#ef4444'; status.textContent='Error: '+e.message; }
 }
 
