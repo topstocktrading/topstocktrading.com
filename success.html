@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank You — Top Stock Trading</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0f0a;color:#c8d4c8;font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+.card{background:#0d1a0d;border:1px solid #1e3020;border-radius:16px;padding:48px 40px;max-width:520px;width:100%;text-align:center;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:3px;color:#fff;margin-bottom:4px;}
+.logo span{color:#00d27a;}
+.icon{font-size:48px;margin:20px 0 16px;}
+h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:1px;color:#fff;margin-bottom:10px;}
+.sub{font-size:14px;color:#5a7a5a;line-height:1.7;margin-bottom:28px;}
+.download-btn{display:inline-block;background:#00d27a;color:#0a0c10;font-weight:700;font-size:15px;padding:14px 36px;border-radius:10px;text-decoration:none;cursor:pointer;border:none;margin-bottom:12px;width:100%;}
+.download-btn:hover{background:#00b868;}
+.note{font-size:11px;color:#3a5a3a;margin-top:16px;line-height:1.6;}
+.back{display:inline-block;margin-top:20px;font-size:13px;color:#3a5a3a;text-decoration:none;}
+.back:hover{color:#4ab44a;}
+.hidden{display:none;}
+
+/* Course / SMS specific */
+.access-box{background:#0a120a;border:1px solid #1e3020;border-radius:10px;padding:20px;margin-bottom:20px;text-align:left;}
+.access-box h3{font-size:14px;font-weight:600;color:#e8f0e8;margin-bottom:8px;}
+.access-box p{font-size:12px;color:#5a7a5a;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">TOP <span>STOCK</span> TRADING</div>
+
+  <!-- DEFAULT / LOADING -->
+  <div id="state-loading">
+    <div class="icon">⏳</div>
+    <h1>Processing...</h1>
+    <p class="sub">Please wait a moment.</p>
+  </div>
+
+  <!-- TOOLS (flashcards, scanner, journal, bundle) -->
+  <div id="state-download" class="hidden">
+    <div class="icon">✅</div>
+    <h1>Payment Confirmed!</h1>
+    <p class="sub" id="download-sub">Your download is ready. Click below to save your file.</p>
+    <button class="download-btn" id="download-btn" onclick="triggerDownload()">Download Now</button>
+    <p class="note">Check your Downloads folder after clicking. If the download doesn't start automatically, click the button again.</p>
+  </div>
+
+  <!-- COURSE -->
+  <div id="state-course" class="hidden">
+    <div class="icon">✅</div>
+    <h1>Welcome to TST Academy!</h1>
+    <div class="access-box">
+      <h3>Your account is being set up</h3>
+      <p>You'll receive a confirmation email shortly with your login credentials. Once you receive it, head to <strong>topstocktrading.com/members.html</strong> to access your course.</p>
+    </div>
+    <p class="note">Didn't receive an email within 10 minutes? Contact us at support@topstocktrading.com</p>
+  </div>
+
+  <!-- SMS -->
+  <div id="state-sms" class="hidden">
+    <div class="icon">✅</div>
+    <h1>You're Subscribed!</h1>
+    <div class="access-box">
+      <h3>SMS Alerts Active</h3>
+      <p>You'll start receiving trade alerts via SMS immediately. Make sure your phone number is on file — if you haven't provided it yet, email us at support@topstocktrading.com with your number.</p>
+    </div>
+    <p class="note">Manage or cancel your subscription anytime at topstocktrading.com</p>
+  </div>
+
+  <!-- MENTORSHIP -->
+  <div id="state-mentorship" class="hidden">
+    <div class="icon">✅</div>
+    <h1>Payment Received!</h1>
+    <div class="access-box">
+      <h3>We'll be in touch within 24 hours</h3>
+      <p>Thank you for investing in your trading. We'll reach out to your email to schedule your first session and walk you through how the mentorship works.</p>
+    </div>
+    <p class="note">Questions? Email support@topstocktrading.com</p>
+  </div>
+
+  <a href="/" class="back">← Back to Top Stock Trading</a>
+</div>
+
+<script>
+var PRODUCTS = {
+  flashcards: {
+    sub: 'Your TST Flashcard Deck is ready to download.',
+    file: '/products/TST-Flashcard-Deck.pdf',
+    filename: 'TST-Flashcard-Deck.pdf'
+  },
+  scanner: {
+    sub: 'Your TST Scanner Settings Pack is ready to download.',
+    file: '/products/tst-scanner-pack.pdf',
+    filename: 'TST-Scanner-Settings-Pack.pdf'
+  },
+  journal: {
+    sub: 'Your TST Journal Template is ready to download.',
+    file: '/products/TST-Journal-Template.xlsx',
+    filename: 'TST-Journal-Template.xlsx'
+  },
+  bundle: {
+    sub: 'Your TST Tools Bundle is ready. Click below to download all 3 files.',
+    file: null,
+    filename: null,
+    bundle: true
+  }
+};
+
+var currentProduct = null;
+
+function show(id) {
+  ['state-loading','state-download','state-course','state-sms','state-mentorship'].forEach(function(s) {
+    document.getElementById(s).classList.add('hidden');
+  });
+  document.getElementById(id).classList.remove('hidden');
+}
+
+function triggerDownload() {
+  if (!currentProduct) return;
+
+  if (currentProduct.bundle) {
+    // Download all 3 for bundle
+    var files = [
+      {file: '/products/TST-Flashcard-Deck.pdf', name: 'TST-Flashcard-Deck.pdf'},
+      {file: '/products/tst-scanner-pack.pdf', name: 'TST-Scanner-Settings-Pack.pdf'},
+      {file: '/products/TST-Journal-Template.xlsx', name: 'TST-Journal-Template.xlsx'},
+    ];
+    files.forEach(function(f, i) {
+      setTimeout(function() {
+        var a = document.createElement('a');
+        a.href = f.file;
+        a.download = f.name;
+        a.click();
+      }, i * 1500);
+    });
+    return;
+  }
+
+  var a = document.createElement('a');
+  a.href = currentProduct.file;
+  a.download = currentProduct.filename;
+  a.click();
+}
+
+// Read product from URL
+var params = new URLSearchParams(window.location.search);
+var product = params.get('product');
+
+if (product === 'course') {
+  show('state-course');
+} else if (product === 'sms') {
+  show('state-sms');
+} else if (product === 'mentorship') {
+  show('state-mentorship');
+} else if (PRODUCTS[product]) {
+  currentProduct = PRODUCTS[product];
+  document.getElementById('download-sub').textContent = currentProduct.sub;
+  show('state-download');
+  // Auto-trigger download after 1 second
+  setTimeout(triggerDownload, 1000);
+} else {
+  // Unknown product — show generic thank you
+  show('state-course');
+}
+</script>
+</body>
+</html>
