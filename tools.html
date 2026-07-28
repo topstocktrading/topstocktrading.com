@@ -873,7 +873,7 @@
       <p>150+ digital flashcards covering every setup, pattern, indicator, and concept in the TST curriculum. The fastest way to drill the fundamentals until they are second nature.</p>
       <div class="tool-price">$15 <span>one time</span></div>
       <br>
-      <a href="#" class="buy-btn" onclick="buyProduct('price_1TyJI7HkKhAzFkTCLxJrcfls','flashcards');return false;">Buy Now — $15 →</a>
+      <a href="https://buy.stripe.com/28E8wP7eua0fekje6Y7ss08" class="buy-btn">Buy Now — $15 →</a>
     </div>
 
     <div class="tool-card">
@@ -883,7 +883,7 @@
       <p>Exact scanner configurations for Webull to surface the setups we trade daily. Includes pre-market gap scanner, momentum scanner, and options flow filters.</p>
       <div class="tool-price">$25 <span>one time</span></div>
       <br>
-      <a href="#" class="buy-btn" onclick="buyProduct('price_1TyJIpHkKhAzFkTCDGmBhDFG','scanner');return false;">Buy Now — $25 →</a>
+      <a href="https://buy.stripe.com/aFa5kDdCSegvccbgf67ss07" class="buy-btn">Buy Now — $25 →</a>
     </div>
 
     <div class="tool-card">
@@ -893,7 +893,7 @@
       <p>A detailed Excel trading journal with auto-calculated P&L, win rate, R multiple, and behavioral scorecards. 4 tabs: Trade Log, Dashboard, Weekly Review, and Daily Scorecard.</p>
       <div class="tool-price">$35 <span>one time</span></div>
       <br>
-      <a href="#" class="buy-btn" onclick="buyProduct('price_1TyJJkHkKhAzFkTCxHiPwzof','journal');return false;">Buy Now — $35 →</a>
+      <a href="https://buy.stripe.com/14A28r42i5JZ5NN0g87ss06" class="buy-btn">Buy Now — $35 →</a>
     </div>
 
 
@@ -906,7 +906,7 @@
       <div style="font-size:12px;color:#5a7a5a;text-decoration:line-through;margin-bottom:2px;">$75 separately</div>
       <div class="tool-price" style="color:#4ab44a;">$60 <span>one time</span></div>
       <br>
-      <a href="#" class="buy-btn" style="background:#4ab44a;color:#0d1a0d;border-color:#4ab44a;" onclick="buyProduct('price_1TyJKPHkKhAzFkTCQgnAZ4H2','bundle');return false;">Buy Bundle — $60 →</a>
+      <a href="https://buy.stripe.com/eVqdR92Yefkz8ZZ4wo7ss05" class="buy-btn">Buy Bundle — $60 →</a>
     </div>
 
 
@@ -1030,21 +1030,7 @@
   <p class="disclaimer">Trading involves substantial risk of loss and is not appropriate for all investors. Past performance is not indicative of future results. All content is for educational purposes only and does not constitute financial advice.</p>
 </footer>
 
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-var stripe = Stripe('pk_live_51THszcHkKhAzFkTCK4r9HzSIQmvE4uxtrVp3TeW8o3TvD0CCJdrsFa6hSrbpxIbmaFnOaesDMdWu6pVgftpWJWeq00V32XBn2z');
 
-function buyProduct(priceId, productKey) {
-  stripe.redirectToCheckout({
-    lineItems: [{ price: priceId, quantity: 1 }],
-    mode: priceId === 'price_1TyJFDHkKhAzFkTCMshxwyJ6' ? 'subscription' : 'payment',
-    successUrl: window.location.origin + '/success.html?product=' + productKey,
-    cancelUrl: window.location.href,
-  }).then(function(result) {
-    if (result.error) alert(result.error.message);
-  });
-}
-</script>
 
 </body>
 </html>
