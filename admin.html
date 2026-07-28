@@ -633,24 +633,24 @@ function renderUpload(body) {
 function uploadImg(input) { if(input.files[0]) doUpload(input.files[0]); }
 
 async function doUpload(file) {
-  const lessonId = document.getElementById('upLesson').value;
-  const num      = document.getElementById('upNum').value || '1';
-  const status   = document.getElementById('upStatus');
-  const ext      = file.name.split('.').pop().toLowerCase();
+  const lessonSel = document.getElementById('upLesson');
+  const numEl = document.getElementById('upNum');
+  const status = document.getElementById('upStatus');
+  if (!lessonSel || !numEl || !status) return;
+  const lessonId = lessonSel.value;
+  // Always read from _uploadNums as source of truth
+  if (!_uploadNums[lessonId]) _uploadNums[lessonId] = 1;
+  const num = _uploadNums[lessonId];
+  const ext = file.name.split('.').pop().toLowerCase();
   const filename = lessonId + '-' + num + '.' + ext;
   status.style.color='#fbbf24'; status.textContent='Uploading '+filename+'...';
   try {
     const {error} = await sb.storage.from('lesson-charts').upload(filename, file, {upsert:true});
     if(error) throw error;
-    status.style.color='#22c55e'; status.textContent='✓ Uploaded: '+filename;
-    // Auto-increment image number for next upload
-    var numEl = document.getElementById('upNum');
-    if (numEl) {
-      var nextNum = parseInt(numEl.value) + 1;
-      numEl.value = nextNum;
-      var lessonSel = document.getElementById('upLesson');
-      if (lessonSel) _uploadNums[lessonSel.value] = nextNum;
-    }
+    // Increment and save
+    _uploadNums[lessonId] = num + 1;
+    numEl.value = _uploadNums[lessonId];
+    status.style.color='#22c55e'; status.textContent='✓ Uploaded: '+filename+' — next: '+lessonId+'-'+_uploadNums[lessonId]+'.'+ext;
   } catch(e) { status.style.color='#ef4444'; status.textContent='Error: '+e.message; }
 }
 
