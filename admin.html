@@ -599,12 +599,13 @@ const LESSON_IDS = [
   {id:'tax-0',name:"Tax Basics \u2014 Trader Tax Basics"}
 ];
 
+function admLessonChange(val){ var n=_uploadNums[val]||1; var el=document.getElementById('upNum'); if(el) el.value=n; }
 function renderUpload(body) {
   let h = '<div class="section-head">Upload Lesson Image</div>';
   h += '<div class="panel">';
   h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:14px;">Images are named automatically: <code style="color:#4ab44a;">lessonID-N.jpg</code>. Pick the lesson, set the image number, then drop.</div>';
   h += '<div class="upload-row">';
-  h += '<select class="upload-select" id="upLesson" onchange="var n=_uploadNums[this.value]||1;document.getElementById(\"upNum\").value=n;">';
+  h += '<select class="upload-select" id="upLesson" onchange="admLessonChange(this.value)">';
   h += LESSON_IDS.map(l=>'<option value="'+l.id+'">'+l.name+'</option>').join('');
   h += '</select>';
   h += '<input class="upload-num" type="number" id="upNum" value="1" min="1" max="99">';
