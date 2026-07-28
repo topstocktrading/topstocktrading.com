@@ -640,6 +640,8 @@ async function doUpload(file) {
     const {error} = await sb.storage.from('lesson-charts').upload(filename, file, {upsert:true});
     if(error) throw error;
     status.style.color='#22c55e'; status.textContent='✓ Uploaded: '+filename;
+    // Reset file input so same file can be uploaded again
+    var fi = document.getElementById('upFile'); if(fi) fi.value='';
     // Auto-increment — store in _uploadNums so it survives re-renders
     var numEl = document.getElementById('upNum');
     var lessonEl = document.getElementById('upLesson');
