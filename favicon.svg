@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 68 68" fill="none">
+  <rect width="68" height="68" fill="#0a0f0a" rx="12"/>
+  <defs>
+    <linearGradient id="g" x1="34" y1="0" x2="34" y2="68" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00d27a"/>
+      <stop offset="100%" stop-color="#00a8ff"/>
+    </linearGradient>
+  </defs>
+  <path d="M34 8 L56 17 L56 37 C56 50 34 62 34 62 C34 62 12 50 12 37 L12 17 Z" fill="none" stroke="url(#g)" stroke-width="3" stroke-linejoin="round"/>
+  <text x="34" y="44" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="18" fill="url(#g)">TST</text>
+</svg>
