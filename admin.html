@@ -602,19 +602,26 @@ async function admLessonChange(val) {
   var el = document.getElementById('upNum');
   var statusEl = document.getElementById('upStatus');
   if (!el) return;
-  // First check in-memory cache
   if (_uploadNums[val]) { el.value = _uploadNums[val]; return; }
-  // Query Supabase to find how many images already exist for this lesson
   try {
     if (statusEl) { statusEl.style.color='#4ab44a'; statusEl.textContent='Checking existing images...'; }
-    var { data, error } = await sb.from('lesson-charts').select('num').eq('lesson_id', val).order('num', {ascending: false}).limit(1);
+    // List files in storage bucket with this lesson prefix
+    var { data, error } = await sb.storage.from('lesson-charts').list('', { search: val + '-' });
     var nextNum = 1;
     if (!error && data && data.length > 0) {
-      nextNum = data[0].num + 1;
+      // Filter to only image files for this exact lesson (not captions .txt)
+      var imgs = data.filter(function(f) {
+        return f.name.startsWith(val + '-') && !f.name.endsWith('.txt');
+      });
+      nextNum = imgs.length + 1;
     }
     _uploadNums[val] = nextNum;
     el.value = nextNum;
-    if (statusEl) { statusEl.textContent = nextNum > 1 ? (nextNum - 1) + ' image(s) already uploaded — next will be #' + nextNum : 'No images yet — starting from #1'; }
+    if (statusEl) {
+      statusEl.textContent = nextNum > 1
+        ? (nextNum - 1) + ' image(s) already uploaded — next will be #' + nextNum
+        : 'No images yet — starting from #1';
+    }
   } catch(e) {
     el.value = _uploadNums[val] || 1;
     if (statusEl) statusEl.textContent = '';
