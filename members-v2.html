@@ -1128,23 +1128,40 @@ function getClient() {
 
 // ── IP CHECK ───────────────────────────────────────────
 async function checkIpAccess(userId) {
-  let ip = '';
   try {
-    const r = await fetch('https://api.ipify.org?format=json');
-    const d = await r.json();
-    ip = d.ip || '';
-  } catch(e) { return true; }
-  const client = getClient();
-  const { data, error } = await client.from('users').select('allowed_ips,ip_blocked').eq('id', userId).single();
-  if (error || !data) return true;
-  if (data.ip_blocked) return false;
-  const ips = data.allowed_ips || [];
-  if (ips.includes(ip)) return true;
-  if (ips.length < 2) {
-    await client.from('users').update({ allowed_ips: [...ips, ip] }).eq('id', userId);
-    return true;
+    // Get IP
+    let ip = '';
+    try {
+      const r = await fetch('https://api.ipify.org?format=json');
+      const d = await r.json();
+      ip = d.ip || '';
+    } catch(e) { return true; } // IP fetch failed, allow through
+
+    const client = getClient();
+    // Must use authenticated client -- query with maybeSingle to avoid 406
+    const { data, error } = await client
+      .from('users')
+      .select('allowed_ips, ip_blocked')
+      .eq('id', userId)
+      .maybeSingle();
+
+    // Any error = fail open (allow access, dont punish users for DB issues)
+    if (error || !data) return true;
+    if (data.ip_blocked === true) return false;
+
+    const ips = Array.isArray(data.allowed_ips) ? data.allowed_ips : [];
+    if (ips.includes(ip)) return true;
+    if (ips.length < 2) {
+      // Register this IP
+      await client.from('users')
+        .update({ allowed_ips: [...ips, ip] })
+        .eq('id', userId);
+      return true;
+    }
+    return false; // 2 IPs already registered, this one isnt one of them
+  } catch(e) {
+    return true; // Fail open on any unexpected error
   }
-  return false;
 }
 
 // ── AUTH ───────────────────────────────────────────────
