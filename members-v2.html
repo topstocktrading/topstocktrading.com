@@ -1280,16 +1280,30 @@ async function loadLesson(lessonId, sectionId) {
 }
 
 function getSectionLabel(sectionId) {
-  const labels = {};
-  {"s00": "Course Introduction", "s01": "Trading Fundamentals", "s02": "The Mathematical Foundation of Trading", "s03": "Price Action & Chart Reading", "s04": "Volume & Order Flow", "s05": "Technical Indicators & Oscillators", "s06": "Trader Psychology & Discipline", "s07": "Accounts, Execution & Risk Management", "s08": "Journaling & Self-Analysis", "s09": "Market Structure & Macro Context", "s10": "Daily Market Structure & Intraday Setups", "s11": "Small Cap Dynamics", "s12": "IPO Strategy & First-Day Trading", "s13": "Options Trading", "s14": "Swing Trading", "s15": "Long-Term Investing", "s16": "Personal Rules & Playbook Execution", "s17": "Crypto Trading", "s18": "Futures Trading", "s19": "Live Trades & Ongoing Learning"}.then ? '' : (function() {
-    const map = {"s00": "Course Introduction", "s01": "Trading Fundamentals", "s02": "The Mathematical Foundation of Trading", "s03": "Price Action & Chart Reading", "s04": "Volume & Order Flow", "s05": "Technical Indicators & Oscillators", "s06": "Trader Psychology & Discipline", "s07": "Accounts, Execution & Risk Management", "s08": "Journaling & Self-Analysis", "s09": "Market Structure & Macro Context", "s10": "Daily Market Structure & Intraday Setups", "s11": "Small Cap Dynamics", "s12": "IPO Strategy & First-Day Trading", "s13": "Options Trading", "s14": "Swing Trading", "s15": "Long-Term Investing", "s16": "Personal Rules & Playbook Execution", "s17": "Crypto Trading", "s18": "Futures Trading", "s19": "Live Trades & Ongoing Learning"};
-    return map[sectionId] || '';
-  })();
-  // Inline approach
-  const map = {"s00": "Course Introduction", "s01": "Trading Fundamentals", "s02": "The Mathematical Foundation of Trading", "s03": "Price Action & Chart Reading", "s04": "Volume & Order Flow", "s05": "Technical Indicators & Oscillators", "s06": "Trader Psychology & Discipline", "s07": "Accounts, Execution & Risk Management", "s08": "Journaling & Self-Analysis", "s09": "Market Structure & Macro Context", "s10": "Daily Market Structure & Intraday Setups", "s11": "Small Cap Dynamics", "s12": "IPO Strategy & First-Day Trading", "s13": "Options Trading", "s14": "Swing Trading", "s15": "Long-Term Investing", "s16": "Personal Rules & Playbook Execution", "s17": "Crypto Trading", "s18": "Futures Trading", "s19": "Live Trades & Ongoing Learning"};
+  var map = {
+    "s00": "Course Introduction",
+    "s01": "Trading Fundamentals",
+    "s02": "The Mathematical Foundation of Trading",
+    "s03": "Price Action & Chart Reading",
+    "s04": "Volume & Order Flow",
+    "s05": "Technical Indicators & Oscillators",
+    "s06": "Trader Psychology & Discipline",
+    "s07": "Accounts, Execution & Risk Management",
+    "s08": "Journaling & Self-Analysis",
+    "s09": "Market Structure & Macro Context",
+    "s10": "Daily Market Structure & Intraday Setups",
+    "s11": "Small Cap Dynamics",
+    "s12": "IPO Strategy & First-Day Trading",
+    "s13": "Options Trading",
+    "s14": "Swing Trading",
+    "s15": "Long-Term Investing",
+    "s16": "Personal Rules & Playbook Execution",
+    "s17": "Crypto Trading",
+    "s18": "Futures Trading",
+    "s19": "Live Trades & Ongoing Learning"
+  };
   return map[sectionId] || '';
 }
-
 function renderComingSoon(lessonId) {
   return `<div class="coming-soon">
     <div class="coming-soon-icon">🚧</div>
