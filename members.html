@@ -4004,27 +4004,33 @@ const SVG_EMPTY=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xml
 const SVG_DONE=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="7" cy="7" r="6" stroke="#00d27a" stroke-width="1.5"/><polyline points="4,7 6,9.5 10,4.5" stroke="#00d27a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 function buildSidebar(){
-  var h='';
-  COURSE.forEach(function(sec){
-    var badge=sec.badge||'beginner';
-    var bcolors={beginner:'#4ab44a',intermediate:'#fbbf24',advanced:'#ef4444',options:'#8b5cf6',psychology:'#14b8a6',library:'#00d27a'};
-    var bc=bcolors[badge]||'#4ab44a';
-    var subs=sec.modules||[];
-    var indent=sec.isChild?'padding-left:14px;border-left:2px solid #1e3020;':'';
-    var labelStyle=sec.isChild?'font-size:11px;color:#5a7a5a;':'';
-    h+='<div class="sidebar-section" id="sec-'+sec.id+'" style="'+indent+'">';
-    h+='<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')"><span class="section-badge" style="background:'+bc+'22;color:'+bc+'">'+badge.toUpperCase()+'</span><span class="section-label" style="'+labelStyle+'">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
-    h+='<div class="section-lessons" id="lessons-'+sec.id+'">';
-    subs.forEach(function(m){
-      var isQuiz=m.id.indexOf('quiz')===0;
-      var liStyle=sec.isChild?'padding-left:28px;':'';
-      h+='<div class="lesson-item'+(isQuiz?' quiz-item':'')+'" id="li-'+m.id+'" style="'+liStyle+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')">'+m.name+'</div>';
+  const nav=document.getElementById('snav');nav.innerHTML='';
+  if(window._currentUser&&typeof loadNotifications==='function') loadNotifications();
+  updateProgress();
+  COURSE.forEach(sec=>{
+    const isOpen=openSecs.has(sec.id);
+    const isSecActive=cur===sec.id;
+    const childStyle=sec.isChild?'border-left:3px solid #1e3020;margin-left:0;':'';
+    const childLabelStyle=sec.isChild?'font-size:11px;opacity:0.7;':'';
+    let mHTML='';
+    sec.modules.forEach(mod=>{
+      if(mod.subs){
+        const mo=openMods.has(mod.id);
+        const sHTML=mod.subs.map((s,si)=>{
+          const lid=`${mod.id}-${si}`;
+          return `<div class="sub-item ${cur===lid?'active':''} ${done.has(lid)?'done':''}" onclick="loadLesson('${lid}')">${done.has(lid)?SVG_DONE:SVG_EMPTY}${s}</div>`;
+        }).join('');
+        mHTML+=`<div class="mod-header ${mo?'open':''}" onclick="toggleMod('${mod.id}')"><span class="mod-name">${mod.name}</span><span class="mod-arrow">▶</span></div><div class="sub-list ${mo?'open':''}">${sHTML}</div>`;
+      } else {
+        const childPad=sec.isChild?'padding-left:28px;font-size:11px;':'';
+        mHTML+=`<div class="dir-item ${cur===mod.id?'active':''} ${done.has(mod.id)?'done':''}" onclick="loadLesson('${mod.id}')">${done.has(mod.id)?SVG_DONE:SVG_EMPTY}${mod.name}</div>`;
+      }
     });
-    h+='</div></div>';
+    const d=document.createElement('div');d.className='sec-group';
+    d.innerHTML=`<div class="sec-header ${isOpen?'open':''} ${isSecActive?'active':''}" onclick="toggleSec('${sec.id}')"><span class="sec-badge">${sec.badge}</span><span class="sec-name">${sec.label}</span><span class="sec-arrow">▶</span></div><div class="sec-lessons ${isOpen?'open':''}">${mHTML}</div>`;
+    nav.appendChild(d);
   });
-  document.getElementById('snav').innerHTML=h;
 }
-
 
 function toggleSec(id){
   loadLesson(id);
