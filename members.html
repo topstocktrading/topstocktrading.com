@@ -4005,61 +4005,46 @@ const SVG_DONE=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmln
 
 function buildSidebar(){
   let h = '';
-  let inLibrary = false;
   COURSE.forEach(function(sec){
-    // Detect library parent
-    if(sec.isParent){
-      inLibrary = true;
-      h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
-      h += '<div class="sidebar-section-header" onclick="toggleSection(\''+sec.id+'\')"><span class="section-label" style="font-size:12px;font-weight:700;color:#00d27a;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
-      h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
-      // Add the intro lesson
-      if(sec.modules){
-        sec.modules.forEach(function(m){
-          h += '<div class="lesson-item" id="li-'+m.id+'" onclick="loadLesson(\''+m.id+'\',\''+sec.id+'\')" >'+m.name+'</div>';
-        });
-      }
-      h += '</div></div>';
-      return;
-    }
-    // Detect library child sections — render indented under the library
-    if(sec.isChild){
-      h += '<div class="sidebar-section sidebar-child" id="sec-'+sec.id+'" style="border-left:2px solid #1e3020;margin-left:0;">';
-      h += '<div class="sidebar-section-header" onclick="toggleSection(\''+sec.id+'\')"><span class="section-label" style="font-size:11px;font-weight:600;color:#5a7a5a;padding-left:12px;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
-      h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
-      if(sec.modules){
-        sec.modules.forEach(function(m){
-          h += '<div class="lesson-item" id="li-'+m.id+'" onclick="loadLesson(\''+m.id+'\',\''+sec.id+'\');closeSiblings(\''+sec.id+'\')" style="padding-left:36px;">'+m.name+'</div>';
-        });
-      }
-      h += '</div></div>';
-      return;
-    }
-    // Normal sections
-    inLibrary = false;
     let badge = sec.badge||'beginner';
     let badgeColors = {beginner:'#4ab44a',intermediate:'#fbbf24',advanced:'#ef4444',options:'#8b5cf6',psychology:'#14b8a6'};
     let bc = badgeColors[badge]||'#4ab44a';
-    h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
-    h += '<div class="sidebar-section-header" onclick="toggleSection(\''+sec.id+'\')"><span class="section-badge" style="background:'+bc+'22;color:'+bc+'">'+badge.toUpperCase()+'</span><span class="section-label">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
-    h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
-    if(sec.modules){
-      sec.modules.forEach(function(m){
-        let isQuiz = m.id.startsWith('quiz');
-        h += '<div class="lesson-item'+(isQuiz?' quiz-item':'')+'" id="li-'+m.id+'" onclick="loadLesson(\''+m.id+'\',\''+sec.id+'\')">'+m.name+'</div>';
+
+    if(sec.isParent){
+      // Library parent — render with green label, no badge
+      h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
+      h += '<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')"><span class="section-label" style="font-size:11px;font-weight:700;color:#00d27a;letter-spacing:0.5px;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
+      h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
+      (sec.modules||[]).forEach(function(m){
+        h += '<div class="lesson-item" id="li-'+m.id+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')">'+m.name+'</div>';
       });
+      h += '</div></div>';
+      return;
     }
+
+    if(sec.isChild){
+      // Library child sub-section — indented, muted label, no badge
+      h += '<div class="sidebar-section" id="sec-'+sec.id+'" style="border-left:3px solid #1e3020;">';
+      h += '<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')" style="padding-left:20px;"><span class="section-label" style="font-size:11px;color:#5a7a5a;font-weight:600;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
+      h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
+      (sec.modules||[]).forEach(function(m){
+        h += '<div class="lesson-item" id="li-'+m.id+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')" style="padding-left:40px;font-size:11px;">'+m.name+'</div>';
+      });
+      h += '</div></div>';
+      return;
+    }
+
+    // Normal section
+    h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
+    h += '<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')"><span class="section-badge" style="background:'+bc+'22;color:'+bc+'">'+badge.toUpperCase()+'</span><span class="section-label">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
+    h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
+    (sec.modules||[]).forEach(function(m){
+      let isQuiz = m.id.startsWith('quiz');
+      h += '<div class="lesson-item'+(isQuiz?' quiz-item':'')+'" id="li-'+m.id+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')">'+m.name+'</div>';
+    });
     h += '</div></div>';
   });
-  document.getElementById('sidebar-inner').innerHTML = h;
-}
-
-function closeSiblings(activeId){
-  // When a child section lesson is clicked, expand the parent library section
-  var libEl = document.getElementById('lessons-s-cs');
-  if(libEl && !libEl.classList.contains('open')){
-    toggleSection('s-cs');
-  }
+  document.getElementById('snav').innerHTML = h;
 }
 
 function toggleSec(id){
