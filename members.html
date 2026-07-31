@@ -3737,17 +3737,17 @@ const COURSE=[
     {id:'17-08',name:'Burnout Recognition & Prevention'},
     {id:'quiz-s17',name:'Section Quiz'},
   ]},
-  {id:'s-cs',label:'Historical Trade Analysis Library',badge:'advanced',isParent:true,modules:[
+  {id:'s-cs',label:'Historical Trade Analysis Library',badge:'library',modules:[
     {id:'cs-intro',name:'How to Use This Library'},
   ]},
-  {id:'s-cs-a',label:'Market Crashes & Macro',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-a',isChild:true,label:'Market Crashes & Macro',badge:'advanced',modules:[
     {id:'cs-01',name:'SPY — COVID Crash 2020'},
     {id:'cs-02',name:'SPY — COVID Recovery 2020'},
     {id:'cs-03',name:'QQQ — 2022 Bear Market'},
     {id:'cs-04',name:'SIVB — Silicon Valley Bank Collapse'},
     {id:'cs-05',name:'SPY — Fed Pivot November 2023'},
   ]},
-  {id:'s-cs-b',label:'Momentum & Trend Following',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-b',isChild:true,label:'Momentum & Trend Following',badge:'advanced',modules:[
     {id:'cs-06',name:'NVDA — AI Boom Earnings Blowout to $3T'},
     {id:'cs-07',name:'META — Metaverse Crash Then 400% Recovery'},
     {id:'cs-08',name:'TSLA — 2020 Parabolic Run'},
@@ -3756,7 +3756,7 @@ const COURSE=[
     {id:'cs-11',name:'PLTR — IPO to AI Re-Rating Two Phases'},
     {id:'cs-12',name:'CRWD — Cybersecurity Leadership Trend'},
   ]},
-  {id:'s-cs-c',label:'Bubbles & Crowd Psychology',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-c',isChild:true,label:'Bubbles & Crowd Psychology',badge:'advanced',modules:[
     {id:'cs-13',name:'GME — January 2021 Greatest Short Squeeze Ever'},
     {id:'cs-14',name:'GME — May 2021 Second Squeeze Different Mechanics'},
     {id:'cs-15',name:'AMC — Meme Rally Retail Coordination & Dilution'},
@@ -3764,7 +3764,7 @@ const COURSE=[
     {id:'cs-17',name:'NKLA — Nikola Fraud Allegations Collapse'},
     {id:'cs-18',name:'TLRY — Original Cannabis Mania 2018 Parabolic'},
   ]},
-  {id:'s-cs-d',label:'Earnings & Catalysts',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-d',isChild:true,label:'Earnings & Catalysts',badge:'advanced',modules:[
     {id:'cs-19',name:'NFLX — Subscriber Miss 35% Single Day Drop'},
     {id:'cs-20',name:'GOOGL — ChatGPT Fear Selloff That Reversed'},
     {id:'cs-21',name:'MRNA — Vaccine Catalyst Small Cap to Large Cap'},
@@ -3773,7 +3773,7 @@ const COURSE=[
     {id:'cs-24',name:'JPM — Flight to Quality During Banking Crisis'},
     {id:'cs-25',name:'COIN — Crypto Correlation Case Study Full Cycle'},
   ]},
-  {id:'s-cs-e',label:'Full Market Cycles',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-e',isChild:true,label:'Full Market Cycles',badge:'advanced',modules:[
     {id:'cs-26',name:'ROKU — Pandemic Boom Accumulation to Distribution'},
     {id:'cs-27',name:'UPST — AI Lending Hype to Reality 95% Drawdown'},
     {id:'cs-28',name:'PTON — Peloton Pandemic Winner Full Boom and Bust'},
@@ -3781,7 +3781,7 @@ const COURSE=[
     {id:'cs-30',name:'ARKK — Peak Growth Investing Maximum Optimism'},
     {id:'cs-31',name:'TSLA — 2022 Collapse Distribution Top'},
   ]},
-  {id:'s-cs-f',label:'Sector Rotations',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-f',isChild:true,label:'Sector Rotations',badge:'advanced',modules:[
     {id:'cs-32',name:'NVDA — AI Wave 1: Nvidia Leads the Rotation'},
     {id:'cs-33',name:'AMD — AI Wave 2: Catch-Up Re-Rating'},
     {id:'cs-34',name:'SMCI — AI Wave 3: Infrastructure Explodes'},
@@ -3790,7 +3790,7 @@ const COURSE=[
     {id:'cs-37',name:'SIVB — Banking Rotation: The Collapse'},
     {id:'cs-38',name:'JPM — Banking Rotation: Flight to Quality'},
   ]},
-  {id:'s-cs-g',label:'Technical Pattern Studies',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-g',isChild:true,label:'Technical Pattern Studies',badge:'advanced',modules:[
     {id:'cs-39',name:'NVDA — Multiple Base & Breakout Sequences 2023'},
     {id:'cs-40',name:'AAPL — Blue Sky Breakout All-Time High'},
     {id:'cs-41',name:'QQQ — Staircase Up Elevator Down 2021-2022'},
@@ -3804,7 +3804,7 @@ const COURSE=[
     {id:'cs-49',name:'BABA — Geopolitical Risk Destroying a Trade'},
     {id:'cs-50',name:'USO — Oil Goes Negative Futures Mechanics'},
   ]},
-  {id:'s-cs-h',label:'Recent Analysis',badge:'advanced',isChild:true,modules:[
+  {id:'s-cs-h',isChild:true,label:'Recent Analysis',badge:'advanced',modules:[
     {id:'cs-gld',name:'GLD — Gold Mega Squeeze 2025-2026'},
     {id:'cs-slv',name:'SLV — Silver Mega Squeeze 2025-2026'},
     {id:'cs-dfns',name:'DFNS — Reverse Split Low Float Squeeze 2026'},
@@ -4004,51 +4004,27 @@ const SVG_EMPTY=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xml
 const SVG_DONE=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="7" cy="7" r="6" stroke="#00d27a" stroke-width="1.5"/><polyline points="4,7 6,9.5 10,4.5" stroke="#00d27a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 function buildSidebar(){
-  var h = '';
-  var badgeColors = {beginner:'#4ab44a',intermediate:'#fbbf24',advanced:'#ef4444',options:'#8b5cf6',psychology:'#14b8a6'};
+  var h='';
   COURSE.forEach(function(sec){
-    var badge = sec.badge || 'beginner';
-    var bc = badgeColors[badge] || '#4ab44a';
-
-    if(sec.isParent){
-      h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
-      h += '<div class="sidebar-section-header" onclick="toggleSection(&quot;'+sec.id+'&quot;)"><span class="section-label" style="font-size:11px;font-weight:700;color:#00d27a;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
-      h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
-      (sec.modules||[]).forEach(function(m){
-        h += '<div class="lesson-item" id="li-'+m.id+'" data-lid="'+m.id+'" data-sid="'+sec.id+'" onclick="llClick(this)">'+m.name+'</div>';
-      });
-      h += '</div></div>';
-      return;
-    }
-
-    if(sec.isChild){
-      h += '<div class="sidebar-section" id="sec-'+sec.id+'" style="border-left:3px solid #1e3020;">';
-      h += '<div class="sidebar-section-header" onclick="toggleSection(&quot;'+sec.id+'&quot;)" style="padding-left:20px;"><span class="section-label" style="font-size:11px;color:#5a7a5a;font-weight:600;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
-      h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
-      (sec.modules||[]).forEach(function(m){
-        h += '<div class="lesson-item" id="li-'+m.id+'" data-lid="'+m.id+'" data-sid="'+sec.id+'" onclick="llClick(this)" style="padding-left:40px;font-size:11px;">'+m.name+'</div>';
-      });
-      h += '</div></div>';
-      return;
-    }
-
-    h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
-    h += '<div class="sidebar-section-header" onclick="toggleSection(&quot;'+sec.id+'&quot;)"><span class="section-badge" style="background:'+bc+'22;color:'+bc+'">'+badge.toUpperCase()+'</span><span class="section-label">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
-    h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
-    (sec.modules||[]).forEach(function(m){
-      var isQuiz = m.id.indexOf('quiz') === 0;
-      h += '<div class="lesson-item'+(isQuiz?' quiz-item':'')+'" id="li-'+m.id+'" data-lid="'+m.id+'" data-sid="'+sec.id+'" onclick="llClick(this)">'+m.name+'</div>';
+    var badge=sec.badge||'beginner';
+    var bcolors={beginner:'#4ab44a',intermediate:'#fbbf24',advanced:'#ef4444',options:'#8b5cf6',psychology:'#14b8a6',library:'#00d27a'};
+    var bc=bcolors[badge]||'#4ab44a';
+    var subs=sec.modules||[];
+    var indent=sec.isChild?'padding-left:14px;border-left:2px solid #1e3020;':'';
+    var labelStyle=sec.isChild?'font-size:11px;color:#5a7a5a;':'';
+    h+='<div class="sidebar-section" id="sec-'+sec.id+'" style="'+indent+'">';
+    h+='<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')"><span class="section-badge" style="background:'+bc+'22;color:'+bc+'">'+badge.toUpperCase()+'</span><span class="section-label" style="'+labelStyle+'">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
+    h+='<div class="section-lessons" id="lessons-'+sec.id+'">';
+    subs.forEach(function(m){
+      var isQuiz=m.id.indexOf('quiz')===0;
+      var liStyle=sec.isChild?'padding-left:28px;':'';
+      h+='<div class="lesson-item'+(isQuiz?' quiz-item':'')+'" id="li-'+m.id+'" style="'+liStyle+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')">'+m.name+'</div>';
     });
-    h += '</div></div>';
+    h+='</div></div>';
   });
-  document.getElementById('snav').innerHTML = h;
+  document.getElementById('snav').innerHTML=h;
 }
 
-function llClick(el){
-  var lid = el.getAttribute('data-lid');
-  var sid = el.getAttribute('data-sid');
-  loadLesson(lid, sid);
-}
 
 function toggleSec(id){
   loadLesson(id);
