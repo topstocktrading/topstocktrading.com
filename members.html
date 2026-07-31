@@ -4004,47 +4004,50 @@ const SVG_EMPTY=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xml
 const SVG_DONE=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="7" cy="7" r="6" stroke="#00d27a" stroke-width="1.5"/><polyline points="4,7 6,9.5 10,4.5" stroke="#00d27a" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 function buildSidebar(){
-  let h = '';
+  var h = '';
+  var badgeColors = {beginner:'#4ab44a',intermediate:'#fbbf24',advanced:'#ef4444',options:'#8b5cf6',psychology:'#14b8a6'};
   COURSE.forEach(function(sec){
-    let badge = sec.badge||'beginner';
-    let badgeColors = {beginner:'#4ab44a',intermediate:'#fbbf24',advanced:'#ef4444',options:'#8b5cf6',psychology:'#14b8a6'};
-    let bc = badgeColors[badge]||'#4ab44a';
+    var badge = sec.badge || 'beginner';
+    var bc = badgeColors[badge] || '#4ab44a';
 
     if(sec.isParent){
-      // Library parent — render with green label, no badge
       h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
-      h += '<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')"><span class="section-label" style="font-size:11px;font-weight:700;color:#00d27a;letter-spacing:0.5px;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
+      h += '<div class="sidebar-section-header" onclick="toggleSection(&quot;'+sec.id+'&quot;)"><span class="section-label" style="font-size:11px;font-weight:700;color:#00d27a;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
       h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
       (sec.modules||[]).forEach(function(m){
-        h += '<div class="lesson-item" id="li-'+m.id+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')">'+m.name+'</div>';
+        h += '<div class="lesson-item" id="li-'+m.id+'" data-lid="'+m.id+'" data-sid="'+sec.id+'" onclick="llClick(this)">'+m.name+'</div>';
       });
       h += '</div></div>';
       return;
     }
 
     if(sec.isChild){
-      // Library child sub-section — indented, muted label, no badge
       h += '<div class="sidebar-section" id="sec-'+sec.id+'" style="border-left:3px solid #1e3020;">';
-      h += '<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')" style="padding-left:20px;"><span class="section-label" style="font-size:11px;color:#5a7a5a;font-weight:600;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
+      h += '<div class="sidebar-section-header" onclick="toggleSection(&quot;'+sec.id+'&quot;)" style="padding-left:20px;"><span class="section-label" style="font-size:11px;color:#5a7a5a;font-weight:600;">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
       h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
       (sec.modules||[]).forEach(function(m){
-        h += '<div class="lesson-item" id="li-'+m.id+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')" style="padding-left:40px;font-size:11px;">'+m.name+'</div>';
+        h += '<div class="lesson-item" id="li-'+m.id+'" data-lid="'+m.id+'" data-sid="'+sec.id+'" onclick="llClick(this)" style="padding-left:40px;font-size:11px;">'+m.name+'</div>';
       });
       h += '</div></div>';
       return;
     }
 
-    // Normal section
     h += '<div class="sidebar-section" id="sec-'+sec.id+'">';
-    h += '<div class="sidebar-section-header" onclick="toggleSection(''+sec.id+'')"><span class="section-badge" style="background:'+bc+'22;color:'+bc+'">'+badge.toUpperCase()+'</span><span class="section-label">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">▾</span></div>';
+    h += '<div class="sidebar-section-header" onclick="toggleSection(&quot;'+sec.id+'&quot;)"><span class="section-badge" style="background:'+bc+'22;color:'+bc+'">'+badge.toUpperCase()+'</span><span class="section-label">'+sec.label+'</span><span class="chevron" id="chev-'+sec.id+'">&#9662;</span></div>';
     h += '<div class="section-lessons" id="lessons-'+sec.id+'">';
     (sec.modules||[]).forEach(function(m){
-      let isQuiz = m.id.startsWith('quiz');
-      h += '<div class="lesson-item'+(isQuiz?' quiz-item':'')+'" id="li-'+m.id+'" onclick="loadLesson(''+m.id+'',''+sec.id+'')">'+m.name+'</div>';
+      var isQuiz = m.id.indexOf('quiz') === 0;
+      h += '<div class="lesson-item'+(isQuiz?' quiz-item':'')+'" id="li-'+m.id+'" data-lid="'+m.id+'" data-sid="'+sec.id+'" onclick="llClick(this)">'+m.name+'</div>';
     });
     h += '</div></div>';
   });
   document.getElementById('snav').innerHTML = h;
+}
+
+function llClick(el){
+  var lid = el.getAttribute('data-lid');
+  var sid = el.getAttribute('data-sid');
+  loadLesson(lid, sid);
 }
 
 function toggleSec(id){
