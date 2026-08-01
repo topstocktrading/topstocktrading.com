@@ -142,7 +142,7 @@ const ADMIN_EMAIL = 'h@topstocktrading.com';
 
 let sb, currentTab = 'overview';
 let _uploadNums = {};
-let allStudents = [], allMessages = [], allNotifs = [];
+let allStudents = [], allMessages = [], allNotifs = [], allProgress = [], allQuizAnswers = [];
 
 async function doLogin() {
   const email = document.getElementById('loginEmail').value.trim();
@@ -263,7 +263,7 @@ function buildStudentTable(students) {
   ['Email','Tier','Sections','Avg Score','Retakes','Weakest Section','Unread Msgs'].forEach(c => h += '<th>'+c+'</th>');
   h += '</tr></thead><tbody>';
   students.forEach(s => {
-    h += '<tr>';
+    h += '<tr style="cursor:pointer;" onclick="viewStudentDetail(\''+s.id+'\')">';
     h += '<td style="color:#c8d4c8;">'+s.email+'</td>';
     h += '<td>'+tierBadge(s.tier)+'</td>';
     h += '<td>'+s.quizzes.length+'</td>';
@@ -275,6 +275,127 @@ function buildStudentTable(students) {
   });
   h += '</tbody></table></div>';
   return h;
+}
+
+function viewStudentDetail(userId) {
+  const s = allStudents.find(x => x.id === userId);
+  if (!s) return;
+  const prog = allProgress.filter(p => p.user_id === userId);
+  const qa = allQuizAnswers.filter(a => a.user_id === userId);
+  const body = document.getElementById('appBody');
+  const completedCount = prog.filter(p => p.completed).length;
+  const totalTime = prog.reduce((t,p) => t+(p.time_spent_seconds||0), 0);
+  const avgTime = prog.length ? Math.round(totalTime/prog.length) : 0;
+  const wrongAnswers = qa.filter(a => !a.is_correct);
+  const correctPct = qa.length ? Math.round((qa.filter(a=>a.is_correct).length/qa.length)*100) : null;
+  const wrongByQ = {};
+  wrongAnswers.forEach(a => {
+    const key = a.section_id+'::'+a.question_text;
+    if (!wrongByQ[key]) wrongByQ[key] = {section:a.section_id,question:a.question_text,correct:a.correct_answer,misses:0};
+    wrongByQ[key].misses++;
+  });
+  const topWrong = Object.values(wrongByQ).sort((a,b)=>b.misses-a.misses).slice(0,10);
+  const lessonTimes = prog.filter(p=>p.time_spent_seconds>0).sort((a,b)=>b.time_spent_seconds-a.time_spent_seconds).slice(0,10);
+  let h = '<button onclick="showTab('students')" style="background:none;border:1px solid #1a2020;border-radius:6px;padding:6px 14px;color:#c8d4c8;cursor:pointer;font-size:12px;margin-bottom:20px;">← Back to Students</button>';
+  h += '<div style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:4px;">'+s.email+'</div>';
+  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:24px;">'+tierBadge(s.tier)+' &nbsp; Joined: '+fmtDate(s.joined)+'</div>';
+  h += '<div class="admin-stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Lessons Done</div><div class="admin-stat-num">'+completedCount+'</div></div>';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Quiz Accuracy</div><div class="admin-stat-num" style="color:'+(correctPct===null?'#2a4a2a':correctPct>=75?'#22c55e':correctPct>=60?'#fbbf24':'#ef4444')+';">'+(correctPct!==null?correctPct+'%':'—')+'</div></div>';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Avg Time/Lesson</div><div class="admin-stat-num">'+Math.floor(avgTime/60)+'m '+(avgTime%60)+'s</div></div>';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Quiz Retakes</div><div class="admin-stat-num">'+s.retakes+'</div></div>';
+  h += '</div>';
+  h += '<div class="section-head">Most Missed Questions</div>';
+  if (!topWrong.length) { h += '<div style="color:#2a4a2a;font-size:13px;padding:12px 0;">No wrong answers recorded yet.</div>'; }
+  else {
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Section</th><th>Question</th><th>Correct Answer</th><th>Times Missed</th></tr></thead><tbody>';
+    topWrong.forEach(w => {
+      h += '<tr><td style="color:#fbbf24;font-size:11px;">'+w.section+'</td><td style="color:#c8d4c8;font-size:12px;max-width:300px;">'+w.question+'</td><td style="color:#22c55e;font-size:12px;">'+w.correct+'</td><td style="text-align:center;color:#ef4444;font-weight:700;">'+w.misses+'x</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  h += '<div class="section-head" style="margin-top:28px;">Most Time Spent (Top Lessons)</div>';
+  if (!lessonTimes.length) { h += '<div style="color:#2a4a2a;font-size:13px;padding:12px 0;">No time data yet.</div>'; }
+  else {
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Lesson</th><th>Time Spent</th><th>Visits</th></tr></thead><tbody>';
+    lessonTimes.forEach(p => {
+      const mins=Math.floor(p.time_spent_seconds/60),secs=p.time_spent_seconds%60;
+      h += '<tr><td style="color:#c8d4c8;font-family:monospace;font-size:12px;">'+p.lesson_id+'</td><td style="color:#60a5fa;">'+mins+'m '+secs+'s</td><td style="color:#3a5a3a;">'+p.visit_count+'x</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  h += '<div class="section-head" style="margin-top:28px;">Full Quiz Answer History</div>';
+  if (!qa.length) { h += '<div style="color:#2a4a2a;font-size:13px;padding:12px 0;">No quiz answers recorded yet.</div>'; }
+  else {
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Section</th><th>Question</th><th>Their Answer</th><th>Correct Answer</th><th>Result</th></tr></thead><tbody>';
+    qa.slice().reverse().forEach(a => {
+      h += '<tr><td style="color:#fbbf24;font-size:11px;">'+a.section_id+'</td><td style="color:#c8d4c8;font-size:12px;max-width:240px;">'+a.question_text+'</td><td style="color:'+(a.is_correct?'#c8d4c8':'#ef4444')+';font-size:12px;">'+a.selected_answer+'</td><td style="color:#22c55e;font-size:12px;">'+a.correct_answer+'</td><td style="text-align:center;">'+(a.is_correct?'<span style="color:#22c55e;font-weight:700;">✓</span>':'<span style="color:#ef4444;font-weight:700;">✗</span>')+'</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  body.innerHTML = h;
+}
+
+function renderCourseData(body) {
+  const totalStudents = allStudents.length;
+  const lessonCounts = {};
+  allProgress.forEach(p => { if (p.completed) lessonCounts[p.lesson_id]=(lessonCounts[p.lesson_id]||0)+1; });
+  const lessonRates = Object.entries(lessonCounts).map(([id,count])=>({id,count,pct:totalStudents?Math.round(count/totalStudents*100):0})).sort((a,b)=>a.pct-b.pct);
+  const hardestLessons = lessonRates.slice(0,10);
+  const globalWrong = {};
+  allQuizAnswers.filter(a=>!a.is_correct).forEach(a => {
+    const key=a.section_id+'::'+a.question_text;
+    if(!globalWrong[key]) globalWrong[key]={section:a.section_id,question:a.question_text,correct:a.correct_answer,misses:0,total:0};
+    globalWrong[key].misses++;
+  });
+  allQuizAnswers.forEach(a => { const key=a.section_id+'::'+a.question_text; if(globalWrong[key]) globalWrong[key].total++; });
+  const topMissed = Object.values(globalWrong).map(w=>({...w,missRate:w.total?Math.round(w.misses/w.total*100):0})).sort((a,b)=>b.missRate-a.missRate).slice(0,15);
+  const sectionScores = {};
+  allStudents.forEach(s => { s.quizzes.forEach(q => { if(!sectionScores[q.section]) sectionScores[q.section]=[]; sectionScores[q.section].push(q.score); }); });
+  const sectionAvgs = Object.entries(sectionScores).map(([sec,scores])=>({sec,avg:Math.round(scores.reduce((a,b)=>a+b,0)/scores.length),count:scores.length})).sort((a,b)=>a.avg-b.avg);
+  const totalAnswers = allQuizAnswers.length;
+  const globalAcc = totalAnswers ? Math.round(allQuizAnswers.filter(a=>a.is_correct).length/totalAnswers*100) : null;
+  const avgCompletion = totalStudents && allProgress.length ? Math.round(Object.values(lessonCounts).reduce((a,b)=>a+b,0)/totalStudents) : 0;
+  let h = '<div style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:4px;">Course Analytics</div>';
+  h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:28px;">Master dataset — '+totalStudents+' students</div>';
+  h += '<div class="admin-stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:28px;">';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Total Students</div><div class="admin-stat-num">'+totalStudents+'</div></div>';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Global Quiz Accuracy</div><div class="admin-stat-num" style="color:'+(globalAcc>=75?'#22c55e':globalAcc>=60?'#fbbf24':'#ef4444')+'">'+(globalAcc!==null?globalAcc+'%':'—')+'</div></div>';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Avg Lessons Done</div><div class="admin-stat-num">'+avgCompletion+'</div></div>';
+  h += '<div class="admin-stat"><div class="admin-stat-label">Total Quiz Answers</div><div class="admin-stat-num">'+totalAnswers+'</div></div>';
+  h += '</div>';
+  h += '<div class="section-head">Most Missed Questions — All Students</div>';
+  if (!topMissed.length) { h += '<div style="color:#2a4a2a;font-size:13px;padding:12px 0;">No data yet.</div>'; }
+  else {
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Section</th><th>Question</th><th>Correct Answer</th><th>Miss Rate</th><th>Attempts</th></tr></thead><tbody>';
+    topMissed.forEach(w => {
+      const color=w.missRate>=60?'#ef4444':w.missRate>=40?'#fbbf24':'#22c55e';
+      h += '<tr><td style="color:#fbbf24;font-size:11px;">'+w.section+'</td><td style="color:#c8d4c8;font-size:12px;max-width:280px;">'+w.question+'</td><td style="color:#22c55e;font-size:12px;">'+w.correct+'</td><td style="color:'+color+';font-weight:700;">'+w.missRate+'%</td><td style="color:#3a5a3a;text-align:center;">'+w.total+'</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  h += '<div class="section-head" style="margin-top:28px;">Section Quiz Performance — Lowest to Highest</div>';
+  if (!sectionAvgs.length) { h += '<div style="color:#2a4a2a;font-size:13px;padding:12px 0;">No quiz data yet.</div>'; }
+  else {
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Section</th><th>Avg Score</th><th>Attempts</th><th>Grade</th></tr></thead><tbody>';
+    sectionAvgs.forEach(s => {
+      const color=s.avg>=75?'#22c55e':s.avg>=60?'#fbbf24':'#ef4444';
+      const grade=s.avg>=90?'A':s.avg>=80?'B':s.avg>=70?'C':s.avg>=60?'D':'F';
+      h += '<tr><td style="color:#c8d4c8;font-family:monospace;font-size:12px;">'+s.sec+'</td><td style="color:'+color+';font-weight:700;">'+s.avg+'%</td><td style="color:#3a5a3a;">'+s.count+'</td><td style="color:'+color+';font-weight:700;font-size:16px;">'+grade+'</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  h += '<div class="section-head" style="margin-top:28px;">Hardest Lessons — Lowest Completion</div>';
+  if (!hardestLessons.length) { h += '<div style="color:#2a4a2a;font-size:13px;padding:12px 0;">No completion data yet.</div>'; }
+  else {
+    h += '<div class="tbl-wrap"><table><thead><tr><th>Lesson ID</th><th>Completions</th><th>% of Students</th></tr></thead><tbody>';
+    hardestLessons.forEach(l => {
+      const color=l.pct>=70?'#22c55e':l.pct>=40?'#fbbf24':'#ef4444';
+      h += '<tr><td style="color:#c8d4c8;font-family:monospace;font-size:12px;">'+l.id+'</td><td style="color:#3a5a3a;">'+l.count+' / '+totalStudents+'</td><td style="color:'+color+';font-weight:700;">'+l.pct+'%</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+  body.innerHTML = h;
 }
 
 function filterStudents(q) {
