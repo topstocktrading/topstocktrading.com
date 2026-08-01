@@ -520,6 +520,7 @@ smallcaps: {
       const hint=document.getElementById('qh-'+sectionId+'-'+i);
       if(hint)hint.style.display='block';
       if(userAns===correctAns)correct++;
+      saveQuizAnswer(sectionId,q,i,userAns,userAns===correctAns);
     });
     const score=Math.round((correct/questions.length)*100);
     const passed=score>=(quiz.passingScore||75);
@@ -536,6 +537,26 @@ smallcaps: {
     const submitBtn=document.getElementById('submit-'+sectionId);
     if(submitBtn)submitBtn.style.display='none';
     saveResult(sectionId,score,passed);
+  }
+
+  async function saveQuizAnswer(sectionId,q,qIdx,userAnsIdx,isCorrect){
+    try{
+      const sb=window.supabase;if(!sb)return;
+      const {data:{user}}=await sb.auth.getUser();if(!user)return;
+      const selectedText=q.choices[userAnsIdx]||'';
+      const correctText=q.choices[q.answer]||'';
+      await sb.from('user_quiz_answers').insert({
+        user_id:user.id,
+        section_id:sectionId,
+        question_id:q.id||('q'+qIdx),
+        question_text:q.q,
+        question_index:qIdx,
+        selected_answer:selectedText,
+        correct_answer:correctText,
+        is_correct:isCorrect,
+        answered_at:new Date().toISOString()
+      });
+    }catch(e){console.log('saveQuizAnswer err:',e);}
   }
 
   async function saveResult(sectionId,score,passed){
