@@ -522,7 +522,7 @@
 <script>
 const SUPABASE_URL='https://jjecwvcxbocogvwsjwmr.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
-async function loadLessonCharts(lessonId){try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'});});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i);var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;" loading="lazy"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
+async function loadLessonCharts(lessonId){const _hm={'cs-cat-h-0':'cs-gld','cs-cat-h-1':'cs-slv','cs-cat-h-2':'cs-dfns','cs-cat-h-3':'cs-tdic','cs-cat-h-4':'cs-tlry','cs-cat-h-5':'cs-be','cs-cat-h-6':'cs-sndk'};lessonId=_hm[lessonId]||lessonId;try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'});});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i);var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;cursor:zoom-in;" loading="lazy" onclick="openLightbox(this.src)"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
 const LESSONS={
 '00-01':{title:'Welcome & Course Framework',content:`<h3>What This Course Is</h3>
 <p>TST Academy is not a course that teaches you to follow someone else's trades. It's a course that teaches you to <strong>think like a trader</strong> — to develop your own edge, build your own rules, and execute with consistency regardless of what the market throws at you.</p>
@@ -4481,8 +4481,9 @@ function updateProgress(){
 
 async function saveProgress(lessonId){
   try{
-    const sb=window.supabase;if(!sb)return;
-    const {data:{user}}=await sb.auth.getUser();if(!user)return;
+    const sb=window.supabase;if(!sb||!sb.auth)return;
+    const _r2=await sb.auth.getUser();if(!_r2||!_r2.data||!_r2.data.user)return;
+    const user=_r2.data.user;
     await sb.from('user_progress').upsert({
       user_id:user.id,lesson_id:lessonId,completed:true,
       completed_at:new Date().toISOString(),
@@ -4494,8 +4495,9 @@ async function saveProgress(lessonId){
 
 async function saveLastLesson(lessonId){
   try{
-    const sb=window.supabase;if(!sb)return;
-    const {data:{user}}=await sb.auth.getUser();if(!user)return;
+    const sb=window.supabase;if(!sb||!sb.auth)return;
+    const _r1=await sb.auth.getUser();if(!_r1||!_r1.data||!_r1.data.user)return;
+    const user=_r1.data.user;
     await sb.from('user_last_lesson').upsert({
       user_id:user.id,lesson_id:lessonId,visited_at:new Date().toISOString()
     },{onConflict:'user_id'});
@@ -4504,8 +4506,9 @@ async function saveLastLesson(lessonId){
 
 async function loadProgress(){
   try{
-    const sb=window.supabase;if(!sb)return;
-    const {data:{user}}=await sb.auth.getUser();if(!user)return;
+    const sb=window.supabase;if(!sb||!sb.auth)return;
+    const _r3=await sb.auth.getUser();if(!_r3||!_r3.data||!_r3.data.user)return;
+    const user=_r3.data.user;
     const {data:rows}=await sb.from('user_progress').select('lesson_id,time_spent_seconds,visit_count').eq('user_id',user.id).eq('completed',true);
     if(rows&&rows.length){
       rows.forEach(function(r){
