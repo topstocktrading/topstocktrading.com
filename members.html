@@ -522,7 +522,7 @@
 <script>
 const SUPABASE_URL='https://jjecwvcxbocogvwsjwmr.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
-async function loadLessonCharts(lessonId){const _hm={'cs-cat-h-0':'cs-gld','cs-cat-h-1':'cs-slv','cs-cat-h-2':'cs-dfns','cs-cat-h-3':'cs-tdic','cs-cat-h-4':'cs-tlry','cs-cat-h-5':'cs-be','cs-cat-h-6':'cs-sndk'};lessonId=_hm[lessonId]||lessonId;try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'});});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i);var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;cursor:zoom-in;" loading="lazy" onclick="openLightbox(this.src)"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
+async function loadLessonCharts(lessonId){try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'});});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i);var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;" loading="lazy"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
 const LESSONS={
 '00-01':{title:'Welcome & Course Framework',content:`<h3>What This Course Is</h3>
 <p>TST Academy is not a course that teaches you to follow someone else's trades. It's a course that teaches you to <strong>think like a trader</strong> — to develop your own edge, build your own rules, and execute with consistency regardless of what the market throws at you.</p>
@@ -4269,7 +4269,7 @@ const COURSE=[
     {id:'cs-cat-e',name:'Full Market Cycles',subs:['ROKU — Pandemic Boom Accumulation to Distribution','UPST — AI Lending Hype to Reality 95% Drawdown','PTON — Peloton Pandemic Winner Full Boom and Bust','ZM — Zoom Pandemic Winner Peak Then Reversal','ARKK — Peak Growth Investing Maximum Optimism','TSLA — 2022 Collapse Distribution Top']},
     {id:'cs-cat-f',name:'Sector Rotations',subs:['NVDA — AI Wave 1: Nvidia Leads the Rotation','AMD — AI Wave 2: Catch-Up Re-Rating','SMCI — AI Wave 3: Infrastructure Explodes','GME — Meme Rotation: GME Sparks the Movement','AMC — Meme Rotation: AMC Follows the Playbook','SIVB — Banking Rotation: The Collapse','JPM — Banking Rotation: Flight to Quality']},
     {id:'cs-cat-g',name:'Technical Pattern Studies',subs:['NVDA — Multiple Base & Breakout Sequences 2023','AAPL — Blue Sky Breakout All-Time High','QQQ — Staircase Up Elevator Down 2021-2022','CVNA — V-Shape Recovery Capitulation to Reversal','META — Accumulation Base Before Monster Rally','NFLX — Failed Breakout Short Setup','SPY — Opening Range Breakout Best Setup Days','GME — Short Squeeze Mechanics Deep Dive','TSLA — Earnings Gap Continuation Multi-Day Hold','ENPH — Full Cycle Growth Boom Bust Clean Energy','BABA — Geopolitical Risk Destroying a Trade','USO — Oil Goes Negative Futures Mechanics']},
-    {id:'cs-cat-h',name:'Recent Analysis',subs:['GLD — Gold Mega Squeeze 2025-2026','SLV — Silver Mega Squeeze 2025-2026','DFNS — Reverse Split Low Float Squeeze 2026','TDIC — Monster Move & Immediate Fade May 2026','TLRY — Cannabis Resurgence 2025-2026','BE — Bloom Energy Full Cycle 2024-2025','SNDK — Post-Spinoff Re-Rating 2024-2025','DJT — Trump Media SPAC Mania to Political Stock 2024-2026']},
+    {id:'cs-cat-h',name:'Recent Analysis',subs:['GLD — Gold Mega Squeeze 2025-2026','SLV — Silver Mega Squeeze 2025-2026','DFNS — Reverse Split Low Float Squeeze 2026','TDIC — Monster Move & Immediate Fade May 2026','TLRY — Cannabis Resurgence 2025-2026','BE — Bloom Energy Full Cycle 2024-2025','SNDK — Post-Spinoff Re-Rating 2024-2025']},
   ]},
     {id:'s18',label:'Live Trades & Ongoing Learning',badge:'advanced',modules:[
     {id:'lt-library',name:'Live Trading Library'},
@@ -4291,26 +4291,6 @@ const INTROS={
   'tax':{desc:"Trading generates taxable income and understanding the basics before tax season can save you significant money and prevent surprises. This section covers the essential tax concepts every trader needs to know.",topics:['Short vs Long Term Gains','Wash Sale Rule','Trader Tax Status','Quarterly Taxes']},
 'livetrades':{desc:"Real trades. Real capital. Real decisions in real time. This section contains recorded live trades across every major setup type covered in the course. Watch active execution, position management, and post-trade review on actual market sessions.",topics:['Flag Trades','Breakout Trades','Dip Buy Trades','Small Cap Trades','Options Trades','Sweep Trades','V-Shape Trades']},
 'finale':{desc:"Everything you have learned - every concept, every pattern, every rule - gets tested here. The Grand Finale is a full simulated trading day. You will build your watchlist, identify your setups, manage your risk, and execute entries and exits in a realistic market simulation. If you can get through this cleanly, you are ready. If you cannot, you will know exactly where to go back and sharpen your edge.",topics:[]},
-'cs-cat-h-7':{title:'DJT — Trump Media SPAC Mania to Political Stock 2024-2026',content:`<h3>DJT — Trump Media: SPAC Mania to Political Stock</h3>
-<p><strong>Date Range:</strong> October 2021 – 2026 | <strong>Concept:</strong> SPAC mechanics, narrative-driven valuation, political stock dynamics, float constraints</p>
-<h3>The DWAC SPAC Phase</h3>
-<p>Digital World Acquisition Corp (DWAC) went public as a blank check SPAC in September 2021 at the standard $10 SPAC price. On October 20, 2021, the announcement that DWAC would merge with Trump Media and Technology Group sent the stock from $10 to $175 in two days — a 1,650% move in 48 hours with no underlying business revenue to justify it. The move was driven entirely by narrative: political enthusiasm, retail trader coordination, and the perception that any company associated with Donald Trump would attract massive retail buying interest.</p>
-<h3>The Long Merger Process</h3>
-<p>The merger took over two years to complete due to SEC investigations, regulatory hurdles, and shareholder vote delays. During this period DWAC traded in a wide range, primarily tracking political news and Trump's legal situation rather than any fundamental business development. Truth Social had minimal revenue and a small user base compared to established social media platforms. The stock was trading on a story, not a business.</p>
-<h3>The DJT Rebrand — March 2024</h3>
-<p>The merger officially closed in March 2024 and DWAC became DJT. The stock surged to approximately $79 on merger completion as retail traders who had been waiting for the event bought in. The float was extremely constrained — Trump himself held approximately 57% of the shares and could not sell for six months under lockup provisions. This artificially restricted supply created volatile, squeeze-like price action on relatively small buying interest.</p>
-<h3>Political Event Driven Trading</h3>
-<p>DJT became perhaps the most purely political stock in market history. Price moves correlated directly with Trump's poll numbers, legal developments, and political events rather than earnings or revenue. The stock surged following Trump's conviction, rose dramatically after the assassination attempt in July 2024, and made new highs after the November 2024 election victory. Traditional valuation frameworks were completely inapplicable.</p>
-<h3>The Lockup Expiration</h3>
-<p>When Trump's six-month lockup expired in September 2024, the market priced in potential supply from the largest shareholder. The stock declined significantly as the market anticipated selling. The lockup expiration dynamic — forced supply hitting a market that had priced in artificial scarcity — is a recurring pattern in SPAC stocks and post-IPO lockup expirations.</p>
-<h3>Key Trading Observations</h3>
-<ul>
-<li>SPAC announcements create the most violent single-day moves in the market — DWAC going from $10 to $175 in 48 hours is the extreme case but 50-100% moves on SPAC merger announcements are common</li>
-<li>Political stocks trade on sentiment and event catalysts that are impossible to predict fundamentally — position sizing must reflect this uncertainty</li>
-<li>Lockup expirations create predictable supply events — the six-month date is public information and can be traded</li>
-<li>Constrained float creates squeeze dynamics on small buying interest — when only 43% of shares trade freely, even modest retail enthusiasm drives dramatic price moves</li>
-</ul>
-<div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">DJT/DWAC is the definitive case study in narrative-driven valuation completely detached from fundamental reality. The business had negligible revenue. The stock traded at billions in market cap. The only thing that mattered was the political narrative and the constrained float. This is a trading vehicle not an investment — and only for traders who deeply understand the specific risks: political binary events, lockup dynamics, and sentiment reversals that happen without warning and with no fundamental anchor.</div></div>`}
 };
 
 const QUOTES=[
@@ -4393,7 +4373,7 @@ function trackLessonComplete(id){
   const elapsed=Math.round((Date.now()-BEHAVIOR.lessonStartTime)/1000);
   if(BEHAVIOR.lessonTimes[id])BEHAVIOR.lessonTimes[id].totalTime+=elapsed;
   if(elapsed<15)logFlag('speed','Fast lesson ('+elapsed+'s): '+id);
-  if(elapsed>420)logFlag('thorough','Deep study ('+elapsed+'s): '+id);
+  if(elapsed>300)logFlag('thorough','Deep study ('+elapsed+'s): '+id);
   BEHAVIOR.lessonStartTime=null;
 }
 function trackQuizAnswer(lessonId,qIdx,selected,correct,isCorrect){
@@ -4453,7 +4433,7 @@ function doLogin(){
   if(e===DEMO.email&&p===DEMO.password){
     document.getElementById('login-screen').style.display='none';
     document.getElementById('sname').textContent=DEMO.name;
-    loadProgress();
+    buildSidebar();loadLesson('beginner');
   } else { document.getElementById('lerr').style.display='block'; }
 }
 function doLogout(){document.getElementById('login-screen').style.display='flex';document.getElementById('le').value='';document.getElementById('lp').value='';}
@@ -4476,54 +4456,6 @@ function updateProgress(){
   const pct=total?Math.round((done.size/total)*100):0;
   document.getElementById('ppct').textContent=pct+'%';
   document.getElementById('pfill').style.width=pct+'%';
-}
-
-
-async function saveProgress(lessonId){
-  try{
-    const sb=window.supabase;if(!sb||!sb.auth)return;
-    const _r2=await sb.auth.getUser();if(!_r2||!_r2.data||!_r2.data.user)return;
-    const user=_r2.data.user;
-    await sb.from('user_progress').upsert({
-      user_id:user.id,lesson_id:lessonId,completed:true,
-      completed_at:new Date().toISOString(),
-      time_spent_seconds:BEHAVIOR.lessonTimes[lessonId]?BEHAVIOR.lessonTimes[lessonId].totalTime:0,
-      visit_count:BEHAVIOR.lessonTimes[lessonId]?BEHAVIOR.lessonTimes[lessonId].starts:1
-    },{onConflict:'user_id,lesson_id'});
-  }catch(e){console.log('saveProgress err:',e);}
-}
-
-async function saveLastLesson(lessonId){
-  try{
-    const sb=window.supabase;if(!sb||!sb.auth)return;
-    const _r1=await sb.auth.getUser();if(!_r1||!_r1.data||!_r1.data.user)return;
-    const user=_r1.data.user;
-    await sb.from('user_last_lesson').upsert({
-      user_id:user.id,lesson_id:lessonId,visited_at:new Date().toISOString()
-    },{onConflict:'user_id'});
-  }catch(e){console.log('saveLastLesson err:',e);}
-}
-
-async function loadProgress(){
-  try{
-    const sb=window.supabase;if(!sb||!sb.auth)return;
-    const _r3=await sb.auth.getUser();if(!_r3||!_r3.data||!_r3.data.user)return;
-    const user=_r3.data.user;
-    const {data:rows}=await sb.from('user_progress').select('lesson_id,time_spent_seconds,visit_count').eq('user_id',user.id).eq('completed',true);
-    if(rows&&rows.length){
-      rows.forEach(function(r){
-        done.add(r.lesson_id);
-        if(r.visit_count>1){BEHAVIOR.lessonTimes[r.lesson_id]={starts:r.visit_count,totalTime:r.time_spent_seconds||0};}
-      });
-    }
-    const {data:ll}=await sb.from('user_last_lesson').select('lesson_id').eq('user_id',user.id).single();
-    const startLesson=(ll&&ll.lesson_id)?ll.lesson_id:'beginner';
-    buildSidebar();
-    loadLesson(startLesson);
-    updateProgress();
-  }catch(e){
-    buildSidebar();loadLesson('beginner');
-  }
 }
 
 const SVG_EMPTY=`<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="7" cy="7" r="6" stroke="#3a4455" stroke-width="1.5"/></svg>`;
@@ -4571,7 +4503,6 @@ function loadLesson(id){
   trackLessonComplete(cur);
   cur=id;
   trackLessonStart(id);
-  saveLastLesson(id);
   const al=allLessons();
   const idx=al.findIndex(l=>l.id===id);
   const lesson=al[idx],prev=al[idx-1],next=al[idx+1];
@@ -4593,9 +4524,8 @@ function loadLesson(id){
     const I=INTROS[id];
     const sec=COURSE.find(s=>s.id===id);
     html=`<div class="sec-intro-card"><span class="sic-badge">${sec?sec.label:id}</span><h2>${(sec?sec.label:id).toUpperCase()}</h2><p>${I.desc}</p><div class="topics-wrap">${I.topics.map(t=>`<span class="topic-pill">${t}</span>`).join('')}</div></div>`;
-  } else if(typeof LESSONS!=='undefined'&&(LESSONS[id]||{'cs-cat-h-0':'cs-gld','cs-cat-h-1':'cs-slv','cs-cat-h-2':'cs-dfns','cs-cat-h-3':'cs-tdic','cs-cat-h-4':'cs-tlry','cs-cat-h-5':'cs-be','cs-cat-h-6':'cs-sndk'}[id])){
-    const _hmap={'cs-cat-h-0':'cs-gld','cs-cat-h-1':'cs-slv','cs-cat-h-2':'cs-dfns','cs-cat-h-3':'cs-tdic','cs-cat-h-4':'cs-tlry','cs-cat-h-5':'cs-be','cs-cat-h-6':'cs-sndk'};
-    const L=LESSONS[_hmap[id]||id];
+  } else if(typeof LESSONS!=='undefined'&&LESSONS[id]){
+    const L=LESSONS[id];
     const secLabel=lesson?lesson.sec:'';
     const videoLessons=['b3-1','b5-0','b9-1','b10-0','a4'];
     const showVideo=videoLessons.includes(id);
@@ -4620,7 +4550,7 @@ function loadLesson(id){
 }
 
 function completeNext(id,nid,isIntro){
-  if(!isIntro){done.add(id);saveProgress(id);}
+  if(!isIntro)done.add(id);
   if(nid)loadLesson(nid);
   else buildSidebar();
   updateProgress();
@@ -4714,20 +4644,6 @@ async function markNotifRead(nid){
   }catch(e){}
 }
 
-
-function openLightbox(src){
-  var lb=document.getElementById('chart-lightbox');
-  document.getElementById('chart-lightbox-img').src=src;
-  lb.style.display='flex';
-  document.body.style.overflow='hidden';
-}
-function closeLightbox(){
-  var lb=document.getElementById('chart-lightbox');
-  lb.style.display='none';
-  document.getElementById('chart-lightbox-img').src='';
-  document.body.style.overflow='';
-}
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox();});
 </script>
 
 <script src="auth.js"></script>
