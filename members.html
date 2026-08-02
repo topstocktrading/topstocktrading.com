@@ -460,8 +460,6 @@
 </head>
 <body>
 
-<div id="chart-lightbox" onclick="closeLightbox()" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.92);z-index:9999;cursor:zoom-out;align-items:center;justify-content:center;"><span onclick="closeLightbox()" style="position:fixed;top:20px;right:28px;color:#fff;font-size:36px;cursor:pointer;z-index:10000;opacity:0.8;line-height:1;">&#x2715;</span><img id="chart-lightbox-img" src="" style="max-width:95vw;max-height:95vh;border-radius:8px;box-shadow:0 0 60px rgba(0,0,0,0.8);"/></div>
-
 <div id="login-screen">
   <div class="login-box">
     <div class="login-logo">TOP <span>STOCK</span> TRADING</div>
@@ -524,7 +522,7 @@
 <script>
 const SUPABASE_URL='https://jjecwvcxbocogvwsjwmr.supabase.co';
 const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
-async function loadLessonCharts(lessonId){const _hmap2={'cs-cat-h-0':'cs-gld','cs-cat-h-1':'cs-slv','cs-cat-h-2':'cs-dfns','cs-cat-h-3':'cs-tdic','cs-cat-h-4':'cs-tlry','cs-cat-h-5':'cs-be','cs-cat-h-6':'cs-sndk'};lessonId=_hmap2[lessonId]||lessonId;try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'});});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i);var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;cursor:zoom-in;" loading="lazy" onclick="openLightbox(this.src)"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
+async function loadLessonCharts(lessonId){try{const r=await fetch(SUPABASE_URL+'/storage/v1/object/list/lesson-charts',{method:'POST',headers:{'Authorization':'Bearer '+SUPABASE_ANON,'Content-Type':'application/json'},body:JSON.stringify({prefix:'',limit:100})});const all=await r.json();if(!all||!all.length)return '';const imgs=all.filter(function(f){return f.name.startsWith(lessonId+'-')&&f.name.match(/\.(png|jpg|jpeg|webp)$/i);}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true,sensitivity:'base'});});if(!imgs.length)return '';const results=await Promise.all(imgs.map(async function(f){var base=f.name.replace(/\.(png|jpg|jpeg|webp)$/i);var url=SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+f.name;var caption='';try{var cr=await fetch(SUPABASE_URL+'/storage/v1/object/public/lesson-charts/'+base+'.txt');if(cr.ok)caption=await cr.text();}catch(e){}return '<div class="chart-box" style="margin-top:20px"><img src="'+url+'" style="width:100%;border-radius:8px;border:1px solid var(--border);display:block;" loading="lazy"/>'+(caption?'<p style="font-size:13px;color:var(--muted);margin-top:10px;line-height:1.7;">'+caption+'</p>':'')+'</div>';}));return results.join('');}catch(e){return '';}}
 const LESSONS={
 '00-01':{title:'Welcome & Course Framework',content:`<h3>What This Course Is</h3>
 <p>TST Academy is not a course that teaches you to follow someone else's trades. It's a course that teaches you to <strong>think like a trader</strong> — to develop your own edge, build your own rules, and execute with consistency regardless of what the market throws at you.</p>
@@ -4292,7 +4290,7 @@ const INTROS={
   'psychology':{desc:"You can know every pattern, every indicator, and every setup in this course - and still lose money if you cannot control yourself. Psychology is the final layer. It is what keeps you disciplined when you are on a losing streak, what stops you from revenge trading, and what allows you to execute your plan without emotion getting in the way. Most traders never address this. The ones who do have a permanent edge over the ones who do not.",topics:['Psychology & Overtrading','Base Hits Over Home Runs','The Playbook Mindset']},
   'tax':{desc:"Trading generates taxable income and understanding the basics before tax season can save you significant money and prevent surprises. This section covers the essential tax concepts every trader needs to know.",topics:['Short vs Long Term Gains','Wash Sale Rule','Trader Tax Status','Quarterly Taxes']},
 'livetrades':{desc:"Real trades. Real capital. Real decisions in real time. This section contains recorded live trades across every major setup type covered in the course. Watch active execution, position management, and post-trade review on actual market sessions.",topics:['Flag Trades','Breakout Trades','Dip Buy Trades','Small Cap Trades','Options Trades','Sweep Trades','V-Shape Trades']},
-'finale':{desc:"Everything you have learned - every concept, every pattern, every rule - gets tested here. The Grand Finale is a full simulated trading day. You will build your watchlist, identify your setups, manage your risk, and execute entries and exits in a realistic market simulation. If you can get through this cleanly, you are ready. If you cannot, you will know exactly where to go back and sharpen your edge.",topics:[]},,'cs-cat-h-7':{title:'DJT — Trump Media SPAC Mania to Political Stock 2024-2026',content:`<h3>DJT — Trump Media: SPAC Mania to Political Stock</h3>
+'finale':{desc:"Everything you have learned - every concept, every pattern, every rule - gets tested here. The Grand Finale is a full simulated trading day. You will build your watchlist, identify your setups, manage your risk, and execute entries and exits in a realistic market simulation. If you can get through this cleanly, you are ready. If you cannot, you will know exactly where to go back and sharpen your edge.",topics:[]},'cs-cat-h-7':{title:'DJT — Trump Media SPAC Mania to Political Stock 2024-2026',content:`<h3>DJT — Trump Media: SPAC Mania to Political Stock</h3>
 <p><strong>Date Range:</strong> October 2021 – 2026 | <strong>Concept:</strong> SPAC mechanics, narrative-driven valuation, political stock dynamics, float constraints</p>
 <h3>The DWAC SPAC Phase</h3>
 <p>Digital World Acquisition Corp (DWAC) went public as a blank check SPAC in September 2021 at the standard $10 SPAC price. On October 20, 2021, the announcement that DWAC would merge with Trump Media & Technology Group — the company behind Truth Social — sent the stock from $10 to $175 in two days. A 1,650% move in 48 hours with no underlying business revenue to justify it. The move was driven entirely by narrative: political enthusiasm, retail trader coordination, and the perception that any company associated with Donald Trump would attract massive retail buying interest.</p>
@@ -4713,11 +4711,7 @@ async function markNotifRead(nid){
   }catch(e){}
 }
 
-</script>
 
-<script src="auth.js"></script>
-<script src="profile.js?v=5"></script>
-<script src="quiz.js">
 function openLightbox(src){
   var lb=document.getElementById('chart-lightbox');
   document.getElementById('chart-lightbox-img').src=src;
@@ -4732,6 +4726,10 @@ function closeLightbox(){
 }
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLightbox();});
 </script>
+
+<script src="auth.js"></script>
+<script src="profile.js?v=5"></script>
+<script src="quiz.js"></script>
 
 </body>
 </html>
