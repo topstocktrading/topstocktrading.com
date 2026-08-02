@@ -4544,9 +4544,9 @@ function loadLesson(id){
 
   document.getElementById('mc').innerHTML=html;
   if(id==='interactive-quiz' && window.TST_INTERACTIVE_QUIZ){ window.TST_INTERACTIVE_QUIZ.current=0;window.TST_INTERACTIVE_QUIZ.score=0;window.TST_INTERACTIVE_QUIZ.answered=[];setTimeout(function(){window.TST_INTERACTIVE_QUIZ.render('interactiveQuizContainer');},80); }
+  buildSidebar();
   loadLessonCharts(id).then(function(c){if(c){var lc=document.querySelector('.lc');if(lc)lc.insertAdjacentHTML('beforeend',c);}});
   window.scrollTo(0,0);
-  buildSidebar();
 }
 
 function completeNext(id,nid,isIntro){
