@@ -685,10 +685,75 @@ const LESSONS={
 <li>Was the volume on this candle above or below average?</li>
 <li>What did the next candle do?</li>
 </ul>
+round:#0d120d;border:1px solid #1e2e1e;border-radius:12px;padding:24px;margin:0 0 24px 0;overflow-x:auto;">
+<p style="color:#6b7c6e;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:16px;text-align:center;">Candlestick Anatomy — Bullish vs Bearish</p>
+<svg viewBox="0 0 560 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:340px;display:block;">
+  <text x="140" y="18" text-anchor="middle" font-family="monospace" font-size="13" fill="#00d27a" font-weight="700">BULLISH (Green)</text>
+  <line x1="140" y1="32" x2="140" y2="80" stroke="#00d27a" stroke-width="2.5"/>
+  <rect x="112" y="80" width="56" height="100" fill="#00d27a" rx="3"/>
+  <line x1="140" y1="180" x2="140" y2="240" stroke="#00d27a" stroke-width="2.5"/>
+  <line x1="110" y1="32" x2="70" y2="32" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="64" y="29" text-anchor="end" font-family="monospace" font-size="11" fill="#c8d4c8">High</text>
+  <text x="64" y="42" text-anchor="end" font-family="monospace" font-size="9" fill="#6b7c6e">top of wick</text>
+  <line x1="110" y1="80" x2="70" y2="68" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="64" y="65" text-anchor="end" font-family="monospace" font-size="11" fill="#c8d4c8">Close</text>
+  <text x="64" y="78" text-anchor="end" font-family="monospace" font-size="9" fill="#6b7c6e">top of body</text>
+  <text x="64" y="133" text-anchor="end" font-family="monospace" font-size="11" fill="#00d27a" font-weight="700">BODY</text>
+  <text x="64" y="146" text-anchor="end" font-family="monospace" font-size="9" fill="#6b7c6e">Close &gt; Open</text>
+  <line x1="110" y1="180" x2="70" y2="192" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="64" y="189" text-anchor="end" font-family="monospace" font-size="11" fill="#c8d4c8">Open</text>
+  <text x="64" y="202" text-anchor="end" font-family="monospace" font-size="9" fill="#6b7c6e">bottom of body</text>
+  <line x1="110" y1="240" x2="70" y2="240" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="64" y="237" text-anchor="end" font-family="monospace" font-size="11" fill="#c8d4c8">Low</text>
+  <text x="64" y="250" text-anchor="end" font-family="monospace" font-size="9" fill="#6b7c6e">bottom of wick</text>
+  <line x1="280" y1="40" x2="280" y2="260" stroke="#1e2e1e" stroke-width="1"/>
+  <text x="420" y="18" text-anchor="middle" font-family="monospace" font-size="13" fill="#ef4444" font-weight="700">BEARISH (Red)</text>
+  <line x1="420" y1="32" x2="420" y2="80" stroke="#ef4444" stroke-width="2.5"/>
+  <rect x="392" y="80" width="56" height="100" fill="#ef4444" rx="3"/>
+  <line x1="420" y1="180" x2="420" y2="240" stroke="#ef4444" stroke-width="2.5"/>
+  <line x1="450" y1="32" x2="490" y2="32" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="496" y="29" font-family="monospace" font-size="11" fill="#c8d4c8">High</text>
+  <text x="496" y="42" font-family="monospace" font-size="9" fill="#6b7c6e">top of wick</text>
+  <line x1="450" y1="80" x2="490" y2="68" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="496" y="65" font-family="monospace" font-size="11" fill="#c8d4c8">Open</text>
+  <text x="496" y="78" font-family="monospace" font-size="9" fill="#6b7c6e">top of body</text>
+  <text x="496" y="133" font-family="monospace" font-size="11" fill="#ef4444" font-weight="700">BODY</text>
+  <text x="496" y="146" font-family="monospace" font-size="9" fill="#6b7c6e">Close &lt; Open</text>
+  <line x1="450" y1="180" x2="490" y2="192" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="496" y="189" font-family="monospace" font-size="11" fill="#c8d4c8">Close</text>
+  <text x="496" y="202" font-family="monospace" font-size="9" fill="#6b7c6e">bottom of body</text>
+  <line x1="450" y1="240" x2="490" y2="240" stroke="#4a6a4a" stroke-width="1"/>
+  <text x="496" y="237" font-family="monospace" font-size="11" fill="#c8d4c8">Low</text>
+  <text x="496" y="250" font-family="monospace" font-size="9" fill="#6b7c6e">bottom of wick</text>
+  <text x="280" y="278" text-anchor="middle" font-family="monospace" font-size="9" fill="#4a6a4a">Wicks show the full range traded. Body shows open to close. Green = buyers won. Red = sellers won.</text>
+</svg>
+</div>
+<h3>The Language of Candlesticks</h3>
+<p>A candlestick is a single unit of price data that tells you four things: where the price opened, where it closed, how high it went, and how low it went during a specific period of time. Every candle on every chart you'll ever look at contains these four data points encoded in its shape. Learning to read that shape instantly — without thinking about it — is one of the most fundamental skills in technical trading.</p>
+<h3>The Anatomy of a Candle</h3>
+<p>Every candlestick has two components: the <strong>body</strong> and the <strong>wicks</strong> (also called shadows or tails).</p>
+<p><strong>The Body</strong> represents the distance between the open and the close. A large body means price moved significantly from open to close. A small body means price ended up close to where it started — indecision, or a balance of buying and selling pressure.</p>
+<p>The color of the body tells you the direction: a <strong>green (or white) body</strong> means the close was higher than the open — buyers won that period. A <strong>red (or black) body</strong> means the close was lower than the open — sellers won that period.</p>
+<p><strong>The Upper Wick</strong> is the line above the body extending to the highest price reached during the period. A long upper wick means price rose significantly at some point but was rejected — sellers pushed it back down before the period closed. This is bearish pressure.</p>
+<p><strong>The Lower Wick</strong> is the line below the body extending to the lowest price reached during the period. A long lower wick means price fell significantly at some point but recovered — buyers stepped in and pushed it back up. This is bullish pressure.</p>
+<h3>What the Body-to-Wick Ratio Tells You</h3>
+<p>The relationship between body size and wick size reveals the conviction of the winning side.</p>
+<p>A candle with a large green body and tiny wicks means buyers were in control from open to close with almost no meaningful resistance. Strong conviction. A candle with a small green body and long wicks on both ends means the period was contested — neither side dominated for long. Low conviction.</p>
+<p>The most significant candles are those where price moves decisively in one direction, closes near the extreme of its range, and leaves little or no opposing wick. These are called <strong>full-body candles</strong> or <strong>strong candles</strong> and they represent clear, one-directional pressure.</p>
+<h3>Candles in Context</h3>
+<p>The most important rule of candlestick reading: no candle has meaning in isolation. Every candle must be read in the context of the candles around it, the level it's forming at, and the volume behind it.</p>
+<p>A long red candle forming after a 10-day uptrend at a key resistance level tells a very different story than the same red candle forming in the middle of a range with no obvious context. The shape is identical. The meaning is completely different.</p>
+<ul>
+<li>What was the trend before this candle?</li>
+<li>What level or structure is this candle forming at?</li>
+<li>Was the volume on this candle above or below average?</li>
+<li>What did the next candle do?</li>
+</ul>
 <div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">Every time you look at a candle, ask yourself: who won this period — buyers or sellers? How convincingly did they win? And what does that tell me about likely future price action? Answering these three questions for every significant candle on a chart is the foundation of candlestick literacy.</div></div>
 <h3>Timeframes and Candle Size</h3>
 <p>One candlestick on a 1-minute chart represents one minute of trading. On a 5-minute chart, five minutes. On a daily chart, one full trading day. The same stock will look completely different depending on which timeframe you choose — and all of those views are simultaneously true.</p>
-<p>A single daily candle contains 390 one-minute candles inside it. The daily candle shows you the big picture — where the stock started and ended the day. The 1-minute candles show you the detail — how it got there. Learning to move between timeframes and understand what each one is telling you is a skill developed in Section 09 of this course.</p>`},
+<p>A single daily candle contains 390 one-minute candles inside it. The daily candle shows you the big picture — where the stock started and ended the day. The 1-minute candles show you the detail — how it got there. Learning to move between timeframes and understand what each one is telling you is a skill developed in Section 09 of this course.</p>
+`},
 '01-05':{title:'Setting Up Your Broker',content:`<p>Before your first trade you need a brokerage account. We recommend <strong>Webull</strong> for beginners — it has everything you need to get started without the complexity or fees of other platforms. That said, there are several strong options depending on your trading style, and you should know what else is out there.</p>
 <h3>Why Webull</h3>
 <ul>
