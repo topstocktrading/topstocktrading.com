@@ -621,7 +621,52 @@ const LESSONS={
 <li><strong>Price sideways, volume declining, time: multi-day</strong> — Classic compression before a breakout. The tighter the range and the lower the volume, the more explosive the eventual move tends to be.</li>
 </ul>
 <div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">Take any stock chart and look at the last 10 significant price moves. For each one, identify: Was volume high or low relative to average? How long did the move take? What was happening at the time of day? Then ask: what story do all three data streams tell together about that move?</div></div>`},
-'01-04':{title:'Anatomy of a Candlestick',content:`<h3>The Language of Candlesticks</h3>
+'01-04':{title:'Anatomy of a Candlestick',content:`<div style="background:#0d120d;border:1px solid #1e2e1e;border-radius:12px;padding:24px;margin:24px 0;text-align:center;">
+<p style="color:#6b7c6e;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;">Candlestick Anatomy — Bullish (Green) &amp; Bearish (Red)</p>
+<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="max-width:420px;width:100%;display:inline-block;">
+  <defs><marker id="arr1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#4a6a4a"/></marker></defs>
+  <!-- GREEN CANDLE -->
+  <text x="95" y="18" text-anchor="middle" font-family="monospace" font-size="12" fill="#00d27a" font-weight="700">BULLISH</text>
+  <line x1="95" y1="30" x2="95" y2="75" stroke="#00d27a" stroke-width="2"/>
+  <rect x="75" y="75" width="40" height="80" fill="#00d27a" rx="2"/>
+  <line x1="95" y1="155" x2="95" y2="200" stroke="#00d27a" stroke-width="2"/>
+  <line x1="100" y1="30" x2="148" y2="30" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="152" y="34" font-family="monospace" font-size="11" fill="#c8d4c8">High</text>
+  <text x="152" y="46" font-family="monospace" font-size="10" fill="#6b7c6e">top of upper wick</text>
+  <line x1="100" y1="75" x2="148" y2="68" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="152" y="72" font-family="monospace" font-size="11" fill="#c8d4c8">Close</text>
+  <text x="152" y="84" font-family="monospace" font-size="10" fill="#6b7c6e">top of body (bullish)</text>
+  <text x="152" y="120" font-family="monospace" font-size="11" fill="#00d27a" font-weight="700">BODY</text>
+  <text x="152" y="132" font-family="monospace" font-size="10" fill="#6b7c6e">Close &gt; Open</text>
+  <line x1="100" y1="155" x2="148" y2="162" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="152" y="166" font-family="monospace" font-size="11" fill="#c8d4c8">Open</text>
+  <text x="152" y="178" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of body (bullish)</text>
+  <line x1="100" y1="200" x2="148" y2="200" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="152" y="204" font-family="monospace" font-size="11" fill="#c8d4c8">Low</text>
+  <text x="152" y="216" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of lower wick</text>
+  <!-- RED CANDLE -->
+  <text x="325" y="18" text-anchor="middle" font-family="monospace" font-size="12" fill="#ef4444" font-weight="700">BEARISH</text>
+  <line x1="325" y1="30" x2="325" y2="75" stroke="#ef4444" stroke-width="2"/>
+  <rect x="305" y="75" width="40" height="80" fill="#ef4444" rx="2"/>
+  <line x1="325" y1="155" x2="325" y2="200" stroke="#ef4444" stroke-width="2"/>
+  <line x1="300" y1="30" x2="252" y2="30" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="168" y="34" font-family="monospace" font-size="11" fill="#c8d4c8">High</text>
+  <text x="168" y="46" font-family="monospace" font-size="10" fill="#6b7c6e">top of upper wick</text>
+  <line x1="300" y1="75" x2="252" y2="68" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="168" y="72" font-family="monospace" font-size="11" fill="#c8d4c8">Open</text>
+  <text x="168" y="84" font-family="monospace" font-size="10" fill="#6b7c6e">top of body (bearish)</text>
+  <text x="128" y="120" font-family="monospace" font-size="11" fill="#ef4444" font-weight="700">BODY</text>
+  <text x="128" y="132" font-family="monospace" font-size="10" fill="#6b7c6e">Close &lt; Open</text>
+  <line x1="300" y1="155" x2="252" y2="162" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="168" y="166" font-family="monospace" font-size="11" fill="#c8d4c8">Close</text>
+  <text x="168" y="178" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of body (bearish)</text>
+  <line x1="300" y1="200" x2="252" y2="200" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
+  <text x="168" y="204" font-family="monospace" font-size="11" fill="#c8d4c8">Low</text>
+  <text x="168" y="216" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of lower wick</text>
+  <text x="210" y="248" text-anchor="middle" font-family="monospace" font-size="10" fill="#4a6a4a">Wicks show the full range traveled. The body shows where price opened and closed.</text>
+</svg>
+</div>
+<h3>The Language of Candlesticks</h3>
 <p>A candlestick is a single unit of price data that tells you four things: where the price opened, where it closed, how high it went, and how low it went during a specific period of time. Every candle on every chart you'll ever look at contains these four data points encoded in its shape. Learning to read that shape instantly — without thinking about it — is one of the most fundamental skills in technical trading.</p>
 <h3>The Anatomy of a Candle</h3>
 <p>Every candlestick has two components: the <strong>body</strong> and the <strong>wicks</strong> (also called shadows or tails).</p>
