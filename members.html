@@ -621,52 +621,7 @@ const LESSONS={
 <li><strong>Price sideways, volume declining, time: multi-day</strong> — Classic compression before a breakout. The tighter the range and the lower the volume, the more explosive the eventual move tends to be.</li>
 </ul>
 <div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">Take any stock chart and look at the last 10 significant price moves. For each one, identify: Was volume high or low relative to average? How long did the move take? What was happening at the time of day? Then ask: what story do all three data streams tell together about that move?</div></div>`},
-'01-04':{title:'Anatomy of a Candlestick',content:`<div style="background:#0d120d;border:1px solid #1e2e1e;border-radius:12px;padding:24px;margin:24px 0;text-align:center;">
-<p style="color:#6b7c6e;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;">Candlestick Anatomy — Bullish (Green) &amp; Bearish (Red)</p>
-<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="max-width:420px;width:100%;display:inline-block;">
-  <defs><marker id="arr1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#4a6a4a"/></marker></defs>
-  <!-- GREEN CANDLE -->
-  <text x="95" y="18" text-anchor="middle" font-family="monospace" font-size="12" fill="#00d27a" font-weight="700">BULLISH</text>
-  <line x1="95" y1="30" x2="95" y2="75" stroke="#00d27a" stroke-width="2"/>
-  <rect x="75" y="75" width="40" height="80" fill="#00d27a" rx="2"/>
-  <line x1="95" y1="155" x2="95" y2="200" stroke="#00d27a" stroke-width="2"/>
-  <line x1="100" y1="30" x2="148" y2="30" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="152" y="34" font-family="monospace" font-size="11" fill="#c8d4c8">High</text>
-  <text x="152" y="46" font-family="monospace" font-size="10" fill="#6b7c6e">top of upper wick</text>
-  <line x1="100" y1="75" x2="148" y2="68" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="152" y="72" font-family="monospace" font-size="11" fill="#c8d4c8">Close</text>
-  <text x="152" y="84" font-family="monospace" font-size="10" fill="#6b7c6e">top of body (bullish)</text>
-  <text x="152" y="120" font-family="monospace" font-size="11" fill="#00d27a" font-weight="700">BODY</text>
-  <text x="152" y="132" font-family="monospace" font-size="10" fill="#6b7c6e">Close &gt; Open</text>
-  <line x1="100" y1="155" x2="148" y2="162" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="152" y="166" font-family="monospace" font-size="11" fill="#c8d4c8">Open</text>
-  <text x="152" y="178" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of body (bullish)</text>
-  <line x1="100" y1="200" x2="148" y2="200" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="152" y="204" font-family="monospace" font-size="11" fill="#c8d4c8">Low</text>
-  <text x="152" y="216" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of lower wick</text>
-  <!-- RED CANDLE -->
-  <text x="325" y="18" text-anchor="middle" font-family="monospace" font-size="12" fill="#ef4444" font-weight="700">BEARISH</text>
-  <line x1="325" y1="30" x2="325" y2="75" stroke="#ef4444" stroke-width="2"/>
-  <rect x="305" y="75" width="40" height="80" fill="#ef4444" rx="2"/>
-  <line x1="325" y1="155" x2="325" y2="200" stroke="#ef4444" stroke-width="2"/>
-  <line x1="300" y1="30" x2="252" y2="30" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="168" y="34" font-family="monospace" font-size="11" fill="#c8d4c8">High</text>
-  <text x="168" y="46" font-family="monospace" font-size="10" fill="#6b7c6e">top of upper wick</text>
-  <line x1="300" y1="75" x2="252" y2="68" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="168" y="72" font-family="monospace" font-size="11" fill="#c8d4c8">Open</text>
-  <text x="168" y="84" font-family="monospace" font-size="10" fill="#6b7c6e">top of body (bearish)</text>
-  <text x="128" y="120" font-family="monospace" font-size="11" fill="#ef4444" font-weight="700">BODY</text>
-  <text x="128" y="132" font-family="monospace" font-size="10" fill="#6b7c6e">Close &lt; Open</text>
-  <line x1="300" y1="155" x2="252" y2="162" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="168" y="166" font-family="monospace" font-size="11" fill="#c8d4c8">Close</text>
-  <text x="168" y="178" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of body (bearish)</text>
-  <line x1="300" y1="200" x2="252" y2="200" stroke="#4a6a4a" stroke-width="1" marker-end="url(#arr1)"/>
-  <text x="168" y="204" font-family="monospace" font-size="11" fill="#c8d4c8">Low</text>
-  <text x="168" y="216" font-family="monospace" font-size="10" fill="#6b7c6e">bottom of lower wick</text>
-  <text x="210" y="248" text-anchor="middle" font-family="monospace" font-size="10" fill="#4a6a4a">Wicks show the full range traveled. The body shows where price opened and closed.</text>
-</svg>
-</div>
-<h3>The Language of Candlesticks</h3>
+'01-04':{title:'Anatomy of a Candlestick',content:`<h3>The Language of Candlesticks</h3>
 <p>A candlestick is a single unit of price data that tells you four things: where the price opened, where it closed, how high it went, and how low it went during a specific period of time. Every candle on every chart you'll ever look at contains these four data points encoded in its shape. Learning to read that shape instantly — without thinking about it — is one of the most fundamental skills in technical trading.</p>
 <h3>The Anatomy of a Candle</h3>
 <p>Every candlestick has two components: the <strong>body</strong> and the <strong>wicks</strong> (also called shadows or tails).</p>
@@ -691,7 +646,33 @@ const LESSONS={
 <h3>Timeframes and Candle Size</h3>
 <p>One candlestick on a 1-minute chart represents one minute of trading. On a 5-minute chart, five minutes. On a daily chart, one full trading day. The same stock will look completely different depending on which timeframe you choose — and all of those views are simultaneously true.</p>
 <p>A single daily candle contains 390 one-minute candles inside it. The daily candle shows you the big picture — where the stock started and ended the day. The 1-minute candles show you the detail — how it got there. Learning to move between timeframes and understand what each one is telling you is a skill developed in Section 09 of this course.</p>`},
-'01-05':{title:'Setting Up Your Broker',content:`<p>Before your first trade you need a brokerage account. We recommend Webull for beginners — it has everything you need to get started without the complexity or fees of other platforms.</p><h3>Why Webull</h3><ul><li><strong>Free Level 2 data</strong> — see the order book in real time, which is essential for reading market depth</li><li><strong>Paper trading built in</strong> — practice with fake money before risking real capital</li><li><strong>Commission-free</strong> — no per-trade fees on stocks and options</li><li><strong>Clean charting</strong> — technical analysis tools that work without a steep learning curve</li><li><strong>Mobile and desktop</strong> — trade from anywhere</li></ul><h3>How to get started</h3><ol><li>Download the Webull app or go to webull.com</li><li>Create an account and verify your identity</li><li>Fund your account (minimum varies — as little as $1 to start paper trading)</li><li>Explore the paper trading feature before using real money</li></ol><div class="callout"><div class="callout-label">TST Edge</div><p>Use Webull paper trading for at least 30 days before going live. Not because paper trading is perfect — it is not — but because it forces you to learn the platform, understand order types, and develop habits before real money is on the line.</p></div>`},
+'01-05':{title:'Setting Up Your Broker',content:`<p>Before your first trade you need a brokerage account. We recommend <strong>Webull</strong> for beginners — it has everything you need to get started without the complexity or fees of other platforms. That said, there are several strong options depending on your trading style, and you should know what else is out there.</p>
+<h3>Why Webull</h3>
+<ul>
+<li><strong>Free Level 2 data</strong> — see the order book in real time, which is essential for reading market depth</li>
+<li><strong>Paper trading built in</strong> — practice with fake money before risking real capital</li>
+<li><strong>Commission-free</strong> — no per-trade fees on stocks and options</li>
+<li><strong>Clean charting</strong> — technical analysis tools that work without a steep learning curve</li>
+<li><strong>Mobile and desktop</strong> — trade from anywhere</li>
+</ul>
+<h3>Other Brokers Worth Knowing</h3>
+<p>As you grow as a trader, your broker needs may evolve. Here are the most commonly used platforms among active day traders:</p>
+<ul>
+<li><strong>TD Ameritrade / thinkorswim</strong> — the most powerful charting and analysis platform available. Preferred by experienced traders. Steeper learning curve but unmatched tools.</li>
+<li><strong>Interactive Brokers (IBKR)</strong> — best for active traders who want the lowest margin rates, direct market access, and advanced order routing. Preferred by professionals and high-volume traders.</li>
+<li><strong>TradeStation</strong> — excellent for technical traders who want more advanced scanning, automation, and execution tools.</li>
+<li><strong>Robinhood</strong> — simple, commission-free, and beginner-friendly, but lacks the tools needed for serious active trading. Fine to start, but you will likely outgrow it.</li>
+<li><strong>Moomoo</strong> — similar to Webull, free Level 2 data, commission-free. A solid alternative if Webull is unavailable in your region.</li>
+</ul>
+<p>Start with Webull. Learn the fundamentals. When your trading demands more advanced tools, you will know it — and you will know which platform fits your needs at that point.</p>
+<h3>How to get started</h3>
+<ol>
+<li>Download the Webull app or go to webull.com</li>
+<li>Create an account and verify your identity</li>
+<li>Fund your account (minimum varies — as little as $1 to start paper trading)</li>
+<li>Explore the paper trading feature before using real money</li>
+</ol>
+<div class="callout"><div class="callout-label">TST Edge</div><p>Use Webull paper trading until you are comfortable with your setups — until entries, exits, and order types feel second nature. Not because paper trading is perfect (it is not) but because it forces you to learn the platform and develop habits before real money is on the line. There is no required timeline — some traders are ready in two weeks, others take longer. You will know when you are ready.</p></div>`},
 '01-06':{title:'Building Your Trading Setup',content:`<p>Your physical trading setup affects your performance more than most traders realize. Trying to day trade on a single laptop screen with a slow internet connection is like trying to drive a race car with one eye closed. Get the basics right before you trade serious size.</p><h3>Screens</h3><p>At minimum you need two monitors. One for your charts, one for your order entry and watchlist. Professional traders typically use three or four screens. If you are serious about active trading, a dual monitor setup is not a luxury - it is a necessity. You need to see multiple charts and your platform simultaneously without constantly switching windows.</p><h3>Internet Connection</h3><p>Your internet connection needs to be fast and reliable. Wired ethernet is always better than WiFi for trading - it is more stable and has lower latency. Have a backup plan for internet outages - a phone hotspot is the most practical backup option. Losing your connection during an open trade with no stop loss set is a serious risk.</p><h3>Computer Performance</h3><p>Trading platforms and multiple real-time charts consume significant computing resources. If your computer is slow, your charts will lag and your order entry will be delayed. At minimum you want a modern computer with 8GB of RAM. 16GB is better. Close all unnecessary programs while trading.</p><h3>The Trading Environment</h3><p>Trade in a quiet environment where you will not be interrupted during market hours. Distractions cause mistakes. Active trading requires full focus for the time you are watching the market - even a 30-second distraction at the wrong moment can be expensive.</p><div class="callout"><div class="callout-label">TST Edge</div><p>Your trading setup is an investment in your performance. You would not try to do precision work with bad tools. Treat your trading infrastructure the same way. Spend what you need to spend to have a reliable, distraction-free setup before you risk significant capital.</p></div>`},
 '01-07':{title:'Market Hours',content:`<p>The market doesn't treat all hours equally. Knowing when to trade is just as important as knowing what to trade.</p><h3>Pre-Market (4:00 AM — 9:30 AM ET)</h3><p>Lower volume, wider spreads, more volatile. News and earnings reports hit during this window. Best used for research and preparation.</p><h3>Market Open (9:30 AM — 10:30 AM ET)</h3><p>The highest volume, highest volatility window of the day. This is where the most opportunity exists — and also where the most damage is done to undisciplined traders. The open rewards preparation and punishes impulsiveness.</p><h3>Midday (10:30 AM — 2:00 PM ET)</h3><p>Volume drops significantly. Spreads widen. Price action gets choppy and unreliable. For most retail traders — especially beginners — this is the most dangerous time to trade.</p><h3>Power Hour (3:00 PM — 4:00 PM ET)</h3><p>Volume picks back up as institutions rebalance portfolios. The second best window of the day for active traders.</p><h3>After Hours (4:00 PM — 8:00 PM ET)</h3><p>Earnings reports frequently release here. Very low volume, very wide spreads. Not recommended for most beginners.</p><div class="callout"><div class="callout-label">TST Edge</div><p>If you only traded the open and power hour and did nothing in between, your results would probably improve immediately. Midday chop kills more accounts than bad setups ever will, especially if you trade options.</p></div>`},
 '01-08':{title:'Pre-Market vs After Hours Trading',content:`<p>Not all trading hours are created equal. The regular session from 9:30 AM to 4:00 PM is where the majority of volume and price discovery happens. But the pre-market session (4:00 AM to 9:30 AM) and after hours session (4:00 PM to 8:00 PM) exist and are increasingly active - especially around news and earnings events. Understanding how these sessions behave differently from regular hours is critical before you attempt to trade them.</p><h3>Pre-Market Session</h3><p>Pre-market trading runs from 4:00 AM to 9:30 AM Eastern. Volume is significantly lower than the regular session - sometimes 90% lower on a quiet day. This means spreads are wider, price action is more erratic, and a single large order can move a stock significantly. The advantage of pre-market is that you can react to overnight news, earnings releases, and international market moves before the regular session opens. The disadvantage is that the price you see at 8:00 AM is often not where the stock opens at 9:30 AM after all participants weigh in.</p><h3>After Hours Session</h3><p>After hours trading runs from 4:00 PM to 8:00 PM Eastern. The most activity happens in the first 30-60 minutes after the close, particularly on earnings announcement days. The same rules apply as pre-market - wider spreads, lower volume, more volatile moves on less participation. A stock that moves 10% after hours on earnings will often gap to a different level when the regular session opens and full volume arrives.</p><h3>Key Differences From Regular Session</h3><p>Limit orders only - most brokerages do not allow market orders in extended hours. Lower liquidity means your order may not fill at all or may fill at a significantly different price than you intended. Not all stocks are tradeable in extended hours - some have very limited or zero pre-market and after hours activity. Stop losses often do not trigger in extended hours.</p><div class="callout"><div class="callout-label">TST Edge</div><p>Pre-market and after hours prices are useful for reading sentiment and identifying potential gap levels for the next session. They are far less reliable for actual trading execution. Use extended hours to gather information, not to take significant positions unless you have a specific and well-understood reason to do so.</p></div>`},
