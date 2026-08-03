@@ -4,6 +4,7 @@
 
 const QUIZ_DATA = {
 
+
   's00': {
     title: "Course Introduction",
     section: "s00",
@@ -25,7 +26,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is the course's view on trading alerts and copy-trading services?", choices: ["They are the fastest path to profitability", "Useful supplements once you have your own edge established", "The best way to learn since you see real trades", "Dangerous because they create dependency instead of skill"], answer: 3, hint: "Dependency on someone else's signals means you have no edge when they disappear." }] },
       { variants: [{ q: "What does the TST framework say about the relationship between risk and reward?", choices: ["Higher risk always means higher reward", "You should minimize all risk at all times", "Risk and reward must be consciously calibrated to your edge and psychology", "Reward should always be 3x risk, no exceptions"], answer: 2, hint: "Risk/reward is personal and context-dependent. There is no universal ratio that works for everyone." }] }
     ]
-  }
+  },
 
   's01': {
     title: "Trading Fundamentals",
@@ -48,7 +49,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does 'time of day' matter in trading?", choices: ["It does not matter \u2014 price action is price action", "Different times have different volatility, volume, and reliability patterns that affect setup quality", "Morning is always best and afternoon is always worst", "Only the open and close matter"], answer: 1, hint: "The open, midday, and close behave differently. Knowing which setups work in which session is part of your edge." }] },
       { variants: [{ q: "What is the significance of the opening candle?", choices: ["It determines the direction for the entire day without exception", "It sets the initial range and reveals early order flow and institutional positioning", "It should always be ignored as noise", "It only matters for stocks that gapped up"], answer: 1, hint: "The opening candle establishes context \u2014 where price opened vs previous close, where buyers and sellers are positioned." }] }
     ]
-  }
+  },
 
   's02': {
     title: "The Mathematical Foundation of Trading",
@@ -71,7 +72,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "According to TST, what does 'your personal playbook' ultimately represent?", choices: ["A set of rules imposed by your broker", "Your highest-conviction setups where data proves you have a repeatable edge", "A wishlist of stocks to trade", "A copy of another trader's successful system"], answer: 1, hint: "A playbook is built from YOUR data showing YOUR edge. It cannot be borrowed from someone else." }] },
       { variants: [{ q: "What happens to expectancy when a trader moves to unfamiliar setups during a losing streak?", choices: ["Expectancy improves because they are trying new things", "Expectancy drops further because they are trading outside proven edge \u2014 compounding the problem", "Nothing changes \u2014 all setups have equal expectancy", "The new setups always outperform in drawdown periods"], answer: 1, hint: "Abandoning your edge during drawdowns is one of the most common and destructive trading mistakes." }] }
     ]
-  }
+  },
 
   's03': {
     title: "Price Action & Chart Reading",
@@ -94,7 +95,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is a reversal pattern introduction telling you about market structure?", choices: ["The trend will continue in the same direction", "There is evidence the current trend is exhausting \u2014 buyers or sellers are losing control", "Volume is always high at reversals", "You should always fade the current trend"], answer: 1, hint: "Reversal patterns signal exhaustion. They do not guarantee a reversal but indicate the balance of power is shifting." }] },
       { variants: [{ q: "What does a Doji candlestick at a major resistance level suggest?", choices: ["Strong continuation of the current trend", "Indecision at a key level \u2014 buyers and sellers are in equilibrium and a breakout or rejection is imminent", "Always a buy signal", "The level is not significant"], answer: 1, hint: "Doji at resistance = indecision at a key level. Price will resolve \u2014 wait for the next candle to confirm direction." }] }
     ]
-  }
+  },
 
   's04': {
     title: "Volume & Order Flow",
@@ -117,7 +118,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does 'integrating volume with price action' mean?", choices: ["Only trade when volume is above average", "Using volume to confirm or question what price action is telling you", "Multiplying price by volume", "Trading only liquid stocks"], answer: 1, hint: "Price shows direction. Volume shows conviction. Together they give a complete picture of what is happening." }] },
       { variants: [{ q: "What does abnormal pre-market volume suggest?", choices: ["Nothing \u2014 pre-market volume is unreliable", "A catalyst event that institutional participants are responding to before the open", "The stock will definitely gap up", "Retail traders are active"], answer: 1, hint: "Abnormal pre-market volume signals something happened. Investigate before assuming direction." }] }
     ]
-  }
+  },
 
   's05': {
     title: "Technical Indicators & Oscillators",
@@ -140,7 +141,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does declining momentum while price rises suggest?", choices: ["The trend is strengthening", "Hidden weakness \u2014 rate of advance slowing, the move may be losing steam", "The stock is a buy", "Volume is about to surge"], answer: 1, hint: "Declining momentum while price advances = fewer buyers stepping in. The move decelerates before price confirms." }] },
       { variants: [{ q: "What is the golden cross?", choices: ["Price breaking above a Fibonacci level", "50-day MA crossing above the 200-day MA \u2014 a long-term bullish signal", "RSI crossing above 50", "MACD crossing the signal line"], answer: 1, hint: "Golden cross (50 above 200) is a widely watched long-term trend signal confirming the medium-term trend turned bullish." }] }
     ]
-  }
+  },
 
   's06': {
     title: "Trader Psychology & Behavioral Patterns",
@@ -163,7 +164,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is the correct response when you feel overwhelming urge to enter a trade?", choices: ["Trust your instincts \u2014 enter immediately", "Pause and ask whether this is your setup or FOMO/revenge/boredom driving the decision", "Always trade your instincts", "Enter with half size as compromise"], answer: 1, hint: "Strong urgency is often an emotional signal, not an edge signal. The best setups are usually obvious." }] },
       { variants: [{ q: "What is the key difference between reactive and adaptive responses to losses?", choices: ["Reactive responses are faster and usually better", "Reactive = emotional, impulsive, blaming; Adaptive = analytical, systematic, learning-focused", "There is no meaningful difference", "Adaptive responses take too long"], answer: 1, hint: "Reactive responses are driven by emotion and usually make things worse. Adaptive responses treat losses as data." }] }
     ]
-  }
+  },
 
   's07': {
     title: "Accounts, Execution & Risk Management",
@@ -186,7 +187,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does position correlation mean and why does it matter?", choices: ["Whether two stocks are in the same price range", "When multiple positions move together \u2014 correlated positions amplify risk because they all lose at the same time", "The relationship between volume and price", "Whether a position is long or short"], answer: 1, hint: "High correlation means your 'diversified' portfolio can drop together. Real diversification requires uncorrelated positions." }] },
       { variants: [{ q: "What is the correct way to handle a stop being hit?", choices: ["Move the stop further away to give the trade more room", "Exit immediately \u2014 the stop exists because that price level invalidates your thesis", "Wait to see if it recovers", "Add to the position to reduce average cost"], answer: 1, hint: "When your stop hits, your thesis is invalidated. Exit immediately. Moving stops turns small losses into catastrophes." }] }
     ]
-  }
+  },
 
   's08': {
     title: "Journaling & Self-Analysis",
@@ -209,7 +210,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does a good journal entry include at minimum?", choices: ["Just the ticker, entry, and exit", "Ticker, date, setup type, entry/exit, planned stop, actual stop, emotional state, deviation from plan, and what you learned", "Only the profit or loss amount", "The news catalyst and chart screenshot"], answer: 1, hint: "A complete journal entry captures execution, emotion, and learning. Missing any element weakens the feedback loop." }] },
       { variants: [{ q: "What is the ultimate purpose of journaling?", choices: ["To create a legal record", "To build a data-driven self-knowledge system that makes you progressively better through systematic feedback", "To share your results with other traders", "To calculate your Sharpe ratio"], answer: 1, hint: "Journaling IS the system. Without it you cannot learn systematically or improve intentionally." }] }
     ]
-  }
+  },
 
   's09': {
     title: "Market Structure & Macro Context",
@@ -232,7 +233,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does a 9-to-1 breadth day (advancers over decliners) signal?", choices: ["The market is overbought and will reverse immediately", "Extreme breadth thrust \u2014 a powerful bullish signal indicating broad institutional participation and potential sustained upside", "The market is manipulated", "Only a few sectors are participating"], answer: 1, hint: "Breadth thrust has historically preceded strong sustained rallies. It signals broad, not narrow, buying." }] },
       { variants: [{ q: "What does knowing your macro context allow a trader to do?", choices: ["Predict the next 6 months of market direction", "Align individual trade direction with the prevailing macro environment \u2014 dramatically improving trade probability", "Choose the best long-term investments", "Avoid all losses from macroeconomic events"], answer: 1, hint: "Trading with macro context = trading with the tide. Against the macro means fighting institutional money flows." }] }
     ]
-  }
+  },
 
   's10': {
     title: "Daily Market Structure & Intraday Setups",
@@ -255,7 +256,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is the first green day after multiple red days pattern?", choices: ["The first profitable day after a losing streak", "A stock that has been declining for multiple sessions showing its first positive day \u2014 potential trend change signal", "Any bounce in a downtrending stock", "A pattern only applicable to small caps"], answer: 1, hint: "First green day after multiple reds = selling exhaustion. Shorts begin covering, buyers step in." }] },
       { variants: [{ q: "What does breakdown below support signal for an intraday trader?", choices: ["An immediate buy opportunity", "Support has failed \u2014 sellers have overcome buyers at that level; price likely to continue lower to the next support", "The stock will always recover to the broken support", "High volume is required for a valid breakdown"], answer: 1, hint: "Breakdowns flip the script \u2014 former support becomes new resistance. Trapped buyers add selling pressure on rallies." }] }
     ]
-  }
+  },
 
   's11': {
     title: "Small Cap Dynamics & Float-Based Trading",
@@ -278,7 +279,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is the relationship between short interest ratio and squeeze potential?", choices: ["Higher short interest always means a guaranteed squeeze", "Higher short interest = more forced buyers if price rises. Combined with a small float, modest buying can force an explosive squeeze", "Short interest has no relationship to price moves", "Only institutional short interest matters"], answer: 1, hint: "Days to cover (short interest / avg daily volume) measures squeeze fuel. High days to cover + small float = max squeeze potential." }] },
       { variants: [{ q: "Why are pre-market halts significant for small cap traders?", choices: ["Pre-market halts are common and usually harmless", "A pre-market halt on a small cap typically indicates significant news pending \u2014 when trading resumes expect extreme volatility", "Pre-market halts only affect institutional traders", "They indicate the stock is about to be delisted"], answer: 1, hint: "Pre-market halt on a small cap = news is dropping. The gap up or down when trading resumes sets the tone for the session." }] }
     ]
-  }
+  },
 
   's12': {
     title: "IPO Strategy & First-Day Trading",
@@ -301,7 +302,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does identifying IPO opportunities require?", choices: ["Reading the company's website", "Evaluating sector context, institutional demand signals, valuation vs peers, timing relative to market conditions, and first-day price action quality", "Buying every IPO equally weighted", "Focusing only on the largest IPOs"], answer: 1, hint: "Not every IPO is an opportunity. Screening for institutional enthusiasm, reasonable valuation, and favorable conditions filters the best." }] },
       { variants: [{ q: "What is the risk of trading an IPO in a sector currently out of favor?", choices: ["No additional risk \u2014 a good company is always a good trade", "The macro headwind reduces demand, making even quality IPOs struggle to maintain gains", "Sector conditions have no impact on IPO performance", "Institutional favor is impossible to determine"], answer: 1, hint: "A great company in an out-of-favor sector faces selling pressure from portfolio rebalancing. Always consider sector context." }] }
     ]
-  }
+  },
 
   's13': {
     title: "Options Trading",
@@ -324,7 +325,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does position sizing for options require different consideration vs stocks?", choices: ["Options always require less capital than stocks", "Options can go to zero \u2014 the maximum loss is always 100% of premium paid; sizing must account for the possibility of total loss", "Options have the same position sizing rules as stocks", "Larger positions are better since risk is limited"], answer: 1, hint: "Options positions can go to zero. Size each options trade so that a total loss is an acceptable dollar amount." }] },
       { variants: [{ q: "What is the key risk of selling options without understanding assignment?", choices: ["There is no meaningful risk in selling options", "Short calls can result in being forced to sell shares you do not own (naked call); short puts require buying shares at the strike if assigned", "Assignment only happens to retail traders", "Options sellers never get assigned before expiration"], answer: 1, hint: "Assignment = being forced to buy or sell shares. Naked calls have unlimited loss potential. Always understand assignment risk." }] }
     ]
-  }
+  },
 
   's14': {
     title: "Swing Trading",
@@ -347,7 +348,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is the purpose of earnings plays as a swing trading strategy?", choices: ["To always hold through earnings announcements", "To position before or immediately after earnings to capture the multi-day continuation of a strong earnings reaction", "To avoid all stocks reporting earnings", "To trade the implied volatility collapse"], answer: 1, hint: "Post-earnings swing: after a strong earnings reaction, the stock often continues trending as institutions build positions over days." }] },
       { variants: [{ q: "What makes a multi-day momentum name different from a stock you would day trade?", choices: ["They are the same thing", "Momentum names are in institutional-sponsored sustained trends \u2014 they have fundamental support for the move, making multi-day holds appropriate", "Momentum names always have higher volume", "Day trades are always more profitable than momentum swings"], answer: 1, hint: "Institutionally sponsored momentum names have fundamental catalysts behind them. The trend is self-sustaining, not just a one-day event." }] }
     ]
-  }
+  },
 
   's15': {
     title: "Long-Term Investing",
@@ -370,7 +371,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is the role of dividends in a long-term portfolio?", choices: ["Dividends are irrelevant to total return", "Dividends provide a return component that is independent of price appreciation \u2014 when reinvested they significantly accelerate compounding", "Dividend stocks are always better than growth stocks", "Dividends always mean a company is financially strong"], answer: 1, hint: "Reinvested dividends are a compounding accelerator. A 3% dividend reinvested over 30 years dramatically increases total return vs no dividend." }] },
       { variants: [{ q: "What is dollar-cost averaging and why is it useful for long-term investors?", choices: ["Buying a fixed dollar amount only when the market is down", "Investing a fixed dollar amount at regular intervals regardless of price \u2014 reducing the impact of volatility and eliminating the need to time the market perfectly", "Only investing when the market is at all-time highs", "A strategy that only works in bull markets"], answer: 1, hint: "DCA removes the pressure of timing the market perfectly. You buy more shares when prices are low and fewer when high \u2014 averaging your cost over time." }] }
     ]
-  }
+  },
 
   's16': {
     title: "Personal Rules & Playbook Execution",
@@ -393,7 +394,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is the role of rules in managing your psychology during trading?", choices: ["Rules create unnecessary rigidity", "Rules remove the need for willpower in the moment \u2014 the decision is already made before the emotional pressure arrives", "Rules are only for beginners", "Experienced traders do not need rules"], answer: 1, hint: "Rules pre-commit you to a behavior before the emotional heat of the market. Without pre-committed rules, emotion wins every time." }] },
       { variants: [{ q: "What does 'scaling winners' mean in the context of personal playbook execution?", choices: ["Selling portions of a winning trade as it moves in your favor", "Adding to a winning position at specific pre-defined technical levels that confirm the original thesis is playing out correctly", "Never adding to any position after entry", "Holding all winners to a specific price target without adjustment"], answer: 1, hint: "Scaling winners is a pre-defined playbook action \u2014 not an impulsive decision. The levels to add are identified before the trade is entered." }] }
     ]
-  }
+  },
 
   's16b': {
     title: "Advanced Pattern Recognition",
@@ -416,7 +417,7 @@ const QUIZ_DATA = {
       { variants: [{ q: "What is mean reversion on extremes?", choices: ["Stocks always return to their all-time highs", "When a stock moves far beyond its normal range, the probability of snapping back toward the mean increases \u2014 the further from normal, the greater the snap-back risk", "Mean reversion never works in trending markets", "A long-term investing concept"], answer: 1, hint: "Mean reversion: extreme moves create extreme imbalances. The snap-back from extreme overextension or oversold conditions can be sharp and fast." }] },
       { variants: [{ q: "What are exhaustion signals in a trend?", choices: ["Signals that a trend is just beginning", "Signs that the trend is losing energy \u2014 climax volume, decreasing momentum, smaller candles, failed continuation attempts \u2014 indicating the trend may be ending", "Technical indicators crossing zero", "Any pause in a trending move"], answer: 1, hint: "Exhaustion: volume climax + decreasing candle size + failed new high attempts + RSI divergence = the trend is running out of fuel. Exit before the reversal confirms." }] }
     ]
-  }
+  },
 
   's17': {
     title: "Advanced Psychology & Discipline",
@@ -440,7 +441,6 @@ const QUIZ_DATA = {
       { variants: [{ q: "What does burnout prevention look like in practice?", choices: ["Never take days off from trading", "Taking regular breaks, maintaining non-trading interests, setting defined stop times, and treating trading as one part of a complete life rather than an all-consuming identity", "Only trading 3 days per week indefinitely", "Reducing position sizes forever after burnout"], answer: 1, hint: "Burnout prevention = sustainable rhythm. Regular breaks, defined stop times, outside interests. Trading as a craft, not an obsession." }] }
     ]
   },
-
 
 
   beginner: {
