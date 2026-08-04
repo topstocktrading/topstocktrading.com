@@ -1897,7 +1897,81 @@ Price declining but on low volume. Sellers are not aggressive — the pullback i
 <div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">Every time you see a price move worth noting, immediately look at the volume bar beneath it and classify the combination: up/up, up/down, down/up, or down/down. Do this for every significant candle on the chart before you draw any conclusion about what the chart is telling you. Within a few weeks this becomes automatic — and your read of charts will improve dramatically.</div></div>`},
 '04-04':{title:'Relative Volume (RVOL)',content:`<p>Relative volume is one of the most important numbers in a trader's pre-market routine. It tells you how much volume a stock is trading compared to its average volume at the same time of day. A stock trading at 5x relative volume is exceptional. A stock trading at 0.3x relative volume is dead money.</p><h3>What RVOL Tells You</h3><p>When a stock has unusually high relative volume it means something is happening. News, earnings, unusual options activity, sector catalyst - something has attracted significant attention to this stock today. High RVOL is the first filter because it means the stock is alive and moving with real participation. Low RVOL means even if the chart looks perfect, there are not enough participants to push it where you need it to go.</p><h3>The RVOL Threshold</h3><p>As a general guideline, look for stocks with at least 1.5x to 2x relative volume as a baseline for day trading. Above 3x is strong. Above 5x is exceptional and often indicates a major catalyst. Below 1x means the stock is trading below its normal activity level and setups on that stock carry lower probability of follow-through.</p><h3>How to Use RVOL Pre-Market</h3><p>Before the market opens, sort your scanner by relative volume to see which stocks are already trading significantly above their normal pre-market volume. These are your candidates for the day. A stock at 10x relative volume pre-market with a clear catalyst is on every active trader's radar that morning.</p><h3>RVOL During the Day</h3><p>Watch how relative volume changes throughout the session. A stock that starts the day at 5x RVOL but falls to 1x RVOL by 10am is losing participation. A stock that starts moderate and climbs to 4x RVOL by midday is attracting increasing attention - something is building.</p><div class="callout"><div class="callout-label">TST Edge</div><p>No RVOL, no trade. This is a rule worth following strictly as a beginner. Every setup looks better with high relative volume behind it. Volume is conviction. Relative volume tells you how unusual that conviction is today.</p></div>`},
 '04-05':{title:'Stock Screeners for Beginners',content:`<p>A stock screener is a tool that filters thousands of stocks down to a handful that meet criteria you define. Without a screener you would need to manually look through thousands of charts every day. With a screener you can surface the 3-5 stocks that actually deserve your attention in minutes. Learning to use a screener is one of the first practical skills you need to develop as a trader.</p><h3>What a Screener Does</h3><p>You set filters - minimum volume, price range, percentage move, relative volume - and the screener returns every stock that meets all of your criteria simultaneously. Instead of looking for a needle in a haystack you are telling the screener exactly what the needle looks like and letting it search for you.</p><h3>How to Use Webull Scanner</h3><p>In Webull open the Markets tab and select Screener. You will see a list of filters on the left side. The most useful filters for beginners are: Price (set a range you can afford to trade), Volume (minimum shares traded today), Change Percentage (stocks moving more than a certain percent), and Market Cap (large cap vs small cap). Set your filters, hit Apply, and Webull returns a list of stocks meeting your criteria sorted by whichever column you choose.</p><h3>The Most Important Filters</h3><p>Relative Volume - stocks trading at 2x or more of their average volume are doing something unusual. This is your primary filter for finding stocks worth watching. Price Change - filtering for stocks moving more than 3-5% pre-market gives you your catalyst candidates for the day. Average Volume - setting a minimum of 500,000 shares average daily volume ensures the stocks you find are liquid enough to trade without significant slippage.</p><h3>Free Scanner Options</h3><p>Webull has a built-in scanner. Finviz.com has a powerful free web-based screener. Both are sufficient for beginners. As you develop more specific criteria you may consider a paid scanner like Trade Ideas, but start with the free options and learn what you are looking for before spending money on tools.</p><div class="callout"><div class="callout-label">TST Edge</div><p>Your scanner is only as good as your filters. The goal is not to find everything - it is to find the 2-3 stocks that deserve your full attention today. Start with simple filters, learn which ones surface the types of moves you want to trade, and refine from there. A beginner with 3 clear filters will outperform one with 20 confusing ones.</p></div>`},
-'04-06':{title:'Reading Level 2',content:`<p>Level 2 is a display of all the current bids and offers for a stock — showing you not just the best price but the depth of the order book.</p><h3>The components of Level 2</h3><ul><li><strong>Bid side</strong> — all buyers, organized from highest price to lowest.</li><li><strong>Ask side</strong> — all sellers, organized from lowest price to highest.</li><li><strong>Size</strong> — the number of shares at each price level.</li></ul><h3>What Level 2 tells you</h3><p>Where the walls are — large blocks of shares at a specific price create temporary support or resistance. A seller with 50,000 shares at $50.00 is a wall — price will struggle to push through until that seller is absorbed or moves their order.</p><div class="callout"><div class="callout-label">TST Edge</div><p>Level 2 is a tool for experienced traders — beginners often overthink it. The most important thing to watch is whether bids or asks are dominating. Are buyers aggressive and refreshing their bids? Or are sellers stepping in front of every uptick?</p></div>
+'04-06':{title:'Reading Level 2',content:`<div style="background:#0d120d;border:1px solid #1e2e1e;border-radius:12px;padding:20px;margin:24px 0;overflow-x:auto;"><p style="color:#6b7c6e;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;text-align:center;">Level 2 Order Book — Reading Bids, Asks, and Market Depth</p><svg viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:320px;display:block;">
+  <!-- Header -->
+  <rect x="0" y="0" width="480" height="30" fill="#0a140a" rx="4"/>
+  <text x="240" y="20" font-family="monospace" font-size="12" fill="#c8d4c8" text-anchor="middle" font-weight="700">AAPL — Level 2 Order Book</text>
+
+  <!-- Column headers -->
+  <text x="60" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">MM/ECN</text>
+  <text x="160" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">BID SIZE</text>
+  <text x="240" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">BID</text>
+  <text x="320" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">ASK</text>
+  <text x="400" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">ASK SIZE</text>
+  <line x1="0" y1="54" x2="480" y2="54" stroke="#1e2e1e" stroke-width="1"/>
+
+  <!-- BID side (green) — buyers -->
+  <rect x="0" y="56" width="238" height="22" fill="rgba(0,210,122,0.08)"/>
+  <text x="60" y="71" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">ARCA</text>
+  <text x="160" y="71" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">500</text>
+  <text x="238" y="71" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="end" font-weight="700">189.48</text>
+
+  <rect x="0" y="80" width="238" height="22" fill="rgba(0,210,122,0.05)"/>
+  <text x="60" y="95" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">NSDQ</text>
+  <text x="160" y="95" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">1200</text>
+  <text x="238" y="95" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="end" font-weight="700">189.45</text>
+
+  <rect x="0" y="104" width="238" height="22" fill="rgba(0,210,122,0.03)"/>
+  <text x="60" y="119" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">EDGX</text>
+  <text x="160" y="119" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">800</text>
+  <text x="238" y="119" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="end" font-weight="700">189.40</text>
+
+  <rect x="0" y="128" width="238" height="22" fill="rgba(0,210,122,0.02)"/>
+  <text x="60" y="143" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">BATS</text>
+  <text x="160" y="143" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">5000</text>
+  <text x="238" y="143" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="end" font-weight="700">189.35</text>
+
+  <rect x="0" y="152" width="238" height="22" fill="rgba(0,210,122,0.01)"/>
+  <text x="60" y="167" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">ARCA</text>
+  <text x="160" y="167" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">300</text>
+  <text x="238" y="167" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="end" font-weight="700">189.30</text>
+
+  <!-- Spread line -->
+  <line x1="0" y1="176" x2="480" y2="176" stroke="#1e2e1e" stroke-width="1" stroke-dasharray="4,2"/>
+  <text x="240" y="189" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">← spread: $0.02 →</text>
+
+  <!-- ASK side (red) — sellers -->
+  <rect x="242" y="56" width="238" height="22" fill="rgba(239,68,68,0.08)"/>
+  <text x="242" y="71" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="start" font-weight="700">189.50</text>
+  <text x="360" y="71" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">200</text>
+  <text x="430" y="71" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">NSDQ</text>
+
+  <rect x="242" y="80" width="238" height="22" fill="rgba(239,68,68,0.05)"/>
+  <text x="242" y="95" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="start" font-weight="700">189.55</text>
+  <text x="360" y="95" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">900</text>
+  <text x="430" y="95" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">ARCA</text>
+
+  <rect x="242" y="104" width="238" height="22" fill="rgba(239,68,68,0.03)"/>
+  <text x="242" y="119" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="start" font-weight="700">189.60</text>
+  <text x="360" y="119" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">1500</text>
+  <text x="430" y="119" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">EDGX</text>
+
+  <rect x="242" y="128" width="238" height="22" fill="rgba(239,68,68,0.02)"/>
+  <text x="242" y="143" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="start" font-weight="700">189.70</text>
+  <text x="360" y="143" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">4800</text>
+  <text x="430" y="143" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">BATS</text>
+
+  <rect x="242" y="152" width="238" height="22" fill="rgba(239,68,68,0.01)"/>
+  <text x="242" y="167" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="start" font-weight="700">189.80</text>
+  <text x="360" y="167" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">700</text>
+  <text x="430" y="167" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">ARCA</text>
+
+  <!-- Annotations -->
+  <text x="240" y="218" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Green = buyers (bids). Red = sellers (asks). Large 5,000 bid at $189.35 = institutional support level.</text>
+  <text x="240" y="232" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Large 4,800 ask at $189.70 = resistance. Price must absorb all those sellers to move higher.</text>
+  <text x="240" y="250" font-family="monospace" font-size="9" fill="#fbbf24" text-anchor="middle">⚠ Orders can be placed and pulled. Never trade Level 2 in isolation — confirm with price action.</text>
+</svg></div>
+<p>Level 2 is a display of all the current bids and offers for a stock — showing you not just the best price but the depth of the order book.</p><h3>The components of Level 2</h3><ul><li><strong>Bid side</strong> — all buyers, organized from highest price to lowest.</li><li><strong>Ask side</strong> — all sellers, organized from lowest price to highest.</li><li><strong>Size</strong> — the number of shares at each price level.</li></ul><h3>What Level 2 tells you</h3><p>Where the walls are — large blocks of shares at a specific price create temporary support or resistance. A seller with 50,000 shares at $50.00 is a wall — price will struggle to push through until that seller is absorbed or moves their order.</p><div class="callout"><div class="callout-label">TST Edge</div><p>Level 2 is a tool for experienced traders — beginners often overthink it. The most important thing to watch is whether bids or asks are dominating. Are buyers aggressive and refreshing their bids? Or are sellers stepping in front of every uptick?</p></div>
 <h3>Level 2 Order Book Basics</h3>
 <p>Level 2 is a real-time display of the bids and asks for a stock — not just the current best bid and best ask (that's Level 1), but a window into the entire depth of the market: every buy order and every sell order that exists at every price level above and below the current price.</p>
 <p>Understanding Level 2 separates traders who see the current price from traders who see the supply and demand structure behind the current price. When used correctly, it gives you information about where buyers and sellers are positioned that price action alone doesn't reveal.</p>
@@ -1917,7 +1991,72 @@ Price declining but on low volume. Sellers are not aggressive — the pullback i
 <p>Level 2 shows the visible order book — the orders that have been placed and are sitting at various price levels. It does not show hidden orders, dark pool activity, or the intentions of large institutions who route orders off-exchange. This means the Level 2 you see is always an incomplete picture of the actual supply and demand.</p>
 <p>Additionally, orders on Level 2 can be canceled instantly. A large bid that disappears the moment price approaches it was likely a fake order placed to create the appearance of support — a practice called spoofing, covered in detail in lesson 04-11.</p>
 <div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">Level 2 is most useful for intraday traders on small and mid-cap stocks where individual large orders are visible and meaningful. On large-cap liquid names like AAPL or TSLA, the order book refreshes thousands of times per second and individual orders are impossible to track meaningfully. Adjust your reliance on Level 2 based on what type of stock you're trading.</div></div>`},
-'04-07':{title:'Reading the Tape',content:`<p>The tape — also called time and sales — is a real time record of every transaction that occurs in a stock.</p><ul><li><strong>Green prints</strong> — trades that executed at the ask price. Buyers were aggressive.</li><li><strong>Red prints</strong> — trades that executed at the bid price. Sellers were aggressive.</li><li><strong>Large prints</strong> — big blocks of shares trading at once. Institutional activity.</li></ul><h3>Tape speed</h3><p>Fast tape with many prints — high activity, strong momentum. Slow tape with few prints — low interest, little conviction. The move may stall.</p><div class="callout"><div class="callout-label">TST Edge</div><p>The tape tells the truth when the chart might lie. A chart can show a breakout that looks clean — but if the tape is showing nothing but red prints and sellers hitting bids on every uptick, that breakout is not what it appears. Learn to read it and you'll have an edge that most retail traders simply don't have.</p></div>
+'04-07':{title:'Reading the Tape',content:`<div style="background:#0d120d;border:1px solid #1e2e1e;border-radius:12px;padding:20px;margin:24px 0;overflow-x:auto;"><p style="color:#6b7c6e;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;text-align:center;">Time &amp; Sales — Reading the Tape</p><svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:280px;display:block;">
+  <!-- Header -->
+  <rect x="0" y="0" width="420" height="30" fill="#0a140a" rx="4"/>
+  <text x="210" y="20" font-family="monospace" font-size="12" fill="#c8d4c8" text-anchor="middle" font-weight="700">Time &amp; Sales — The Tape</text>
+
+  <!-- Column headers -->
+  <text x="60" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">TIME</text>
+  <text x="160" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">PRICE</text>
+  <text x="260" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">SIZE</text>
+  <text x="360" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">SIDE</text>
+  <line x1="0" y1="54" x2="420" y2="54" stroke="#1e2e1e" stroke-width="1"/>
+
+  <!-- Transactions — newest at top -->
+  <!-- Big green block — aggressive buyer lifting ask -->
+  <rect x="0" y="56" width="420" height="22" fill="rgba(0,210,122,0.15)"/>
+  <text x="60" y="71" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">10:24:31</text>
+  <text x="160" y="71" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">189.50</text>
+  <text x="260" y="71" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">10,000</text>
+  <text x="360" y="71" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">ASK ↑</text>
+
+  <rect x="0" y="80" width="420" height="22" fill="rgba(0,210,122,0.08)"/>
+  <text x="60" y="95" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">10:24:30</text>
+  <text x="160" y="95" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">189.49</text>
+  <text x="260" y="95" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">2,400</text>
+  <text x="360" y="95" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">ASK ↑</text>
+
+  <rect x="0" y="104" width="420" height="22" fill="rgba(0,210,122,0.05)"/>
+  <text x="60" y="119" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">10:24:29</text>
+  <text x="160" y="119" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">189.48</text>
+  <text x="260" y="119" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">800</text>
+  <text x="360" y="119" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">ASK ↑</text>
+
+  <!-- Small red — passive seller -->
+  <rect x="0" y="128" width="420" height="22" fill="rgba(239,68,68,0.05)"/>
+  <text x="60" y="143" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">10:24:28</text>
+  <text x="160" y="143" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="middle">189.45</text>
+  <text x="260" y="143" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">300</text>
+  <text x="360" y="143" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">BID ↓</text>
+
+  <!-- Big green again -->
+  <rect x="0" y="152" width="420" height="22" fill="rgba(0,210,122,0.12)"/>
+  <text x="60" y="167" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">10:24:27</text>
+  <text x="160" y="167" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">189.48</text>
+  <text x="260" y="167" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">5,000</text>
+  <text x="360" y="167" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">ASK ↑</text>
+
+  <rect x="0" y="176" width="420" height="22" fill="rgba(239,68,68,0.05)"/>
+  <text x="60" y="191" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">10:24:26</text>
+  <text x="160" y="191" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="middle">189.44</text>
+  <text x="260" y="191" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">200</text>
+  <text x="360" y="191" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">BID ↓</text>
+
+  <rect x="0" y="200" width="420" height="22" fill="rgba(0,210,122,0.08)"/>
+  <text x="60" y="215" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">10:24:25</text>
+  <text x="160" y="215" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">189.47</text>
+  <text x="260" y="215" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">1,800</text>
+  <text x="360" y="215" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">ASK ↑</text>
+
+  <!-- Legend/note -->
+  <line x1="0" y1="228" x2="420" y2="228" stroke="#1e2e1e" stroke-width="1"/>
+  <text x="210" y="245" font-family="monospace" font-size="9" fill="#00d27a" text-anchor="middle">Green (ASK) = aggressive buyer lifting the offer — buyers want in NOW</text>
+  <text x="210" y="258" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">Red (BID) = aggressive seller hitting the bid — sellers want out NOW</text>
+  <text x="210" y="273" font-family="monospace" font-size="9" fill="#fbbf24" text-anchor="middle">10,000 share block at ask = institutional buying. Small reds = retail noise.</text>
+  <text x="210" y="288" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Predominantly green tape with large blocks = buyers in control</text>
+</svg></div>
+<p>The tape — also called time and sales — is a real time record of every transaction that occurs in a stock.</p><ul><li><strong>Green prints</strong> — trades that executed at the ask price. Buyers were aggressive.</li><li><strong>Red prints</strong> — trades that executed at the bid price. Sellers were aggressive.</li><li><strong>Large prints</strong> — big blocks of shares trading at once. Institutional activity.</li></ul><h3>Tape speed</h3><p>Fast tape with many prints — high activity, strong momentum. Slow tape with few prints — low interest, little conviction. The move may stall.</p><div class="callout"><div class="callout-label">TST Edge</div><p>The tape tells the truth when the chart might lie. A chart can show a breakout that looks clean — but if the tape is showing nothing but red prints and sellers hitting bids on every uptick, that breakout is not what it appears. Learn to read it and you'll have an edge that most retail traders simply don't have.</p></div>
 <h3>Reading the Tape</h3>
 <p>The tape — also called the time and sales window — is a real-time feed of every transaction that occurs in a stock: the price, the size of the trade, and whether it executed at the bid or the ask. While Level 2 shows you where orders are sitting, the tape shows you what's actually happening — the transactions being executed right now.</p>
 <p>Reading the tape is one of the older skills in trading, dating back to the original ticker tape machines of the early 20th century. The technology has changed dramatically but the core skill — reading the flow of buying and selling through actual transactions — remains as relevant as ever.</p>
@@ -2582,7 +2721,44 @@ Price declining but on low volume. Sellers are not aggressive — the pullback i
 <p>Timing matters significantly in short selling. The best short setups tend to occur: after failed breakouts (where a stock breaks resistance but immediately reverses), at key resistance levels where prior sellers returned, and during afternoon fade patterns in stocks that have run hard in the morning and are losing momentum as retail interest wanes.</p>
 
 <div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">Short selling is harder than it looks and harder than going long. The natural bias of markets is upward — you're fighting that bias every time you short. Borrow costs eat into your gains. Squeezes can be catastrophic. Start with small size when learning to short. Focus on the clearest, most liquid setups with manageable borrow rates. Never short a stock without knowing what your maximum loss is and being fully prepared to accept it.</div></div>`},
-'07-06':{title:'Order Types Overview',content:`<h3>Order Types Overview</h3>
+'07-06':{title:'Order Types Overview',content:`<div style="background:#0d120d;border:1px solid #1e2e1e;border-radius:12px;padding:20px;margin:24px 0;overflow-x:auto;"><p style="color:#6b7c6e;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;text-align:center;">Order Types — At a Glance</p><svg viewBox="0 0 560 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:360px;display:block;">
+  <text x="280" y="18" font-family="monospace" font-size="11" fill="#c8d4c8" text-anchor="middle" font-weight="700">ORDER TYPES — QUICK REFERENCE</text>
+
+  <!-- Market Order -->
+  <rect x="10" y="30" width="255" height="90" fill="#0a140a" rx="6" stroke="#1e3020" stroke-width="1"/>
+  <text x="137" y="48" font-family="monospace" font-size="11" fill="#fbbf24" text-anchor="middle" font-weight="700">Market Order</text>
+  <text x="137" y="63" font-family="monospace" font-size="9" fill="#9aaa9a" text-anchor="middle">Buy/sell immediately at best available price</text>
+  <text x="137" y="78" font-family="monospace" font-size="9" fill="#00d27a" text-anchor="middle">✓ Guarantees execution</text>
+  <text x="137" y="92" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">✗ Does NOT guarantee price (slippage risk)</text>
+  <text x="137" y="110" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Best for: liquid stocks, urgent exits</text>
+
+  <!-- Limit Order -->
+  <rect x="295" y="30" width="255" height="90" fill="#0a140a" rx="6" stroke="#1e3020" stroke-width="1"/>
+  <text x="422" y="48" font-family="monospace" font-size="11" fill="#fbbf24" text-anchor="middle" font-weight="700">Limit Order</text>
+  <text x="422" y="63" font-family="monospace" font-size="9" fill="#9aaa9a" text-anchor="middle">Buy/sell only at your specified price or better</text>
+  <text x="422" y="78" font-family="monospace" font-size="9" fill="#00d27a" text-anchor="middle">✓ Guarantees price</text>
+  <text x="422" y="92" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">✗ Does NOT guarantee execution</text>
+  <text x="422" y="110" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Best for: entries, exits at specific levels</text>
+
+  <!-- Stop Order -->
+  <rect x="10" y="135" width="255" height="90" fill="#0a140a" rx="6" stroke="#1e3020" stroke-width="1"/>
+  <text x="137" y="153" font-family="monospace" font-size="11" fill="#fbbf24" text-anchor="middle" font-weight="700">Stop (Market) Order</text>
+  <text x="137" y="168" font-family="monospace" font-size="9" fill="#9aaa9a" text-anchor="middle">Triggers a market order when stop price is hit</text>
+  <text x="137" y="183" font-family="monospace" font-size="9" fill="#00d27a" text-anchor="middle">✓ Guarantees execution after trigger</text>
+  <text x="137" y="197" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">✗ May fill far from stop in fast markets</text>
+  <text x="137" y="215" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Best for: stop losses in liquid stocks</text>
+
+  <!-- Stop-Limit Order -->
+  <rect x="295" y="135" width="255" height="90" fill="#0a140a" rx="6" stroke="#1e3020" stroke-width="1"/>
+  <text x="422" y="153" font-family="monospace" font-size="11" fill="#fbbf24" text-anchor="middle" font-weight="700">Stop-Limit Order</text>
+  <text x="422" y="168" font-family="monospace" font-size="9" fill="#9aaa9a" text-anchor="middle">Triggers a limit order when stop price is hit</text>
+  <text x="422" y="183" font-family="monospace" font-size="9" fill="#00d27a" text-anchor="middle">✓ Guarantees price if filled</text>
+  <text x="422" y="197" font-family="monospace" font-size="9" fill="#ef4444" text-anchor="middle">✗ May NOT fill if price gaps through limit</text>
+  <text x="422" y="215" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Use with caution for stop losses</text>
+
+  <text x="280" y="248" font-family="monospace" font-size="9" fill="#4a6a4a" text-anchor="middle">Rule: use limit orders for entries, stop orders for exits. Never use market orders in thin or fast-moving stocks.</text>
+</svg></div>
+<h3>Order Types Overview</h3>
 <p>Every trade you place is communicated to the market through an order. The type of order you choose determines how your trade executes — whether you get filled immediately or wait, whether you control price or speed, and what happens if the market moves against you before your order fills. Choosing the wrong order type can mean the difference between a clean entry and a catastrophic fill.</p>
 
 <h3>The Core Trade-Off in All Orders</h3>
@@ -3057,7 +3233,74 @@ Price declining but on low volume. Sellers are not aggressive — the pullback i
 <p>Starting each week with a prepared watchlist and specific levels means you spend the trading day executing on a plan rather than scanning for ideas in real time. Real-time scanning while also managing positions is cognitively expensive and produces reactive, lower-quality entries. A pre-built watchlist allows proactive, patient execution of setups you've already identified.</p>
 
 <div class="callout"><div class="callout-label">TST Edge</div><div class="callout-text">The Sunday reconnaissance ritual takes discipline to establish and maintain. It's easy to skip it when markets feel simple or when you're confident. Skip it, and you'll spend Monday morning reacting to market moves without context. Miss a significant catalyst, get blindsided by an earnings surprise on a stock you were long, or chase a move you should have anticipated. The 90 minutes on Sunday is insurance against being unprepared during the week. Make it non-negotiable.</div></div>`},
-'10-01':{title:'Pre-Market Prep & Watchlist',content:`<p>Most traders lose money not because they cannot read charts - but because they show up to the market with no plan. The traders who win consistently do the same thing every morning before the market opens. They know exactly what they are looking for, where they are getting in, and what would tell them they are wrong. This tab teaches you that entire process from start to finish.</p><h3>Step 1 - Know What Stocks You Trade</h3><p>Not every stock is worth your attention - but figuring out exactly which ones are is something only you can determine over time. As you trade and develop your style, you will naturally start to notice which types of stocks you read best, which price ranges suit your account size, and which volatility levels match your risk tolerance. That personal criteria becomes your filter. Write it down as you discover it. That list is the foundation of your pre-market process every single day.</p><h3>Step 2 - Scan for Your Stocks</h3><p>A scanner is one of the most important tools you will use as a trader. It does in seconds what would take hours manually - it filters thousands of stocks down to the handful that meet your criteria right now. Every morning before the open, run your pre-market scanner to find stocks that are moving with volume and have a reason to be watched. The specific settings you use will evolve as your trading style develops, but the habit of scanning every single morning before the bell is non-negotiable. If you are not scanning, you are reacting. Traders who react are always late.</p><h3>Step 3 - Build Your Watchlist</h3><p>Take your scanner results and cut them down to 2-3 names maximum. For each one, mark the key levels on the chart - prior day high and low, pre-market high and low, major support and resistance. Those are your decision points for the day.</p><h3>Step 4 - Write Your Game Plan</h3><p>For each stock on your watchlist, answer three questions before the market opens: What is my bias - long or short? What price triggers me to take the trade? Where am I wrong and where am I taking profits? If you cannot answer all three, the stock does not make the watchlist.</p><div class="callout"><div class="callout-label">TST Edge</div><p>The best trade of the day is almost always on your watchlist before the market opens. Reactive trading - jumping into something you just noticed - is where most of your losses will come from. Do the work before the open and trade your plan, not the moment.</p></div>`},
+'10-01':{title:'Pre-Market Prep & Watchlist',content:`<div style="background:#0d120d;border:1px solid #1e2e1e;border-radius:12px;padding:20px;margin:24px 0;overflow-x:auto;"><p style="color:#6b7c6e;font-size:11px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px;text-align:center;">Pre-Market Watchlist — What It Looks Like at 9:15am</p><svg viewBox="0 0 520 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:340px;display:block;">
+  <!-- Header -->
+  <rect x="0" y="0" width="520" height="30" fill="#0a140a" rx="4"/>
+  <text x="260" y="20" font-family="monospace" font-size="12" fill="#c8d4c8" text-anchor="middle" font-weight="700">Pre-Market Watchlist — 9:15am ET</text>
+
+  <!-- Column headers -->
+  <text x="55" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">TICKER</text>
+  <text x="125" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">PRICE</text>
+  <text x="185" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">GAP %</text>
+  <text x="245" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">RVOL</text>
+  <text x="320" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">CATALYST</text>
+  <text x="450" y="48" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">SETUP WATCH</text>
+  <line x1="0" y1="54" x2="520" y2="54" stroke="#1e2e1e" stroke-width="1"/>
+
+  <!-- Row 1: big gapper, strong -->
+  <rect x="0" y="56" width="520" height="22" fill="rgba(0,210,122,0.08)"/>
+  <text x="55" y="71" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">NVDA</text>
+  <text x="125" y="71" font-family="monospace" font-size="11" fill="#c8d4c8" text-anchor="middle">$875.20</text>
+  <text x="185" y="71" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">+8.4%</text>
+  <text x="245" y="71" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">12.3x</text>
+  <text x="320" y="71" font-family="monospace" font-size="10" fill="#9aaa9a" text-anchor="middle">Earnings beat</text>
+  <text x="450" y="71" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">Gap &amp; go above $880</text>
+
+  <!-- Row 2 -->
+  <rect x="0" y="80" width="520" height="22" fill="rgba(0,210,122,0.04)"/>
+  <text x="55" y="95" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">TSLA</text>
+  <text x="125" y="95" font-family="monospace" font-size="11" fill="#c8d4c8" text-anchor="middle">$182.50</text>
+  <text x="185" y="95" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">+3.1%</text>
+  <text x="245" y="95" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">4.7x</text>
+  <text x="320" y="95" font-family="monospace" font-size="10" fill="#9aaa9a" text-anchor="middle">Delivery numbers</text>
+  <text x="450" y="95" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">ORB above $184</text>
+
+  <!-- Row 3: small cap runner -->
+  <rect x="0" y="104" width="520" height="22" fill="rgba(0,210,122,0.10)"/>
+  <text x="55" y="119" font-family="monospace" font-size="12" fill="#00d27a" text-anchor="middle" font-weight="700">ACMR</text>
+  <text x="125" y="119" font-family="monospace" font-size="11" fill="#c8d4c8" text-anchor="middle">$24.80</text>
+  <text x="185" y="119" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">+22.4%</text>
+  <text x="245" y="119" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">28.6x</text>
+  <text x="320" y="119" font-family="monospace" font-size="10" fill="#9aaa9a" text-anchor="middle">FDA approval</text>
+  <text x="450" y="119" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">Watch open — high vol</text>
+
+  <!-- Row 4: gap down -->
+  <rect x="0" y="128" width="520" height="22" fill="rgba(239,68,68,0.06)"/>
+  <text x="55" y="143" font-family="monospace" font-size="12" fill="#ef4444" text-anchor="middle" font-weight="700">META</text>
+  <text x="125" y="143" font-family="monospace" font-size="11" fill="#c8d4c8" text-anchor="middle">$498.10</text>
+  <text x="185" y="143" font-family="monospace" font-size="11" fill="#ef4444" text-anchor="middle">-4.2%</text>
+  <text x="245" y="143" font-family="monospace" font-size="11" fill="#00d27a" text-anchor="middle">6.1x</text>
+  <text x="320" y="143" font-family="monospace" font-size="10" fill="#9aaa9a" text-anchor="middle">Weak guidance</text>
+  <text x="450" y="143" font-family="monospace" font-size="10" fill="#fbbf24" text-anchor="middle">Short below $495</text>
+
+  <!-- Row 5: watchlist, no catalyst -->
+  <rect x="0" y="152" width="520" height="22" fill="rgba(255,255,255,0.01)"/>
+  <text x="55" y="167" font-family="monospace" font-size="12" fill="#c8d4c8" text-anchor="middle">AAPL</text>
+  <text x="125" y="167" font-family="monospace" font-size="11" fill="#c8d4c8" text-anchor="middle">$189.40</text>
+  <text x="185" y="167" font-family="monospace" font-size="11" fill="#6b7c6e" text-anchor="middle">+0.3%</text>
+  <text x="245" y="167" font-family="monospace" font-size="11" fill="#6b7c6e" text-anchor="middle">1.2x</text>
+  <text x="320" y="167" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">No catalyst</text>
+  <text x="450" y="167" font-family="monospace" font-size="10" fill="#6b7c6e" text-anchor="middle">Low priority today</text>
+
+  <!-- Legend -->
+  <line x1="0" y1="182" x2="520" y2="182" stroke="#1e2e1e" stroke-width="1"/>
+  <text x="260" y="200" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">RVOL = Relative Volume (current volume vs average at this time). 3x+ = abnormal interest.</text>
+  <text x="260" y="215" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Gap % = how much the stock moved from yesterday's close. Large gaps need a clear catalyst.</text>
+  <text x="260" y="230" font-family="monospace" font-size="9" fill="#fbbf24" text-anchor="middle">Build this list before 9:30am. Know your setups before the open — never react unprepared.</text>
+  <text x="260" y="248" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Priority: high RVOL + strong catalyst + clear setup = top of your focus list.</text>
+  <text x="260" y="263" font-family="monospace" font-size="9" fill="#6b7c6e" text-anchor="middle">Low RVOL + no catalyst = skip it today, even if the chart looks interesting.</text>
+</svg></div>
+<p>Most traders lose money not because they cannot read charts - but because they show up to the market with no plan. The traders who win consistently do the same thing every morning before the market opens. They know exactly what they are looking for, where they are getting in, and what would tell them they are wrong. This tab teaches you that entire process from start to finish.</p><h3>Step 1 - Know What Stocks You Trade</h3><p>Not every stock is worth your attention - but figuring out exactly which ones are is something only you can determine over time. As you trade and develop your style, you will naturally start to notice which types of stocks you read best, which price ranges suit your account size, and which volatility levels match your risk tolerance. That personal criteria becomes your filter. Write it down as you discover it. That list is the foundation of your pre-market process every single day.</p><h3>Step 2 - Scan for Your Stocks</h3><p>A scanner is one of the most important tools you will use as a trader. It does in seconds what would take hours manually - it filters thousands of stocks down to the handful that meet your criteria right now. Every morning before the open, run your pre-market scanner to find stocks that are moving with volume and have a reason to be watched. The specific settings you use will evolve as your trading style develops, but the habit of scanning every single morning before the bell is non-negotiable. If you are not scanning, you are reacting. Traders who react are always late.</p><h3>Step 3 - Build Your Watchlist</h3><p>Take your scanner results and cut them down to 2-3 names maximum. For each one, mark the key levels on the chart - prior day high and low, pre-market high and low, major support and resistance. Those are your decision points for the day.</p><h3>Step 4 - Write Your Game Plan</h3><p>For each stock on your watchlist, answer three questions before the market opens: What is my bias - long or short? What price triggers me to take the trade? Where am I wrong and where am I taking profits? If you cannot answer all three, the stock does not make the watchlist.</p><div class="callout"><div class="callout-label">TST Edge</div><p>The best trade of the day is almost always on your watchlist before the market opens. Reactive trading - jumping into something you just noticed - is where most of your losses will come from. Do the work before the open and trade your plan, not the moment.</p></div>`},
 '10-02':{title:'The Opening Range',content:`<p>The opening range is the high and low of the first period of trading after the market opens. It is one of the most important reference points of every trading day and is used by professional traders as a key decision-making tool throughout the session.</p><h3>What Is the Opening Range</h3><p>Most traders define the opening range as the first 5 minutes, 15 minutes, or 30 minutes of trading. The high and low established during this period create two critical levels. These levels act as support and resistance for the rest of the day more consistently than almost any other intraday level.</p><h3>The Opening Range Breakout</h3><p>When price breaks above the opening range high with strong volume, it is a bullish signal suggesting the buyers who showed up at the open are in control. When price breaks below the opening range low with strong volume, it is a bearish signal. These breakouts are high probability setups precisely because so many professional traders are watching the same levels.</p><h3>The Opening Range as a Filter</h3><p>Use the opening range to set your directional bias for the morning. If price is above the opening range midpoint, your bias should be bullish and you should favor long setups. If price is below the midpoint, your bias should be bearish. Trading against the opening range bias is low probability and requires exceptional setup quality to justify.</p><h3>The Opening Range Hold</h3><p>Sometimes more valuable than the breakout is when a stock tests the opening range high or low and holds. A pullback to the opening range high that holds as new support is a continuation long setup. A bounce to the opening range low that fails as resistance is a continuation short setup.</p><div class="callout"><div class="callout-label">TST Edge</div><p>Mark the opening range high and low on every stock you are watching every single morning. These two lines should be among the first things drawn on your chart. Everything that happens for the rest of the day has context relative to these levels.</p></div>`},
 '10-03':{title:'The First 5 Candles',content:`<p>The first five candles after the market opens are arguably the most information-dense five minutes of the trading day. They tell you whether the day will be trending or choppy, whether buyers or sellers are in control, and whether your pre-market thesis is playing out or failing.</p><h3>What to Look For</h3><p>Are the candles large or small? Large candles mean high volatility and directional conviction. Small candles mean indecision and potential chop. Is there a clear direction or is price whipping back and forth? Is volume expanding or contracting? Is the stock holding above its opening price or fading below it?</p><h3>The Character of the Day</h3><p>The first five candles establish the character of the day. A stock that opens with five consecutive large green candles on expanding volume is telling you it wants to go higher. A stock that opens with a gap up but immediately sells off with large red candles is telling you the gap may fill. Read what the market is giving you, not what you want to see.</p><h3>The No-Trade Zone</h3><p>Many experienced traders have a personal rule of not entering trades during the first five minutes of trading. The reasoning is sound - the open is the most volatile and unpredictable period of the day, spreads are wider, and the direction established in the first five minutes sometimes reverses completely by minute ten. Watching the first five candles gives you information without requiring you to risk capital during the most uncertain period.</p><h3>After the First Five</h3><p>Once the first five candles have formed, you have a much clearer picture. You know the opening range, you have seen how the stock reacted to its pre-market levels, and you have an initial read on direction. Now your setups have context. An entry at 9:40 AM is a very different proposition than an entry at 9:31 AM.</p><div class="callout"><div class="callout-label">TST Edge</div><p>Train yourself to watch without touching during the first five minutes. This discipline alone will save you from some of your worst trades. The trades that hurt the most are often the ones taken in the first sixty seconds when everything feels urgent but nothing is actually clear yet.</p></div>`},
 '10-04':{title:'Time of Day Filters',content:`<p>Not all hours of the trading day are equal. Specific setups work dramatically better at specific times. Understanding when to use each setup is as important as the setup itself.</p><h3>The Open (9:30 - 10:30 AM)</h3><p>The highest volume, highest volatility period of the day. Breakout setups from pre-market levels work best here. Gap and go plays, opening range breakouts, and momentum entries all have their highest probability of success in this window. This is also where the most damage is done to undisciplined traders who act without a plan.</p><h3>Mid-Morning (10:30 AM - 12:00 PM)</h3><p>Volume begins to decline. Trend-following setups work well early in this period when morning momentum is still intact. By 11:00 AM, be more selective. By 11:30 AM, the best morning setups have already played out.</p><h3>Midday (12:00 PM - 2:00 PM)</h3><p>The lowest volume, lowest reliability period of the day. Spreads widen, price action becomes choppy, and false breakouts are common. Mean reversion setups have their best performance midday because stocks tend to range rather than trend. Most experienced day traders dramatically reduce activity or stop trading entirely during this window.</p><h3>Power Hour (3:00 - 4:00 PM)</h3><p>Volume returns as institutions rebalance portfolios and traders position for the next day. Continuation setups in stocks that trended strongly in the morning often resume. Breakout setups from afternoon consolidations work well with the afternoon volume surge providing confirmation.</p><div class="callout"><div class="callout-label">TST Edge</div><p>If you removed every trade you took between 11:30 AM and 2:30 PM from your history, most traders would find their results improve significantly. Midday chop is where disciplined traders sit on their hands and undisciplined ones give back their morning gains.</p></div>`},
