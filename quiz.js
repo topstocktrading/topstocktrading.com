@@ -981,7 +981,8 @@ smallcaps: {
   async function saveQuizAnswer(sectionId,q,qIdx,userAnsIdx,isCorrect){
     try{
       const sb=window.supabase;if(!sb)return;
-      const {data:{user}}=await sb.auth.getUser();if(!user)return;
+      const _r=await sb.auth.getUser();if(!_r||!_r.data||!_r.data.user)return;
+      const user=_r.data.user;
       const selectedText=q.choices[userAnsIdx]||'';
       const correctText=q.choices[q.answer]||'';
       await sb.from('user_quiz_answers').insert({
@@ -1002,8 +1003,9 @@ smallcaps: {
     try{
       const sb=window.supabase;
       if(!sb)return;
-      const {data:{user}}=await sb.auth.getUser();
-      if(!user)return;
+      const _r2=await sb.auth.getUser();
+      if(!_r2||!_r2.data||!_r2.data.user)return;
+      const user=_r2.data.user;
       const attempts=(window['__quiz_attempts_'+sectionId]||0)+1;
       window['__quiz_attempts_'+sectionId]=attempts;
       await sb.from('quiz_results').upsert({
