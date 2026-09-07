@@ -457,6 +457,7 @@
 .notif-empty{padding:16px 14px;font-size:12px;color:#3a5a3a;text-align:center;}
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -470,10 +471,21 @@
     <div class="login-logo">TOP <span>STOCK</span> TRADING</div>
     <div class="login-subtitle">TST Academy — Members Area</div>
     <h2>SIGN IN</h2>
-    <div class="input-group"><label>Email</label><input type="email" id="le" placeholder="you@email.com"></div>
+    <div class="input-group"><label>Email</label><input type="email" id="le" placeholder="you@email.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <div class="input-group"><label>Password</label><input type="password" id="lp" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-    <button class="login-btn" onclick="doLogin()">Access My Course</button>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Access My Course</button>
     <div class="login-error" id="lerr">Incorrect email or password.</div>
+    <div style="margin-top:14px;"><a href="#" onclick="showForgotPassword(event)" style="font-size:13px;color:#00d27a;text-decoration:none;opacity:0.7;">Forgot your password?</a></div>
+  </div>
+  <div class="login-box" id="forgot-box" style="display:none;">
+    <div class="login-logo">TOP <span>STOCK</span> TRADING</div>
+    <div class="login-subtitle">Reset Your Password</div>
+    <h2>FORGOT PASSWORD</h2>
+    <div class="input-group"><label>Email</label><input type="email" id="reset-email" placeholder="you@email.com"></div>
+    <button class="login-btn" onclick="doResetPassword()">Send Reset Link</button>
+    <div class="login-error" id="reset-err"></div>
+    <div id="reset-success" style="display:none;margin-top:12px;font-size:13px;color:#00d27a;">Check your email for a reset link.</div>
+    <div style="margin-top:14px;"><a href="#" onclick="showLogin(event)" style="font-size:13px;color:#00d27a;text-decoration:none;opacity:0.7;">Back to sign in</a></div>
   </div>
 </div>
 
@@ -5726,15 +5738,78 @@ function showProfileDashboard(){
   }, 100);
 }
 
-function doLogin(){
-  const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value.trim();
-  if(e===DEMO.email&&p===DEMO.password){
+// Supabase auth client
+const _supa = window._supaClient || (()=>{
+  const {createClient} = supabase;
+  window._supaClient = createClient(SUPABASE_URL, SUPABASE_ANON);
+  return window._supaClient;
+})();
+
+async function doLogin(){
+  const e=document.getElementById('le').value.trim();
+  const p=document.getElementById('lp').value.trim();
+  if(!e||!p){document.getElementById('lerr').style.display='block';return;}
+  const btn=document.getElementById('login-btn');
+  btn.textContent='Signing in...';btn.disabled=true;
+  document.getElementById('lerr').style.display='none';
+  const {data,error} = await _supa.auth.signInWithPassword({email:e,password:p});
+  if(error){
+    document.getElementById('lerr').textContent='Incorrect email or password.';
+    document.getElementById('lerr').style.display='block';
+    btn.textContent='Access My Course';btn.disabled=false;
+  } else {
+    const name = data.user.user_metadata?.full_name || data.user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
-    document.getElementById('sname').textContent=DEMO.name;
+    document.getElementById('sname').textContent=name;
     buildSidebar();loadLesson('beginner');
-  } else { document.getElementById('lerr').style.display='block'; }
+  }
 }
-function doLogout(){document.getElementById('login-screen').style.display='flex';document.getElementById('le').value='';document.getElementById('lp').value='';}
+
+async function doLogout(){
+  await _supa.auth.signOut();
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('le').value='';
+  document.getElementById('lp').value='';
+}
+
+function showForgotPassword(e){
+  e.preventDefault();
+  document.getElementById('login-btn').closest('.login-box').style.display='none';
+  document.getElementById('forgot-box').style.display='block';
+}
+
+function showLogin(e){
+  e.preventDefault();
+  document.getElementById('forgot-box').style.display='none';
+  document.getElementById('login-btn').closest('.login-box').style.display='block';
+}
+
+async function doResetPassword(){
+  const email=document.getElementById('reset-email').value.trim();
+  if(!email){document.getElementById('reset-err').textContent='Please enter your email.';document.getElementById('reset-err').style.display='block';return;}
+  const {error} = await _supa.auth.resetPasswordForEmail(email, {
+    redirectTo: 'https://topstocktrading.com/members.html'
+  });
+  if(error){
+    document.getElementById('reset-err').textContent=error.message;
+    document.getElementById('reset-err').style.display='block';
+  } else {
+    document.getElementById('reset-success').style.display='block';
+    document.getElementById('reset-err').style.display='none';
+  }
+}
+
+// Check if user is already logged in on page load
+async function checkSession(){
+  const {data:{session}} = await _supa.auth.getSession();
+  if(session){
+    const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+    document.getElementById('login-screen').style.display='none';
+    document.getElementById('sname').textContent=name;
+    buildSidebar();loadLesson('beginner');
+  }
+}
+window.addEventListener('load', checkSession);
 
 function allLessons(){
   const all=[];
