@@ -5740,7 +5740,7 @@ function showProfileDashboard(){
 
 // Supabase auth client
 const _supa = window._supaClient || (()=>{
-  const {createClient} = supabase;
+  const {createClient} = window.supabase;
   window._supaClient = createClient(SUPABASE_URL, SUPABASE_ANON);
   return window._supaClient;
 })();
