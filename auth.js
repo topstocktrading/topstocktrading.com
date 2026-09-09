@@ -6,18 +6,20 @@
   var SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqZWN3dmN4Ym9jb2d2d3Nqd21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg0MzMxMjcsImV4cCI6MjA5NDAwOTEyN30.Eb2DuAqv1D9d4IoWpyXLSGZGUS4QLS116xEYUgDyYNY';
 
   function loadSDK(callback) {
-    if (window.supabase && window.supabase.createClient) { callback(); return; }
-    var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
-    s.onload = function() {
-      window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-      var btn = document.querySelector('.login-btn');
-      if (btn) { btn.textContent = 'Access My Course'; btn.disabled = false; }
-      checkForPasswordRecovery();
-      callback();
-    };
-    s.onerror = function() { console.warn('Supabase SDK failed to load'); };
-    document.head.appendChild(s);
+    function init() {
+      if (window.supabase && window.supabase.createClient) {
+        if (!window._supabaseClient) {
+          window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+        }
+        var btn = document.querySelector('.login-btn');
+        if (btn) { btn.textContent = 'Access My Course'; btn.disabled = false; }
+        checkForPasswordRecovery();
+        callback();
+      } else {
+        setTimeout(init, 100);
+      }
+    }
+    init();
   }
 
   function getClient() { return window._supabaseClient || null; }
