@@ -127,7 +127,11 @@
     }
     var client = getClient();
     if (!client) {
-      if (errEl) { errEl.textContent = 'Auth not loaded. Please refresh.'; errEl.style.display = 'block'; }
+      if (btn) { btn.textContent = 'Loading...'; btn.disabled = true; }
+      setTimeout(function() {
+        if (btn) { btn.textContent = 'Access My Course'; btn.disabled = false; }
+        window.doLogin();
+      }, 1000);
       return;
     }
     if (btn) { btn.textContent = 'Signing in...'; btn.disabled = true; }
