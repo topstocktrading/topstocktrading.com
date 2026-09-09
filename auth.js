@@ -11,6 +11,8 @@
     s.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
     s.onload = function() {
       window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+      var btn = document.querySelector('.login-btn');
+      if (btn) { btn.textContent = 'Access My Course'; btn.disabled = false; }
       checkForPasswordRecovery();
       callback();
     };
@@ -163,10 +165,16 @@
 
   window.getSupabaseClient = function() { return getClient(); };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { loadSDK(checkSession); });
-  } else {
+  function initAuth() {
+    var btn = document.querySelector('.login-btn');
+    if (btn) { btn.textContent = 'Loading...'; btn.disabled = true; }
     loadSDK(checkSession);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAuth);
+  } else {
+    initAuth();
   }
 
 })();
