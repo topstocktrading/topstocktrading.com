@@ -5739,11 +5739,13 @@ function showProfileDashboard(){
 }
 
 // Supabase auth client
-const _supa = window._supaClient || (()=>{
+function getSupaClient(){
+  if(window._supaClient) return window._supaClient;
+  if(!window.supabase) return null;
   const {createClient} = window.supabase;
   window._supaClient = createClient(SUPABASE_URL, SUPABASE_ANON);
   return window._supaClient;
-})();
+}
 
 async function doLogin(){
   const e=document.getElementById('le').value.trim();
@@ -5752,6 +5754,13 @@ async function doLogin(){
   const btn=document.getElementById('login-btn');
   btn.textContent='Signing in...';btn.disabled=true;
   document.getElementById('lerr').style.display='none';
+  const _supa = getSupaClient();
+  if(!_supa){
+    document.getElementById('lerr').textContent='Loading... please try again in a moment.';
+    document.getElementById('lerr').style.display='block';
+    btn.textContent='Access My Course';btn.disabled=false;
+    return;
+  }
   const {data,error} = await _supa.auth.signInWithPassword({email:e,password:p});
   if(error){
     document.getElementById('lerr').textContent='Incorrect email or password.';
@@ -5766,7 +5775,8 @@ async function doLogin(){
 }
 
 async function doLogout(){
-  await _supa.auth.signOut();
+  const _supa = getSupaClient();
+  if(_supa) await _supa.auth.signOut();
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('le').value='';
   document.getElementById('lp').value='';
@@ -5787,6 +5797,8 @@ function showLogin(e){
 async function doResetPassword(){
   const email=document.getElementById('reset-email').value.trim();
   if(!email){document.getElementById('reset-err').textContent='Please enter your email.';document.getElementById('reset-err').style.display='block';return;}
+  const _supa = getSupaClient();
+  if(!_supa){document.getElementById('reset-err').textContent='Loading...';document.getElementById('reset-err').style.display='block';return;}
   const {error} = await _supa.auth.resetPasswordForEmail(email, {
     redirectTo: 'https://topstocktrading.com/members.html'
   });
@@ -5801,6 +5813,8 @@ async function doResetPassword(){
 
 // Check if user is already logged in on page load
 async function checkSession(){
+  const _supa = getSupaClient();
+  if(!_supa){setTimeout(checkSession,500);return;}
   const {data:{session}} = await _supa.auth.getSession();
   if(session){
     const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
