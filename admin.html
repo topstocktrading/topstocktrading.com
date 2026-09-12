@@ -296,7 +296,7 @@ function viewStudentDetail(userId) {
   });
   const topWrong = Object.values(wrongByQ).sort((a,b)=>b.misses-a.misses).slice(0,10);
   const lessonTimes = prog.filter(p=>p.time_spent_seconds>0).sort((a,b)=>b.time_spent_seconds-a.time_spent_seconds).slice(0,10);
-  let h = '<button onclick="showTab('students')" style="background:none;border:1px solid #1a2020;border-radius:6px;padding:6px 14px;color:#c8d4c8;cursor:pointer;font-size:12px;margin-bottom:20px;">← Back to Students</button>';
+  let h = '<button onclick="showTab(\'students\')" style="background:none;border:1px solid #1a2020;border-radius:6px;padding:6px 14px;color:#c8d4c8;cursor:pointer;font-size:12px;margin-bottom:20px;">← Back to Students</button>';
   h += '<div style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:4px;">'+s.email+'</div>';
   h += '<div style="font-size:12px;color:#3a5a3a;margin-bottom:24px;">'+tierBadge(s.tier)+' &nbsp; Joined: '+fmtDate(s.joined)+'</div>';
   h += '<div class="admin-stats-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px;">';
