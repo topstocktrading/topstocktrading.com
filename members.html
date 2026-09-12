@@ -5176,6 +5176,31 @@ function getSupaClient(){
   return window._supaClient;
 }
 
+async function loadProgress(userId){
+  const _supa = getSupaClient();
+  if(!_supa||!userId) return;
+  try{
+    const {data} = await _supa.from('user_progress').select('lesson_id').eq('user_id',userId).eq('completed',true);
+    if(data) data.forEach(row=>done.add(row.lesson_id));
+    buildSidebar();
+    updateProgress();
+  }catch(e){console.warn('loadProgress error',e);}
+}
+
+async function saveProgress(userId, lessonId){
+  const _supa = getSupaClient();
+  if(!_supa||!userId||!lessonId) return;
+  try{
+    await _supa.from('user_progress').upsert({
+      user_id: userId,
+      lesson_id: lessonId,
+      completed: true,
+      completed_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    },{onConflict:'user_id,lesson_id'});
+  }catch(e){console.warn('saveProgress error',e);}
+}
+
 async function doLogin(){
   const e=document.getElementById('le').value.trim();
   const p=document.getElementById('lp').value.trim();
@@ -5196,10 +5221,12 @@ async function doLogin(){
     document.getElementById('lerr').style.display='block';
     btn.textContent='Access My Course';btn.disabled=false;
   } else {
+    _currentUserId = data.user.id;
     const name = data.user.user_metadata?.full_name || data.user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
     document.getElementById('sname').textContent=name;
-    buildSidebar();loadLesson('beginner');
+    loadLesson('beginner');
+    loadProgress(_currentUserId);
   }
 }
 
@@ -5241,15 +5268,19 @@ async function doResetPassword(){
 }
 
 // Check if user is already logged in on page load
+let _currentUserId = null;
+
 async function checkSession(){
   const _supa = getSupaClient();
   if(!_supa){setTimeout(checkSession,500);return;}
   const {data:{session}} = await _supa.auth.getSession();
   if(session){
+    _currentUserId = session.user.id;
     const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
     document.getElementById('sname').textContent=name;
-    buildSidebar();loadLesson('beginner');
+    loadLesson('beginner');
+    loadProgress(_currentUserId);
   }
 }
 window.addEventListener('load', checkSession);
@@ -5366,7 +5397,10 @@ function loadLesson(id){
 }
 
 function completeNext(id,nid,isIntro){
-  if(!isIntro)done.add(id);
+  if(!isIntro){
+    done.add(id);
+    if(_currentUserId) saveProgress(_currentUserId, id);
+  }
   if(nid)loadLesson(nid);
   else buildSidebar();
   updateProgress();
