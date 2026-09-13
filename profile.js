@@ -560,7 +560,7 @@ var TST_PROFILE = {
     var noteContent = '';
     try {
       var client = getSupabase();
-      var result = await client.from('user_notes').select('content').eq('user_id', user.id).single();
+      var result = await client.from('user_notes').select('content').eq('user_id', user.id).is('lesson_id', null).order('updated_at', {ascending: false}).limit(1).single();
       if (result.data) noteContent = result.data.content || '';
     } catch(e) {}
 
@@ -586,9 +586,10 @@ var TST_PROFILE = {
       var client = getSupabase();
       await client.from('user_notes').upsert({
         user_id: user.id,
+        lesson_id: null,
         content: editor.value,
         updated_at: new Date().toISOString()
-      });
+      }, {onConflict: 'user_id,lesson_id'});
       if (status) { status.textContent = '✓ Saved'; setTimeout(function(){ status.textContent = ''; }, 2000); }
     } catch(e) {
       if (status) { status.style.color = '#ef4444'; status.textContent = 'Error saving.'; }
