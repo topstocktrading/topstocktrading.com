@@ -584,12 +584,23 @@ var TST_PROFILE = {
     if (!user) return;
     try {
       var client = getSupabase();
-      await client.from('user_notes').upsert({
-        user_id: user.id,
-        lesson_id: null,
-        content: editor.value,
-        updated_at: new Date().toISOString()
-      }, {onConflict: 'user_id,lesson_id'});
+      // Check if freeform note exists
+      var existing = await client.from('user_notes').select('id').eq('user_id', user.id).is('lesson_id', null).limit(1).single();
+      if (existing.data) {
+        // Update existing row
+        await client.from('user_notes').update({
+          content: editor.value,
+          updated_at: new Date().toISOString()
+        }).eq('id', existing.data.id);
+      } else {
+        // Insert new row
+        await client.from('user_notes').insert({
+          user_id: user.id,
+          lesson_id: null,
+          content: editor.value,
+          updated_at: new Date().toISOString()
+        });
+      }
       if (status) { status.textContent = '✓ Saved'; setTimeout(function(){ status.textContent = ''; }, 2000); }
     } catch(e) {
       if (status) { status.style.color = '#ef4444'; status.textContent = 'Error saving.'; }
