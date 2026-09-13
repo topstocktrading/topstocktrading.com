@@ -5269,12 +5269,10 @@ async function doLogin(){
     const name = data.user.user_metadata?.full_name || data.user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
     document.getElementById('sname').textContent=name;
-    buildSidebar();
     loadLesson('beginner');
-    setTimeout(()=>{
-      loadProgress(_currentUserId);
+    loadProgress(_currentUserId).then(()=>{
       loadNotes(_currentUserId);
-    }, 300);
+    });
   }
 }
 
@@ -5328,12 +5326,10 @@ async function checkSession(){
       const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
       document.getElementById('login-screen').style.display='none';
       document.getElementById('sname').textContent=name;
-      buildSidebar();
       loadLesson('beginner');
-      setTimeout(()=>{
-        loadProgress(_currentUserId);
+      loadProgress(_currentUserId).then(()=>{
         loadNotes(_currentUserId);
-      }, 300);
+      });
     }
   }catch(e){console.warn('checkSession error',e);}
 }
