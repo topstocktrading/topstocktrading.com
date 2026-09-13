@@ -5054,7 +5054,20 @@ function saveNote(lessonId){
   const text=input?input.value.trim():'';if(!text)return;
   if(!NOTES[lessonId])NOTES[lessonId]=[];
   const lesson=allLessons().find(l=>l.id===lessonId);
-  NOTES[lessonId].push({id:Date.now(),text,videoTime:currentVideoTime,created:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),lessonTitle:lesson?lesson.title:lessonId,lessonSec:lesson?lesson.sec:''});
+  const noteObj={id:Date.now(),text,videoTime:currentVideoTime,created:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),lessonTitle:lesson?lesson.title:lessonId,lessonSec:lesson?lesson.sec:''};
+  NOTES[lessonId].push(noteObj);
+  // Save to Supabase
+  if(_currentUserId){
+    const _supa=getSupaClient();
+    if(_supa){
+      _supa.from('user_notes').insert({
+        user_id:_currentUserId,
+        lesson_id:lessonId,
+        content:text,
+        updated_at:new Date().toISOString()
+      }).then(({error})=>{if(error)console.warn('Note save error:',error);});
+    }
+  }
   if(input)input.value='';
   renderNotes(lessonId);updateNotesCount(lessonId);
 }
@@ -5187,6 +5200,28 @@ async function loadProgress(userId){
   }catch(e){console.warn('loadProgress error',e);}
 }
 
+async function loadNotes(userId){
+  const _supa = getSupaClient();
+  if(!_supa||!userId) return;
+  try{
+    const {data} = await _supa.from('user_notes').select('lesson_id,content,updated_at').eq('user_id',userId).order('updated_at',{ascending:true});
+    if(data){
+      data.forEach(row=>{
+        if(!row.lesson_id||!row.content) return;
+        if(!NOTES[row.lesson_id]) NOTES[row.lesson_id]=[];
+        const lesson=allLessons().find(l=>l.id===row.lesson_id);
+        NOTES[row.lesson_id].push({
+          id:new Date(row.updated_at).getTime(),
+          text:row.content,
+          created:new Date(row.updated_at).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}),
+          lessonTitle:lesson?lesson.title:row.lesson_id,
+          lessonSec:lesson?lesson.sec:''
+        });
+      });
+    }
+  }catch(e){console.warn('loadNotes error',e);}
+}
+
 async function saveProgress(userId, lessonId){
   const _supa = getSupaClient();
   if(!_supa||!userId||!lessonId) return;
@@ -5227,6 +5262,7 @@ async function doLogin(){
     document.getElementById('sname').textContent=name;
     loadLesson('beginner');
     loadProgress(_currentUserId);
+    loadNotes(_currentUserId);
   }
 }
 
@@ -5281,6 +5317,7 @@ async function checkSession(){
     document.getElementById('sname').textContent=name;
     loadLesson('beginner');
     loadProgress(_currentUserId);
+    loadNotes(_currentUserId);
   }
 }
 window.addEventListener('load', checkSession);
