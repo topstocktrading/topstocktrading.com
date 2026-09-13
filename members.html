@@ -5062,7 +5062,8 @@ function saveNote(lessonId){
     if(_supa){
       _supa.from('user_notes').insert({
         user_id:_currentUserId,
-        content:'['+lessonId+'] '+text,
+        lesson_id:lessonId,
+        content:text,
         updated_at:new Date().toISOString()
       }).then(({error})=>{if(error)console.warn('Note save error:',error);});
     }
@@ -5209,7 +5210,8 @@ async function loadNotes(userId){
   const _supa = getSupaClient();
   if(!_supa||!userId) return;
   try{
-    const {data} = await _supa.from('user_notes').select('lesson_id,content,updated_at').eq('user_id',userId).order('updated_at',{ascending:true});
+    const {data,error} = await _supa.from('user_notes').select('lesson_id,content,updated_at').eq('user_id',userId).not('lesson_id','is',null).order('updated_at',{ascending:true});
+    if(error){console.warn('loadNotes error',error);return;}
     if(data){
       data.forEach(row=>{
         if(!row.lesson_id||!row.content) return;
@@ -5223,8 +5225,9 @@ async function loadNotes(userId){
           lessonSec:lesson?lesson.sec:''
         });
       });
+      console.log('Notes loaded:',data.length);
     }
-  }catch(e){console.warn('loadNotes error',e);}
+  }catch(e){console.warn('loadNotes exception',e);}
 }
 
 async function saveProgress(userId, lessonId){
