@@ -5180,13 +5180,15 @@ function showProfileDashboard(){
   }, 100);
 }
 
-// Supabase auth client
+// Supabase auth client - always use single shared instance
 function getSupaClient(){
+  // Use auth.js client if available (prevents multiple GoTrueClient instances)
+  if(window._supabaseClient) return window._supabaseClient;
   if(window._supaClient) return window._supaClient;
-  if(!window.supabase) return null;
-  const {createClient} = window.supabase;
-  window._supaClient = createClient(SUPABASE_URL, SUPABASE_ANON);
-  return window._supaClient;
+  if(!window.supabase||!window.supabase.createClient) return null;
+  // Only create if no client exists yet
+  window._supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+  return window._supabaseClient;
 }
 
 async function loadProgress(userId){
@@ -5309,16 +5311,18 @@ let _currentUserId = null;
 async function checkSession(){
   const _supa = getSupaClient();
   if(!_supa){setTimeout(checkSession,500);return;}
-  const {data:{session}} = await _supa.auth.getSession();
-  if(session){
-    _currentUserId = session.user.id;
-    const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
-    document.getElementById('login-screen').style.display='none';
-    document.getElementById('sname').textContent=name;
-    loadLesson('beginner');
-    loadProgress(_currentUserId);
-    loadNotes(_currentUserId);
-  }
+  try{
+    const {data:{session}} = await _supa.auth.getSession();
+    if(session){
+      _currentUserId = session.user.id;
+      const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('sname').textContent=name;
+      loadLesson('beginner');
+      loadProgress(_currentUserId);
+      loadNotes(_currentUserId);
+    }
+  }catch(e){console.warn('checkSession error',e);}
 }
 window.addEventListener('load', checkSession);
 
