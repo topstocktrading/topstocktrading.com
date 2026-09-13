@@ -164,20 +164,24 @@ async function doLogin() {
 }
 
 async function loadAll() {
-  const [usersR, quizR, msgR, tiersR, notifR] = await Promise.all([
+  const [usersR, quizR, msgR, tiersR, notifR, progressR, quizAnswersR] = await Promise.all([
     sb.from('users').select('*').order('created_at', {ascending:false}),
     sb.from('quiz_results').select('*'),
     sb.from('messages').select('*').order('created_at', {ascending:false}),
     sb.from('user_tiers').select('*'),
     sb.from('notifications').select('*').order('created_at', {ascending:false}).limit(30),
+    sb.from('user_progress').select('*').eq('completed', true),
+    sb.from('user_quiz_answers').select('*'),
   ]);
 
-  const users   = usersR.data  || [];
-  const quizzes = quizR.data   || [];
-  const msgs    = msgR.data    || [];
-  const tiers   = tiersR.data  || [];
-  allNotifs     = notifR.data  || [];
-  allMessages   = msgs;
+  const users       = usersR.data       || [];
+  const quizzes     = quizR.data        || [];
+  const msgs        = msgR.data         || [];
+  const tiers       = tiersR.data       || [];
+  allNotifs         = notifR.data       || [];
+  allMessages       = msgs;
+  allProgress       = progressR.data    || [];
+  allQuizAnswers    = quizAnswersR.data || [];
 
   allStudents = users.map(u => {
     const uq = quizzes.filter(q => q.user_id === u.id);
@@ -188,7 +192,9 @@ async function loadAll() {
     const retakes = uq.reduce((s,q)=>s+(q.attempts>1?q.attempts-1:0),0);
     const worst = uq.length ? [...uq].sort((a,b)=>a.score-b.score)[0] : null;
     const unread = um.filter(m=>!m.read && m.sender==='member').length;
-    return {id:u.id, email:u.email||'Unknown', tier, quizzes:uq, messages:um, avg, retakes, worst, unread, joined:u.created_at};
+    const up = allProgress.filter(p => p.user_id === u.id);
+    const lessonsCompleted = up.length;
+    return {id:u.id, email:u.email||'Unknown', tier, quizzes:uq, messages:um, progress:up, avg, retakes, worst, unread, joined:u.created_at, lessonsCompleted};
   });
 }
 
@@ -260,7 +266,7 @@ function renderStudents(body) {
 function buildStudentTable(students) {
   if (!students.length) return '<div style="color:#2a4a2a;font-size:13px;padding:20px;">No students found.</div>';
   let h = '<div class="tbl-wrap"><table><thead><tr>';
-  ['Email','Tier','Sections','Avg Score','Retakes','Weakest Section','Unread Msgs'].forEach(c => h += '<th>'+c+'</th>');
+  ['Email','Tier','Lessons Done','Quizzes','Avg Score','Retakes','Unread Msgs'].forEach(c => h += '<th>'+c+'</th>');
   h += '</tr></thead><tbody>';
   students.forEach(s => {
     h += '<tr style="cursor:pointer;" onclick="viewStudentDetail(\''+s.id+'\')">';
