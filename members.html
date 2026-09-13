@@ -5062,8 +5062,7 @@ function saveNote(lessonId){
     if(_supa){
       _supa.from('user_notes').insert({
         user_id:_currentUserId,
-        lesson_id:lessonId,
-        content:text,
+        content:'['+lessonId+'] '+text,
         updated_at:new Date().toISOString()
       }).then(({error})=>{if(error)console.warn('Note save error:',error);});
     }
@@ -5195,11 +5194,15 @@ async function loadProgress(userId){
   const _supa = getSupaClient();
   if(!_supa||!userId) return;
   try{
-    const {data} = await _supa.from('user_progress').select('lesson_id').eq('user_id',userId).eq('completed',true);
-    if(data) data.forEach(row=>done.add(row.lesson_id));
-    buildSidebar();
-    updateProgress();
-  }catch(e){console.warn('loadProgress error',e);}
+    const {data,error} = await _supa.from('user_progress').select('lesson_id').eq('user_id',userId).eq('completed',true);
+    if(error){console.warn('loadProgress error',error);return;}
+    if(data && data.length>0){
+      data.forEach(row=>done.add(row.lesson_id));
+      buildSidebar();
+      updateProgress();
+      console.log('Progress loaded:',data.length,'lessons completed');
+    }
+  }catch(e){console.warn('loadProgress exception',e);}
 }
 
 async function loadNotes(userId){
@@ -5262,9 +5265,12 @@ async function doLogin(){
     const name = data.user.user_metadata?.full_name || data.user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
     document.getElementById('sname').textContent=name;
+    buildSidebar();
     loadLesson('beginner');
-    loadProgress(_currentUserId);
-    loadNotes(_currentUserId);
+    setTimeout(()=>{
+      loadProgress(_currentUserId);
+      loadNotes(_currentUserId);
+    }, 300);
   }
 }
 
@@ -5318,9 +5324,12 @@ async function checkSession(){
       const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
       document.getElementById('login-screen').style.display='none';
       document.getElementById('sname').textContent=name;
+      buildSidebar();
       loadLesson('beginner');
-      loadProgress(_currentUserId);
-      loadNotes(_currentUserId);
+      setTimeout(()=>{
+        loadProgress(_currentUserId);
+        loadNotes(_currentUserId);
+      }, 300);
     }
   }catch(e){console.warn('checkSession error',e);}
 }
