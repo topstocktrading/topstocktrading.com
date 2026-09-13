@@ -980,7 +980,7 @@ smallcaps: {
 
   async function saveQuizAnswer(sectionId,q,qIdx,userAnsIdx,isCorrect){
     try{
-      const sb=window.supabase;if(!sb)return;
+      const sb=window.getSupaClient?window.getSupaClient():(window._supabaseClient||window.supabase);if(!sb)return;
       const _r=await sb.auth.getUser();if(!_r||!_r.data||!_r.data.user)return;
       const user=_r.data.user;
       const selectedText=q.choices[userAnsIdx]||'';
@@ -1001,7 +1001,7 @@ smallcaps: {
 
   async function saveResult(sectionId,score,passed){
     try{
-      const sb=window.supabase;
+      const sb=window.getSupaClient?window.getSupaClient():(window._supabaseClient||window.supabase);
       if(!sb)return;
       const _r2=await sb.auth.getUser();
       if(!_r2||!_r2.data||!_r2.data.user)return;
