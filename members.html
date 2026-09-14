@@ -5464,10 +5464,11 @@ async function sendAI(){
   const inp=document.getElementById('aiin'),msg=inp.value.trim();if(!msg)return;inp.value='';
   addMsg(msg,'user');addMsg('Thinking...','bot','thinking-msg');
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:'You are the TST Academy AI assistant for Top Stock Trading. Help students understand trading concepts clearly and concisely. Be educational, beginner-friendly, and direct. Never give specific buy/sell advice on real stocks.',messages:[{role:'user',content:msg}]})});
+    const r=await fetch('https://tst-api.vercel.app/api/tst-ai',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:msg})});
     const d=await r.json();
     document.getElementById('thinking-msg')?.remove();
-    addMsg(d.content[0].text,'bot');
+    if(d.error){addMsg('Sorry, AI is temporarily unavailable. Try again in a moment.','bot');}
+    else{addMsg(d.text,'bot');}
   }catch(e){document.getElementById('thinking-msg')?.remove();addMsg('Connection error. Try again.','bot');}
 }
 
