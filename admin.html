@@ -458,7 +458,8 @@ function renderMessages(body, filterUserId) {
 
     h += '<div class="panel" style="margin-bottom:14px;">';
     h += '<div style="font-size:13px;font-weight:700;color:#c8d4c8;margin-bottom:12px;">'+email+'</div>';
-    h += '<div style="max-height:220px;overflow-y:auto;margin-bottom:12px;">';
+    h += '<div id="thread-'+uid+'" style="max-height:220px;overflow-y:auto;margin-bottom:12px;display:flex;flex-direction:column;">';
+    const threadId = 'thread-'+uid;
     allThread.forEach(m => {
       const isMe = m.sender === 'tst';
       h += '<div style="display:flex;justify-content:'+(isMe?'flex-end':'flex-start')+';margin-bottom:8px;">';
@@ -468,6 +469,7 @@ function renderMessages(body, filterUserId) {
       h += '</div></div>';
     });
     h += '</div>';
+    h += '<script>setTimeout(()=>{var t=document.getElementById(\''+threadId+'\');if(t)t.scrollTop=t.scrollHeight;},50);</script>';
     h += '<div style="display:flex;gap:8px;">';
     h += '<input id="reply-'+uid+'" placeholder="Reply..." style="flex:1;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:8px 12px;color:#e8f0e8;font-size:12px;outline:none;font-family:DM Sans,sans-serif;">';
     h += '<button onclick="sendReply(\''+uid+'\')" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:8px 16px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:12px;cursor:pointer;">Send</button>';
@@ -527,7 +529,7 @@ async function postNotif() {
   const status = document.getElementById('postStatus');
   if (!title.trim()) { if(status) status.textContent='Enter a title first.'; return; }
   try {
-    await sb.from('notifications').insert({title:title.trim()});
+    await sb.from('notifications').insert({title:title.trim(), created_at:new Date().toISOString()});
     if(status){ status.style.color='#22c55e'; status.textContent='✓ Posted'; }
     document.getElementById('notifTitle').value='';
     await loadAll();
