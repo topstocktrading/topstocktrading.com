@@ -469,7 +469,6 @@ function renderMessages(body, filterUserId) {
       h += '</div></div>';
     });
     h += '</div>';
-    h += '<script>setTimeout(()=>{var t=document.getElementById(\''+threadId+'\');if(t)t.scrollTop=t.scrollHeight;},50);</script>';
     h += '<div style="display:flex;gap:8px;">';
     h += '<input id="reply-'+uid+'" placeholder="Reply..." style="flex:1;background:#07090a;border:1px solid #1a2020;border-radius:8px;padding:8px 12px;color:#e8f0e8;font-size:12px;outline:none;font-family:DM Sans,sans-serif;">';
     h += '<button onclick="sendReply(\''+uid+'\')" style="background:#22c55e;color:#000;border:none;border-radius:8px;padding:8px 16px;font-family:Rajdhani,sans-serif;font-weight:700;font-size:12px;cursor:pointer;">Send</button>';
