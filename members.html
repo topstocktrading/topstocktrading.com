@@ -5266,6 +5266,7 @@ async function doLogin(){
     btn.textContent='Access My Course';btn.disabled=false;
   } else {
     _currentUserId = data.user.id;
+    window._currentUser = data.user;
     const name = data.user.user_metadata?.full_name || data.user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
     document.getElementById('sname').textContent=name;
@@ -5323,6 +5324,7 @@ async function checkSession(){
     const {data:{session}} = await _supa.auth.getSession();
     if(session){
       _currentUserId = session.user.id;
+      window._currentUser = session.user;
       const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
       document.getElementById('login-screen').style.display='none';
       document.getElementById('sname').textContent=name;
@@ -5462,7 +5464,7 @@ async function sendAI(){
   const inp=document.getElementById('aiin'),msg=inp.value.trim();if(!msg)return;inp.value='';
   addMsg(msg,'user');addMsg('Thinking...','bot','thinking-msg');
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:'You are the TST Academy AI assistant for Top Stock Trading. Help students understand trading concepts clearly and concisely. Be educational, beginner-friendly, and direct. Never give specific buy/sell advice on real stocks.',messages:[{role:'user',content:msg}]})});
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,system:'You are the TST Academy AI assistant for Top Stock Trading. Help students understand trading concepts clearly and concisely. Be educational, beginner-friendly, and direct. Never give specific buy/sell advice on real stocks.',messages:[{role:'user',content:msg}]})});
     const d=await r.json();
     document.getElementById('thinking-msg')?.remove();
     addMsg(d.content[0].text,'bot');
