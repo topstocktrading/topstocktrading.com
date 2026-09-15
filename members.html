@@ -5268,10 +5268,9 @@ async function doLogin(){
     const name = data.user.user_metadata?.full_name || data.user.email.split('@')[0];
     document.getElementById('login-screen').style.display='none';
     document.getElementById('sname').textContent=name;
+    await loadProgress(_currentUserId);
+    loadNotes(_currentUserId);
     loadLesson('beginner');
-    loadProgress(_currentUserId).then(()=>{
-      loadNotes(_currentUserId);
-    });
   }
 }
 
@@ -5326,10 +5325,9 @@ async function checkSession(){
       const name = session.user.user_metadata?.full_name || session.user.email.split('@')[0];
       document.getElementById('login-screen').style.display='none';
       document.getElementById('sname').textContent=name;
+      await loadProgress(_currentUserId);
+      loadNotes(_currentUserId);
       loadLesson('beginner');
-      loadProgress(_currentUserId).then(()=>{
-        loadNotes(_currentUserId);
-      });
     }
   }catch(e){console.warn('checkSession error',e);}
 }
