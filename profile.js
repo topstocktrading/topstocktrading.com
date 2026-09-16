@@ -99,7 +99,7 @@ var TST_PROFILE = {
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'journal\', this)">Journal</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
-          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'password\', this)">Change Password</button>' +
+          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'account\', this)">Account Info</button>' +
           tenKTabHtml +
         '</div>' +
         '<div id="tstTabBody">' +
@@ -125,20 +125,42 @@ var TST_PROFILE = {
     if (tab === 'notes')     await this.renderNotes(body, tier);
     if (tab === 'messages')  await this.renderMessages(body, tier);
     if (tab === 'tenk')      await this.renderTenK(body, tier);
-    if (tab === 'password')  await this.renderPassword(body);
+    if (tab === 'account')   await this.renderAccount(body);
   },
 
-  renderPassword: async function(body) {
-    body.innerHTML = '<div style="max-width:420px;margin:0 auto;padding:20px;">' +
-      '<h2 style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#e8f0e8;margin-bottom:6px;">Change Password</h2>' +
-      '<p style="color:#6a8a6a;font-size:13px;margin-bottom:24px;">Enter your new password below. Must be at least 8 characters.</p>' +
-      '<div style="display:flex;flex-direction:column;gap:14px;">' +
-        '<input id="pw-new" type="password" placeholder="New password" style="background:#0d1a0d;border:1px solid #1a2a1a;border-radius:8px;padding:12px 16px;color:#e8f0e8;font-size:14px;outline:none;width:100%;box-sizing:border-box;"/>' +
-        '<input id="pw-confirm" type="password" placeholder="Confirm new password" style="background:#0d1a0d;border:1px solid #1a2a1a;border-radius:8px;padding:12px 16px;color:#e8f0e8;font-size:14px;outline:none;width:100%;box-sizing:border-box;"/>' +
-        '<button onclick="TST_PROFILE.doChangePassword()" style="background:#00d27a;color:#000;border:none;border-radius:8px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;letter-spacing:1px;">UPDATE PASSWORD</button>' +
-        '<div id="pw-status" style="font-size:13px;text-align:center;min-height:20px;"></div>' +
-      '</div>' +
-    '</div>';
+  renderAccount: async function(body) {
+    var user = await this.getUser();
+    if (!user) { body.innerHTML = '<p style="color:#ef4444;padding:20px;">Could not load account info.</p>'; return; }
+    var name = (user.user_metadata && user.user_metadata.full_name) || user.email.split('@')[0];
+    var email = user.email;
+    var joined = new Date(user.created_at).toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+    var row = function(label, value) {
+      return '<div style="display:flex;flex-direction:column;gap:4px;padding:16px 0;border-bottom:1px solid #1a2a1a;">' +
+        '<div style="font-size:11px;color:#4a6a4a;letter-spacing:1.5px;text-transform:uppercase;">' + label + '</div>' +
+        '<div style="font-size:15px;color:#e8f0e8;font-weight:500;">' + value + '</div>' +
+      '</div>';
+    };
+    body.innerHTML =
+      '<div style="max-width:480px;margin:0 auto;padding:20px;">' +
+        '<h2 style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#e8f0e8;margin-bottom:4px;">Account Info</h2>' +
+        '<p style="color:#6a8a6a;font-size:13px;margin-bottom:20px;">Your TST Academy membership details.</p>' +
+        row('Full Name', name) +
+        row('Email Address', email) +
+        row('Member Since', joined) +
+        '<div style="padding:20px 0;border-bottom:1px solid #1a2a1a;">' +
+          '<div style="font-size:11px;color:#4a6a4a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">Change Password</div>' +
+          '<div style="display:flex;flex-direction:column;gap:10px;">' +
+            '<input id="pw-new" type="password" placeholder="New password" style="background:#0d1a0d;border:1px solid #1a2a1a;border-radius:8px;padding:11px 14px;color:#e8f0e8;font-size:14px;outline:none;width:100%;box-sizing:border-box;"/>' +
+            '<input id="pw-confirm" type="password" placeholder="Confirm new password" style="background:#0d1a0d;border:1px solid #1a2a1a;border-radius:8px;padding:11px 14px;color:#e8f0e8;font-size:14px;outline:none;width:100%;box-sizing:border-box;"/>' +
+            '<button onclick="TST_PROFILE.doChangePassword()" style="background:#00d27a;color:#000;border:none;border-radius:8px;padding:11px;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:1px;width:100%;">UPDATE PASSWORD</button>' +
+            '<div id="pw-status" style="font-size:13px;text-align:center;min-height:18px;"></div>' +
+          '</div>' +
+        '</div>' +
+        '<div style="padding:20px 0;">' +
+          '<div style="font-size:11px;color:#4a6a4a;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;">Contact Support</div>' +
+          '<a href="mailto:support@topstocktrading.com" style="display:inline-block;background:#0d1a0d;border:1px solid #1a2a1a;color:#00d27a;border-radius:8px;padding:11px 20px;font-size:13px;font-weight:600;text-decoration:none;">✉ support@topstocktrading.com</a>' +
+        '</div>' +
+      '</div>';
   },
 
   doChangePassword: async function() {
