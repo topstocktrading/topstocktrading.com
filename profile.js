@@ -99,6 +99,7 @@ var TST_PROFILE = {
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'journal\', this)">Journal</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'trading\', this)">Trading Data</button>' +
           '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'notes\', this)">My Notes</button>' +
+          '<button class="tst-tab" onclick="TST_PROFILE.switchTab(\'password\', this)">Change Password</button>' +
           tenKTabHtml +
         '</div>' +
         '<div id="tstTabBody">' +
@@ -124,6 +125,7 @@ var TST_PROFILE = {
     if (tab === 'notes')     await this.renderNotes(body, tier);
     if (tab === 'messages')  await this.renderMessages(body, tier);
     if (tab === 'tenk')      await this.renderTenK(body, tier);
+    if (tab === 'password')  await this.renderPassword(body);
   },
 
   // ============================================================
