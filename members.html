@@ -5040,7 +5040,7 @@ const QUOTES=[
   {t:"Base hits win championships. Stop swinging for home runs.",a:"TST Academy"},
 ];
 
-let cur='beginner',done=new Set(),openSecs=new Set(['beginner']),openMods=new Set();
+let cur='beginner',done=new Set(),openSecs=new Set(['beginner']),openMods=new Set(),passedSections=new Set(['s00','s01']);
 const BEHAVIOR={student:'',quizzes:[],lessonTimes:{},retries:{},flags:[],scores:{breakout:[],dip:[],momentum:[],patience:[],risk:[]},lessonStartTime:null,questionStartTime:null};
 
 const NOTES={};
@@ -5194,16 +5194,49 @@ async function loadProgress(userId){
   const _supa = getSupaClient();
   if(!_supa||!userId) return;
   try{
-    const {data,error} = await _supa.from('user_progress').select('lesson_id').eq('user_id',userId).eq('completed',true);
-    if(error){console.warn('loadProgress error',error);return;}
-    if(data && data.length>0){
-      data.forEach(row=>done.add(row.lesson_id));
+    const [progressRes, quizRes] = await Promise.all([
+      _supa.from('user_progress').select('lesson_id').eq('user_id',userId).eq('completed',true),
+      _supa.from('quiz_results').select('section,passed,score').eq('user_id',userId)
+    ]);
+    if(progressRes.data) progressRes.data.forEach(row=>done.add(row.lesson_id));
+    if(quizRes.data){
+      quizRes.data.forEach(row=>{
+        if(row.passed && row.score>=85) passedSections.add(row.section);
+      });
+      // Unlock sections sequentially based on passed quizzes
+      rebuildUnlockedSections();
     }
-    // Always rebuild sidebar and update progress after load
     buildSidebar();
     updateProgress();
-    console.log('Progress loaded:',data?data.length:0,'lessons completed');
+    console.log('Progress loaded:',progressRes.data?progressRes.data.length:0,'lessons,',passedSections.size,'sections passed');
   }catch(e){console.warn('loadProgress exception',e);}
+}
+
+function rebuildUnlockedSections(){
+  // s00 and s01 always unlocked, case studies always unlocked
+  const SECTION_ORDER=['s00','s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13','s14','s15','s16','s16b','s17','s18'];
+  const QUIZ_SECTIONS=new Set(['s01','s02','s03','s04','s05','s06','s07','s08','s09','s10','s11','s12','s13','s14','s15','s16','s16b','s17']);
+  // Always unlock s00, s01, case studies
+  passedSections.add('s00');
+  passedSections.add('s01');
+  // Walk sections in order — unlock next if current is passed
+  for(let i=0;i<SECTION_ORDER.length-1;i++){
+    const sec=SECTION_ORDER[i];
+    const nextSec=SECTION_ORDER[i+1];
+    if(QUIZ_SECTIONS.has(sec)){
+      // This section requires quiz pass to unlock next
+      if(passedSections.has(sec)) passedSections.add(nextSec);
+    } else {
+      // No quiz — check all lessons complete
+      const secObj=COURSE.find(s=>s.id===sec);
+      if(secObj){
+        const allMods=[];
+        secObj.modules.forEach(m=>{ if(m.subs) m.subs.forEach((_,si)=>allMods.push(m.id+'-'+si)); else allMods.push(m.id); });
+        const allDone=allMods.every(lid=>done.has(lid)||lid.startsWith('quiz-'));
+        if(allDone) passedSections.add(nextSec);
+      }
+    }
+  }
 }
 
 async function loadNotes(userId){
@@ -5380,6 +5413,8 @@ function buildSidebar(){
         mHTML+=`<div class="dir-item ${cur===mod.id?'active':''} ${done.has(mod.id)?'done':''}" onclick="loadLesson('${mod.id}')">${done.has(mod.id)?SVG_DONE:SVG_EMPTY}${mod.name}</div>`;
       }
     });
+    const ALWAYS_UNLOCKED=new Set(['s00','s01','s-cs','cs-intro','cs-cat-a','cs-cat-b','cs-cat-c','cs-cat-d','cs-cat-e','cs-cat-f','cs-cat-g','cs-cat-h']);
+    const isLocked=!ALWAYS_UNLOCKED.has(sec.id)&&!passedSections.has(sec.id)&&sec.id!=='s01';
     const d=document.createElement('div');d.className='sec-group';
     d.innerHTML=`<div class="sec-header ${isOpen?'open':''} ${isSecActive?'active':''}" onclick="toggleSec('${sec.id}')"><span class="sec-badge">${sec.badge}</span><span class="sec-name">${sec.label}</span><span class="sec-arrow">▶</span></div><div class="sec-lessons ${isOpen?'open':''}">${mHTML}</div>`;
     nav.appendChild(d);
@@ -5454,6 +5489,21 @@ function completeNext(id,nid,isIntro){
   else buildSidebar();
   updateProgress();
 }
+
+// Called by quiz.js after quiz submission
+window.onQuizResult = function(sectionId, passed, score){
+  if(passed && score>=85){
+    passedSections.add(sectionId);
+    rebuildUnlockedSections();
+    buildSidebar();
+    // Show success — section unlocked
+    const banner=document.createElement('div');
+    banner.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#00d27a;color:#000;padding:12px 24px;border-radius:8px;font-weight:700;font-size:14px;z-index:99999;';
+    banner.textContent='✓ Section passed — next section unlocked!';
+    document.body.appendChild(banner);
+    setTimeout(()=>banner.remove(),3000);
+  }
+};
 
 function toggleChat(){document.getElementById('aip').classList.toggle('open');}
 
