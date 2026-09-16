@@ -5548,6 +5548,7 @@ async function markNotifRead(nid){
 function openLightbox(src){
   var lb=document.getElementById('tst-lightbox');
   document.getElementById('tst-lightbox-img').src=src;
+  document.getElementById('tst-lightbox-link').href=src;
   lb.style.display='flex';
   document.body.style.overflow='hidden';
 }
