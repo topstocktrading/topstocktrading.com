@@ -8,7 +8,7 @@ const QUIZ_DATA = {
   's00': {
     title: "Course Introduction",
     section: "s00",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the primary goal of TST Academy?", choices: ["Teach you one strategy to use forever", "Build a complete trader \u2014 mindset, math, and mechanics", "Help you pick the best stocks to buy and hold", "Show you how to copy professional traders"], answer: 1, hint: "TST is built around the whole trader \u2014 psychology, edge, and execution together." }] },
       { variants: [{ q: "According to the course framework, what comes BEFORE strategy?", choices: ["Finding the right broker", "Understanding your own psychology and edge", "Learning technical indicators", "Building a watchlist"], answer: 1, hint: "Mindset and math come before any strategy. You need to understand yourself first." }] },
@@ -31,7 +31,7 @@ const QUIZ_DATA = {
   's01': {
     title: "Trading Fundamentals",
     section: "s01",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What are the 3 pillars every trader needs according to TST?", choices: ["Stocks, options, and futures", "Mindset, mathematical edge, and mechanics", "Charts, indicators, and news", "Broker, platform, and scanner"], answer: 1, hint: "Without all three \u2014 mindset, edge, and mechanics \u2014 a trader is missing a critical foundation." }] },
       { variants: [{ q: "What does a candlestick's body represent?", choices: ["The high and low of the period", "The opening and closing price", "The volume traded", "The gap between sessions"], answer: 1, hint: "The body is the range between open and close. The color tells you which direction price moved." }] },
@@ -54,7 +54,7 @@ const QUIZ_DATA = {
   's02': {
     title: "The Mathematical Foundation of Trading",
     section: "s02",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the formula for expectancy?", choices: ["Win rate \u00d7 average win", "(Win rate \u00d7 avg win) - (loss rate \u00d7 avg loss)", "Average win / average loss", "Win rate - loss rate"], answer: 1, hint: "Expectancy = (Win% \u00d7 Avg Win) - (Loss% \u00d7 Avg Loss). Positive expectancy means the strategy makes money over time." }] },
       { variants: [{ q: "A trader has a 40% win rate. Can they be profitable?", choices: ["No \u2014 you need at least 50% to make money", "Yes, if their average win is significantly larger than their average loss", "Only if they trade more than 100 times per month", "No \u2014 win rate is the only thing that matters"], answer: 1, hint: "Win rate alone is meaningless. A 40% win rate with 3:1 reward/risk is highly profitable." }] },
@@ -77,7 +77,7 @@ const QUIZ_DATA = {
   's03': {
     title: "Price Action & Chart Reading",
     section: "s03",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What makes a price level significant as support or resistance?", choices: ["It was mentioned on financial news", "Price has reversed or stalled at that level multiple times \u2014 proving it has historical significance", "Any round number (like $50 or $100)", "It is exactly at a moving average"], answer: 1, hint: "Support and resistance are proven by repeated price reactions, not arbitrary levels." }] },
       { variants: [{ q: "When a resistance level is broken with strong volume, what typically happens?", choices: ["Price immediately returns to the previous range", "The broken resistance becomes the new support \u2014 role reversal", "Volume always decreases after a breakout", "The stock is about to reverse"], answer: 1, hint: "Resistance that breaks on volume becomes support. This role reversal is one of the most reliable principles in technical analysis." }] },
@@ -100,7 +100,7 @@ const QUIZ_DATA = {
   's04': {
     title: "Volume & Order Flow",
     section: "s04",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What does high volume on an up day confirm?", choices: ["The move is temporary", "Institutional participation \u2014 buyers are engaged and the move has conviction", "The stock is overbought", "It will reverse tomorrow"], answer: 1, hint: "Volume is conviction. High volume on an up day means large participants are buying, not just retail." }] },
       { variants: [{ q: "What does declining volume during a price advance suggest?", choices: ["Strong institutional accumulation", "The advance is losing momentum \u2014 fewer participants engaged, weakening the move", "The stock is about to gap up", "Volume is irrelevant to price direction"], answer: 1, hint: "Rising price on falling volume is a warning. The move lacks participation and may not sustain." }] },
@@ -123,7 +123,7 @@ const QUIZ_DATA = {
   's05': {
     title: "Technical Indicators & Oscillators",
     section: "s05",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the primary limitation of all technical indicators?", choices: ["Too complicated to calculate", "They are lagging \u2014 derived from past price data and confirm what has already happened", "Only work on daily charts", "Require expensive software"], answer: 1, hint: "Indicators lag. They describe past price action. Use them to confirm, never to predict." }] },
       { variants: [{ q: "What does the 20-day moving average represent?", choices: ["Average price of the past 20 hours", "Average closing price over past 20 trading days \u2014 a dynamic measure of short-term trend", "Price where institutions bought", "The stock's fair value"], answer: 1, hint: "The 20-day MA is a short-term trend gauge. Price consistently above = uptrend. Below = downtrend." }] },
@@ -146,7 +146,7 @@ const QUIZ_DATA = {
   's06': {
     title: "Trader Psychology & Behavioral Patterns",
     section: "s06",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the most common emotional response immediately after a losing trade?", choices: ["Calm acceptance", "Revenge trading \u2014 the urge to immediately make back the loss with a larger impulsive trade", "Excitement about the next opportunity", "Immediately journaling the loss"], answer: 1, hint: "Revenge trading is the #1 account killer after losses. The emotional brain overrides the rational brain." }] },
       { variants: [{ q: "What does an elite trader do differently when they lose?", choices: ["Increase position size to make it back faster", "Take a break and forget about it", "Treat the loss as data \u2014 review, learn, move on with no emotional residue", "Call their broker to complain"], answer: 2, hint: "Elite traders have a process for losses: review without judgment, extract the lesson, move on." }] },
@@ -169,7 +169,7 @@ const QUIZ_DATA = {
   's07': {
     title: "Accounts, Execution & Risk Management",
     section: "s07",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the Pattern Day Trader (PDT) rule?", choices: ["You cannot trade more than 100 times per month", "4 or more day trades in 5 business days in a margin account under $25,000 flags and restricts your account", "Day trading is illegal for retail traders", "You must hold every trade at least one day"], answer: 1, hint: "PDT rule: 4+ day trades in 5 days with under $25K = flagged. Use a cash account or maintain $25K+." }] },
       { variants: [{ q: "What is the primary risk of using a market order?", choices: ["It always executes at a worse price than a limit order", "You get filled at whatever price is available \u2014 in fast or thin markets this can be significantly worse than expected", "Market orders cannot be cancelled", "They fill too slowly in active stocks"], answer: 1, hint: "Market orders guarantee execution but not price. In thin stocks or fast markets you can get filled far from expected." }] },
@@ -192,7 +192,7 @@ const QUIZ_DATA = {
   's08': {
     title: "Journaling & Self-Analysis",
     section: "s08",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "Why is a trading journal non-negotiable according to TST?", choices: ["Brokers require it", "It is the only way to create a feedback loop \u2014 without data you cannot identify patterns or improve systematically", "It helps you remember which stocks you traded", "Required for tax purposes"], answer: 1, hint: "No journal = no feedback loop. You are flying blind, repeating mistakes you cannot identify." }] },
       { variants: [{ q: "What should be tracked beyond entry and exit prices?", choices: ["Only profit and loss", "Setup type, emotional state, execution quality, deviation from plan, and market conditions \u2014 the why behind each trade", "The weather and news headlines", "Only winning trades"], answer: 1, hint: "Price in/out is the minimum. The real value is tracking WHY you took the trade and whether you followed your plan." }] },
@@ -215,7 +215,7 @@ const QUIZ_DATA = {
   's09': {
     title: "Market Structure & Macro Context",
     section: "s09",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What does market breadth measure?", choices: ["Volume of the most active stocks", "How many stocks are advancing vs declining \u2014 whether a market move is broad and healthy or narrow and fragile", "Total market capitalization", "Volatility of the overall market"], answer: 1, hint: "Breadth reveals participation. A rallying index where only 20% of stocks advance is weak." }] },
       { variants: [{ q: "What is sector rotation?", choices: ["Switching from stocks to bonds", "Movement of institutional money from one sector to another as economic conditions change \u2014 revealing where smart money is positioned", "Individual stocks rotating between sectors", "A technical pattern on sector ETF charts"], answer: 1, hint: "Sectors lead and lag based on economic cycles. Knowing which sectors institutions are flowing into gives directional bias." }] },
@@ -238,7 +238,7 @@ const QUIZ_DATA = {
   's10': {
     title: "Daily Market Structure & Intraday Setups",
     section: "s10",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the opening range and why does it matter?", choices: ["The gap between yesterday's close and today's open", "The high and low established in the first 30-60 minutes \u2014 a break above signals bullish control, below signals bearish control", "The pre-market trading range", "The first candle on a 5-minute chart"], answer: 1, hint: "Opening range is the day's initial battleground. ORB above = bullish; below = bearish." }] },
       { variants: [{ q: "What does pre-market watchlist preparation involve?", choices: ["Randomly selecting stocks to trade", "Identifying gappers, high-RVOL stocks, and potential catalysts before the open so you know your setups before the session begins", "Reading overnight news only", "Building a list of long-term investments"], answer: 1, hint: "Pre-market prep means you enter with a defined list of stocks to watch and setups to execute \u2014 no decisions under pressure." }] },
@@ -261,7 +261,7 @@ const QUIZ_DATA = {
   's11': {
     title: "Small Cap Dynamics & Float-Based Trading",
     section: "s11",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is a stock's float?", choices: ["The total shares outstanding", "The number of shares available for public trading \u2014 shares held by insiders with lockups are NOT in the float", "The market capitalization", "The average daily volume"], answer: 1, hint: "Float = tradeable shares. A 1M share float means only 1M shares can be bought and sold \u2014 small float = big moves." }] },
       { variants: [{ q: "Why does float size dramatically affect price volatility?", choices: ["Large floats are more volatile", "Small floats have limited supply \u2014 the same buying pressure moves a small float stock far more than a large float stock", "Float has no relationship to volatility", "Only market cap matters"], answer: 1, hint: "Small supply + meaningful demand = large price moves. Float is the supply side of that equation." }] },
@@ -284,7 +284,7 @@ const QUIZ_DATA = {
   's12': {
     title: "IPO Strategy & First-Day Trading",
     section: "s12",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What makes IPOs fundamentally different from established stocks to trade?", choices: ["They always go up on the first day", "There is no price history, no established support/resistance, and no predictable trading behavior \u2014 you are trading pure price discovery", "They have lower volatility", "They are easier to trade because everyone is watching"], answer: 1, hint: "No history = no reference points. Every IPO price action is unique \u2014 driven by offering supply vs buyer demand." }] },
       { variants: [{ q: "What is the opening auction in an IPO?", choices: ["The first trade after the stock becomes available", "The process where the exchange matches buy and sell orders to determine the opening price \u2014 often significantly different from the IPO price", "A scheduled auction 30 minutes after the open", "When institutions receive their allocated shares"], answer: 1, hint: "The opening auction sets the first public price by matching all pre-open orders. Can be dramatically above or below the IPO price." }] },
@@ -307,7 +307,7 @@ const QUIZ_DATA = {
   's13': {
     title: "Options Trading",
     section: "s13",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What does buying a call option give you the right to do?", choices: ["Sell 100 shares at the strike price", "Buy 100 shares at the strike price before expiration \u2014 you profit if the stock rises above strike plus premium paid", "Receive dividends on 100 shares", "Short sell 100 shares"], answer: 1, hint: "Call option = right (not obligation) to buy 100 shares at the strike price. Profitable when the stock rises above strike + premium." }] },
       { variants: [{ q: "What is theta in options trading?", choices: ["The rate at which the option gains value", "Time decay \u2014 the daily erosion of an option's value as expiration approaches; buyers lose theta, sellers collect it", "The sensitivity of option price to volatility changes", "The probability the option expires in the money"], answer: 1, hint: "Theta is time decay. Options lose value every day simply from the passage of time. Buyers fight theta; sellers collect it." }] },
@@ -330,7 +330,7 @@ const QUIZ_DATA = {
   's14': {
     title: "Swing Trading",
     section: "s14",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is swing trading?", choices: ["Day trading held for more than one hour", "Holding positions for multiple days to weeks to capture larger price moves \u2014 trading the swing within a trend rather than intraday noise", "Long-term investing with frequent adjustments", "Trading based on fundamental analysis only"], answer: 1, hint: "Swing trading captures multi-day to multi-week moves. You are trading the swing, not the tick." }] },
       { variants: [{ q: "What is a consolidation breakout swing?", choices: ["Buying a stock that has been declining for weeks", "Entering when a stock breaks out of a tight multi-day or multi-week consolidation range with volume, expecting continuation higher", "Any breakout on a daily chart", "A stock breaking its 200-day moving average"], answer: 1, hint: "Consolidation breakout swings: tight range = coiling energy. The breakout on volume releases that energy directionally." }] },
@@ -353,7 +353,7 @@ const QUIZ_DATA = {
   's15': {
     title: "Long-Term Investing",
     section: "s15",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the core principle of buy and hold strategy?", choices: ["Buying any stock and holding it forever", "Identifying businesses with durable competitive advantages and holding through volatility to capture compounding returns over years", "Holding every position for exactly one year", "Never selling any stock under any circumstances"], answer: 1, hint: "Buy and hold works when you own great businesses. The strategy fails when you own mediocre businesses \u2014 holding forever does not rescue a bad investment." }] },
       { variants: [{ q: "What are LEAPs in options?", choices: ["Short-term options expiring this week", "Long-term Equity Anticipation Securities \u2014 options with expiration dates typically one to three years out, used as a lower-cost alternative to owning shares outright", "Options that automatically renew annually", "A type of ETF that tracks long-term interest rates"], answer: 1, hint: "LEAPs give you long-term directional exposure with defined maximum loss (the premium paid) and leverage vs owning shares outright." }] },
@@ -376,7 +376,7 @@ const QUIZ_DATA = {
   's16': {
     title: "Personal Rules & Playbook Execution",
     section: "s16",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What are non-negotiable rules in trading?", choices: ["Rules that apply to everyone", "Personal rules derived from your own trading data that define when to trade, how much to risk, and when to stop \u2014 rules you never break regardless of conviction", "Rules imposed by your broker", "Rules that can be broken if the setup looks exceptional"], answer: 1, hint: "Non-negotiable rules are your last line of defense against your worst impulses. If you break them, you do not have rules \u2014 you have suggestions." }] },
       { variants: [{ q: "What does your personal playbook contain?", choices: ["Every possible trading strategy", "Only your highest-probability setups that have demonstrated edge in your own trading history \u2014 your specific entries, exits, and sizing for each", "A list of stocks to watch", "Strategies copied from other successful traders"], answer: 1, hint: "Your playbook is personal. It contains only setups where YOUR data shows YOU have edge. It cannot be borrowed from someone else." }] },
@@ -399,7 +399,7 @@ const QUIZ_DATA = {
   's16b': {
     title: "Advanced Pattern Recognition",
     section: "s16b",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is a kill candle?", choices: ["The final candle before a stock halts", "A single large candle that breaks a key level with force and closes near the extreme \u2014 often signaling the dominant side has taken control decisively", "Any red candle in an uptrend", "A candle that forms during a circuit breaker halt"], answer: 1, hint: "Kill candles show one side overwhelming the other. A large candle closing at the extreme of its range signals conviction, not just movement." }] },
       { variants: [{ q: "What is a fake second higher low?", choices: ["A legitimate higher low pattern", "Price appears to make a higher low, drawing in buyers, then breaks below the first low \u2014 trapping longs who bought the apparent higher low", "A pattern that always leads to breakouts", "A double bottom formation"], answer: 1, hint: "Fake second higher low = trap. The apparent uptrend structure lures buyers, then breaks, triggering their stops and creating a cascade lower." }] },
@@ -422,7 +422,7 @@ const QUIZ_DATA = {
   's17': {
     title: "Advanced Psychology & Discipline",
     section: "s17",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { variants: [{ q: "What is the reality of trading that most beginners fail to anticipate?", choices: ["It is consistently profitable from the first month", "It involves extended periods of difficulty, drawdown, and uncertainty even for successful traders \u2014 the path is not linear", "You will know if you have talent within the first week", "The hardest part is finding the right strategy"], answer: 1, hint: "The reality: losing streaks are normal. Drawdowns are inevitable. The psychological grind is harder than the intellectual work of learning strategy." }] },
       { variants: [{ q: "What does 'small consistent wins over home runs' mean?", choices: ["Only trade for tiny profits", "Building account size and confidence through a disciplined process of capturing reliable edge repeatedly \u2014 rather than swinging for life-changing trades that require luck", "Small wins are the goal even in ideal conditions", "Home runs are impossible in trading"], answer: 1, hint: "Consistency compounds. The trader who captures 0.5R per day 200 days per year dramatically outperforms the trader swinging for 5R who takes huge losses." }] },
@@ -446,7 +446,7 @@ const QUIZ_DATA = {
   beginner: {
     title: "Beginner Mastery Test",
     section: "beginner",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { id:"b1", variants:[
         { q:"A long lower wick on a candle tells you:", choices:["Sellers pushed price down but buyers rejected the lows and pushed it back up","Buyers were in control the entire period","The stock had low volume","Sellers won and price closed at the lows"], answer:0, hint:"The wick shows where price went — the close shows who won." },
@@ -553,7 +553,7 @@ const QUIZ_DATA = {
   intermediate: {
     title: "Intermediate Mastery Test",
     section: "intermediate",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { id:"i1", variants:[
         { q:"QQQ is down 1.5% and below VWAP all morning. You have a long setup on a tech stock. You should:", choices:["Skip or reduce size — trading long against a downtrending index dramatically lowers probability","Enter full size since individual stock setups work regardless of market direction","Enter with a wider stop since the index selloff will cause more volatility","Wait 30 minutes then enter since morning selloffs usually reverse"], answer:0, hint:"How hard is it to swim upstream when the whole market is selling?" },
@@ -685,7 +685,7 @@ const QUIZ_DATA = {
 smallcaps: {
     title: "Small Cap Trading Mastery Test",
     section: "smallcaps",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { id:"sc1", q:"What is float and why does it matter for small cap trading?", choices:["Float is total shares outstanding — higher float means safer trades","Float is the number of shares available for public trading — low float means limited supply which causes larger price moves on volume","Float is the daily average volume of a stock","Float only matters for options traders not equity traders"], answer:1, hint:"Float = supply. Limited supply plus increased demand equals explosive moves. That is why low float small caps move so fast." },
       { id:"sc2", q:"A short squeeze is most likely to occur when:", choices:["Short interest is very low and the stock is already up 50%","A heavily shorted stock with low float gets a positive catalyst forcing shorts to cover which drives price higher","The stock is breaking down and short sellers are adding to positions","Volume is below average and price is consolidating"], answer:1, hint:"Short squeeze = forced buying. High short interest plus positive catalyst plus low float equals explosive upside as shorts are forced to cover." },
@@ -708,7 +708,7 @@ smallcaps: {
   options: {
     title: "Options Trading Mastery Test",
     section: "options",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { id:"op1", q:"What does buying a call option give you the right to do?", choices:["Sell 100 shares at the strike price before expiration","Buy 100 shares at the strike price before expiration","Receive dividends from the underlying stock","Short the stock at the current market price"], answer:1, hint:"Calls give the right to BUY. Puts give the right to SELL. Never mix these up — getting this wrong costs you money immediately." },
       { id:"op2", q:"You buy a call with a $50 strike on a stock trading at $47. This option is:", choices:["In the money — the stock is close enough to the strike","Out of the money — the stock must move above $50 for this to have intrinsic value","At the money — the stock is within $3 of the strike","Deep in the money — any option within $5 is considered deep ITM"], answer:1, hint:"ITM calls have strike below stock price. OTM calls have strike above stock price. At $47 with a $50 strike you need $3 more of movement just to break even at intrinsic value." },
@@ -736,7 +736,7 @@ smallcaps: {
   longterm: {
     title: "Long-Term Investing Mastery Test",
     section: "longterm",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { id:"lt1", q:"The primary purpose of fundamental analysis is to:", choices:["Predict short-term price movements using earnings reports","Determine whether a business is worth owning at its current price by evaluating its financial health and growth trajectory","Find stocks with the highest technical momentum","Identify breakout patterns on weekly charts"], answer:1, hint:"Fundamentals answer: is this a good business and am I paying a fair price? Technicals then tell you when to buy it." },
       { id:"lt2", q:"A stock's P/E ratio of 12 versus a sector average of 28 most likely means:", choices:["The stock is always a strong buy since it is cheap relative to peers","The stock may be undervalued — or there is a serious problem with the business. The P/E is a starting point for deeper research not a conclusion","The company is growing faster than its peers","The stock is too cheap to be worth owning"], answer:1, hint:"Low P/E versus peers starts a question not ends one. Is it cheap because it is overlooked? Or because the business is deteriorating? You must find out which." },
@@ -787,7 +787,7 @@ smallcaps: {
   swingtrading: {
     title: "Swing Trading Mastery Test",
     section: "swingtrading",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { id:"sw1", q:"The primary chart timeframe for swing trading entries and exits is:", choices:["1-minute chart for the most precise entry timing","Daily chart for setup identification with the weekly chart providing trend context","15-minute chart since it balances intraday and multi-day views","Monthly chart to identify long-term support and resistance"], answer:1, hint:"Swing trading is about multi-day moves. The daily chart is your primary tool. The weekly chart tells you if you are trading with or against the larger trend." },
       { id:"sw2", q:"A swing trade breakout setup requires:", choices:["Price touching resistance level intraday even if it does not close above it","A full daily candle CLOSE above a clearly defined resistance level with above-average volume — a wick does not count","Price above the 200-day moving average with any level of volume","Three consecutive green candles regardless of where price is relative to resistance"], answer:1, hint:"On the daily chart a close above resistance is acceptance. A wick is rejection. These are completely different outcomes that require different responses." },
@@ -813,7 +813,7 @@ smallcaps: {
   psychology: {
     title: "Psychology and Mindset Mastery Test",
     section: "psychology",
-    passingScore: 75,
+    passingScore: 85,
     questions: [
       { id:"psy1", q:"Revenge trading is defined as:", choices:["A legitimate strategy for recovering losses quickly by taking higher-probability setups immediately after a loss","Taking trades driven by the need to recover money after a loss — emotional decisions not based on setups that meet your criteria","A pattern of trading in the same direction as the market after being stopped out","Any trade taken within 30 minutes of a previous loss regardless of setup quality"], answer:1, hint:"Revenge trading is driven by ego and loss aversion not by market opportunity. Your next trade is based on anger not on a legitimate setup. That combination always loses over time." },
       { id:"psy2", q:"After a significant unexpected loss the most effective immediate response is:", choices:["Immediately take a larger position in a high-conviction idea to offset the loss and reset your P&L quickly","Step away from the screen for a mandatory 15-30 minute break before making any new trading decision","Review your watchlist and find the next available setup to get back in the game","Call your trading partner to discuss what went wrong and get their advice"], answer:1, hint:"The mandatory break after a significant loss is the most important behavioral tool in trading. It breaks the emotional reaction loop before it can compound into a bigger loss." },
@@ -962,7 +962,7 @@ smallcaps: {
       saveQuizAnswer(sectionId,q,i,userAns,userAns===correctAns);
     });
     const score=Math.round((correct/questions.length)*100);
-    const passed=score>=(quiz.passingScore||75);
+    const passed=score>=(quiz.passingScore||85);
     const resultEl=document.getElementById('qr-'+sectionId);
     if(resultEl){
       resultEl.style.display='block';
@@ -976,6 +976,8 @@ smallcaps: {
     const submitBtn=document.getElementById('submit-'+sectionId);
     if(submitBtn)submitBtn.style.display='none';
     saveResult(sectionId,score,passed);
+    // Notify members.html of quiz result for section locking
+    if(typeof window.onQuizResult === 'function') window.onQuizResult(sectionId, passed, score);
   }
 
   async function saveQuizAnswer(sectionId,q,qIdx,userAnsIdx,isCorrect){
