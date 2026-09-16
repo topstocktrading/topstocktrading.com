@@ -5416,7 +5416,7 @@ function buildSidebar(){
     const ALWAYS_UNLOCKED=new Set(['s00','s01','s-cs','cs-intro','cs-cat-a','cs-cat-b','cs-cat-c','cs-cat-d','cs-cat-e','cs-cat-f','cs-cat-g','cs-cat-h']);
     const isLocked=!ALWAYS_UNLOCKED.has(sec.id)&&!passedSections.has(sec.id)&&sec.id!=='s01';
     const d=document.createElement('div');d.className='sec-group';
-    d.innerHTML=`<div class="sec-header ${isOpen?'open':''} ${isSecActive?'active':''}" onclick="toggleSec('${sec.id}')"><span class="sec-badge">${sec.badge}</span><span class="sec-name">${sec.label}</span><span class="sec-arrow">▶</span></div><div class="sec-lessons ${isOpen?'open':''}">${mHTML}</div>`;
+    d.innerHTML=`<div class="sec-header ${isOpen?'open':''} ${isSecActive?'active':''}" onclick="${isLocked?'showLockedMsg()':"toggleSec('${sec.id}')"}"><span class="sec-badge">${sec.badge}</span><span class="sec-name">${isLocked?'🔒 ':''}${sec.label}</span><span class="sec-arrow">${isLocked?'':'▶'}</span></div><div class="sec-lessons ${isOpen?'open':''}">${mHTML}</div>`;
     nav.appendChild(d);
   });
 }
@@ -5430,7 +5430,22 @@ function toggleMod(id){if(openMods.has(id))openMods.delete(id);else openMods.add
 
 function rq(){const q=QUOTES[Math.floor(Math.random()*QUOTES.length)];return `<div class="quote-block"><div class="quote-text">"${q.t}"</div><div class="quote-author">— ${q.a}</div></div>`;}
 
+function showLockedMsg(){
+  const banner=document.createElement('div');
+  banner.style.cssText='position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#0d1a0d;border:1px solid #ef4444;color:#ef4444;padding:14px 28px;border-radius:8px;font-weight:700;font-size:13px;z-index:99999;text-align:center;max-width:400px;';
+  banner.textContent='🔒 Pass the quiz in the previous section (85%+) to unlock this section.';
+  document.body.appendChild(banner);
+  setTimeout(()=>banner.remove(),4000);
+}
+
 function loadLesson(id){
+  if(!id)return;
+  // Check if lesson's section is locked
+  const ALWAYS_UNLOCKED_SECS=new Set(['s00','s01','s-cs','cs-intro','cs-cat-a','cs-cat-b','cs-cat-c','cs-cat-d','cs-cat-e','cs-cat-f','cs-cat-g','cs-cat-h']);
+  const secObj=COURSE.find(s=>s.modules&&s.modules.some(m=>m.id===id||(m.subs&&m.subs.some((_,si)=>m.id+'-'+si===id))));
+  if(secObj&&!ALWAYS_UNLOCKED_SECS.has(secObj.id)&&!passedSections.has(secObj.id)){
+    showLockedMsg();return;
+  }
   trackLessonComplete(cur);
   cur=id;
   trackLessonStart(id);
