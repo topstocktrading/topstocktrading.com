@@ -976,8 +976,12 @@ smallcaps: {
     const submitBtn=document.getElementById('submit-'+sectionId);
     if(submitBtn)submitBtn.style.display='none';
     saveResult(sectionId,score,passed);
-    // Notify members.html of quiz result for section locking
-    if(typeof window.onQuizResult === 'function') window.onQuizResult(sectionId, passed, score);
+    // Hide Mark Complete & Next if failed, show if passed
+    const navBtn=document.querySelector('.nav-btn.primary');
+    if(navBtn){
+      if(!passed){navBtn.style.display='none';}
+      else{navBtn.style.display='';}
+    }
   }
 
   async function saveQuizAnswer(sectionId,q,qIdx,userAnsIdx,isCorrect){
