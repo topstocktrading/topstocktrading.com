@@ -1237,7 +1237,40 @@ var TST_CSV = {
       var file = e.dataTransfer.files[0];
       if (file && file.name.endsWith('.csv')) TST_CSV.handleFile(file);
     });
+  },
+
+  renderPassword: async function(body) {
+    body.innerHTML = '<div style="max-width:420px;margin:0 auto;padding:20px;">' +
+      '<h2 style="font-family:Rajdhani,sans-serif;font-size:24px;font-weight:700;color:#e8f0e8;margin-bottom:6px;">Change Password</h2>' +
+      '<p style="color:#6a8a6a;font-size:13px;margin-bottom:24px;">Enter your new password below. Must be at least 8 characters.</p>' +
+      '<div style="display:flex;flex-direction:column;gap:14px;">' +
+        '<input id="pw-new" type="password" placeholder="New password" style="background:#0d1a0d;border:1px solid #1a2a1a;border-radius:8px;padding:12px 16px;color:#e8f0e8;font-size:14px;outline:none;width:100%;box-sizing:border-box;"/>' +
+        '<input id="pw-confirm" type="password" placeholder="Confirm new password" style="background:#0d1a0d;border:1px solid #1a2a1a;border-radius:8px;padding:12px 16px;color:#e8f0e8;font-size:14px;outline:none;width:100%;box-sizing:border-box;"/>' +
+        '<button onclick="TST_PROFILE.doChangePassword()" style="background:#00d27a;color:#000;border:none;border-radius:8px;padding:12px;font-weight:700;font-size:14px;cursor:pointer;letter-spacing:1px;">UPDATE PASSWORD</button>' +
+        '<div id="pw-status" style="font-size:13px;text-align:center;min-height:20px;"></div>' +
+      '</div>' +
+    '</div>';
+  },
+
+  doChangePassword: async function() {
+    var newPw = document.getElementById('pw-new').value;
+    var confirm = document.getElementById('pw-confirm').value;
+    var status = document.getElementById('pw-status');
+    if (!newPw || newPw.length < 8) { status.style.color='#ef4444'; status.textContent='Password must be at least 8 characters.'; return; }
+    if (newPw !== confirm) { status.style.color='#ef4444'; status.textContent='Passwords do not match.'; return; }
+    status.style.color='#6a8a6a'; status.textContent='Updating...';
+    try {
+      var client = getSupabase();
+      var result = await client.auth.updateUser({ password: newPw });
+      if (result.error) throw result.error;
+      status.style.color='#00d27a'; status.textContent='✓ Password updated successfully.';
+      document.getElementById('pw-new').value='';
+      document.getElementById('pw-confirm').value='';
+    } catch(e) {
+      status.style.color='#ef4444'; status.textContent='Error: ' + (e.message||'Could not update password.');
+    }
   }
+
 };
 
 // ============================================================
