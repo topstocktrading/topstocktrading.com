@@ -103,6 +103,7 @@
       await client.from('users').update({ allowed_ips: [...allowedIps, ip] }).eq('id', userId);
       return { allowed: true, ip };
     }
+    await client.from('users').update({ ip_blocked: true }).eq('id', userId);
     return { allowed: false, ip, reason: 'limit' };
   }
 
