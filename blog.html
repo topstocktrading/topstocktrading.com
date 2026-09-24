@@ -67,6 +67,7 @@
   .post-card-img{height:140px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
   .post-card-img.market{background:linear-gradient(135deg,#0d1a12,#0a0c10);}
   .post-card-img.education{background:linear-gradient(135deg,#0a1219,#0a0c10);}
+  .post-card-img.stocks{background:linear-gradient(135deg,#0f0a1f,#0a0c10);}
   .post-card-img.strategy{background:linear-gradient(135deg,#1a140a,#0a0c10);}
   .post-card-img.psychology{background:linear-gradient(135deg,#14091a,#0a0c10);}
   .post-card-img-text{font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:3px;opacity:0.1;color:#fff;}
@@ -152,6 +153,7 @@
   </div>
 </div>
 
+
 <div class="blog-body">
 
   <div class="filter-bar">
@@ -162,296 +164,323 @@
     <button class="filter-btn" onclick="filterPosts('psychology', this)">Psychology</button>
   </div>
 
-  <!-- FEATURED POST -->
-  <div class="featured-post" data-category="market" id="featured">
-    <div class="featured-img">
-      <div class="featured-img-icon">OIL</div>
-    </div>
-    <div class="featured-content">
-      <span class="post-badge badge-market">Market Analysis</span>
-      <a href="blog-iran-oil.html" class="post-title-link">
-        <div class="post-card-title">What the Iran War and Oil Prices Actually Mean for Your Portfolio</div>
-      </a>
-      <p class="post-excerpt">War in the Middle East, oil above $100, gas at $4 a gallon. The market is volatile and headlines are moving prices by the minute. Here's what it actually means for traders — and how to position yourself without getting chopped up by the noise.</p>
-      <div class="post-meta-row">
-        <span class="post-date">April 10, 2026</span>
-        <span>·</span>
-        <span class="post-read-time">8 min read</span>
+  <!-- ══ MARKET ANALYSIS ══ -->
+  <div class="section-block" data-section="market">
+    <div class="section-divider"><div class="divider-line"></div><div class="divider-label">Market Analysis</div><div class="divider-line"></div></div>
+
+    <!-- Featured: Flash PMIs (most recent) -->
+    <div class="featured-post" data-category="market">
+      <div class="featured-img" style="background:linear-gradient(135deg,#071a10,#0a0c10);">
+        <div class="featured-img-icon" style="color:rgba(0,210,122,0.15);"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,210,122,0.06)"/>
+        <polyline points="8,55 22,38 34,45 48,22 62,30 72,18" fill="none" stroke="#00d27a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="18" r="3" fill="#00d27a"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="11" fill="rgba(0,210,122,0.5)" text-anchor="middle" letter-spacing="2">PMI</text>
+      </svg></div>
       </div>
-      <a href="blog-iran-oil.html" class="read-more">Read Article →</a>
+      <div class="featured-content">
+        <span class="post-badge badge-market">Market Analysis</span>
+        <a href="blog-flash-pmi-september-2026.html" class="post-title-link">
+          <div class="post-card-title">Flash PMIs Come In Hot — October Rate Hike Is Back On the Table</div>
+        </a>
+        <p class="post-excerpt">Services PMI hit 57.3 against a 55.7 estimate. The economy is not cooling — and that gives the Fed all the cover it needs to hike again in October. Here's what traders need to watch.</p>
+        <div class="post-meta-row"><span class="post-date">September 24, 2026</span><span>·</span><span class="post-read-time">5 min read</span></div>
+        <a href="blog-flash-pmi-september-2026.html" class="read-more">Read Article →</a>
+      </div>
+    </div>
+
+    <div class="posts-grid">
+      <div class="post-card" data-category="market">
+        <div class="post-card-img market" style="background:linear-gradient(135deg,#071a10,#0a0c10);"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,210,122,0.06)"/>
+        <polyline points="8,55 22,38 34,45 48,22 62,30 72,18" fill="none" stroke="#00d27a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="18" r="3" fill="#00d27a"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="11" fill="rgba(0,210,122,0.5)" text-anchor="middle" letter-spacing="2">FED</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-market">Market Analysis</span>
+          <a href="blog-fed-rate-hike-2026.html" class="post-title-link"><div class="post-card-title-sm">The Fed Just Hiked to 4% — Here's What It Means for Traders</div></a>
+          <p class="post-card-excerpt">Unanimous 12-0 vote. The first hike since 2023. Here's what it means for stocks, yields, and your portfolio.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="market">
+        <div class="post-card-img market" style="background:linear-gradient(135deg,#071a10,#0a0c10);"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,210,122,0.06)"/>
+        <polyline points="8,55 22,38 34,45 48,22 62,30 72,18" fill="none" stroke="#00d27a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="18" r="3" fill="#00d27a"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="11" fill="rgba(0,210,122,0.5)" text-anchor="middle" letter-spacing="2">GEO</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-market">Market Analysis</span>
+          <a href="blog-trump-xi-summit-2026.html" class="post-title-link"><div class="post-card-title-sm">The Trump–Xi Summit: What Traders Need to Know Before Thursday</div></a>
+          <p class="post-card-excerpt">AI chips, tariffs, and Taiwan on the agenda. Here's how to position around the most market-moving meeting of the year.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">7 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="market">
+        <div class="post-card-img market" style="background:linear-gradient(135deg,#071a10,#0a0c10);"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,210,122,0.06)"/>
+        <polyline points="8,55 22,38 34,45 48,22 62,30 72,18" fill="none" stroke="#00d27a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="18" r="3" fill="#00d27a"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="11" fill="rgba(0,210,122,0.5)" text-anchor="middle" letter-spacing="2">QQQ</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-market">Market Analysis</span>
+          <a href="blog-qqq-all-time-highs.html" class="post-title-link"><div class="post-card-title-sm">QQQ Just Broke All-Time Highs — What It Means for the AI Trade</div></a>
+          <p class="post-card-excerpt">The Nasdaq 100 hit back-to-back records. AMD crossed $1 trillion. The AI trade is back on.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">5 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="market">
+        <div class="post-card-img market" style="background:linear-gradient(135deg,#071a10,#0a0c10);"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,210,122,0.06)"/>
+        <polyline points="8,55 22,38 34,45 48,22 62,30 72,18" fill="none" stroke="#00d27a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="72" cy="18" r="3" fill="#00d27a"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="11" fill="rgba(0,210,122,0.5)" text-anchor="middle" letter-spacing="2">SPY</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-market">Market Analysis</span>
+          <a href="blog-spy-double-top-warning.html" class="post-title-link"><div class="post-card-title-sm">SPY Made a Double Top at All-Time Highs — Here's What the Chart Is Saying</div></a>
+          <p class="post-card-excerpt">Three weeks of rising sell volume. A double top. A hawkish Fed. Here's what traders should watch.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- POSTS GRID -->
-  <div class="posts-grid" id="posts-grid">
+  <!-- ══ STOCKS ══ -->
+  <div class="section-block" data-section="stocks">
+    <div class="section-divider"><div class="divider-line"></div><div class="divider-label">Stocks</div><div class="divider-line"></div></div>
 
-    <div class="post-card" data-category="market">
-      <div class="post-card-img market">
-        <div class="post-card-img-text">AI</div>
+    <!-- Featured: CRWD (most recent) -->
+    <div class="featured-post" data-category="stocks">
+      <div class="featured-img" style="background:linear-gradient(135deg,#0f0a1f,#0a0c10);">
+        <div class="featured-img-icon"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(99,102,241,0.06)"/>
+        <rect x="12" y="50" width="10" height="18" rx="2" fill="rgba(99,102,241,0.4)"/>
+        <rect x="26" y="38" width="10" height="30" rx="2" fill="rgba(99,102,241,0.6)"/>
+        <rect x="40" y="28" width="10" height="40" rx="2" fill="#818cf8"/>
+        <rect x="54" y="18" width="10" height="50" rx="2" fill="#818cf8"/>
+        <line x1="12" y1="44" x2="68" y2="12" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.4"/>
+        <text x="40" y="8" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(129,140,248,0.6)" text-anchor="middle" letter-spacing="2">CRWD</text>
+      </svg></div>
       </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-market">Market Analysis</span>
-        <a href="blog-ai-bubble.html" class="post-title-link">
-          <div class="post-card-title-sm">The AI Trade Isn't a Bubble — Here's Why the Skeptics Keep Getting It Wrong</div>
+      <div class="featured-content">
+        <span class="post-badge badge-stocks">Stocks</span>
+        <a href="blog-crwd-all-time-highs.html" class="post-title-link">
+          <div class="post-card-title">CrowdStrike Breaks to All-Time Highs — The Setup and the Story</div>
         </a>
-        <p class="post-card-excerpt">People have been calling AI a bubble for two years. The spending keeps accelerating. Here's what's actually happening and what it means for traders and long term investors right now.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">April 10, 2026</span>
-          <span class="post-card-read">9 min read</span>
-        </div>
+        <p class="post-excerpt">CRWD broke out from a week-long flag pattern directly at all-time highs. Here's the technical setup, why CrowdStrike leads the cybersecurity sector, and what comes next.</p>
+        <div class="post-meta-row"><span class="post-date">September 24, 2026</span><span>·</span><span class="post-read-time">5 min read</span></div>
+        <a href="blog-crwd-all-time-highs.html" class="read-more">Read Article →</a>
       </div>
     </div>
 
+    <div class="posts-grid">
+      <div class="post-card" data-category="stocks">
+        <div class="post-card-img stocks"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(99,102,241,0.06)"/>
+        <rect x="12" y="50" width="10" height="18" rx="2" fill="rgba(99,102,241,0.4)"/>
+        <rect x="26" y="38" width="10" height="30" rx="2" fill="rgba(99,102,241,0.6)"/>
+        <rect x="40" y="28" width="10" height="40" rx="2" fill="#818cf8"/>
+        <rect x="54" y="18" width="10" height="50" rx="2" fill="#818cf8"/>
+        <line x1="12" y1="44" x2="68" y2="12" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.4"/>
+        <text x="40" y="8" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(129,140,248,0.6)" text-anchor="middle" letter-spacing="2">MRNA</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-stocks">Stocks</span>
+          <a href="blog-mrna-cancer-vaccine.html" class="post-title-link"><div class="post-card-title-sm">Moderna's mRNA Cancer Vaccine Just Worked in Phase 3</div></a>
+          <p class="post-card-excerpt">The first personalized mRNA cancer vaccine to succeed in a late-stage trial. What happened and what it means for MRNA.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">7 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="stocks">
+        <div class="post-card-img stocks"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(99,102,241,0.06)"/>
+        <rect x="12" y="50" width="10" height="18" rx="2" fill="rgba(99,102,241,0.4)"/>
+        <rect x="26" y="38" width="10" height="30" rx="2" fill="rgba(99,102,241,0.6)"/>
+        <rect x="40" y="28" width="10" height="40" rx="2" fill="#818cf8"/>
+        <rect x="54" y="18" width="10" height="50" rx="2" fill="#818cf8"/>
+        <line x1="12" y1="44" x2="68" y2="12" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.4"/>
+        <text x="40" y="8" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(129,140,248,0.6)" text-anchor="middle" letter-spacing="2">VKTX</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-stocks">Stocks</span>
+          <a href="blog-viking-therapeutics-vktx.html" class="post-title-link"><div class="post-card-title-sm">Viking Therapeutics Surges 35.67% on Weight Loss Drug Data</div></a>
+          <p class="post-card-excerpt">VK2735 Phase data stuns analysts. Here's what the drug does and why the GLP-1 race just got more competitive.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="stocks">
+        <div class="post-card-img stocks"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(99,102,241,0.06)"/>
+        <rect x="12" y="50" width="10" height="18" rx="2" fill="rgba(99,102,241,0.4)"/>
+        <rect x="26" y="38" width="10" height="30" rx="2" fill="rgba(99,102,241,0.6)"/>
+        <rect x="40" y="28" width="10" height="40" rx="2" fill="#818cf8"/>
+        <rect x="54" y="18" width="10" height="50" rx="2" fill="#818cf8"/>
+        <line x1="12" y1="44" x2="68" y2="12" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.4"/>
+        <text x="40" y="8" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(129,140,248,0.6)" text-anchor="middle" letter-spacing="2">COST</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-stocks">Stocks</span>
+          <a href="blog-costco-earnings-preview.html" class="post-title-link"><div class="post-card-title-sm">Costco Q4 Earnings Preview: The Consumer Health Test</div></a>
+          <p class="post-card-excerpt">EPS estimate $6.51. Reports Thursday after close. Here's what to watch and why it matters beyond COST.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="stocks">
+        <div class="post-card-img stocks"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(99,102,241,0.06)"/>
+        <rect x="12" y="50" width="10" height="18" rx="2" fill="rgba(99,102,241,0.4)"/>
+        <rect x="26" y="38" width="10" height="30" rx="2" fill="rgba(99,102,241,0.6)"/>
+        <rect x="40" y="28" width="10" height="40" rx="2" fill="#818cf8"/>
+        <rect x="54" y="18" width="10" height="50" rx="2" fill="#818cf8"/>
+        <line x1="12" y1="44" x2="68" y2="12" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.4"/>
+        <text x="40" y="8" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(129,140,248,0.6)" text-anchor="middle" letter-spacing="2">AMD</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-stocks">Stocks</span>
+          <a href="blog-amd-1-trillion-market-cap.html" class="post-title-link"><div class="post-card-title-sm">AMD Crosses $1 Trillion Market Cap — Here's the Full Story</div></a>
+          <p class="post-card-excerpt">AMD gapped up 10% and crossed the trillion dollar threshold. Here's how it got there.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 22, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <div class="post-card" data-category="market">
-      <div class="post-card-img market">
-        <div class="post-card-img-text">FED</div>
+  <!-- ══ EDUCATION ══ -->
+  <div class="section-block" data-section="education">
+    <div class="section-divider"><div class="divider-line"></div><div class="divider-label">Education</div><div class="divider-line"></div></div>
+
+    <!-- Featured: Bull Flag -->
+    <div class="featured-post" data-category="education">
+      <div class="featured-img" style="background:linear-gradient(135deg,#071219,#0a0c10);">
+        <div class="featured-img-icon"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,168,255,0.06)"/>
+        <rect x="18" y="22" width="44" height="34" rx="3" fill="none" stroke="#00a8ff" stroke-width="2" opacity="0.5"/>
+        <line x1="26" y1="32" x2="54" y2="32" stroke="#00a8ff" stroke-width="1.5" opacity="0.6"/>
+        <line x1="26" y1="39" x2="54" y2="39" stroke="#00a8ff" stroke-width="1.5" opacity="0.4"/>
+        <line x1="26" y1="46" x2="42" y2="46" stroke="#00a8ff" stroke-width="1.5" opacity="0.3"/>
+        <path d="M28 62 L40 56 L52 62" fill="none" stroke="#00a8ff" stroke-width="2" stroke-linejoin="round" opacity="0.5"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(0,168,255,0.5)" text-anchor="middle" letter-spacing="2">FLAG</text>
+      </svg></div>
       </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-market">Market Analysis</span>
-        <a href="blog-fed-rate-hike-2026.html" class="post-title-link"><div class="post-card-title-sm">The Fed Just Hiked to 4% — Here's What It Means for Traders</div></a>
-        <p class="post-card-excerpt">The first rate hike since 2023. Unanimous 12-0 vote. Here's what it means for stocks, yields, and your portfolio.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="market">
-      <div class="post-card-img market">
-        <div class="post-card-img-text">GEO</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-market">Market Analysis</span>
-        <a href="blog-trump-xi-summit-2026.html" class="post-title-link"><div class="post-card-title-sm">The Trump–Xi Summit: What Traders Need to Know Before Thursday</div></a>
-        <p class="post-card-excerpt">AI chips, tariffs, and Taiwan on the agenda. Here's how to position around the most market-moving meeting of the year.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">7 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="market">
-      <div class="post-card-img market">
-        <div class="post-card-img-text">QQQ</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-market">Market Analysis</span>
-        <a href="blog-qqq-all-time-highs.html" class="post-title-link"><div class="post-card-title-sm">QQQ Just Broke All-Time Highs — What It Means for the AI Trade</div></a>
-        <p class="post-card-excerpt">The Nasdaq 100 hit back-to-back records. AMD crossed $1 trillion. The AI trade is back on.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">5 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="market">
-      <div class="post-card-img market">
-        <div class="post-card-img-text">OIL</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-market">Market Analysis</span>
-        <a href="blog-oil-drop-iran-2026.html" class="post-title-link"><div class="post-card-title-sm">Oil Drops 2.77% After Iran Signals Strait of Hormuz Reopening</div></a>
-        <p class="post-card-excerpt">Iran's signal at the UN sent USO down 2.77%. Here's what it means for energy stocks and the broader market.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">5 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="market">
-      <div class="post-card-img market">
-        <div class="post-card-img-text">PMI</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-market">Market Analysis</span>
-        <a href="blog-flash-pmi-september-2026.html" class="post-title-link"><div class="post-card-title-sm">Flash PMIs Come In Hot — October Rate Hike Is Back On the Table</div></a>
-        <p class="post-card-excerpt">Services PMI hit 57.3 vs 55.7 expected. The economy is not cooling. Here's what it means for rates.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 24, 2026</span>
-          <span class="post-card-read">5 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="market">
-      <div class="post-card-img market">
-        <div class="post-card-img-text">SPY</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-market">Market Analysis</span>
-        <a href="blog-spy-double-top-warning.html" class="post-title-link"><div class="post-card-title-sm">SPY Made a Double Top at All-Time Highs — Here's What the Chart Is Saying</div></a>
-        <p class="post-card-excerpt">Three weeks of rising sell volume. A double top. A hawkish Fed. Here's what traders should watch.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="stocks">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">MRNA</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-stocks">Stocks</span>
-        <a href="blog-mrna-cancer-vaccine.html" class="post-title-link"><div class="post-card-title-sm">Moderna's mRNA Cancer Vaccine Just Worked in Phase 3 — Here's What It Means</div></a>
-        <p class="post-card-excerpt">The first personalized mRNA cancer vaccine to succeed in a late-stage trial. What happened and what it means for MRNA.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">7 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="stocks">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">VKTX</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-stocks">Stocks</span>
-        <a href="blog-viking-therapeutics-vktx.html" class="post-title-link"><div class="post-card-title-sm">Viking Therapeutics Surges 35.67% on Weight Loss Drug Data</div></a>
-        <p class="post-card-excerpt">VK2735 Phase data stuns analysts. Here's what the drug does and why the GLP-1 race just got more competitive.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="stocks">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">COST</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-stocks">Stocks</span>
-        <a href="blog-costco-earnings-preview.html" class="post-title-link"><div class="post-card-title-sm">Costco Q4 Earnings Preview: The Consumer Health Test That Moves the Market</div></a>
-        <p class="post-card-excerpt">EPS estimate $6.51. Reports Thursday after close. Here's what to watch and why it matters beyond COST.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="stocks">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">AMD</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-stocks">Stocks</span>
-        <a href="blog-amd-1-trillion-market-cap.html" class="post-title-link"><div class="post-card-title-sm">AMD Crosses $1 Trillion Market Cap — Here's the Full Story</div></a>
-        <p class="post-card-excerpt">AMD gapped up 10% and crossed the trillion dollar threshold. Here's how it got there.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 22, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="stocks">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">CRWD</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-stocks">Stocks</span>
-        <a href="blog-crwd-all-time-highs.html" class="post-title-link"><div class="post-card-title-sm">CrowdStrike Breaks to All-Time Highs — The Setup and the Story</div></a>
-        <p class="post-card-excerpt">CRWD broke out from a week-long flag at all-time highs. Here's the technical setup and the bigger story.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 24, 2026</span>
-          <span class="post-card-read">5 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="education">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">FLAG</div>
-      </div>
-      <div class="post-card-body">
+      <div class="featured-content">
         <span class="post-badge badge-education">Education</span>
-        <a href="blog-bull-flag-pattern-explained.html" class="post-title-link"><div class="post-card-title-sm">The Bull Flag Pattern: What It Is, Why It Works, and How to Trade It</div></a>
-        <p class="post-card-excerpt">One of the most reliable continuation patterns explained clearly — what causes it and how to trade it correctly.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 23, 2026</span>
-          <span class="post-card-read">7 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="education">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">R:R</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-education">Education</span>
-        <a href="blog-risk-reward-ratio-explained.html" class="post-title-link"><div class="post-card-title-sm">Risk/Reward Is the Only Stat That Matters in Trading — Here's Why</div></a>
-        <p class="post-card-excerpt">You don't need to be right most of the time to make money. Here's why risk/reward changes everything.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 23, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="education">
-      <div class="post-card-img education">
-        <div class="post-card-img-text">VOL</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-education">Education</span>
-        <a href="blog-volume-analysis-explained.html" class="post-title-link"><div class="post-card-title-sm">How to Read Volume: The Market's Lie Detector</div></a>
-        <p class="post-card-excerpt">Price tells you what the market is doing. Volume tells you if it's real.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 23, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="psychology">
-      <div class="post-card-img psychology">
-        <div class="post-card-img-text">PSY</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-psychology">Psychology</span>
-        <a href="blog-revenge-trading-psychology.html" class="post-title-link"><div class="post-card-title-sm">Revenge Trading: The Fastest Way to Blow Up Your Account</div></a>
-        <p class="post-card-excerpt">One bad trade becomes five. Here's the psychology behind revenge trading and the only fix that works.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 23, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="psychology">
-      <div class="post-card-img psychology">
-        <div class="post-card-img-text">PSY</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-psychology">Psychology</span>
-        <a href="blog-overtrading-psychology.html" class="post-title-link"><div class="post-card-title-sm">Overtrading Is Killing Your Account — Here's Why More Trades Means Less Money</div></a>
-        <p class="post-card-excerpt">The urge to always be in a trade is one of the most destructive habits in retail trading.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 23, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
-      </div>
-    </div>
-    <div class="post-card" data-category="psychology">
-      <div class="post-card-img psychology">
-        <div class="post-card-img-text">PSY</div>
-      </div>
-      <div class="post-card-body">
-        <span class="post-badge badge-psychology">Psychology</span>
-        <a href="blog-fomo-trading-psychology.html" class="post-title-link"><div class="post-card-title-sm">FOMO Trading: Why the Trade You Should Never Take Feels Impossible to Pass</div></a>
-        <p class="post-card-excerpt">Fear of missing out sends traders chasing at the worst entry point. Here's how to break the cycle.</p>
-        <div class="post-card-footer">
-          <span class="post-card-date">Sept 23, 2026</span>
-          <span class="post-card-read">6 min read</span>
-        </div>
+        <a href="blog-bull-flag-pattern-explained.html" class="post-title-link">
+          <div class="post-card-title">The Bull Flag Pattern: What It Is, Why It Works, and How to Trade It</div>
+        </a>
+        <p class="post-excerpt">One of the most reliable continuation patterns in trading — explained clearly. What causes it, how to identify it, and how to trade it with the correct entry, stop, and target.</p>
+        <div class="post-meta-row"><span class="post-date">September 23, 2026</span><span>·</span><span class="post-read-time">7 min read</span></div>
+        <a href="blog-bull-flag-pattern-explained.html" class="read-more">Read Article →</a>
       </div>
     </div>
 
+    <div class="posts-grid">
+      <div class="post-card" data-category="education">
+        <div class="post-card-img education"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,168,255,0.06)"/>
+        <rect x="18" y="22" width="44" height="34" rx="3" fill="none" stroke="#00a8ff" stroke-width="2" opacity="0.5"/>
+        <line x1="26" y1="32" x2="54" y2="32" stroke="#00a8ff" stroke-width="1.5" opacity="0.6"/>
+        <line x1="26" y1="39" x2="54" y2="39" stroke="#00a8ff" stroke-width="1.5" opacity="0.4"/>
+        <line x1="26" y1="46" x2="42" y2="46" stroke="#00a8ff" stroke-width="1.5" opacity="0.3"/>
+        <path d="M28 62 L40 56 L52 62" fill="none" stroke="#00a8ff" stroke-width="2" stroke-linejoin="round" opacity="0.5"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(0,168,255,0.5)" text-anchor="middle" letter-spacing="2">R:R</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-education">Education</span>
+          <a href="blog-risk-reward-ratio-explained.html" class="post-title-link"><div class="post-card-title-sm">Risk/Reward Is the Only Stat That Matters in Trading</div></a>
+          <p class="post-card-excerpt">You don't need to be right most of the time to make money. Here's why risk/reward changes everything.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 23, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="education">
+        <div class="post-card-img education"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(0,168,255,0.06)"/>
+        <rect x="18" y="22" width="44" height="34" rx="3" fill="none" stroke="#00a8ff" stroke-width="2" opacity="0.5"/>
+        <line x1="26" y1="32" x2="54" y2="32" stroke="#00a8ff" stroke-width="1.5" opacity="0.6"/>
+        <line x1="26" y1="39" x2="54" y2="39" stroke="#00a8ff" stroke-width="1.5" opacity="0.4"/>
+        <line x1="26" y1="46" x2="42" y2="46" stroke="#00a8ff" stroke-width="1.5" opacity="0.3"/>
+        <path d="M28 62 L40 56 L52 62" fill="none" stroke="#00a8ff" stroke-width="2" stroke-linejoin="round" opacity="0.5"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(0,168,255,0.5)" text-anchor="middle" letter-spacing="2">VOL</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-education">Education</span>
+          <a href="blog-volume-analysis-explained.html" class="post-title-link"><div class="post-card-title-sm">How to Read Volume: The Market's Lie Detector</div></a>
+          <p class="post-card-excerpt">Price tells you what the market is doing. Volume tells you if it's real.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 23, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ PSYCHOLOGY ══ -->
+  <div class="section-block" data-section="psychology">
+    <div class="section-divider"><div class="divider-line"></div><div class="divider-label">Psychology</div><div class="divider-line"></div></div>
+
+    <!-- Featured: Revenge Trading -->
+    <div class="featured-post" data-category="psychology">
+      <div class="featured-img" style="background:linear-gradient(135deg,#14091a,#0a0c10);">
+        <div class="featured-img-icon"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(168,85,247,0.06)"/>
+        <circle cx="40" cy="30" r="16" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.5"/>
+        <path d="M33 30 Q36 24 40 28 Q44 32 47 26" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.7"/>
+        <line x1="40" y1="46" x2="40" y2="56" stroke="#a855f7" stroke-width="2" opacity="0.4"/>
+        <line x1="32" y1="56" x2="48" y2="56" stroke="#a855f7" stroke-width="2" opacity="0.4"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(168,85,247,0.5)" text-anchor="middle" letter-spacing="2">RVNG</text>
+      </svg></div>
+      </div>
+      <div class="featured-content">
+        <span class="post-badge badge-psychology">Psychology</span>
+        <a href="blog-revenge-trading-psychology.html" class="post-title-link">
+          <div class="post-card-title">Revenge Trading: The Fastest Way to Blow Up Your Account</div>
+        </a>
+        <p class="post-excerpt">One bad trade becomes five. The pattern is always the same: take a loss, size up to make it back, take a bigger loss. Here's the psychology behind it — and the only system that actually stops it.</p>
+        <div class="post-meta-row"><span class="post-date">September 23, 2026</span><span>·</span><span class="post-read-time">6 min read</span></div>
+        <a href="blog-revenge-trading-psychology.html" class="read-more">Read Article →</a>
+      </div>
+    </div>
+
+    <div class="posts-grid">
+      <div class="post-card" data-category="psychology">
+        <div class="post-card-img psychology"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(168,85,247,0.06)"/>
+        <circle cx="40" cy="30" r="16" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.5"/>
+        <path d="M33 30 Q36 24 40 28 Q44 32 47 26" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.7"/>
+        <line x1="40" y1="46" x2="40" y2="56" stroke="#a855f7" stroke-width="2" opacity="0.4"/>
+        <line x1="32" y1="56" x2="48" y2="56" stroke="#a855f7" stroke-width="2" opacity="0.4"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(168,85,247,0.5)" text-anchor="middle" letter-spacing="2">OTRD</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-psychology">Psychology</span>
+          <a href="blog-overtrading-psychology.html" class="post-title-link"><div class="post-card-title-sm">Overtrading Is Killing Your Account — Here's Why More Trades Means Less Money</div></a>
+          <p class="post-card-excerpt">The urge to always be in a trade is one of the most destructive habits in retail trading.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 23, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+      <div class="post-card" data-category="psychology">
+        <div class="post-card-img psychology"><svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="8" fill="rgba(168,85,247,0.06)"/>
+        <circle cx="40" cy="30" r="16" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.5"/>
+        <path d="M33 30 Q36 24 40 28 Q44 32 47 26" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.7"/>
+        <line x1="40" y1="46" x2="40" y2="56" stroke="#a855f7" stroke-width="2" opacity="0.4"/>
+        <line x1="32" y1="56" x2="48" y2="56" stroke="#a855f7" stroke-width="2" opacity="0.4"/>
+        <text x="40" y="75" font-family="Bebas Neue,sans-serif" font-size="10" fill="rgba(168,85,247,0.5)" text-anchor="middle" letter-spacing="2">FOMO</text>
+      </svg></div>
+        <div class="post-card-body">
+          <span class="post-badge badge-psychology">Psychology</span>
+          <a href="blog-fomo-trading-psychology.html" class="post-title-link"><div class="post-card-title-sm">FOMO Trading: Why the Trade You Should Never Take Feels Impossible to Pass</div></a>
+          <p class="post-card-excerpt">Fear of missing out sends traders chasing at the worst entry point. Here's how to break the cycle.</p>
+          <div class="post-card-footer"><span class="post-card-date">Sept 23, 2026</span><span class="post-card-read">6 min read</span></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- NEWSLETTER -->
   <div class="newsletter-box">
-    <h2>GET THE WEEKLY MARKET BREAKDOWN</h2>
-    <p>Every week — what moved, why it moved, and what to watch next. No spam. Just signal.</p>
-    <div class="newsletter-form">
-      <input type="email" class="newsletter-input" placeholder="your@email.com">
-      <button class="newsletter-btn">Subscribe</button>
-    </div>
+
     <p class="newsletter-disclaimer">Free. Unsubscribe any time.</p>
   </div>
 
@@ -475,9 +504,21 @@
 function filterPosts(category, btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  const featured = document.getElementById('featured');
-  const cards = document.querySelectorAll('#posts-grid .post-card');
-  if (category === 'all') { /* show all */
+  const sections = document.querySelectorAll('.section-block');
+  const allFeatured = document.querySelectorAll('.featured-post');
+  const allCards = document.querySelectorAll('.post-card');
+  if (category === 'all') {
+    sections.forEach(s => s.style.display = 'block');
+    allFeatured.forEach(f => f.style.display = 'grid');
+    allCards.forEach(c => c.style.display = 'flex');
+    return;
+  }
+  sections.forEach(s => {
+    s.style.display = s.dataset.section === category ? 'block' : 'none';
+  });
+  allFeatured.forEach(f => f.style.display = f.dataset.category === category ? 'grid' : 'none');
+  allCards.forEach(c => c.style.display = c.dataset.category === category ? 'flex' : 'none');
+  // dummy to replace old block
     featured.style.display = 'grid';
     cards.forEach(c => c.style.display = 'flex');
   } else {
