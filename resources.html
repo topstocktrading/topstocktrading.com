@@ -1093,20 +1093,26 @@ async function submitEmail() {
 
   try {
     // Subscribe to KIT and apply tag
-    var res = await fetch('https://api.convertkit.com/v3/subscribers', {
+    // Map PDF tags to KIT form IDs
+    var formIds = {
+      'dl-risk-framework': '9959040'
+      // others to be added after test
+    };
+    var formId = formIds[tag] || '9959040';
+
+    var res = await fetch('https://api.convertkit.com/v3/forms/' + formId + '/subscribe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         api_key: KIT_API_KEY,
         email: email,
-        tags: [tag],
         fields: { source: 'tst-resources', pdf: currentPdf }
       })
     });
 
     var json = await res.json();
 
-    if (res.ok && json.subscriber) {
+    if (res.ok && json.subscription) {
       // Success — show confirmation and redirect to download page
       var box = document.querySelector('.modal-box');
       box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
