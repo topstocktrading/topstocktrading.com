@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.svg">
+  <title>AMD Crosses $1 Trillion Market Cap — Here's the Full Story Behind the Milestone | TST Academy</title>
+  <meta name="description" content="AMD joined the $1 trillion club after a 10% single-day surge. Here's how it got there and what comes next.">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0a0c10;--surface:#0f1218;--border:#1a2a1a;--green:#00d27a;--muted:#6b7280;--text:#e2e8f0;--heading:#f8fafc;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(10,12,16,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-weight:700;font-size:16px;letter-spacing:3px;color:var(--green);text-decoration:none;font-family:'IBM Plex Mono',monospace;}
+    .nav-logo span{color:#c8d4c8;}
+    .nav-links{display:flex;gap:32px;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{background:var(--green);color:#0a0c10;padding:9px 22px;font-size:13px;font-weight:600;text-decoration:none;border-radius:6px;}
+    .article-header{padding:140px 0 60px;text-align:center;border-bottom:1px solid var(--border);max-width:820px;margin:0 auto;}
+    .article-badge{display:inline-block;background:rgba(99,102,241,0.1);color:#818cf8;border:1px solid rgba(99,102,241,0.3);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:3px;padding:5px 14px;text-transform:uppercase;margin-bottom:20px;}
+    .article-title{font-size:clamp(32px,5vw,52px);font-weight:700;color:var(--heading);line-height:1.15;letter-spacing:-1px;margin-bottom:20px;}
+    .article-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;}
+    .article-meta span{color:var(--green);}
+    .visual-block{max-width:820px;margin:48px auto;padding:0 24px;}
+    .visual-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;position:relative;}
+    .visual-card-content{padding:40px 48px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1;}
+    .visual-accent{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#6366f1,#818cf8);}
+    .vc-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#818cf8;letter-spacing:5px;text-transform:uppercase;margin-bottom:8px;}
+    .vc-main{font-size:clamp(28px,4vw,42px);font-weight:700;color:var(--heading);line-height:1.1;}
+    .vc-main em{font-style:normal;color:#818cf8;}
+    .vc-sub{font-size:16px;color:var(--muted);margin-top:8px;}
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border:1px solid var(--border);margin-top:24px;}
+    .stat-cell{padding:20px 24px;border-right:1px solid var(--border);}
+    .stat-cell:last-child{border-right:none;}
+    .stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+    .stat-val{font-size:28px;font-weight:700;color:#818cf8;line-height:1;}
+    .stat-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+    .article-body{max-width:820px;margin:0 auto;padding:0 24px 80px;}
+    .article-body h2{font-size:26px;font-weight:700;color:var(--heading);margin:48px 0 16px;padding-top:8px;border-top:1px solid var(--border);}
+    .article-body h3{font-size:20px;font-weight:600;color:var(--heading);margin:32px 0 12px;}
+    .article-body p{margin-bottom:20px;color:var(--text);font-size:17px;line-height:1.75;}
+    .article-body strong{color:var(--heading);font-weight:600;}
+    .article-body ul,.article-body ol{margin:0 0 20px 24px;}
+    .article-body li{margin-bottom:10px;font-size:17px;line-height:1.7;}
+    .callout{background:var(--surface);border-left:3px solid #818cf8;padding:20px 24px;margin:32px 0;border-radius:0 4px 4px 0;}
+    .callout p{margin:0;font-size:16px;}
+    .callout-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#818cf8;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;}
+    footer{background:var(--surface);border-top:1px solid var(--border);padding:48px;text-align:center;}
+    .footer-brand{font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:4px;color:var(--green);font-size:14px;margin-bottom:16px;}
+    .footer-brand span{color:#c8d4c8;}
+    .footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:16px;flex-wrap:wrap;}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:13px;}
+    .footer-disc{font-size:12px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.6;}
+    @media(max-width:768px){nav{padding:14px 24px;}.nav-links{display:none;}.article-header{padding:100px 24px 40px;}.stats-row{grid-template-columns:1fr 1fr;}.stat-cell{border-bottom:1px solid var(--border);}.visual-card-content{padding:28px 24px;}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/index.html"><span>TOP</span>STOCK<span>TRADING</span></a>
+  <ul class="nav-links">
+    <li><a href="/how-it-works.html">How It Works</a></li>
+    <li><a href="/resources.html">TST Resources</a></li>
+    <li><a href="/tools.html">TST Tools</a></li>
+    <li><a href="/blog.html">Blog</a></li>
+    <li><a href="/members.html">Member Login</a></li>
+  </ul>
+  <a class="nav-cta" href="/index.html#courses">Get Started</a>
+</nav>
+
+<div class="article-header">
+  <div class="article-badge">Stocks</div>
+  <h1 class="article-title">AMD Crosses $1 Trillion Market Cap — Here's the Full Story Behind the Milestone</h1>
+  <div class="article-meta">September 22, 2026 &nbsp;·&nbsp; <span>6 min read</span> &nbsp;·&nbsp; TST Academy</div>
+</div>
+
+<div class="visual-block">
+<div class="visual-card">
+  <div class="visual-accent" style="background:linear-gradient(90deg,#6366f1,#818cf8);"></div>
+  <div class="visual-card-content">
+    <div class="vc-label" style="color:#818cf8;">AMD · Advanced Micro Devices</div>
+    <div class="vc-main" style="color:#f8fafc;">$1 Trillion<br><em>Market Cap</em></div>
+    <div class="vc-sub">AMD just crossed one of the rarest thresholds in financial markets. Here's what got it there.</div>
+    <div class="stats-row"><div class="stat-cell"><div class="stat-label">Market Cap</div><div class="stat-val">$1T+</div><div class="stat-sub">Milestone</div></div><div class="stat-cell"><div class="stat-label">Session Gain</div><div class="stat-val">+10%</div><div class="stat-sub">On ATH break day</div></div><div class="stat-cell"><div class="stat-label">Revenue Growth</div><div class="stat-val">+46% YoY</div><div class="stat-sub">Q2 2026</div></div><div class="stat-cell"><div class="stat-label">ATH Status</div><div class="stat-val">New</div><div class="stat-sub">Price discovery</div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="article-body">
+<h2>The Trillion Dollar Club</h2>
+<p>Advanced Micro Devices crossed $1 trillion in market capitalization — joining a club that includes only the most dominant companies in the history of capitalism: Apple, Microsoft, NVIDIA, Amazon, and Alphabet. Five years ago, AMD was a scrappy underdog fighting for relevance against Intel. Today it is one of the most valuable companies on the planet.</p>
+<p>The milestone came on a session where AMD gapped up and ripped 10% on monster volume, breaking to all-time highs on a day when the broader Nasdaq also hit record territory. It is difficult to overstate how significant a 10% single-day gain is for a company worth over $1 trillion — you are moving hundreds of billions of dollars in market cap in one session.</p>
+
+<h2>How AMD Got Here</h2>
+<p>The story is straightforward in retrospect, though it was anything but obvious five years ago. CEO Lisa Su bet the company on high-performance computing chips — specifically the data center GPU market — at a time when NVIDIA had a commanding lead and Intel was still dominant in CPUs.</p>
+<p>That bet paid off spectacularly. AMD's EPYC server processors have steadily taken market share from Intel in data centers. Its Instinct MI series GPUs are gaining traction as an alternative to NVIDIA's H100 in AI training workloads, particularly for hyperscalers looking to reduce single-vendor dependency.</p>
+<div class="callout" style="border-left-color:#818cf8;">
+<div class="callout-label" style="color:#818cf8;">The Numbers</div>
+<p>Q2 2026: $11.2B in revenue guidance, +46% year-over-year growth. Data center segment revenue up 115% year-over-year in Q1 2026. AMD is not growing slowly — it is compounding at rates that justify the multiple.</p>
+</div>
+<h2>The AI Connection</h2>
+<p>Every major technology company in the world is spending aggressively on AI infrastructure. NVIDIA gets most of the attention, but AMD is the clear number two — and in a market this large, being a credible number two is worth hundreds of billions of dollars. Microsoft, Meta, and Google have all publicly committed to using AMD chips alongside NVIDIA to diversify their AI compute supply chain.</p>
+<p>The $1 trillion milestone is a reflection of the market's belief that AI infrastructure spending will be sustained, that AMD will continue to capture meaningful share, and that the company's execution under Lisa Su will remain at the highest level.</p>
+
+<h2>What's Next</h2>
+<p>At all-time highs with no overhead resistance, price discovery is the operative phrase. The market will set new levels based on earnings momentum, AI capex cycle data, and competitive dynamics with NVIDIA. Any positive news on AMD's next-generation GPU architecture or new hyperscaler contracts could be the catalyst for the next leg higher.</p>
+</div>
+
+<footer>
+  <div class="footer-brand"><span>TOP</span>STOCK<span>TRADING</span></div>
+  <div class="footer-links">
+    <a href="/index.html">Home</a>
+    <a href="/index.html#courses">Courses</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/members.html">Member Login</a>
+  </div>
+  <p class="footer-disc">© 2026 Top Stock Trading · topstocktrading.com · All rights reserved.<br>Trading involves substantial risk of loss and is not appropriate for all investors. All content is for educational purposes only.</p>
+</footer>
+</body>
+</html>

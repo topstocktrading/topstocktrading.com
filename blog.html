@@ -283,7 +283,7 @@ function filterPosts(category, btn) {
   btn.classList.add('active');
   const featured = document.getElementById('featured');
   const cards = document.querySelectorAll('#posts-grid .post-card');
-  if (category === 'all') {
+  if (category === 'all') { /* show all */
     featured.style.display = 'grid';
     cards.forEach(c => c.style.display = 'flex');
   } else {

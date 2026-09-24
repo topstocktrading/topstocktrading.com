@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.svg">
+  <title>Risk/Reward Is the Only Stat That Matters in Trading — Here's Why | TST Academy</title>
+  <meta name="description" content="You don't need to be right most of the time to make money. Here's why risk/reward ratio is the single most important concept in trading.">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0a0c10;--surface:#0f1218;--border:#1a2a1a;--green:#00d27a;--muted:#6b7280;--text:#e2e8f0;--heading:#f8fafc;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(10,12,16,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-weight:700;font-size:16px;letter-spacing:3px;color:var(--green);text-decoration:none;font-family:'IBM Plex Mono',monospace;}
+    .nav-logo span{color:#c8d4c8;}
+    .nav-links{display:flex;gap:32px;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{background:var(--green);color:#0a0c10;padding:9px 22px;font-size:13px;font-weight:600;text-decoration:none;border-radius:6px;}
+    .article-header{padding:140px 0 60px;text-align:center;border-bottom:1px solid var(--border);max-width:820px;margin:0 auto;}
+    .article-badge{display:inline-block;background:rgba(245,158,11,0.1);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:3px;padding:5px 14px;text-transform:uppercase;margin-bottom:20px;}
+    .article-title{font-size:clamp(32px,5vw,52px);font-weight:700;color:var(--heading);line-height:1.15;letter-spacing:-1px;margin-bottom:20px;}
+    .article-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;}
+    .article-meta span{color:var(--green);}
+    .visual-block{max-width:820px;margin:48px auto;padding:0 24px;}
+    .visual-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;position:relative;}
+    .visual-card-content{padding:40px 48px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1;}
+    .visual-accent{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f59e0b,#f97316);}
+    .vc-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#f59e0b;letter-spacing:5px;text-transform:uppercase;margin-bottom:8px;}
+    .vc-main{font-size:clamp(28px,4vw,42px);font-weight:700;color:var(--heading);line-height:1.1;}
+    .vc-main em{font-style:normal;color:#f59e0b;}
+    .vc-sub{font-size:16px;color:var(--muted);margin-top:8px;}
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border:1px solid var(--border);margin-top:24px;}
+    .stat-cell{padding:20px 24px;border-right:1px solid var(--border);}
+    .stat-cell:last-child{border-right:none;}
+    .stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+    .stat-val{font-size:28px;font-weight:700;color:#f59e0b;line-height:1;}
+    .stat-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+    .article-body{max-width:820px;margin:0 auto;padding:0 24px 80px;}
+    .article-body h2{font-size:26px;font-weight:700;color:var(--heading);margin:48px 0 16px;padding-top:8px;border-top:1px solid var(--border);}
+    .article-body h3{font-size:20px;font-weight:600;color:var(--heading);margin:32px 0 12px;}
+    .article-body p{margin-bottom:20px;color:var(--text);font-size:17px;line-height:1.75;}
+    .article-body strong{color:var(--heading);font-weight:600;}
+    .article-body ul,.article-body ol{margin:0 0 20px 24px;}
+    .article-body li{margin-bottom:10px;font-size:17px;line-height:1.7;}
+    .callout{background:var(--surface);border-left:3px solid #f59e0b;padding:20px 24px;margin:32px 0;border-radius:0 4px 4px 0;}
+    .callout p{margin:0;font-size:16px;}
+    .callout-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#f59e0b;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;}
+    footer{background:var(--surface);border-top:1px solid var(--border);padding:48px;text-align:center;}
+    .footer-brand{font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:4px;color:var(--green);font-size:14px;margin-bottom:16px;}
+    .footer-brand span{color:#c8d4c8;}
+    .footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:16px;flex-wrap:wrap;}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:13px;}
+    .footer-disc{font-size:12px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.6;}
+    @media(max-width:768px){nav{padding:14px 24px;}.nav-links{display:none;}.article-header{padding:100px 24px 40px;}.stats-row{grid-template-columns:1fr 1fr;}.stat-cell{border-bottom:1px solid var(--border);}.visual-card-content{padding:28px 24px;}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/index.html"><span>TOP</span>STOCK<span>TRADING</span></a>
+  <ul class="nav-links">
+    <li><a href="/how-it-works.html">How It Works</a></li>
+    <li><a href="/resources.html">TST Resources</a></li>
+    <li><a href="/tools.html">TST Tools</a></li>
+    <li><a href="/blog.html">Blog</a></li>
+    <li><a href="/members.html">Member Login</a></li>
+  </ul>
+  <a class="nav-cta" href="/index.html#courses">Get Started</a>
+</nav>
+
+<div class="article-header">
+  <div class="article-badge">Education</div>
+  <h1 class="article-title">Risk/Reward Is the Only Stat That Matters in Trading — Here's Why</h1>
+  <div class="article-meta">September 23, 2026 &nbsp;·&nbsp; <span>6 min read</span> &nbsp;·&nbsp; TST Academy</div>
+</div>
+
+<div class="visual-block">
+<div class="visual-card">
+  <div class="visual-accent" style="background:linear-gradient(90deg,#f59e0b,#f97316);"></div>
+  <div class="visual-card-content">
+    <div class="vc-label" style="color:#f59e0b;">Education · Risk Management</div>
+    <div class="vc-main" style="color:#f8fafc;">Risk/Reward:<br><em>The Only Stat That Matters</em></div>
+    <div class="vc-sub">You don't need to be right most of the time to make money trading. Here's why.</div>
+    <div class="stats-row"><div class="stat-cell"><div class="stat-label">Win Rate</div><div class="stat-val">40%</div><div class="stat-sub">Can still profit</div></div><div class="stat-cell"><div class="stat-label">Min R:R</div><div class="stat-val">2:1</div><div class="stat-sub">Standard floor</div></div><div class="stat-cell"><div class="stat-label">Ideal R:R</div><div class="stat-val">3:1+</div><div class="stat-sub">Elite setups</div></div><div class="stat-cell"><div class="stat-label">Key Rule</div><div class="stat-val">Cut Losses</div><div class="stat-sub">Let winners run</div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="article-body">
+<h2>The Math That Changes Everything</h2>
+<p>Most new traders believe the key to making money is being right — picking the winning stocks more often than the losing ones. This is wrong. The key to making money in trading is <strong>how much you make when you're right versus how much you lose when you're wrong.</strong> That ratio is called risk/reward, and understanding it changes everything.</p>
+<p>Here's the math. If you risk $100 on a trade aiming to make $200, your risk/reward ratio is 1:2. Now imagine you do this 10 times and you're only right 4 times — a 40% win rate. Most people would call that terrible. But your math:</p>
+<ul>
+<li>4 winners × $200 = $800</li>
+<li>6 losers × $100 = -$600</li>
+<li>Net profit: $200</li>
+</ul>
+<p>You made money with a 40% win rate. That's the power of risk/reward.</p>
+
+<h2>What This Means for How You Trade</h2>
+<p>Every time you enter a trade, you should know exactly two things before you click the button: where your stop loss is (the point where the trade is wrong), and where your target is (the point where you take profit). If the distance from your entry to your target isn't at least twice the distance from your entry to your stop, the trade doesn't meet the minimum risk/reward threshold.</p>
+<div class="callout" style="border-left-color:#f59e0b;">
+<div class="callout-label" style="color:#f59e0b;">The Practical Rule</div>
+<p>Before every trade, ask yourself: "If I'm wrong, how much do I lose? If I'm right, how much do I make?" If the answer isn't at least 2:1 in your favor, pass on the trade. There will always be another setup.</p>
+</div>
+<h2>Why Most Traders Get This Backwards</h2>
+<p>The psychological pull to cut winners early and let losers run is one of the most documented biases in behavioral finance. It feels good to lock in a profit — taking that gain feels like winning. And holding a losing trade feels like hope — if you close it, the loss becomes real. So traders do the exact opposite of what the math requires: they take small winners and hold large losers.</p>
+<p>The correct approach is the opposite. Cut losses quickly and mechanically at your predetermined stop level. Let winners develop toward their measured target. The discomfort of closing a small loss immediately is the price of protecting yourself from a catastrophic loss.</p>
+
+<h2>Putting It Into Practice</h2>
+<p>Here's a simple framework for every trade:</p>
+<ol>
+<li>Identify your entry — the price at which the setup triggers</li>
+<li>Define your stop — the price below which the setup is wrong</li>
+<li>Calculate the distance: Entry – Stop = Risk</li>
+<li>Identify your target — the measured move or key resistance level</li>
+<li>Calculate: Target – Entry = Reward</li>
+<li>Divide Reward by Risk. If the result is less than 2, skip the trade.</li>
+</ol>
+<p>Do this for every trade, every time. It removes emotion from the equation and forces you to only take setups where the math is on your side.</p>
+</div>
+
+<footer>
+  <div class="footer-brand"><span>TOP</span>STOCK<span>TRADING</span></div>
+  <div class="footer-links">
+    <a href="/index.html">Home</a>
+    <a href="/index.html#courses">Courses</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/members.html">Member Login</a>
+  </div>
+  <p class="footer-disc">© 2026 Top Stock Trading · topstocktrading.com · All rights reserved.<br>Trading involves substantial risk of loss and is not appropriate for all investors. All content is for educational purposes only.</p>
+</footer>
+</body>
+</html>

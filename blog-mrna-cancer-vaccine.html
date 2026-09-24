@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.svg">
+  <title>Moderna's mRNA Cancer Vaccine Just Worked in Phase 3 — Here's What It Means | TST Academy</title>
+  <meta name="description" content="Moderna and Merck's personalized mRNA cancer vaccine succeeded in Phase 3. Here's what happened, how the science works, and what it means for MRNA.">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#0a0c10;--surface:#0f1218;--border:#1a2a1a;--green:#00d27a;--muted:#6b7280;--text:#e2e8f0;--heading:#f8fafc;}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;line-height:1.7;}
+    nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;background:rgba(10,12,16,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);}
+    .nav-logo{font-weight:700;font-size:16px;letter-spacing:3px;color:var(--green);text-decoration:none;font-family:'IBM Plex Mono',monospace;}
+    .nav-logo span{color:#c8d4c8;}
+    .nav-links{display:flex;gap:32px;list-style:none;}
+    .nav-links a{color:var(--muted);text-decoration:none;font-size:14px;transition:color 0.2s;}
+    .nav-links a:hover{color:var(--text);}
+    .nav-cta{background:var(--green);color:#0a0c10;padding:9px 22px;font-size:13px;font-weight:600;text-decoration:none;border-radius:6px;}
+    .article-header{padding:140px 0 60px;text-align:center;border-bottom:1px solid var(--border);max-width:820px;margin:0 auto;}
+    .article-badge{display:inline-block;background:rgba(99,102,241,0.1);color:#818cf8;border:1px solid rgba(99,102,241,0.3);font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:3px;padding:5px 14px;text-transform:uppercase;margin-bottom:20px;}
+    .article-title{font-size:clamp(32px,5vw,52px);font-weight:700;color:var(--heading);line-height:1.15;letter-spacing:-1px;margin-bottom:20px;}
+    .article-meta{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:2px;}
+    .article-meta span{color:var(--green);}
+    .visual-block{max-width:820px;margin:48px auto;padding:0 24px;}
+    .visual-card{background:var(--surface);border:1px solid var(--border);border-radius:4px;overflow:hidden;position:relative;}
+    .visual-card-content{padding:40px 48px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:1;}
+    .visual-accent{position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#6366f1,#818cf8);}
+    .vc-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#818cf8;letter-spacing:5px;text-transform:uppercase;margin-bottom:8px;}
+    .vc-main{font-size:clamp(28px,4vw,42px);font-weight:700;color:var(--heading);line-height:1.1;}
+    .vc-main em{font-style:normal;color:#818cf8;}
+    .vc-sub{font-size:16px;color:var(--muted);margin-top:8px;}
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border:1px solid var(--border);margin-top:24px;}
+    .stat-cell{padding:20px 24px;border-right:1px solid var(--border);}
+    .stat-cell:last-child{border-right:none;}
+    .stat-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:6px;}
+    .stat-val{font-size:28px;font-weight:700;color:#818cf8;line-height:1;}
+    .stat-sub{font-size:12px;color:var(--muted);margin-top:4px;}
+    .article-body{max-width:820px;margin:0 auto;padding:0 24px 80px;}
+    .article-body h2{font-size:26px;font-weight:700;color:var(--heading);margin:48px 0 16px;padding-top:8px;border-top:1px solid var(--border);}
+    .article-body h3{font-size:20px;font-weight:600;color:var(--heading);margin:32px 0 12px;}
+    .article-body p{margin-bottom:20px;color:var(--text);font-size:17px;line-height:1.75;}
+    .article-body strong{color:var(--heading);font-weight:600;}
+    .article-body ul,.article-body ol{margin:0 0 20px 24px;}
+    .article-body li{margin-bottom:10px;font-size:17px;line-height:1.7;}
+    .callout{background:var(--surface);border-left:3px solid #818cf8;padding:20px 24px;margin:32px 0;border-radius:0 4px 4px 0;}
+    .callout p{margin:0;font-size:16px;}
+    .callout-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#818cf8;letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;}
+    footer{background:var(--surface);border-top:1px solid var(--border);padding:48px;text-align:center;}
+    .footer-brand{font-family:'IBM Plex Mono',monospace;font-weight:700;letter-spacing:4px;color:var(--green);font-size:14px;margin-bottom:16px;}
+    .footer-brand span{color:#c8d4c8;}
+    .footer-links{display:flex;justify-content:center;gap:32px;margin-bottom:16px;flex-wrap:wrap;}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:13px;}
+    .footer-disc{font-size:12px;color:var(--muted);max-width:600px;margin:0 auto;line-height:1.6;}
+    @media(max-width:768px){nav{padding:14px 24px;}.nav-links{display:none;}.article-header{padding:100px 24px 40px;}.stats-row{grid-template-columns:1fr 1fr;}.stat-cell{border-bottom:1px solid var(--border);}.visual-card-content{padding:28px 24px;}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="/index.html"><span>TOP</span>STOCK<span>TRADING</span></a>
+  <ul class="nav-links">
+    <li><a href="/how-it-works.html">How It Works</a></li>
+    <li><a href="/resources.html">TST Resources</a></li>
+    <li><a href="/tools.html">TST Tools</a></li>
+    <li><a href="/blog.html">Blog</a></li>
+    <li><a href="/members.html">Member Login</a></li>
+  </ul>
+  <a class="nav-cta" href="/index.html#courses">Get Started</a>
+</nav>
+
+<div class="article-header">
+  <div class="article-badge">Stocks</div>
+  <h1 class="article-title">Moderna's mRNA Cancer Vaccine Just Worked in Phase 3 — Here's What It Means</h1>
+  <div class="article-meta">September 22, 2026 &nbsp;·&nbsp; <span>7 min read</span> &nbsp;·&nbsp; TST Academy</div>
+</div>
+
+<div class="visual-block">
+<div class="visual-card">
+  <div class="visual-accent" style="background:linear-gradient(90deg,#6366f1,#818cf8);"></div>
+  <div class="visual-card-content">
+    <div class="vc-label" style="color:#818cf8;">Moderna · mRNA-4157/V940</div>
+    <div class="vc-main" style="color:#f8fafc;">Phase 3:<br><em>Cancer Vaccine Works</em></div>
+    <div class="vc-sub">The first personalized mRNA cancer vaccine to succeed in a Phase 3 trial. What it means for MRNA — and for medicine.</div>
+    <div class="stats-row"><div class="stat-cell"><div class="stat-label">Stock Gain</div><div class="stat-val">~177%</div><div class="stat-sub">Day of announcement</div></div><div class="stat-cell"><div class="stat-label">Trial Size</div><div class="stat-val">1,137</div><div class="stat-sub">Patients</div></div><div class="stat-cell"><div class="stat-label">Risk Reduction</div><div class="stat-val">Significant</div><div class="stat-sub">vs Keytruda alone</div></div><div class="stat-cell"><div class="stat-label">Partner</div><div class="stat-val">MRK</div><div class="stat-sub">Merck/Keytruda</div></div></div>
+  </div>
+</div>
+</div>
+
+<div class="article-body">
+<h2>What Moderna Just Proved</h2>
+<p>Moderna and Merck announced that their personalized mRNA cancer vaccine — known as intismeran autogene, or mRNA-4157/V940 — succeeded in a Phase 3 clinical trial for high-risk melanoma. The vaccine, paired with Merck's immunotherapy Keytruda, significantly reduced the risk of cancer returning or spreading compared to Keytruda alone in a study of 1,137 patients.</p>
+<p>This is not a minor milestone. This is the <strong>first personalized mRNA cancer vaccine to succeed in a Phase 3 trial</strong> — the final step before a company can request FDA approval. The Phase 3 bar is where most cancer drugs fail. Moderna and Merck cleared it.</p>
+
+<h2>How the Vaccine Works</h2>
+<p>What makes this technology genuinely remarkable is that the vaccine is different for every patient. Doctors take a sample of the patient's tumor, sequence its genetic profile, and then design an mRNA vaccine that teaches that specific patient's immune system to recognize the unique mutations in their cancer and attack them.</p>
+<p>The previous standard of care — Keytruda alone — already reduced cancer recurrence significantly in high-risk melanoma. The new combination reduced it further. Earlier Phase 2 data showed a 49% reduction in recurrence risk and a 59% reduction in metastasis to distant organs compared to Keytruda alone.</p>
+<div class="callout" style="border-left-color:#818cf8;">
+<div class="callout-label" style="color:#818cf8;">The Science Context</div>
+<p>mRNA technology became a household name through COVID-19 vaccines. But the original vision for mRNA was always cancer — teaching the immune system to recognize and destroy tumor cells the way it destroys viruses. Today's announcement is that original vision becoming reality.</p>
+</div>
+<h2>What It Means for the Stock</h2>
+<p>MRNA surged roughly 177% on the day of the Phase 3 announcement — one of the largest single-day gains in the company's history. The stock had been struggling since its COVID vaccine revenue peaked, and the cancer vaccine program represented the company's clearest path back to relevance.</p>
+<p>The Phase 3 success changes the narrative entirely. MRNA is no longer a COVID vaccine company waiting for its next act. It is a platform company that has now proven its mRNA technology works against cancer. That's a completely different valuation story.</p>
+
+<h2>What Comes Next</h2>
+<p>Moderna and Merck have said they plan to seek regulatory review. The FDA approval process for a Phase 3-proven drug typically takes 6-12 months after filing. Beyond melanoma, Moderna is testing the same platform technology in non-small cell lung cancer (Phase 3) and renal cell carcinoma (Phase 2). A win in one cancer type doesn't automatically translate — but it makes each subsequent trial more credible.</p>
+<ul>
+<li><strong>FDA submission</strong> — expected in the coming months</li>
+<li><strong>Lung cancer Phase 3 readout</strong> — the next major catalyst</li>
+<li><strong>Merck (MRK)</strong> — a direct beneficiary through expanded Keytruda usage</li>
+<li><strong>Competitive response</strong> — BioNTech and other mRNA players will accelerate their cancer programs</li>
+</ul>
+</div>
+
+<footer>
+  <div class="footer-brand"><span>TOP</span>STOCK<span>TRADING</span></div>
+  <div class="footer-links">
+    <a href="/index.html">Home</a>
+    <a href="/index.html#courses">Courses</a>
+    <a href="/blog.html">Blog</a>
+    <a href="/members.html">Member Login</a>
+  </div>
+  <p class="footer-disc">© 2026 Top Stock Trading · topstocktrading.com · All rights reserved.<br>Trading involves substantial risk of loss and is not appropriate for all investors. All content is for educational purposes only.</p>
+</footer>
+</body>
+</html>
