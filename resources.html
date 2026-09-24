@@ -1044,13 +1044,31 @@
 
 <script>
 var currentPdf = '';
-var icons = {'TST Risk Framework':'🛡️','Pre-Market Checklist':'📋','Daily Watchlist Builder':'📈','Trading Psychology Cheat Sheet':'🧠',"Beginner's Guide to Reading Charts":'🕯️','Options Greeks Simplified':'⚡'};
+
+// PDF metadata — name, icon, tag, download page
+var pdfData = {
+  'TST Risk Framework':             { icon:'🛡️', tag:'dl-risk-framework',    url:'/dl/tst-rf-a7k2.html' },
+  'Pre-Market Checklist':           { icon:'📋', tag:'dl-premarket-checklist', url:'/dl/tst-pm-b3x1.html' },
+  'Daily Watchlist Builder':        { icon:'📈', tag:'dl-watchlist-builder',   url:'/dl/tst-wl-c4y8.html' },
+  'Trading Psychology Cheat Sheet': { icon:'🧠', tag:'dl-psychology',          url:'/dl/tst-ps-d5z9.html' },
+  "Beginner's Guide to Reading Charts": { icon:'🕯️', tag:'dl-reading-charts', url:'/dl/tst-bc-e6w7.html' },
+  'Options Greeks Simplified':      { icon:'⚡', tag:'dl-options-greeks',      url:'/dl/tst-og-f7v4.html' },
+  'Candlesticks & Terminology':     { icon:'🕯️', tag:'dl-candlesticks',        url:'/dl/tst-ct-g8u3.html' },
+  "The Trader's Pattern Playbook":  { icon:'📐', tag:'dl-pattern-playbook',    url:'/dl/tst-pp-h9t2.html' },
+  'Options & Futures Basics':       { icon:'📖', tag:'dl-options-futures',     url:'/dl/tst-of-i1s6.html' },
+  'The TST Trading Rules':          { icon:'📋', tag:'dl-trading-rules',       url:'/dl/tst-tr-j2r5.html' },
+  "The Ultimate Trader's Cheat Sheet": { icon:'⚡', tag:'dl-cheat-sheet',      url:'/dl/tst-cs-k3q4.html' }
+};
+
+var KIT_API_KEY = 'GCFpVH_EQFR3RdhD1ZDG6A';
 
 function openModal(pdfName, btn) {
   currentPdf = pdfName;
+  var data = pdfData[pdfName] || {};
   document.getElementById('modalTitle').textContent = pdfName;
-  document.getElementById('modalIcon').textContent = icons[pdfName] || '📄';
+  document.getElementById('modalIcon').textContent = data.icon || '📄';
   document.getElementById('modalEmail').value = '';
+  document.getElementById('modalEmail').style.borderColor = '';
   document.getElementById('emailModal').classList.add('active');
 }
 
@@ -1058,20 +1076,70 @@ function closeModal() {
   document.getElementById('emailModal').classList.remove('active');
 }
 
-function submitEmail() {
+async function submitEmail() {
   var email = document.getElementById('modalEmail').value.trim();
   if (!email || !email.includes('@')) {
     document.getElementById('modalEmail').style.borderColor = '#ef4444';
     return;
   }
-  // TODO: Connect to Kit API to add subscriber and trigger PDF delivery
-  // For now show success state
-  var box = document.querySelector('.modal-box');
-  box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div><h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">Check Your Email</h3><p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">The PDF is on its way to ' + email + '. Check your spam folder if it does not arrive within 2 minutes.</p><button class="modal-cancel" onclick="closeModal()" style="background:#22c55e;color:#000;border:none;border-radius:10px;padding:10px 24px;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;cursor:pointer;">Done</button>';
+
+  var btn = document.querySelector('.modal-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  var data = pdfData[currentPdf] || {};
+  var tag = data.tag || 'dl-resource';
+  var redirectUrl = data.url || '/resources.html';
+
+  try {
+    // Subscribe to KIT and apply tag
+    var res = await fetch('https://api.convertkit.com/v3/subscribers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        api_key: KIT_API_KEY,
+        email: email,
+        tags: [tag],
+        fields: { source: 'tst-resources', pdf: currentPdf }
+      })
+    });
+
+    var json = await res.json();
+
+    if (res.ok && json.subscriber) {
+      // Success — show confirmation and redirect to download page
+      var box = document.querySelector('.modal-box');
+      box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
+        + '<h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">You're in — redirecting now</h3>'
+        + '<p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">Taking you to your download. A copy is also on its way to <strong style="color:#f0f4f1;">' + email + '</strong></p>'
+        + '<div style="width:40px;height:3px;background:#22c55e;border-radius:2px;margin:0 auto;animation:grow 2s linear forwards;"></div>'
+        + '<style>@keyframes grow{from{width:0}to{width:200px}}</style>';
+      setTimeout(function() { window.location.href = redirectUrl; }, 2000);
+    } else {
+      throw new Error(json.message || 'Subscription failed');
+    }
+  } catch(err) {
+    // Show error state
+    btn.textContent = 'Send Me The PDF →';
+    btn.disabled = false;
+    document.getElementById('modalEmail').style.borderColor = '#ef4444';
+    var errMsg = document.getElementById('modalError');
+    if (!errMsg) {
+      errMsg = document.createElement('p');
+      errMsg.id = 'modalError';
+      errMsg.style.cssText = 'color:#ef4444;font-size:12px;margin-top:8px;';
+      btn.parentNode.insertBefore(errMsg, btn.nextSibling);
+    }
+    errMsg.textContent = 'Something went wrong. Please try again.';
+  }
 }
 
 document.getElementById('emailModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
+});
+
+document.getElementById('modalEmail').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') submitEmail();
 });
 </script>
 </body>
