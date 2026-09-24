@@ -518,13 +518,6 @@ function filterPosts(category, btn) {
   });
   allFeatured.forEach(f => f.style.display = f.dataset.category === category ? 'grid' : 'none');
   allCards.forEach(c => c.style.display = c.dataset.category === category ? 'flex' : 'none');
-  // dummy to replace old block
-    featured.style.display = 'grid';
-    cards.forEach(c => c.style.display = 'flex');
-  } else {
-    featured.style.display = featured.dataset.category === category ? 'grid' : 'none';
-    cards.forEach(c => c.style.display = c.dataset.category === category ? 'flex' : 'none');
-  }
 }
 </script>
 
