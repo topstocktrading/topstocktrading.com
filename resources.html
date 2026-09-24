@@ -1045,30 +1045,29 @@
 <script>
 var currentPdf = '';
 
-// PDF metadata — name, icon, tag, download page
 var pdfData = {
-  'TST Risk Framework':             { icon:'🛡️', tag:'dl-risk-framework',    url:'/dl/tst-rf-a7k2.html' },
-  'Pre-Market Checklist':           { icon:'📋', tag:'dl-premarket-checklist', url:'/dl/tst-pm-b3x1.html' },
-  'Daily Watchlist Builder':        { icon:'📈', tag:'dl-watchlist-builder',   url:'/dl/tst-wl-c4y8.html' },
-  'Trading Psychology Cheat Sheet': { icon:'🧠', tag:'dl-psychology',          url:'/dl/tst-ps-d5z9.html' },
-  "Beginner's Guide to Reading Charts": { icon:'🕯️', tag:'dl-reading-charts', url:'/dl/tst-bc-e6w7.html' },
-  'Options Greeks Simplified':      { icon:'⚡', tag:'dl-options-greeks',      url:'/dl/tst-og-f7v4.html' },
-  'Candlesticks & Terminology':     { icon:'🕯️', tag:'dl-candlesticks',        url:'/dl/tst-ct-g8u3.html' },
-  "The Trader's Pattern Playbook":  { icon:'📐', tag:'dl-pattern-playbook',    url:'/dl/tst-pp-h9t2.html' },
-  'Options & Futures Basics':       { icon:'📖', tag:'dl-options-futures',     url:'/dl/tst-of-i1s6.html' },
-  'The TST Trading Rules':          { icon:'📋', tag:'dl-trading-rules',       url:'/dl/tst-tr-j2r5.html' },
-  "The Ultimate Trader's Cheat Sheet": { icon:'⚡', tag:'dl-cheat-sheet',      url:'/dl/tst-cs-k3q4.html' }
+  'TST Risk Framework':                  { icon:'🛡️', formId:'9959040', url:'/dl/tst-rf-a7k2.html' },
+  'Pre-Market Checklist':                { icon:'📋', formId:'9959040', url:'/dl/tst-pm-b3x1.html' },
+  'Daily Watchlist Builder':             { icon:'📈', formId:'9959040', url:'/dl/tst-wl-c4y8.html' },
+  'Trading Psychology Cheat Sheet':      { icon:'🧠', formId:'9959040', url:'/dl/tst-ps-d5z9.html' },
+  "Beginner's Guide to Reading Charts":  { icon:'🕯️', formId:'9959040', url:'/dl/tst-bc-e6w7.html' },
+  'Options Greeks Simplified':           { icon:'⚡', formId:'9959040', url:'/dl/tst-og-f7v4.html' },
+  'Candlesticks & Terminology':          { icon:'🕯️', formId:'9959040', url:'/dl/tst-ct-g8u3.html' },
+  "The Trader's Pattern Playbook":       { icon:'📐', formId:'9959040', url:'/dl/tst-pp-h9t2.html' },
+  'Options & Futures Basics':            { icon:'📖', formId:'9959040', url:'/dl/tst-of-i1s6.html' },
+  'The TST Trading Rules':               { icon:'📋', formId:'9959040', url:'/dl/tst-tr-j2r5.html' },
+  "The Ultimate Trader's Cheat Sheet":   { icon:'⚡', formId:'9959040', url:'/dl/tst-cs-k3q4.html' }
 };
 
-var KIT_API_KEY = 'GCFpVH_EQFR3RdhD1ZDG6A';
-
-function openModal(pdfName, btn) {
+function openModal(pdfName) {
   currentPdf = pdfName;
   var data = pdfData[pdfName] || {};
   document.getElementById('modalTitle').textContent = pdfName;
   document.getElementById('modalIcon').textContent = data.icon || '📄';
   document.getElementById('modalEmail').value = '';
   document.getElementById('modalEmail').style.borderColor = '';
+  var err = document.getElementById('modalError');
+  if (err) err.textContent = '';
   document.getElementById('emailModal').classList.add('active');
 }
 
@@ -1076,7 +1075,7 @@ function closeModal() {
   document.getElementById('emailModal').classList.remove('active');
 }
 
-async function submitEmail() {
+function submitEmail() {
   var email = document.getElementById('modalEmail').value.trim();
   if (!email || !email.includes('@')) {
     document.getElementById('modalEmail').style.borderColor = '#ef4444';
@@ -1088,56 +1087,46 @@ async function submitEmail() {
   btn.disabled = true;
 
   var data = pdfData[currentPdf] || {};
-  var tag = data.tag || 'dl-resource';
+  var formId = data.formId || '9959040';
   var redirectUrl = data.url || '/resources.html';
 
-  try {
-    // Subscribe to KIT and apply tag
-    // Map PDF tags to KIT form IDs
-    var formIds = {
-      'dl-risk-framework': '9959040'
-      // others to be added after test
-    };
-    var formId = formIds[tag] || '9959040';
-
-    var res = await fetch('https://api.convertkit.com/v3/forms/' + formId + '/subscribe', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        api_key: KIT_API_KEY,
-        email: email,
-        fields: { source: 'tst-resources', pdf: currentPdf }
-      })
-    });
-
-    var json = await res.json();
-
-    if (res.ok && json.subscription) {
-      // Success — show confirmation and redirect to download page
-      var box = document.querySelector('.modal-box');
-      box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
-        + '<h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">You're in — redirecting now</h3>'
-        + '<p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">Taking you to your download. A copy is also on its way to <strong style="color:#f0f4f1;">' + email + '</strong></p>'
-        + '<div style="width:40px;height:3px;background:#22c55e;border-radius:2px;margin:0 auto;animation:grow 2s linear forwards;"></div>'
-        + '<style>@keyframes grow{from{width:0}to{width:200px}}</style>';
-      setTimeout(function() { window.location.href = redirectUrl; }, 2000);
-    } else {
-      throw new Error(json.message || 'Subscription failed');
-    }
-  } catch(err) {
-    // Show error state
-    btn.textContent = 'Send Me The PDF →';
-    btn.disabled = false;
-    document.getElementById('modalEmail').style.borderColor = '#ef4444';
-    var errMsg = document.getElementById('modalError');
-    if (!errMsg) {
-      errMsg = document.createElement('p');
-      errMsg.id = 'modalError';
-      errMsg.style.cssText = 'color:#ef4444;font-size:12px;margin-top:8px;';
-      btn.parentNode.insertBefore(errMsg, btn.nextSibling);
-    }
-    errMsg.textContent = 'Something went wrong. Please try again.';
+  // Hidden iframe to capture KIT response without redirecting the page
+  var iframe = document.getElementById('kit-iframe');
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.name = 'kit-iframe';
+    iframe.id = 'kit-iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
   }
+
+  // Hidden form POST directly to KIT — no CORS, no API key needed
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://app.kit.com/forms/' + formId + '/subscriptions';
+  form.target = 'kit-iframe';
+  form.style.display = 'none';
+
+  var emailField = document.createElement('input');
+  emailField.type = 'email';
+  emailField.name = 'email_address';
+  emailField.value = email;
+  form.appendChild(emailField);
+
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+
+  // Show success and redirect
+  setTimeout(function() {
+    var box = document.querySelector('.modal-box');
+    box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
+      + '<h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">You\'re in!</h3>'
+      + '<p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">Taking you to your download now. A confirmation is on its way to <strong style="color:#f0f4f1;">' + email + '</strong></p>'
+      + '<div style="height:3px;background:#22c55e;border-radius:2px;width:0;animation:grow 1.5s linear forwards;"></div>'
+      + '<style>@keyframes grow{from{width:0}to{width:100%}}</style>';
+    setTimeout(function() { window.location.href = redirectUrl; }, 1800);
+  }, 400);
 }
 
 document.getElementById('emailModal').addEventListener('click', function(e) {
@@ -1147,6 +1136,7 @@ document.getElementById('emailModal').addEventListener('click', function(e) {
 document.getElementById('modalEmail').addEventListener('keypress', function(e) {
   if (e.key === 'Enter') submitEmail();
 });
+</script>
 </script>
 </body>
 </html>
