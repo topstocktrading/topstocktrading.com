@@ -837,6 +837,7 @@
     .coming-soon .download-btn{background:#1e2820;color:#6b7c6e;}
     .cs-badge{display:inline-block;background:#1e2820;border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6b7c6e;text-transform:uppercase;margin-bottom:12px;}
   </style>
+<script src="https://f.convertkit.com/ckjs/ck.5.js"></script>
 </head>
 <body>
 <nav>
@@ -1046,17 +1047,17 @@
 var currentPdf = '';
 
 var pdfData = {
-  'TST Risk Framework':                  { icon:'🛡️', formId:'9959040', url:'/dl/tst-rf-a7k2.html' },
-  'Pre-Market Checklist':                { icon:'📋', formId:'9959040', url:'/dl/tst-pm-b3x1.html' },
-  'Daily Watchlist Builder':             { icon:'📈', formId:'9959040', url:'/dl/tst-wl-c4y8.html' },
-  'Trading Psychology Cheat Sheet':      { icon:'🧠', formId:'9959040', url:'/dl/tst-ps-d5z9.html' },
-  "Beginner's Guide to Reading Charts":  { icon:'🕯️', formId:'9959040', url:'/dl/tst-bc-e6w7.html' },
-  'Options Greeks Simplified':           { icon:'⚡', formId:'9959040', url:'/dl/tst-og-f7v4.html' },
-  'Candlesticks & Terminology':          { icon:'🕯️', formId:'9959040', url:'/dl/tst-ct-g8u3.html' },
-  "The Trader's Pattern Playbook":       { icon:'📐', formId:'9959040', url:'/dl/tst-pp-h9t2.html' },
-  'Options & Futures Basics':            { icon:'📖', formId:'9959040', url:'/dl/tst-of-i1s6.html' },
-  'The TST Trading Rules':               { icon:'📋', formId:'9959040', url:'/dl/tst-tr-j2r5.html' },
-  "The Ultimate Trader's Cheat Sheet":   { icon:'⚡', formId:'9959040', url:'/dl/tst-cs-k3q4.html' }
+  'TST Risk Framework':                  { icon:'🛡️', url:'/dl/tst-rf-a7k2.html' },
+  'Pre-Market Checklist':                { icon:'📋', url:'/dl/tst-pm-b3x1.html' },
+  'Daily Watchlist Builder':             { icon:'📈', url:'/dl/tst-wl-c4y8.html' },
+  'Trading Psychology Cheat Sheet':      { icon:'🧠', url:'/dl/tst-ps-d5z9.html' },
+  "Beginner's Guide to Reading Charts":  { icon:'🕯️', url:'/dl/tst-bc-e6w7.html' },
+  'Options Greeks Simplified':           { icon:'⚡', url:'/dl/tst-og-f7v4.html' },
+  'Candlesticks & Terminology':          { icon:'🕯️', url:'/dl/tst-ct-g8u3.html' },
+  "The Trader's Pattern Playbook":       { icon:'📐', url:'/dl/tst-pp-h9t2.html' },
+  'Options & Futures Basics':            { icon:'📖', url:'/dl/tst-of-i1s6.html' },
+  'The TST Trading Rules':               { icon:'📋', url:'/dl/tst-tr-j2r5.html' },
+  "The Ultimate Trader's Cheat Sheet":   { icon:'⚡', url:'/dl/tst-cs-k3q4.html' }
 };
 
 function openModal(pdfName) {
@@ -1066,8 +1067,6 @@ function openModal(pdfName) {
   document.getElementById('modalIcon').textContent = data.icon || '📄';
   document.getElementById('modalEmail').value = '';
   document.getElementById('modalEmail').style.borderColor = '';
-  var err = document.getElementById('modalError');
-  if (err) err.textContent = '';
   document.getElementById('emailModal').classList.add('active');
 }
 
@@ -1082,40 +1081,55 @@ function submitEmail() {
     return;
   }
 
-  var btn = document.querySelector('.modal-submit');
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-
   var data = pdfData[currentPdf] || {};
-  var formId = data.formId || '9959040';
   var redirectUrl = data.url || '/resources.html';
 
-  // POST to KIT using XMLHttpRequest — doesn't follow redirects like form submit does
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', 'https://app.kit.com/forms/' + formId + '/subscriptions', true);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4) {
-      // KIT always returns 200 range on success — show success regardless
-      var box = document.querySelector('.modal-box');
-      box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
-        + '<h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">You\'re in!</h3>'
-        + '<p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">Taking you to your download. Check your inbox for a confirmation from TST.</p>'
-        + '<div style="height:3px;background:#22c55e;border-radius:2px;width:0;animation:grow 1.5s linear forwards;"></div>'
-        + '<style>@keyframes grow{from{width:0}to{width:100%}}</style>';
-      setTimeout(function() { window.location.href = redirectUrl; }, 1800);
-    }
-  };
-  xhr.send('email_address=' + encodeURIComponent(email));
+  // Set the email in KIT's real form and submit it
+  document.getElementById('kit-email-field').value = email;
 
-document.getElementById('emailModal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+  // Listen for KIT's success event
+  window._pdfRedirectUrl = redirectUrl;
+  window._kitSubmitPending = true;
 
-document.getElementById('modalEmail').addEventListener('keypress', function(e) {
-  if (e.key === 'Enter') submitEmail();
+  // Submit KIT's actual form
+  document.getElementById('kit-submit-btn').click();
+
+  // Show success UI immediately
+  var box = document.querySelector('.modal-box');
+  box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
+    + '<h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">You're in!</h3>'
+    + '<p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">Taking you to your download. Check your inbox for a confirmation from TST.</p>'
+    + '<div style="height:3px;background:#22c55e;border-radius:2px;width:0;animation:kitgrow 1.5s linear forwards;"></div>'
+    + '<style>@keyframes kitgrow{from{width:0}to{width:100%}}</style>';
+
+  setTimeout(function() {
+    window.location.href = redirectUrl;
+  }, 1800);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('emailModal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+  document.getElementById('modalEmail').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') submitEmail();
+  });
 });
 </script>
 </script>
+
+<!-- Hidden KIT form — handles all subscription logic -->
+<form id="kit-master-form" 
+  action="https://app.kit.com/forms/9959040/subscriptions" 
+  class="seva-form formkit-form" 
+  method="post" 
+  data-sv-form="9959040" 
+  data-uid="38163525f9" 
+  data-format="inline" 
+  data-version="5"
+  style="display:none !important; position:absolute; left:-9999px;">
+  <input type="email" name="email_address" id="kit-email-field" placeholder="Email Address" required>
+  <button type="submit" id="kit-submit-btn">Subscribe</button>
+</form>
 </body>
 </html>
