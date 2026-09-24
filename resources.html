@@ -1090,44 +1090,23 @@ function submitEmail() {
   var formId = data.formId || '9959040';
   var redirectUrl = data.url || '/resources.html';
 
-  // Hidden iframe to capture KIT response without redirecting the page
-  var iframe = document.getElementById('kit-iframe');
-  if (!iframe) {
-    iframe = document.createElement('iframe');
-    iframe.name = 'kit-iframe';
-    iframe.id = 'kit-iframe';
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-  }
-
-  // Hidden form POST directly to KIT — no CORS, no API key needed
-  var form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://app.kit.com/forms/' + formId + '/subscriptions';
-  form.target = 'kit-iframe';
-  form.style.display = 'none';
-
-  var emailField = document.createElement('input');
-  emailField.type = 'email';
-  emailField.name = 'email_address';
-  emailField.value = email;
-  form.appendChild(emailField);
-
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-
-  // Show success and redirect
-  setTimeout(function() {
-    var box = document.querySelector('.modal-box');
-    box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
-      + '<h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">You\'re in!</h3>'
-      + '<p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">Taking you to your download now. A confirmation is on its way to <strong style="color:#f0f4f1;">' + email + '</strong></p>'
-      + '<div style="height:3px;background:#22c55e;border-radius:2px;width:0;animation:grow 1.5s linear forwards;"></div>'
-      + '<style>@keyframes grow{from{width:0}to{width:100%}}</style>';
-    setTimeout(function() { window.location.href = redirectUrl; }, 1800);
-  }, 400);
-}
+  // POST to KIT using XMLHttpRequest — doesn't follow redirects like form submit does
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', 'https://app.kit.com/forms/' + formId + '/subscriptions', true);
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+      // KIT always returns 200 range on success — show success regardless
+      var box = document.querySelector('.modal-box');
+      box.innerHTML = '<div style="font-size:48px;margin-bottom:16px;">✅</div>'
+        + '<h3 style="font-family:Rajdhani,sans-serif;font-size:22px;color:#f0f4f1;margin-bottom:8px;">You\'re in!</h3>'
+        + '<p style="color:#6b7c6e;font-size:13px;margin-bottom:20px;">Taking you to your download. Check your inbox for a confirmation from TST.</p>'
+        + '<div style="height:3px;background:#22c55e;border-radius:2px;width:0;animation:grow 1.5s linear forwards;"></div>'
+        + '<style>@keyframes grow{from{width:0}to{width:100%}}</style>';
+      setTimeout(function() { window.location.href = redirectUrl; }, 1800);
+    }
+  };
+  xhr.send('email_address=' + encodeURIComponent(email));
 
 document.getElementById('emailModal').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
