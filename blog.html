@@ -3,6 +3,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.svg">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Blog | TST Academy – Top Stock Trading</title>
 <meta name="description" content="Trading insights, market analysis, and education from TST Academy. No fluff, no hype — just real knowledge to make you a better trader.">
@@ -115,6 +117,8 @@
   .nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
   .nav-logo-text { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:#fff; }
   .nav-logo-text span { color:var(--green); }
+  .badge-stocks{background:rgba(99,102,241,0.15);color:#818cf8;border:1px solid rgba(99,102,241,0.3);}
+  .badge-economy{background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);}
 </style>
 </head>
 <body>
@@ -154,8 +158,9 @@
   <div class="filter-bar">
     <button class="filter-btn active" onclick="filterPosts('all', this)">All Posts</button>
     <button class="filter-btn" onclick="filterPosts('market', this)">Market Analysis</button>
+    <button class="filter-btn" onclick="filterPosts('stocks', this)">Stocks</button>
+    <button class="filter-btn" onclick="filterPosts('economy', this)">The Fed &amp; Economy</button>
     <button class="filter-btn" onclick="filterPosts('education', this)">Education</button>
-    <button class="filter-btn" onclick="filterPosts('strategy', this)">Strategy</button>
     <button class="filter-btn" onclick="filterPosts('psychology', this)">Psychology</button>
   </div>
 
@@ -215,12 +220,12 @@
       </div>
     </div>
 
-    <div class="post-card" data-category="strategy" style="opacity:0.4;pointer-events:none;">
+    <div class="post-card" data-category="stocks" style="opacity:0.4;pointer-events:none;">
       <div class="post-card-img strategy">
         <div class="post-card-img-text">RR</div>
       </div>
       <div class="post-card-body">
-        <span class="post-badge badge-strategy">Strategy</span>
+        <span class="post-badge badge-stocks">Stocks</span>
         <div class="post-card-title-sm" style="color:var(--muted);">Why Risk/Reward Is the Only Stat That Actually Matters</div>
         <p class="post-card-excerpt">Coming soon.</p>
         <div class="post-card-footer">
