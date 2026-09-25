@@ -45,21 +45,53 @@ tr:nth-child(even) td{background:#f9fafb;}
 .svg-wrap{display:flex;justify-content:center;margin:10px 0;}
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
 .cr{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:10px 0;}
-</style></head><body><div class="page"><div class="hd"><div class="hd-top"><div class="logo">TOP <span>STOCK</span> TRADING</div><span class="dt">Free Resource</span></div><div class="tb"><div class="ti">Options & Futures Basics</div><div class="su">Calls, puts, strike prices, ES, NQ — everything explained in plain English</div></div><div class="hbar"></div></div><div class="body"><div class="intro">Options and futures are powerful tools most traders don't fully understand before using them. <strong>No math formulas. No jargon. Just what you actually need to know.</strong></div>
-<div class="sec"><div class="st"><span class="sn">1</span>Options Basics</div>
+</style></head><body><div class="page"><div class="hd"><div class="hd-top"><div class="logo">TOP <span>STOCK</span> TRADING</div><span class="dt">Free Resource</span></div><div class="tb"><div class="ti">Options & Futures Basics</div><div class="su">Calls, puts, strike prices, ES, NQ — everything explained in plain English</div></div><div class="hbar"></div></div><div class="body"><div class="intro">Options and futures are powerful tools that most traders use before they understand them. <strong>This guide cuts through the jargon and explains exactly what you need to know — and what you need to respect before using them.</strong></div>
+
+<div class="sec"><div class="st"><span class="sn">1</span>Options — The Core Concepts</div>
 <table><tr><th>Term</th><th>Plain English</th></tr>
-<tr><td><strong>Call Option</strong></td><td>Right to BUY 100 shares at the strike price. Buy calls when bullish.</td></tr>
-<tr><td><strong>Put Option</strong></td><td>Right to SELL 100 shares at the strike price. Buy puts when bearish.</td></tr>
-<tr><td><strong>Strike Price</strong></td><td>The price at which you can exercise the option.</td></tr>
-<tr><td><strong>Expiration</strong></td><td>The date the option expires. Options lose value as expiration approaches.</td></tr>
-<tr><td><strong>Premium</strong></td><td>The price you pay for the contract. Maximum you can lose if wrong.</td></tr>
-<tr><td><strong>In The Money (ITM)</strong></td><td>Stock has passed the strike price in your profitable direction.</td></tr>
-<tr><td><strong>Out of The Money (OTM)</strong></td><td>Stock has not reached strike yet. Cheaper but lower probability.</td></tr></table></div>
-<div class="sec"><div class="st"><span class="sn">2</span>Futures Basics</div>
+<tr><td><strong>Call Option</strong></td><td>The right — not obligation — to BUY 100 shares at the strike price before expiration. You buy calls when you expect the stock to go UP.</td></tr>
+<tr><td><strong>Put Option</strong></td><td>The right — not obligation — to SELL 100 shares at the strike price before expiration. You buy puts when you expect the stock to go DOWN.</td></tr>
+<tr><td><strong>Strike Price</strong></td><td>The price at which you have the right to buy or sell the stock. Choose a strike close to the current stock price for the most responsive contract.</td></tr>
+<tr><td><strong>Expiration Date</strong></td><td>The date the option contract expires. After this date it is worthless. Longer expiration = more time for your thesis to play out, but costs more.</td></tr>
+<tr><td><strong>Premium</strong></td><td>The price you pay per share for the contract. Each contract controls 100 shares. A $2.00 premium = $200 total cost per contract. This is the most you can lose.</td></tr>
+<tr><td><strong>In The Money (ITM)</strong></td><td>The stock has already moved past your strike price in your favor. ITM options cost more but have higher probability.</td></tr>
+<tr><td><strong>Out of The Money (OTM)</strong></td><td>The stock has not yet reached your strike price. Cheap, but most OTM options expire worthless. High risk.</td></tr>
+<tr><td><strong>At The Money (ATM)</strong></td><td>Strike price equals or is very close to the current stock price. Most sensitive to price movement.</td></tr></table></div>
+
+<div class="sec"><div class="st"><span class="sn">2</span>The Greeks — What They Mean in Plain English</div>
+<table><tr><th>Greek</th><th>What It Measures</th><th>What It Means For You</th></tr>
+<tr><td><strong>Delta</strong></td><td>How much the option moves per $1 move in the stock</td><td>A 0.50 delta call gains $0.50 for every $1 the stock rises. ATM options are roughly 0.50 delta. ITM higher, OTM lower.</td></tr>
+<tr><td><strong>Theta</strong></td><td>Time decay — how much value the option loses each day</td><td>Every day that passes, your option loses value even if the stock doesn't move. Theta is your enemy when buying options. It accelerates near expiration.</td></tr>
+<tr><td><strong>Vega</strong></td><td>Sensitivity to implied volatility changes</td><td>When implied volatility rises, options get more expensive. When it drops (often after earnings), options lose value fast — this is called a vol crush.</td></tr>
+<tr><td><strong>Gamma</strong></td><td>How fast delta changes as the stock moves</td><td>High gamma = your option becomes more responsive as the stock moves toward your strike. Important for 0DTE and short-term options.</td></tr></table></div>
+
+<div class="sec"><div class="st"><span class="sn">3</span>The Most Important Rules for Buying Options</div>
+<ul class="cl">
+<li>Never buy options expiring in less than 2 weeks unless you are an advanced trader. Time decay will destroy you.</li>
+<li>Buy ITM or ATM options, not far OTM lottery tickets. OTM options require a large move just to break even.</li>
+<li>Size down on options vs stocks. One option contract = 100 shares of leverage. Respect that.</li>
+<li>Know your break-even before you enter. Break-even = Strike price + premium paid (for calls). The stock must exceed this to profit at expiration.</li>
+<li>Have a plan to exit before expiration. Most profitable option trades are exited early — not held to expiration.</li>
+<li>Never hold through earnings without understanding vol crush. IV drops sharply after earnings even when the stock moves in your direction.</li>
+</ul></div>
+
+<div class="sec"><div class="st"><span class="sn">4</span>Futures — The Core Concepts</div>
+<table><tr><th>Contract</th><th>What It Tracks</th><th>Point Value</th><th>Micro Version</th></tr>
+<tr><td><strong>ES</strong></td><td>S&P 500</td><td>$50 per point</td><td>MES — $5 per point</td></tr>
+<tr><td><strong>NQ</strong></td><td>Nasdaq 100</td><td>$20 per point</td><td>MNQ — $2 per point</td></tr>
+<tr><td><strong>YM</strong></td><td>Dow Jones</td><td>$5 per point</td><td>MYM — $0.50 per point</td></tr>
+<tr><td><strong>RTY</strong></td><td>Russell 2000</td><td>$50 per point</td><td>M2K — $5 per point</td></tr>
+<tr><td><strong>CL</strong></td><td>Crude Oil</td><td>$1,000 per point</td><td>None — highly volatile</td></tr></table>
+<div class="rule"><div class="rl">Key Difference From Stocks</div><div class="rt">Futures trade nearly 24 hours a day, 5 days a week. They use margin — you control a large contract with a small deposit. A 10-point move in ES is $500. This cuts both ways. Start with Micro contracts (MES, MNQ) until you understand how they move.</div></div></div>
+
+<div class="sec"><div class="st"><span class="sn">5</span>Futures Terminology</div>
 <table><tr><th>Term</th><th>Plain English</th></tr>
-<tr><td><strong>ES (S&P Futures)</strong></td><td>Tracks the S&P 500. Each point = $50. Trade overall market direction.</td></tr>
-<tr><td><strong>NQ (Nasdaq Futures)</strong></td><td>Tracks Nasdaq 100. Each point = $20. Tech-heavy index.</td></tr>
-<tr><td><strong>MES / MNQ</strong></td><td>Micro versions — 1/10th the size. Better for beginners learning futures.</td></tr>
-<tr><td><strong>Contango</strong></td><td>Futures price higher than spot. Normal market condition.</td></tr>
-<tr><td><strong>Backwardation</strong></td><td>Futures price lower than spot. Signals unusual demand for immediate delivery.</td></tr></table></div>
-<div class="warn"><div class="wl">⚠ Do not trade options or futures until</div><div class="wt">You have a consistent edge trading stocks. Options amplify both gains and losses. Futures move fast with high margin requirements. Learn to walk before you run.</div></div></div><div class="disc">For educational purposes only. Trading involves substantial risk of loss. Not financial advice.</div><div class="ft2"><span class="ftx">topstocktrading.com · Free Resource</span><span class="fbn">TST</span></div></div></body></html>
+<tr><td><strong>Margin</strong></td><td>The deposit required to hold a futures contract. Much smaller than the contract value — this creates leverage.</td></tr>
+<tr><td><strong>Rollover</strong></td><td>Futures expire quarterly. When expiration approaches, traders roll into the next contract. Check expiration dates.</td></tr>
+<tr><td><strong>Contango</strong></td><td>Futures price is higher than the current spot price. The normal state for most futures markets.</td></tr>
+<tr><td><strong>Backwardation</strong></td><td>Futures price is below spot price. Signals unusual near-term demand — common in commodity markets during supply crunches.</td></tr>
+<tr><td><strong>Mark to Market</strong></td><td>Futures P&L is settled daily. Gains and losses are credited or debited to your account at the end of each session — unlike stocks where you only realize P&L when you close.</td></tr></table></div>
+
+<div class="warn"><div class="wl">⚠ Before You Trade Options or Futures</div><div class="wt">Have a consistent, documented edge trading stocks first. Options amplify both gains and losses — a bad options trade can lose 100% in days. Futures move fast with significant margin requirements — a 20-point NQ move against you is $400 in seconds. Understand the product completely before using real money. Start with paper trading or Micro contracts.</div></div>
+
+</div><div class="disc">For educational purposes only. Trading involves substantial risk of loss. Not financial advice.</div><div class="ft2"><span class="ftx">topstocktrading.com · Free Resource</span><span class="fbn">TST</span></div></div></body></html>
