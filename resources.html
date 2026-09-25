@@ -1038,16 +1038,16 @@
 var currentPdf = '';
 
 var pdfData = {
-  'TST Risk Framework':                  { icon:'🛡️', url:'/dl/tst-rf-a7k2.html' },
-  'Pre-Market Checklist':                { icon:'📋', url:'/dl/tst-pm-b3x1.html' },
-  'Daily Watchlist Builder':             { icon:'📈', url:'/dl/tst-wl-c4y8.html' },
-  'Trading Psychology Cheat Sheet':      { icon:'🧠', url:'/dl/tst-ps-d5z9.html' },
-  "Beginner's Guide to Reading Charts":  { icon:'🕯️', url:'/dl/tst-bc-e6w7.html' },
-  'Options Greeks Simplified':           { icon:'⚡', url:'/dl/tst-og-f7v4.html' },
-  "The Trader's Pattern Playbook":       { icon:'📐', url:'/dl/tst-pp-h9t2.html' },
-  'Options & Futures Basics':            { icon:'📖', url:'/dl/tst-of-i1s6.html' },
-  'The TST Trading Rules':               { icon:'📋', url:'/dl/tst-tr-j2r5.html' },
-  "The Ultimate Trader's Cheat Sheet":   { icon:'⚡', url:'/dl/tst-cs-k3q4.html' }
+  'TST Risk Framework':                  { icon:'🛡️', formId:'9959040', url:'/dl/tst-rf-a7k2.html' },
+  'Pre-Market Checklist':                { icon:'📋', formId:'9959215', url:'/dl/tst-pm-b3x1.html' },
+  'Daily Watchlist Builder':             { icon:'📈', formId:'9962132', url:'/dl/tst-wl-c4y8.html' },
+  'Trading Psychology Cheat Sheet':      { icon:'🧠', formId:'9962141', url:'/dl/tst-ps-d5z9.html' },
+  "Beginner's Guide to Reading Charts":  { icon:'🕯️', formId:'9962147', url:'/dl/tst-bc-e6w7.html' },
+  'Options Greeks Simplified':           { icon:'⚡', formId:'9962153', url:'/dl/tst-og-f7v4.html' },
+  "The Trader's Pattern Playbook":       { icon:'📐', formId:'9962161', url:'/dl/tst-pp-h9t2.html' },
+  'Options & Futures Basics':            { icon:'📖', formId:'9962177', url:'/dl/tst-of-i1s6.html' },
+  'The TST Trading Rules':               { icon:'📋', formId:'9962182', url:'/dl/tst-tr-j2r5.html' },
+  "The Ultimate Trader's Cheat Sheet":   { icon:'⚡', formId:'9962186', url:'/dl/tst-cs-k3q4.html' }
 };
 
 function openModal(pdfName) {
@@ -1072,10 +1072,16 @@ function submitEmail() {
   }
 
   var data = pdfData[currentPdf] || {};
+  var formId = data.formId || '9959040';
   var redirectUrl = data.url || '/resources.html';
 
   // Set the email in KIT's real form and submit it
   document.getElementById('kit-email-field').value = email;
+
+  // Update hidden form action to use the correct form ID for this PDF
+  var kitForm = document.getElementById('kit-master-form');
+  kitForm.action = 'https://app.kit.com/forms/' + formId + '/subscriptions';
+  kitForm.setAttribute('data-sv-form', formId);
 
   // Submit KIT's actual form
   document.getElementById('kit-submit-btn').click();
